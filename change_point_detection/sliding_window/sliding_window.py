@@ -15,8 +15,9 @@ metric = "loss"
 window_len = 24
 #dist_type = "hellinger"
 #dist_type = "mean"
-dist_type = "emd"
+#dist_type = "emd"
 #dist_type = "bhattacharyya"
+dist_type = "jensen_shannon"
 
 date_dir = str(target_year) + "_" + str(target_month).zfill(2)
 
@@ -78,6 +79,17 @@ def get_distr(l):
 def mean_dist(l1, l2):
 	return abs(np.mean(l1) - np.mean(l2))
 
+def kl_divergence(distr1, distr2):
+	ret = 0
+	for i in xrange(len(distr1)): 
+		if distr1[i] > 0:
+			ret += distr1[i]*math.log(distr1[i]/distr2[i])
+	return ret
+
+def jensen_shannon_divergence(distr1, distr2):
+	m = (distr1 + distr2)/2.0	
+	return 0.5*(kl_divergence(distr1, m) + kl_divergence(distr2, m))
+
 def distance(l1, l2):
 	distr1 = get_distr(l1)	
 	distr2 = get_distr(l2)	
@@ -89,6 +101,7 @@ def distance(l1, l2):
 	elif dist_type == "hellinger": return hellinger_dist(distr1, distr2)	
 	elif dist_type == "emd": return emd(distr1*1.0, distr2*1.0, emd_dist_matrix*1.0)
 	elif dist_type == "bhattacharyya": return bhattacharyya_dist(distr1, distr2)
+	elif dist_type == "jensen_shannon": return jensen_shannon_divergence(distr1, distr2)
 
 def plot_ts_and_dist(ts, ts_dist, out_file_path, ylabel):
 	min_len = 1
