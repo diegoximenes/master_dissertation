@@ -2,6 +2,7 @@ import os, math, sys
 import pandas as pd
 import numpy as np
 import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pylab as plt
 from pyemd import emd
 
@@ -103,51 +104,6 @@ def distance(l1, l2):
 	elif dist_type == "bhattacharyya": return bhattacharyya_dist(distr1, distr2)
 	elif dist_type == "jensen_shannon": return jensen_shannon_divergence(distr1, distr2)
 
-def plot_ts_and_dist(ts, ts_dist, out_file_path, ylabel):
-	min_len = 1
-	if len(ts.y) < min_len or len(ts_dist.y) < min_len:
-		print "less points than necessary"
-		return
-	
-	plt.clf()
-	matplotlib.rcParams.update({'font.size': 13})
-	f, ax = plt.subplots(2, 1, figsize = (16, 12), sharex = "col")
-		
-	strdt_bin = {}
-	for strdt in sorted(list(ts.strdt_mean.keys())): strdt_bin[strdt] = len(strdt_bin)
-
-	xticks, xticks_labels = plot_procedures.get_xticks(strdt_bin)
-
-	x, y = [], []
-	for i in range(len(ts.y)): 
-		if ts.y[i] != None:
-			x.append(strdt_bin[ts.x[i]])
-			y.append(ts.y[i])
-	
-	x_dist, y_dist = [], []
-	for i in range(len(ts_dist.y)): 
-		if ts_dist.y[i] != None:
-			x_dist.append(strdt_bin[ts_dist.x[i]])
-			y_dist.append(ts_dist.y[i])
-	
-	ax[0].grid()
-	ax[0].set_ylabel(ylabel)
-	ax[0].set_xticks(xticks)
-	ax[0].set_xlim([min(xticks), max(xticks) + 24])
-	ax[0].set_ylim([-0.01, 1.01])
-	ax[0].scatter(x, y, s = 10)
-	
-	ax[1].grid()
-	ax[1].set_ylabel(dist_type + " dist")
-	ax[1].set_xticks(xticks)
-	ax[1].set_xticklabels(xticks_labels, rotation = "vertical")
-	ax[0].set_xlim([min(xticks), max(xticks) + 24])
-	if (dist_type == "hellinger") or (metric == "loss" and dist_type == "mean"): ax[1].set_ylim([-0.01, 1.01])
-	ax[1].plot(x_dist, y_dist)
-	
-	plt.savefig(out_file_path + "_" + dist_type + ".png")
-	plt.close("all")
-
 def sliding_window(in_file_path, out_file_path):
 	ts = TimeSeries(in_file_path, target_month, target_year, metric)
 	ts_compressed = time_series.get_compressed(ts)
@@ -164,7 +120,9 @@ def sliding_window(in_file_path, out_file_path):
 			ts_dist.x.append(strdt)
 			ts_dist.y.append(dist)
 	
-	plot_ts_and_dist(ts_ma, ts_dist, out_file_path, metric)
+	dist_ylim = None
+	if (dist_type == "hellinger") or (metric == "loss" and dist_type == "mean"): dist_ylim = [-0.01, 1.01]
+	plot_procedures.plot_ts_and_dist(ts_ma, ts_dist, out_file_path + "_" + dist_type + ".png", metric, dist_type + " dist", dist_ylim)
 		
 def get_change_points():
 	cnt = 0

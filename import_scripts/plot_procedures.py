@@ -1,7 +1,7 @@
 import sys
 import pandas as pd
 import matplotlib
-#matplotlib.use("Agg")
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 sys.path.append("../general_scripts/")
@@ -15,6 +15,46 @@ def get_xticks(strdt_bin):
 			xticks.append(strdt_bin[strdt])
 			xticks_labels.append(str(dt.day).zfill(2) + "/" + str(dt.month).zfill(2))
 	return xticks, xticks_labels
+
+def plot_ts_and_dist(ts, ts_dist, out_file_path, ylabel, dist_ylabel = "", dist_ylim = None):
+	plt.clf()
+	matplotlib.rcParams.update({'font.size': 13})
+	f, ax = plt.subplots(2, 1, figsize = (16, 12), sharex = "col")
+		
+	strdt_bin = {}
+	for strdt in sorted(list(ts.strdt_mean.keys())): strdt_bin[strdt] = len(strdt_bin)
+
+	xticks, xticks_labels = get_xticks(strdt_bin)
+
+	x, y = [], []
+	for i in range(len(ts.y)): 
+		if ts.y[i] != None:
+			x.append(strdt_bin[ts.x[i]])
+			y.append(ts.y[i])
+	
+	x_dist, y_dist = [], []
+	for i in range(len(ts_dist.y)): 
+		if ts_dist.y[i] != None:
+			x_dist.append(strdt_bin[ts_dist.x[i]])
+			y_dist.append(ts_dist.y[i])
+	
+	ax[0].grid()
+	ax[0].set_ylabel(ylabel)
+	ax[0].set_xticks(xticks)
+	ax[0].set_xlim([min(xticks), max(xticks) + 24])
+	ax[0].set_ylim([-0.01, 1.01])
+	ax[0].scatter(x, y, s = 10)
+	
+	ax[1].grid()
+	ax[1].set_ylabel(dist_ylabel)
+	ax[1].set_xticks(xticks)
+	ax[1].set_xticklabels(xticks_labels, rotation = "vertical")
+	ax[0].set_xlim([min(xticks), max(xticks) + 24])
+	if dist_ylim != None: ax[1].set_ylim(dist_ylim)
+	ax[1].plot(x_dist, y_dist)
+	
+	plt.savefig(out_file_path)
+	plt.close("all")
 
 def plotax_ts(ax, ts, strdt_axvline = {}, ylabel = "", ylim = None):
 	strdt_bin = {}
