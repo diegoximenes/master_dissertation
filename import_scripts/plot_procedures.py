@@ -79,7 +79,7 @@ def plotax_ts(ax, ts, strdt_axvline = {}, ylabel = "", ylim = None):
 	ax.set_ylabel(ylabel)
 	ax.scatter(x, y, s = 10)
 
-def plot_ts(ts, out_file_path, dt_axvline = {}, ylabel = "", ylim = None):
+def plot_ts(ts, out_file_path, dt_axvline = {}, ylabel = "", ylim = None, strdt_axvline = []):
 	strdt_bin = {}
 	for strdt in sorted(list(ts.strdt_mean.keys())): strdt_bin[strdt] = len(strdt_bin)
 
@@ -98,6 +98,8 @@ def plot_ts(ts, out_file_path, dt_axvline = {}, ylabel = "", ylim = None):
 	for dt in dt_axvline: 
 		strdt = str(dt.year) + "-" + str(dt.month).zfill(2) + "-" + str(dt.day).zfill(2) + " " + str(dt.hour).zfill(2) + ":00:00"
 		plt.axvline(strdt_bin[strdt], color = "r", linewidth = 2.0)
+	
+	for strdt in strdt_axvline: plt.axvline(strdt_bin[strdt], color = "r", linewidth = 2.0)
 
 	plt.grid()
 	plt.xticks(xticks, xticks_labels, rotation = "vertical")
