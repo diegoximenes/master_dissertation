@@ -8,7 +8,7 @@ from time_series import TimeSeries
 #PARAMETERS
 target_year, target_month = 2015, 12
 metric = "loss"
-max_segments = 10
+max_segments = 10 #not used in O(n**2) solution
 min_segment_len = 1
 #cost_type = "mse"
 #cost_type = "likelihood_normal"
@@ -21,12 +21,12 @@ date_dir = str(target_year) + "_" + str(target_month).zfill(2)
 
 def penalization(n, k):
 	if penalization_type == "aic": return 2*k
-	elif penalization_type == "sic": return np.log(n)*k
+	elif penalization_type == "sic": return 2*np.log(n)*k
 	elif penalization_type == "hannan_quinn": return np.log(np.log(n))*k
 def penalization_linear(n):
 	if penalization_type == "aic": return 2
-	elif penalization_type == "sic": return np.log(n)
-	elif penalization_type == "hannan_quinn": return np.log(np.log(n))
+	elif penalization_type == "sic": return 2*np.log(n)
+	elif penalization_type == "hannan_quinn": return 2*np.log(np.log(n))
 
 def get_mean(i, j):
 	return np.float(prefix_sum[j] - prefix_sum[i-1])/(j-i+1)
@@ -67,7 +67,7 @@ def calc_exponential_log_likelihood_matrix(data):
 			exponential_log_likelihood_mat[i][j] = (j-i+1)*np.log(lmbd) - lmbd*(prefix_sum[j] - prefix_sum[i-1])
 			
 def segment_cost(i, j):
-	if cost_type == "mse": return mse_mat[i][j]
+	if cost_type == "mse": return 2*mse_mat[i][j]
 	elif cost_type == "likelihood_normal": return -2*normal_log_likelihood_mat[i][j]
 	elif cost_type == "likelihood_exponential": return -2*exponential_log_likelihood_mat[i][j]
 
@@ -126,6 +126,7 @@ def segment_neighbourhood_linear_penalization(in_file_path, out_file_path):
 	n = len(ts_ma_compressed.y)
 	calc_prefix_sum(ts_ma_compressed.y)
 	calc_mse_matrix(ts_ma_compressed.y)
+	calc_exponential_log_likelihood_matrix(ts_ma_compressed.y)
 	if cost_type == "likelihood_normal": calc_normal_log_likelihood_matrix(ts_ma_compressed.y)
 
 	#calculate dp
@@ -155,7 +156,7 @@ def process():
 	server = "NHODTCSRV04"
 	in_file_path = "../input/" + date_dir + "/" + server + "/" + mac + ".csv"
 	out_file_path = "./test.png"
-	#segment_neighbourhood_linear_penalization(in_file_path, out_file_path)
-	segment_neighbourhood(in_file_path, out_file_path)
+	segment_neighbourhood_linear_penalization(in_file_path, out_file_path)
+	#segment_neighbourhood(in_file_path, out_file_path)
 
 process()
