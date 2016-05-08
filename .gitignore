@@ -9,3 +9,8 @@
 !*.py
 !*.c
 !*.cpp
+!*.js
+!*.html
+!*.css
+!./change_point_detection/from_unsupervised_to_supervised/javascript/d3/*
+!./change_point_detection/from_unsupervised_to_supervised/javascript/bootstrap/*
