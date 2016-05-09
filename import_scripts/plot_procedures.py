@@ -1,7 +1,6 @@
 import sys
 import pandas as pd
 import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 sys.path.append("../general_scripts/")
@@ -16,7 +15,7 @@ def get_xticks(strdt_bin):
 			xticks_labels.append(str(dt.day).zfill(2) + "/" + str(dt.month).zfill(2))
 	return xticks, xticks_labels
 
-def plot_ts_and_dist(ts, ts_dist, out_file_path, ylabel, dist_ylabel = "", dist_ylim = None):
+def plot_ts_and_dist(ts, ts_dist, out_file_path, ylabel, dist_ylabel = "", dist_ylim = None, plot_type = "plot", dist_yticks = None, dist_yticklabels = None):
 	plt.clf()
 	matplotlib.rcParams.update({'font.size': 13})
 	f, ax = plt.subplots(2, 1, figsize = (16, 12), sharex = "col")
@@ -51,8 +50,11 @@ def plot_ts_and_dist(ts, ts_dist, out_file_path, ylabel, dist_ylabel = "", dist_
 	ax[1].set_xticklabels(xticks_labels, rotation = "vertical")
 	ax[0].set_xlim([min(xticks), max(xticks) + 24])
 	if dist_ylim != None: ax[1].set_ylim(dist_ylim)
-	ax[1].plot(x_dist, y_dist)
-	
+	if dist_yticks != None: ax[1].set_yticks(dist_yticks)
+	if dist_yticklabels != None: ax[1].set_yticklabels(dist_yticklabels)
+	if plot_type == "plot": ax[1].plot(x_dist, y_dist)
+	elif plot_type == "scatter": ax[1].scatter(x_dist, y_dist)
+		
 	plt.savefig(out_file_path)
 	plt.close("all")
 
