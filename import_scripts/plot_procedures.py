@@ -1,5 +1,6 @@
 import sys
 import pandas as pd
+import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
@@ -41,6 +42,7 @@ def plot_ts_and_dist(ts, ts_dist, out_file_path, ylabel, dist_ylabel = "", dist_
 	ax[0].set_ylabel(ylabel)
 	ax[0].set_xticks(xticks)
 	ax[0].set_xlim([min(xticks), max(xticks) + 24])
+	ax[0].set_yticks(np.arange(0, 1 + 0.05, 0.05))
 	ax[0].set_ylim([-0.01, 1.01])
 	ax[0].scatter(x, y, s = 10)
 	

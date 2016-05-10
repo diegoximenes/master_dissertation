@@ -1,5 +1,4 @@
 import ghmm, sys, os
-import matplotlib.pylab as plt
 
 sys.path.append("../../import_scripts/")
 import time_series, plot_procedures
