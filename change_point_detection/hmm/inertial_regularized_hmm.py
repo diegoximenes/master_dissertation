@@ -46,26 +46,3 @@ def process():
 	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path, metric, dist_ylabel = "hidden states", plot_type = "scatter", dist_ylim = [0-0.5, number_of_states-1+0.5], dist_yticks = range(number_of_states))
 		
 process()
-
-"""
-if __name__ == "__main__":
-    '''*****************'''
-    ''' Minimal Example '''
-    '''*****************'''
-
-    ''' Fake data. Notice each observation is a row, columns are dimensions. 
-        Thus, we have 3,000 time steps of 45D data in this fake example. '''
-    data = np.random.random((3000, 45))
-    data[1500:, :] = 2.
-
-    ''' Regularization modes and parameter '''
-    rgzn_modes = GaussianHMM.RgznModes()
-    zeta = 3.
-
-    ''' Define two-state model, run it on observation data and find 
-        maximally likely hidden states, subject to regularization. '''
-    K = 2        
-    model1 = GaussianHMM(K, data, rgzn_modes.INERTIAL)
-    model1.learn(data, zeta=zeta)
-    predicted_states = model1.decode(data)
-"""

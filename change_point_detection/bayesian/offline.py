@@ -56,7 +56,7 @@ def process():
 	in_file_path = "../input/" + date_dir + "/" + server + "/" + mac + ".csv"
 	out_file_path = "./plots/bayesian_offline/" + date_dir + "/" + server + "/" + mac
 	get_change_points(in_file_path, out_file_path)	
-
+	
 	for server in os.listdir("../input/" + date_dir + "/"):
 			print server
 			create_dirs(server)

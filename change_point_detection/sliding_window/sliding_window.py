@@ -108,12 +108,11 @@ def sliding_window(in_file_path, out_file_path):
 	ts = TimeSeries(in_file_path, target_month, target_year, metric)
 	ts_compressed = time_series.get_compressed(ts)
 	ts_ma = time_series.ma_smoothing(ts)
-	ts_compressed_ma = time_series.ma_smoothing(ts_compressed)
 
 	ts_dist = TimeSeries()
-	for i in range(window_len, len(ts_compressed_ma.y) - window_len + 1):
-		strdt = ts_compressed_ma.x[i]
-		dist = distance(ts_compressed_ma.y[i - window_len : i], ts_compressed_ma.y[i : i + window_len])
+	for i in range(window_len, len(ts_compressed.y) - window_len + 1):
+		strdt = ts_compressed.x[i]
+		dist = distance(ts_compressed.y[i - window_len : i], ts_compressed.y[i : i + window_len])
 		
 		if dist != None:
 			ts_dist.strdt_mean[strdt] = dist
@@ -122,14 +121,15 @@ def sliding_window(in_file_path, out_file_path):
 	
 	dist_ylim = None
 	if (dist_type == "hellinger") or (metric == "loss" and dist_type == "mean"): dist_ylim = [-0.01, 1.01]
-	plot_procedures.plot_ts_and_dist(ts_ma, ts_dist, out_file_path + "_" + dist_type + ".png", metric, dist_type + " dist", dist_ylim)
+	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path + "_" + dist_type + ".png", metric, dist_type + " dist", dist_ylim)
 		
 def get_change_points():
 	cnt = 0
 
 	mac = "64:66:B3:50:03:A2"
 	server = "NHODTCSRV04"
-	sliding_window("../input/" + date_dir + "/" + server + "/" + mac + ".csv", "./test.png")
+	sliding_window("../input/" + date_dir + "/" + server + "/" + mac + ".csv", "./test")
+	return
 
 	for server in os.listdir("../input/" + date_dir + "/"):
 		print server
