@@ -1,0 +1,24 @@
+<html>
+<head>
+<script>
+function validate_email(email)
+{
+	var regexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return regexp.test(email);
+}
+
+function validate_form()
+{
+	valid_email = validate_email(document.forms["form"]["email"].value);
+	if(!valid_email) window.alert("E-mail is invalid.");
+	return valid_email;
+}
+</script>
+</head>
+<body>
+<form name="form" action="set_change_points.php" onsubmit="return validate_form()" method="post">
+E-mail: <input type="text" name="email">
+<input type="submit" value="Start">
+</form>
+</body>
+</html>
