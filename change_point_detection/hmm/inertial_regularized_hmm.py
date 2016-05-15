@@ -38,11 +38,11 @@ def process():
 	
 	ts_dist = TimeSeries()
 	for i in range(len(ts_compressed.x)):
-		strdt = ts_compressed.x[i]
-		ts_dist.strdt_mean[strdt] = hidden_state_path[i]
-		ts_dist.x.append(strdt)
+		dt = ts_compressed.x[i]
+		ts_dist.dt_mean[dt] = hidden_state_path[i]
+		ts_dist.x.append(dt)
 		ts_dist.y.append(hidden_state_path[i])
 	
-	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path, metric, dist_ylabel = "hidden states", plot_type = "scatter", dist_ylim = [0-0.5, number_of_states-1+0.5], dist_yticks = range(number_of_states))
+	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path, ylabel = metric, dist_ylabel = "hidden states", dist_plot_type = "scatter", dist_ylim = [0-0.5, number_of_states-1+0.5], dist_yticks = range(number_of_states))
 		
 process()

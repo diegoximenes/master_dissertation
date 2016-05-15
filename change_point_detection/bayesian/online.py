@@ -47,9 +47,9 @@ def get_change_points(in_file_path, out_file_path):
 	for i in xrange(len(prob_list)-1):
 		ts_dist.x.append(ts_compressed.x[i])
 		ts_dist.y.append(prob_list[i])
-		ts_dist.strdt_mean[ts_compressed.x[i]] = prob_list[i]
+		ts_dist.dt_mean[ts_compressed.x[i]] = prob_list[i]
 		
-	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path + ".png", metric, "p", [-0.01, 1.01])
+	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path + ".png", ylabel = metric, dist_ylabel = "p", dist_ylim = [-0.01, 1.01])
 
 def create_dirs(server):
 	if os.path.exists("./plots/") == False: os.makedirs("./plots/")

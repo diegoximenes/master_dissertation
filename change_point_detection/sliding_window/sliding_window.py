@@ -1,9 +1,6 @@
 import os, math, sys
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pylab as plt
 from pyemd import emd
 
 sys.path.append("../../import_scripts/")
@@ -14,11 +11,11 @@ from time_series import TimeSeries
 target_year, target_month = 2015, 12
 metric = "loss"
 window_len = 24
-#dist_type = "hellinger"
+dist_type = "hellinger"
 #dist_type = "mean"
 #dist_type = "emd"
 #dist_type = "bhattacharyya"
-dist_type = "jensen_shannon"
+#dist_type = "jensen_shannon"
 
 date_dir = str(target_year) + "_" + str(target_month).zfill(2)
 
@@ -108,20 +105,20 @@ def sliding_window(in_file_path, out_file_path):
 	ts = TimeSeries(in_file_path, target_month, target_year, metric)
 	ts_compressed = time_series.get_compressed(ts)
 	ts_ma = time_series.ma_smoothing(ts)
-
-	ts_dist = TimeSeries()
+	
+	ts_dist = time_series.dist_ts(ts)
 	for i in range(window_len, len(ts_compressed.y) - window_len + 1):
-		strdt = ts_compressed.x[i]
+		dt = ts_compressed.x[i]
 		dist = distance(ts_compressed.y[i - window_len : i], ts_compressed.y[i : i + window_len])
 		
 		if dist != None:
-			ts_dist.strdt_mean[strdt] = dist
-			ts_dist.x.append(strdt)
+			ts_dist.dt_mean[dt] = dist
+			ts_dist.x.append(dt)
 			ts_dist.y.append(dist)
-	
+
 	dist_ylim = None
 	if (dist_type == "hellinger") or (metric == "loss" and dist_type == "mean"): dist_ylim = [-0.01, 1.01]
-	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path + "_" + dist_type + ".png", metric, dist_type + " dist", dist_ylim)
+	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path + "_" + dist_type + ".png", ylabel = metric, dist_ylabel = dist_type + " dist", dist_ylim = dist_ylim)
 		
 def get_change_points():
 	cnt = 0

@@ -1,9 +1,6 @@
 import os, math, sys
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pylab as plt
 
 import cProfile
 import bayesian_changepoint_detection.offline_changepoint_detection as offcd
@@ -35,13 +32,13 @@ def get_change_points(in_file_path, out_file_path):
 	#print "len(prob_list)=" + str(len(prob_list))
 	#print "len(ts_compressed.x)=" + str(len(ts_compressed.x))
 
-	ts_dist = TimeSeries()
+	ts_dist = time_series.dist_ts(ts_compressed)
 	for i in xrange(len(ts_compressed.x)-1):
 		ts_dist.x.append(ts_compressed.x[i])
 		ts_dist.y.append(prob_list[i])
-		ts_dist.strdt_mean[ts_compressed.x[i]] = prob_list[i]
+		ts_dist.dt_mean[ts_compressed.x[i]] = prob_list[i]
 		
-	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path + ".png", metric, "p", [-0.01, 1.01])
+	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path + ".png", ylabel = metric, dist_ylabel = "p", dist_ylim = [-0.01, 1.01])
 
 def create_dirs(server):
 	if os.path.exists("./plots/") == False: os.makedirs("./plots/")
@@ -56,7 +53,8 @@ def process():
 	in_file_path = "../input/" + date_dir + "/" + server + "/" + mac + ".csv"
 	out_file_path = "./plots/bayesian_offline/" + date_dir + "/" + server + "/" + mac
 	get_change_points(in_file_path, out_file_path)	
-	
+	return
+		
 	for server in os.listdir("../input/" + date_dir + "/"):
 			print server
 			create_dirs(server)

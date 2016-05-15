@@ -1,12 +1,8 @@
 from pymongo import MongoClient
 import pytz, os, sys, calendar
 from datetime import datetime
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pylab as plt
-import numpy as np
 
-sys.path.append("/home/diegoximenes/Documents/data_analysis/import_scripts/")
+sys.path.append("../import_scripts/")
 import datetime_procedures, read_input, database
 
 client = MongoClient("cabul", 27017)

@@ -110,9 +110,9 @@ def segment_neighbourhood(in_file_path, out_file_path):
 				n_segments -= 1
 				break
 	
-	strdt_cp = []
-	for cp in change_points: strdt_cp.append(ts_ma_compressed.x[cp-1])
-	plot_procedures.plot_ts(ts, out_file_path, ylabel = "loss", ylim = [-0.01, 1.01], strdt_axvline = strdt_cp)
+	dt_cp = []
+	for cp in change_points: dt_cp.append(ts_ma_compressed.x[cp-1])
+	plot_procedures.plot_ts(ts, out_file_path, ylabel = "loss", ylim = [-0.01, 1.01], dt_axvline = dt_cp)
 
 """
 can only be used on penalization(n, k) = f(n)*k
@@ -147,9 +147,9 @@ def segment_neighbourhood_linear_penalization(in_file_path, out_file_path):
 				i = j-1
 				break
 	
-	strdt_cp = []
-	for cp in change_points: strdt_cp.append(ts_ma_compressed.x[cp-1])
-	plot_procedures.plot_ts(ts, out_file_path, ylabel = "loss", ylim = [-0.01, 1.01], strdt_axvline = strdt_cp)
+	dt_cp = []
+	for cp in change_points: dt_cp.append(ts_ma_compressed.x[cp-1])
+	plot_procedures.plot_ts(ts, out_file_path, ylabel = "loss", ylim = [-0.01, 1.01], dt_axvline = dt_cp)
 
 def process():
 	mac = "64:66:B3:50:03:A2"

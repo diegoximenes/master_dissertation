@@ -34,11 +34,11 @@ def hmm_gaussian_distribution(ts, A, B, pi, out_file_path):
 	print "loglikelihood=" + str(loglikelihood)
 	
 	hidden_state_path = model.viterbi(obs_seq)[0]
-	ts_dist = TimeSeries()
+	ts_dist = time_series.dist_ts(ts)
 	for i in range(len(ts.x)):
-		strdt = ts.x[i]
-		ts_dist.strdt_mean[strdt] = hidden_state_path[i]
-		ts_dist.x.append(strdt)
+		dt = ts.x[i]
+		ts_dist.dt_mean[dt] = hidden_state_path[i]
+		ts_dist.x.append(dt)
 		ts_dist.y.append(hidden_state_path[i])
 	
 	n = len(pi)
@@ -49,7 +49,7 @@ def hmm_gaussian_distribution(ts, A, B, pi, out_file_path):
 		sigma2 = model.getEmission(i)[1]
 		hidden_states_ticklabels.append("(%.2f"%mu + ", %.2f)"%sigma2)
 		
-	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path + ".png", metric, dist_ylabel = "hidden states: (mu, sigma**2)", plot_type = "scatter", dist_ylim = [0-0.5, n-1+0.5], dist_yticks = hidden_states_ticks, dist_yticklabels = hidden_states_ticklabels)
+	plot_procedures.plot_ts_and_dist(ts, ts_dist, out_file_path + ".png", ylabel = metric, dist_ylabel = "hidden states: (mu, sigma**2)", dist_plot_type = "scatter", dist_ylim = [0-0.5, n-1+0.5], dist_yticks = hidden_states_ticks, dist_yticklabels = hidden_states_ticklabels)
 		
 def process_continuous(in_file_path):	
 	ts = TimeSeries(in_file_path, target_month, target_year, metric)
