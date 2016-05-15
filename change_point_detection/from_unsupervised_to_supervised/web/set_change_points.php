@@ -1,3 +1,5 @@
+<!doctype html>
+
 <?php
 session_start();
 
@@ -79,7 +81,6 @@ for($i=1; $i<count($csv_file); ++$i)
 }
 $js_dt_array = json_encode($dt_array);
 $js_loss_array = json_encode($loss_array);
-
 ?>
 
 <html>
@@ -185,7 +186,7 @@ var margin = {top: 20, right: 20, bottom: 60, left: 40},
 var page_width = $(window).width(), page_height = $(window).height();
 	margin = {top: 20, right: 20, bottom: 60, left: 40},
 	width = page_width - margin.left - margin.right - 230,
-	height = page_height - margin.top - margin.bottom - 10;
+	height = page_height - margin.top - margin.bottom - 12;
 width = Math.max(width, 900);
 height = Math.max(height, 400);
 
