@@ -11,8 +11,8 @@ metric = "loss"
 max_segments = 10 #not used in O(n**2) solution
 min_segment_len = 1
 #cost_type = "mse"
-cost_type = "likelihood_normal"
-#cost_type = "likelihood_exponential"
+#cost_type = "likelihood_normal"
+cost_type = "likelihood_exponential"
 #cost_type = "likelihood_all" #consider that all likelihood distributions can be used
 #penalization_type = "aic"
 penalization_type = "sic"
@@ -68,6 +68,9 @@ def calc_exponential_log_likelihood_matrix(data):
 			exponential_log_likelihood_mat[i][j] = (j-i+1)*np.log(lmbd) - lmbd*(prefix_sum[j] - prefix_sum[i-1])
 			
 def segment_cost(i, j):
+	#segment has only one value: degenerate distribution
+	if ("likelihood" in cost_type) and (prefix_sum[j] - prefix_sum[i-1] == 0): return (-2*np.log(1), "likelihood_degenerate")
+
 	if cost_type == "mse": return (2*mse_mat[i][j], "mse")
 	elif cost_type == "likelihood_normal": return (-2*normal_log_likelihood_mat[i][j], "likelihood_normal")
 	elif cost_type == "likelihood_exponential": return (-2*exponential_log_likelihood_mat[i][j], "likelihood_exponential")
