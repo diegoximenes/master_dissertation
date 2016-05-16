@@ -12,7 +12,8 @@ max_segments = 10 #not used in O(n**2) solution
 min_segment_len = 1
 #cost_type = "mse"
 #cost_type = "likelihood_normal"
-cost_type = "likelihood_exponential"
+#cost_type = "likelihood_exponential"
+cost_type = "likelihood_all" #consider that all likelihood distributions can be used
 #penalization_type = "aic"
 penalization_type = "sic"
 #penalization_type = "hannan_quinn"
@@ -67,21 +68,35 @@ def calc_exponential_log_likelihood_matrix(data):
 			exponential_log_likelihood_mat[i][j] = (j-i+1)*np.log(lmbd) - lmbd*(prefix_sum[j] - prefix_sum[i-1])
 			
 def segment_cost(i, j):
-	if cost_type == "mse": return 2*mse_mat[i][j]
-	elif cost_type == "likelihood_normal": return -2*normal_log_likelihood_mat[i][j]
-	elif cost_type == "likelihood_exponential": return -2*exponential_log_likelihood_mat[i][j]
+	if cost_type == "mse": return (2*mse_mat[i][j], "mse")
+	elif cost_type == "likelihood_normal": return (-2*normal_log_likelihood_mat[i][j], "likelihood_normal")
+	elif cost_type == "likelihood_exponential": return (-2*exponential_log_likelihood_mat[i][j], "likelihood_exponential")
+	elif cost_type == "likelihood_all": 	
+		normal_cost = -2*normal_log_likelihood_mat[i][j]
+		exponential_cost = -2*exponential_log_likelihood_mat[i][j]
+		if normal_cost <= exponential_cost: return (normal_cost, "likelihood_normal")
+		else: return (exponential_cost, "likelihood_exponential")
+
+def write_change_points(change_points, segment_type, ts, out_file_path):
+	file = open(out_file_path + "_change_points.csv", "w")
+	file.write("change_point\n")
+	for cp in change_points: file.write(str(ts.x[cp-1]) + "\n")
+	file.close()
+
+	file = open(out_file_path + "_segment_type.csv", "w")
+	file.write("segment_type,left_point,right_point\n")
+	for p in segment_type: file.write(str(p[0]) + "," + str(ts.x[p[1]-1]) + "," + str(ts.x[p[2]-1]) + "\n")
+	file.close()
 
 def segment_neighbourhood(in_file_path, out_file_path):
 	ts = TimeSeries(in_file_path, target_month, target_year, metric)
 	ts_compressed = time_series.get_compressed(ts)
-	ts_ma = time_series.ma_smoothing(ts)
-	ts_ma_compressed = time_series.get_compressed(ts_ma)
 	
-	n = len(ts_ma_compressed.y)
-	calc_prefix_sum(ts_ma_compressed.y)
-	calc_mse_matrix(ts_ma_compressed.y)
-	calc_exponential_log_likelihood_matrix(ts_ma_compressed.y)
-	if cost_type == "likelihood_normal": calc_normal_log_likelihood_matrix(ts_ma_compressed.y)
+	n = len(ts_compressed.y)
+	calc_prefix_sum(ts_compressed.y)
+	calc_mse_matrix(ts_compressed.y)
+	calc_exponential_log_likelihood_matrix(ts_compressed.y)
+	if cost_type == "likelihood_all" or cost_type == "likelihood_normal": calc_normal_log_likelihood_matrix(ts_compressed.y)
 
 	#calculate dp
 	dp = np.zeros(shape = (max_segments+1, n+1))	
@@ -91,7 +106,7 @@ def segment_neighbourhood(in_file_path, out_file_path):
 		for i in xrange(1, n+1):
 			dp[n_segments][i] = float("inf")
 			for j in xrange(1, i - min_segment_len+1 + 1): 
-				dp[n_segments][i] = min(dp[n_segments][i], dp[n_segments-1][j-1] + segment_cost(j, i))
+				dp[n_segments][i] = min(dp[n_segments][i], dp[n_segments-1][j-1] + segment_cost(j, i)[0])
 	
 	#get best number of segments
 	best_n_segments = 1
@@ -100,19 +115,23 @@ def segment_neighbourhood(in_file_path, out_file_path):
 			best_n_segments = n_segments
 
 	#backtrack: get change points
-	change_points = []
+	segment_type, change_points = [], []
 	i, n_segments = n, best_n_segments
 	while n_segments > 1:
 		for j in range(1, i - min_segment_len+1 + 1):
-			if np.isclose(dp[n_segments][i], dp[n_segments-1][j-1] + segment_cost(j, i)):
+			if np.isclose(dp[n_segments][i], dp[n_segments-1][j-1] + segment_cost(j, i)[0]):
+				segment_type.append((segment_cost(j, i)[1], j, i))
 				change_points.append(j) #CHECK THIS INDEX
 				i = j-1
 				n_segments -= 1
 				break
+	if change_points[-1] > 1: segment_type.append((segment_cost(1, change_points[-1]-1)[1], 1, change_points[-1]-1))
 	
+	write_change_points(change_points, segment_type, ts_compressed, out_file_path)
+			
 	dt_cp = []
-	for cp in change_points: dt_cp.append(ts_ma_compressed.x[cp-1])
-	plot_procedures.plot_ts(ts, out_file_path, ylabel = "loss", ylim = [-0.01, 1.01], dt_axvline = dt_cp)
+	for cp in change_points: dt_cp.append(ts_compressed.x[cp-1])
+	plot_procedures.plot_ts(ts, out_file_path + ".png", ylabel = "loss", ylim = [-0.02, 1.02], dt_axvline = dt_cp)
 
 """
 can only be used on penalization(n, k) = f(n)*k
@@ -120,14 +139,12 @@ can only be used on penalization(n, k) = f(n)*k
 def segment_neighbourhood_linear_penalization(in_file_path, out_file_path):
 	ts = TimeSeries(in_file_path, target_month, target_year, metric)
 	ts_compressed = time_series.get_compressed(ts)
-	ts_ma = time_series.ma_smoothing(ts)
-	ts_ma_compressed = time_series.get_compressed(ts_ma)
 	
-	n = len(ts_ma_compressed.y)
-	calc_prefix_sum(ts_ma_compressed.y)
-	calc_mse_matrix(ts_ma_compressed.y)
-	calc_exponential_log_likelihood_matrix(ts_ma_compressed.y)
-	if cost_type == "likelihood_normal": calc_normal_log_likelihood_matrix(ts_ma_compressed.y)
+	n = len(ts_compressed.y)
+	calc_prefix_sum(ts_compressed.y)
+	calc_mse_matrix(ts_compressed.y)
+	calc_exponential_log_likelihood_matrix(ts_compressed.y)
+	if cost_type == "likelihood_all" or cost_type == "likelihood_normal": calc_normal_log_likelihood_matrix(ts_compressed.y)
 
 	#calculate dp
 	dp = np.zeros(n+1)	
@@ -135,28 +152,32 @@ def segment_neighbourhood_linear_penalization(in_file_path, out_file_path):
 	for i in xrange(1, n+1):
 		dp[i] = float("inf")
 		for j in xrange(1, i - min_segment_len+1 + 1): 
-			dp[i] = min(dp[i], dp[j-1] + segment_cost(j, i) + penalization_linear(n))
+			dp[i] = min(dp[i], dp[j-1] + segment_cost(j, i)[0] + penalization_linear(n))
 	
 	#backtrack: get change points
-	change_points = []
+	segment_type, change_points = [], []
 	i = n
 	while i > 1:
 		for j in range(1, i - min_segment_len + 1):
-			if np.isclose(dp[i], dp[j-1] + segment_cost(j, i) + penalization_linear(n)):
+			if np.isclose(dp[i], dp[j-1] + segment_cost(j, i)[0] + penalization_linear(n)):
+				segment_type.append(segment_cost(j, i)[1])
 				change_points.append(j) #CHECK THIS INDEX
 				i = j-1
 				break
+	if change_points[-1] > 1: segment_type.append((segment_cost(1, change_points[-1]-1)[1], 1, change_points[-1]-1))
 	
+	write_change_points(change_points, segment_type, ts_compressed, out_file_path)
+
 	dt_cp = []
-	for cp in change_points: dt_cp.append(ts_ma_compressed.x[cp-1])
-	plot_procedures.plot_ts(ts, out_file_path, ylabel = "loss", ylim = [-0.01, 1.01], dt_axvline = dt_cp)
+	for cp in change_points: dt_cp.append(ts_compressed.x[cp-1])
+	plot_procedures.plot_ts(ts, out_file_path + ".png", ylabel = "loss", ylim = [-0.02, 1.02], dt_axvline = dt_cp)
 
 def process():
 	mac = "64:66:B3:50:03:A2"
 	server = "NHODTCSRV04"
 	in_file_path = "../input/" + date_dir + "/" + server + "/" + mac + ".csv"
-	out_file_path = "./test.png"
-	segment_neighbourhood_linear_penalization(in_file_path, out_file_path)
-	#segment_neighbourhood(in_file_path, out_file_path)
+	out_file_path = "./test"
+	#segment_neighbourhood_linear_penalization(in_file_path, out_file_path)
+	segment_neighbourhood(in_file_path, out_file_path)
 
 process()

@@ -40,8 +40,14 @@ function validate_form()
 	return valid_email;
 }
 </script>
+<title>Set Change Points</title>
 </head>
 <body>
+<ul>
+<li> Indicate the homogeneous segments of the time series: click with the left button of the mouse where you think the statistical properties(mean, variance, periodicity, etc) have changed. </li>
+<li> Don't forget to click in "Save and next". </li>
+<li> Your e-mail is only used to identify you in the system, avoiding that you check the same time series more than once. </li>
+</ul>
 <form name="form" action="set_change_points.php" onsubmit="return validate_form()" method="post">
 E-mail: <input type="text" name="email">
 <input type="submit" value="Start" class="button">
