@@ -12,8 +12,8 @@ max_segments = 10 #not used in O(n**2) solution
 min_segment_len = 1
 #cost_type = "mse"
 #cost_type = "likelihood_normal"
-#cost_type = "likelihood_exponential"
-cost_type = "likelihood_all" #consider that all likelihood distributions can be used
+cost_type = "likelihood_exponential"
+#cost_type = "likelihood_all" #consider that all likelihood distributions can be used
 #penalization_type = "aic"
 penalization_type = "sic"
 #penalization_type = "hannan_quinn"
@@ -160,7 +160,7 @@ def segment_neighbourhood_linear_penalization(in_file_path, out_file_path):
 	while i > 1:
 		for j in range(1, i - min_segment_len + 1):
 			if np.isclose(dp[i], dp[j-1] + segment_cost(j, i)[0] + penalization_linear(n)):
-				segment_type.append(segment_cost(j, i)[1])
+				segment_type.append((segment_cost(j, i)[1], j, i))
 				change_points.append(j) #CHECK THIS INDEX
 				i = j-1
 				break
@@ -177,7 +177,7 @@ def process():
 	server = "NHODTCSRV04"
 	in_file_path = "../input/" + date_dir + "/" + server + "/" + mac + ".csv"
 	out_file_path = "./test"
-	#segment_neighbourhood_linear_penalization(in_file_path, out_file_path)
-	segment_neighbourhood(in_file_path, out_file_path)
+	segment_neighbourhood_linear_penalization(in_file_path, out_file_path)
+	#segment_neighbourhood(in_file_path, out_file_path)
 
 process()
