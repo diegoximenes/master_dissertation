@@ -11,8 +11,8 @@ metric = "loss"
 max_segments = 10 #not used in O(n**2) solution
 min_segment_len = 1
 #cost_type = "mse"
-#cost_type = "likelihood_normal"
-cost_type = "likelihood_exponential"
+cost_type = "likelihood_normal"
+#cost_type = "likelihood_exponential"
 #cost_type = "likelihood_all" #consider that all likelihood distributions can be used
 #penalization_type = "aic"
 penalization_type = "sic"
@@ -23,7 +23,7 @@ date_dir = str(target_year) + "_" + str(target_month).zfill(2)
 def penalization(n, k):
 	if penalization_type == "aic": return 2*k
 	elif penalization_type == "sic": return 2*np.log(n)*k
-	elif penalization_type == "hannan_quinn": return np.log(np.log(n))*k
+	elif penalization_type == "hannan_quinn": return 2*np.log(np.log(n))*k
 def penalization_linear(n):
 	if penalization_type == "aic": return 2
 	elif penalization_type == "sic": return 2*np.log(n)
@@ -158,7 +158,7 @@ def segment_neighbourhood_linear_penalization(in_file_path, out_file_path):
 	segment_type, change_points = [], []
 	i = n
 	while i > 1:
-		for j in range(1, i - min_segment_len + 1):
+		for j in range(1, i - min_segment_len+1 + 1):
 			if np.isclose(dp[i], dp[j-1] + segment_cost(j, i)[0] + penalization_linear(n)):
 				segment_type.append((segment_cost(j, i)[1], j, i))
 				change_points.append(j) #CHECK THIS INDEX
