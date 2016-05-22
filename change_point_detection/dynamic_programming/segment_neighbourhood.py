@@ -9,11 +9,11 @@ from time_series import TimeSeries
 target_year, target_month = 2015, 12
 metric = "loss"
 max_segments = 10 #not used in O(n**2) solution
-min_segment_len = 1
+min_segment_len = 10
 #cost_type = "mse"
 #cost_type = "likelihood_normal"
-cost_type = "likelihood_exponential"
-#cost_type = "likelihood_all" #consider that all likelihood distributions can be used
+#cost_type = "likelihood_exponential"
+cost_type = "likelihood_poisson"
 #penalization_type = "aic"
 penalization_type = "sic"
 #penalization_type = "hannan_quinn"
@@ -31,6 +31,19 @@ def penalization_linear(n):
 
 def get_mean(i, j):
 	return np.float(prefix_sum[j] - prefix_sum[i-1])/(j-i+1)
+
+def segment_is_degenerate(i, j):
+	if (same_left[j] >= (j-i+1)): return True
+	return False
+
+def calc_same_left(data):
+	global same_left
+	n = len(data)
+	same_left = np.zeros(n+1)
+	same_left[1] = 1
+	for i in xrange(2, n+1): 
+		if data[i-1-1] == data[i-1]: same_left[i] = 1 + same_left[i-1]
+		else: same_left[i] = 1
 
 def calc_prefix_sum(data):
 	global prefix_sum
@@ -54,9 +67,9 @@ def calc_normal_log_likelihood_matrix(data):
 	normal_log_likelihood_mat = np.zeros(shape = (n+1, n+1))
 	for i in xrange(1, n+1):
 		for j in xrange(i+1, n+1):
+			if (segment_is_degenerate(i, j)): continue
 			squared_std = mse_mat[i][j]
-			if np.isclose(squared_std, 0): normal_log_likelihood_mat[i][j] = np.log(1)
-			else: normal_log_likelihood_mat[i][j] = -0.5*(j-i+1)*np.log(2*np.pi*squared_std) - 0.5*(j-i+1)
+			normal_log_likelihood_mat[i][j] = -0.5*(j-i+1)*np.log(2*np.pi*squared_std) - 0.5*(j-i+1)
 
 def calc_exponential_log_likelihood_matrix(data):
 	global exponential_log_likelihood_mat 
@@ -64,21 +77,34 @@ def calc_exponential_log_likelihood_matrix(data):
 	exponential_log_likelihood_mat = np.zeros(shape = (n+1, n+1))
 	for i in xrange(1, n+1):
 		for j in xrange(i+1, n+1):
+			if (segment_is_degenerate(i, j)): continue
 			lmbd = np.float(j-i+1)/(prefix_sum[j] - prefix_sum[i-1])
 			exponential_log_likelihood_mat[i][j] = (j-i+1)*np.log(lmbd) - lmbd*(prefix_sum[j] - prefix_sum[i-1])
-			
+
+def calc_prefix_sum_log_factorial(data):
+	global prefix_sum_log_factorial_mat
+	n = len(data)
+	prefix_sum_log_factorial_mat = np.zeros(shape = n+1)
+	for i in xrange(1, n+1): prefix_sum_log_factorial_mat[i] = math.log(math.factorial(int(data[i-1]*100))) + prefix_sum_log_factorial_mat[i-1]
+
+def calc_poisson_log_likelihood_matrix(data):
+	global poisson_log_likelihood_mat
+	n = len(data)
+	poisson_log_likelihood_mat = np.zeros(shape = (n+1, n+1))
+	for i in xrange(1, n+1):
+		for j in xrange(i+1, n+1):
+			if (segment_is_degenerate(i, j)): continue
+			lmbd = float(prefix_sum[j] - prefix_sum[i-1])/(j-i+1)
+			poisson_log_likelihood_mat[i][j] = -(j-i+1)*lmbd + (prefix_sum[j] - prefix_sum[i-1])*math.log(lmbd) - (prefix_sum_log_factorial_mat[j] - prefix_sum_log_factorial_mat[i-1])
+
 def segment_cost(i, j):
 	#segment has only one value: degenerate distribution
-	if ("likelihood" in cost_type) and (prefix_sum[j] - prefix_sum[i-1] == 0): return (-2*np.log(1), "likelihood_degenerate")
+	if ("likelihood" in cost_type) and segment_is_degenerate(i, j): return (-2*np.log(1), "likelihood_degenerate")
 
 	if cost_type == "mse": return (2*mse_mat[i][j], "mse")
 	elif cost_type == "likelihood_normal": return (-2*normal_log_likelihood_mat[i][j], "likelihood_normal")
 	elif cost_type == "likelihood_exponential": return (-2*exponential_log_likelihood_mat[i][j], "likelihood_exponential")
-	elif cost_type == "likelihood_all": 	
-		normal_cost = -2*normal_log_likelihood_mat[i][j]
-		exponential_cost = -2*exponential_log_likelihood_mat[i][j]
-		if normal_cost <= exponential_cost: return (normal_cost, "likelihood_normal")
-		else: return (exponential_cost, "likelihood_exponential")
+	elif cost_type == "likelihood_poisson": return (-2*poisson_log_likelihood_mat[i][j], "likelihood_poisson")
 
 def write_change_points(change_points, segment_type, ts, out_file_path):
 	file = open(out_file_path + "_change_points.csv", "w")
@@ -96,11 +122,15 @@ def segment_neighbourhood(in_file_path, out_file_path):
 	ts_compressed = time_series.get_compressed(ts)
 	
 	n = len(ts_compressed.y)
+	calc_same_left(ts_compressed.y)
 	calc_prefix_sum(ts_compressed.y)
 	calc_mse_matrix(ts_compressed.y)
-	calc_exponential_log_likelihood_matrix(ts_compressed.y)
-	if cost_type == "likelihood_all" or cost_type == "likelihood_normal": calc_normal_log_likelihood_matrix(ts_compressed.y)
-
+	if cost_type == "likelihood_exponential": calc_exponential_log_likelihood_matrix(ts_compressed.y)
+	elif cost_type == "likelihood_normal": calc_normal_log_likelihood_matrix(ts_compressed.y)
+	elif cost_type == "likelihood_poisson":
+		calc_prefix_sum_log_factorial(ts_compressed.y)
+		calc_poisson_log_likelihood_matrix(ts_compressed.y)
+		
 	#calculate dp
 	dp = np.zeros(shape = (max_segments+1, n+1))	
 	for i in xrange(1, n+1): dp[0][i] = float("inf")
@@ -108,7 +138,8 @@ def segment_neighbourhood(in_file_path, out_file_path):
 		print n_segments
 		for i in xrange(1, n+1):
 			dp[n_segments][i] = float("inf")
-			for j in xrange(1, i - min_segment_len+1 + 1): 
+			for j in xrange(1, i - min_segment_len+1 + 1):
+				if segment_is_degenerate(j, i): continue 
 				dp[n_segments][i] = min(dp[n_segments][i], dp[n_segments-1][j-1] + segment_cost(j, i)[0])
 	
 	#get best number of segments
@@ -122,6 +153,7 @@ def segment_neighbourhood(in_file_path, out_file_path):
 	i, n_segments = n, best_n_segments
 	while n_segments > 1:
 		for j in range(1, i - min_segment_len+1 + 1):
+			if segment_is_degenerate(j, i): continue 
 			if np.isclose(dp[n_segments][i], dp[n_segments-1][j-1] + segment_cost(j, i)[0]):
 				segment_type.append((segment_cost(j, i)[1], j, i))
 				change_points.append(j) #CHECK THIS INDEX
@@ -139,15 +171,17 @@ def segment_neighbourhood(in_file_path, out_file_path):
 """
 can only be used on penalization(n, k) = f(n)*k
 """
+"""
 def segment_neighbourhood_linear_penalization(in_file_path, out_file_path):
 	ts = TimeSeries(in_file_path, target_month, target_year, metric)
 	ts_compressed = time_series.get_compressed(ts)
-	
+
 	n = len(ts_compressed.y)
+	calc_same_left(ts_compressed.y)
 	calc_prefix_sum(ts_compressed.y)
 	calc_mse_matrix(ts_compressed.y)
-	calc_exponential_log_likelihood_matrix(ts_compressed.y)
-	if cost_type == "likelihood_all" or cost_type == "likelihood_normal": calc_normal_log_likelihood_matrix(ts_compressed.y)
+	if cost_type == "likelihood_exponential": calc_exponential_log_likelihood_matrix(ts_compressed.y)
+	elif cost_type == "likelihood_normal": calc_normal_log_likelihood_matrix(ts_compressed.y)
 
 	#calculate dp
 	dp = np.zeros(n+1)	
@@ -174,13 +208,14 @@ def segment_neighbourhood_linear_penalization(in_file_path, out_file_path):
 	dt_cp = []
 	for cp in change_points: dt_cp.append(ts_compressed.x[cp-1])
 	plot_procedures.plot_ts(ts, out_file_path + ".png", ylabel = "loss", ylim = [-0.02, 1.02], dt_axvline = dt_cp)
+"""
 
 def process():
 	mac = "64:66:B3:50:03:A2"
 	server = "NHODTCSRV04"
 	in_file_path = "../input/" + date_dir + "/" + server + "/" + mac + ".csv"
 	out_file_path = "./test"
-	segment_neighbourhood_linear_penalization(in_file_path, out_file_path)
-	#segment_neighbourhood(in_file_path, out_file_path)
+	#segment_neighbourhood_linear_penalization(in_file_path, out_file_path)
+	segment_neighbourhood(in_file_path, out_file_path)
 
 process()
