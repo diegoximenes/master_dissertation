@@ -1,4 +1,71 @@
 <!doctype html>
+<html>
+<head>
+<title>Set Change Points</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="./libs/d3.min.js"></script>
+<script src="./libs/jquery-1.12.3.min.js"></script>
+
+<style>
+
+body 
+{
+	font: 10px sans-serif;
+}
+
+.axis path,
+.axis line 
+{
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+
+.tick line
+{
+	opacity: 0.1;
+}
+
+.dot 
+{
+	stroke: #000;
+}
+
+.overlay 
+{
+	fill: none;
+	pointer-events: all;
+}
+
+.button 
+{
+	background-color: #008CBA;
+	border: none;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	border-radius: 4px;
+	border: 2px solid #008CBA;
+	cursor: pointer;
+	font-size: 13px;
+	padding: 6px 6px;
+	width: 180px;
+	-webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+.button:hover
+{
+	color: #008CBA;
+	background-color: white;
+	border: 2px solid #008CBA;
+}
+
+</style>
+</head>
 
 <?php
 session_start();
@@ -83,76 +150,19 @@ $js_dt_array = json_encode($dt_array);
 $js_loss_array = json_encode($loss_array);
 ?>
 
-<html>
-<head>
-<title>Set Change Points</title>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<style>
-
-body {
-  font: 10px sans-serif;
-}
-
-.axis path,
-.axis line 
-{
-	fill: none;
-	stroke: #000;
-	shape-rendering: crispEdges;
-}
-
-.tick line
-{
-	opacity: 0.1;
-}
-
-.dot 
-{
-	stroke: #000;
-}
-
-.overlay 
-{
-	fill: none;
-	pointer-events: all;
-}
-
-.button {
-	background-color: #008CBA;
-	border: none;
-	color: white;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	border-radius: 4px;
-	border: 2px solid #008CBA;
-	cursor: pointer;
-	font-size: 13px;
-	padding: 6px 6px;
-	width: 180px;
-	-webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
-}
-.button:hover
-{
-	color: #008CBA;
-	background-color: white;
-	border: 2px solid #008CBA;
-}
-
-</style>
-</head>
 <body>
 
-<script src="./libs/d3.min.js"></script>
-<script src="./libs/jquery-1.12.3.min.js"></script>
+<div id="div_plot" align="left" style="float: left"></div>
 
-<div>
-<div id="div_plot" align="left" style="float: left">
 <script>
+
+/*
+function sleepFor( sleepDuration ){
+    var now = new Date().getTime();
+    while(new Date().getTime() < now + sleepDuration){} 
+}
+sleepFor(1000);
+*/
 
 Date.prototype.addDays = function(days) {
     var dat = new Date(this.valueOf())
@@ -222,7 +232,6 @@ svg.append("text")
 	.style("font-size", "13px")
 	.attr("class", "y label")
 	.attr("text-anchor", "end")
-	.attr("dx", "-24em")
 	.attr("dy", "-2.3em")
 	.attr("transform", "rotate(-90)")
 	.text("loss fraction");
@@ -293,8 +302,18 @@ function remove_change_point()
 	}
 }
 
+function clear_page()
+{
+	svg.selectAll("overlay").remove();
+	$("#div_button").empty();
+	$("#div_plot").empty();
+	$("#div_loading").html("<h1>loading</h1>");
+}
+
 function save_change_points()
 {
+	clear_page();
+	
 	json_change_points_array = JSON.stringify(change_points_array);
 	//window.alert(json_change_points_array);
 		
@@ -303,15 +322,20 @@ function save_change_points()
 	$("#change_points_form").submit();
 }
 
+$(window).on('beforeunload', function() { clear_page(); });
+
 </script>
-</div>
-<div align="left" style="float: left">
+
+<div id="div_button" align="left" style="float: left">
 <div style="padding-top:6px">
 <button type="button" class="button" onclick="remove_change_point()">Remove last change point</button><br>
 </div>
 <div style="padding-top:6px">
 <button type="button" class="button" onclick="save_change_points()">Save and next</button>
 </div>
+</div>
+
+<div id="div_loading" align="center">
 </div>
 <body>
 </html>
