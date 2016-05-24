@@ -156,13 +156,7 @@ $js_loss_array = json_encode($loss_array);
 
 <script>
 
-/*
-function sleepFor( sleepDuration ){
-    var now = new Date().getTime();
-    while(new Date().getTime() < now + sleepDuration){} 
-}
-sleepFor(1000);
-*/
+var compress_time_series = true;
 
 Date.prototype.addDays = function(days) {
     var dat = new Date(this.valueOf())
@@ -188,30 +182,47 @@ console.log("date_end=" + date_end);
 console.log(date_array);
 */
 
-/*
-var margin = {top: 20, right: 20, bottom: 60, left: 40},
-	width = 960 - margin.left - margin.right,
-	height = 600 - margin.top - margin.bottom;
-*/
+//get data
+var dt_array = <?php echo $js_dt_array; ?>;
+var loss_array = <?php echo $js_loss_array; ?>;
+var pt_array = new Array();
+for(i=0; i<dt_array.length; ++i)
+{
+	var format = d3.time.format("%Y-%m-%d %H:%M:%S");
+	dt_array[i] = format.parse(dt_array[i].slice(0,19));
+	
+	//ignore point outside date range
+	if((dt_array[i].getTime() < date_start.getTime()) || (dt_array[i].getTime() >= date_end.getTime())) continue;
 
-var page_width = $(window).width(), page_height = $(window).height();
+	pt_array.push({dt: dt_array[i], loss: loss_array[i]});
+}
+pt_array.sort(function cmp(pt1, pt2) { return (pt1.dt.getTime() - pt2.dt.getTime()); });
+
+var page_width = $(window).width(), page_height = $(window).height(),
 	margin = {top: 20, right: 20, bottom: 60, left: 40},
 	width = page_width - margin.left - margin.right - 230,
 	height = page_height - margin.top - margin.bottom - 12;
 width = Math.max(width, 900);
 height = Math.max(height, 400);
 
-var x = d3.time.scale()
-	.range([0, width]);
-var y = d3.scale.linear()
-	.range([height, 0]);
+var x;
+if(compress_time_series) x = d3.scale.linear().range([0, width]);
+else x = d3.time.scale().range([0, width]);
+
+var y = d3.scale.linear().range([height, 0]);
 
 var xAxis = d3.svg.axis()
 	.scale(x)
 	.orient("bottom")
 	.tickSize(-height, 0, 0)
+if(!compress_time_series)
+{
+	xAxis
 	.tickFormat(d3.time.format("%d/%m"))
 	.tickValues(date_array);
+}
+else xAxis.tickValues([]);
+
 var yAxis = d3.svg.axis()
 	.scale(y)
 	.orient("left")
@@ -225,7 +236,8 @@ var svg = d3.select("#div_plot").append("svg")
 	.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-x.domain([date_array[0], date_array[date_array.length - 1]]);
+if(!compress_time_series) x.domain([date_array[0], date_array[date_array.length - 1]]);
+else x.domain([0, pt_array.length - 1]);
 y.domain([-0.02, 1.02]);
 
 svg.append("text")
@@ -236,6 +248,16 @@ svg.append("text")
 	.attr("transform", "rotate(-90)")
 	.text("loss fraction");
 
+if(compress_time_series)
+{
+	svg.append("text")
+	.style("font-size", "13px")
+	.attr("class", "y label")
+	.attr("transform", "translate(" + width + "," + (margin.top + height) + ")")
+	.attr("dx", "-2.3em")
+	.text("time");
+}
+
 svg.append("g")
 	.attr("class", "x axis")	
 	.attr("transform", "translate(0," + height + ")")
@@ -245,25 +267,24 @@ svg.append("g")
 		.attr("transform", "rotate(-65)");
 svg.append("g")
 	.attr("class", "y axis")
-	.call(yAxis)
+	.call(yAxis);
 
-//add points
-var dt_array = <?php echo $js_dt_array; ?>;
-var loss_array = <?php echo $js_loss_array; ?>;
-for(i=0; i<dt_array.length; ++i)
+for(i=0; i<pt_array.length; ++i)
 {
-	var format = d3.time.format("%Y-%m-%d %H:%M:%S");
-	dt_array[i] = format.parse(dt_array[i].slice(0,19));
-	
-	//ignore point outside date range
-	if((dt_array[i].getTime() < date_start.getTime()) || (dt_array[i].getTime() >= date_end.getTime())) continue;
+	var dt = pt_array[i].dt;
+	var loss = pt_array[i].loss;
 		
+	var cx;
+	if(!compress_time_series) cx = x(dt);
+	else cx = x(i);
+	
 	svg.append("circle")
 		.attr("class", "dot")
 		.attr("r", 1.0)
-		.attr("cx", x(dt_array[i]))
-		.attr("cy", y(loss_array[i]))
+		.attr("cx", cx)
+		.attr("cy", y(loss));
 }
+
 //add area to handle mouse events
 svg.append("rect")
 	.attr("class", "overlay")
@@ -277,8 +298,10 @@ function add_change_point()
 	var px = x.invert(d3.mouse(this)[0]);
 	var py = y.invert(d3.mouse(this)[1]);
 	
-	change_points_array.push(px)
-		
+	if(compress_time_series) change_points_array.push(pt_array[Math.min(pt_array.length-1, Math.round(px))].dt);
+	else change_points_array.push(px);
+	console.log(change_points_array);
+	
 	svg.append("line")
 		.attr("id", "change_point_" + change_points_array.length)
 		.attr("x1", x(px))		
@@ -287,7 +310,7 @@ function add_change_point()
 		.attr("y2", y(y.domain()[1]))
 		.style("stroke-width", 2)
 		.style("stroke", "red")
-		.style("fill", "none")
+		.style("fill", "none");
 	
 	//console.log("x=" + px);
 	//window.alert("x=" + px + ", y=" + py);
