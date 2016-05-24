@@ -10,7 +10,7 @@
 <style>
 body 
 {
-  font: 10px sans-serif;
+	font: 10px sans-serif;
 }
 
 .axis path,
@@ -85,7 +85,11 @@ if(isset($_GET["plot_type"]) && $_GET["plot_type"] == "linear2") $selected_linea
 if(isset($_GET["plot_type"]) && $_GET["plot_type"] == "polypoint") $selected_polypoint = "selected";
 if(isset($_GET["plot_type"]) && $_GET["plot_type"] == "log") $selected_log = "selected";
 if(isset($_GET["plot_type"]) && $_GET["plot_type"] == "band") $selected_band = "selected";
-if(isset($_GET["plot_type"]) && $_GET["plot_type"] == "jet") $selected_jet = "selected";
+
+$selected_compress_true = $selected_compress_false = "";
+if(isset($_GET["compress_time_series"]) && $_GET["compress_time_series"] == "true") $selected_compress_true = "selected";
+if(isset($_GET["compress_time_series"]) && $_GET["compress_time_series"] == "false") $selected_compress_false = "selected";
+
 ?>
 
 <select name="plot_type">
@@ -94,7 +98,11 @@ if(isset($_GET["plot_type"]) && $_GET["plot_type"] == "jet") $selected_jet = "se
 <option value="polypoint" <?php echo $selected_polypoint; ?>>polypoint</option>
 <option value="log" <?php echo $selected_log; ?>>log</option>
 <option value="band" <?php echo $selected_band; ?>>band</option>
-<!--<option value="jet" <?php echo $selected_jet; ?>>jet</option>-->
+</select>
+
+<select name="compress_time_series">
+<option value="false" <?php echo "$selected_compress_false"; ?> >Not compressed</option>
+<option value="true" <?php echo "$selected_compress_true"; ?> >Compressed</option>
 </select>
 
 <input type="submit" class="button" value="Plot"></input>
@@ -107,7 +115,7 @@ if(isset($_GET["plot_type"]) && $_GET["plot_type"] == "jet") $selected_jet = "se
 
 <?php
 
-if(!isset($_GET["ts_id"]) || !isset($_GET["plot_type"])) exit;
+if(!isset($_GET["ts_id"]) || !isset($_GET["plot_type"]) || !isset($_GET["compress_time_series"])) exit;
 
 $sql = "SELECT date_start, date_end, csv_path FROM time_series WHERE id='".$_GET["ts_id"]."'";
 $ret = pg_query($db, $sql);
@@ -135,6 +143,8 @@ $js_loss_array = json_encode($loss_array);
 <script src="./libs/jquery-1.12.3.min.js"></script>
 
 <script>
+
+var compress_time_series = <?php echo $_GET["compress_time_series"]; ?>;
 
 Date.prototype.addDays = function(days) {
     var dat = new Date(this.valueOf())
@@ -169,77 +179,24 @@ console.log("date_end=" + date_end);
 console.log(date_array);
 */
 
-function get_colour(v, vmin, vmax)
+//get data
+var dt_array = <?php echo $js_dt_array; ?>;
+var loss_array = <?php echo $js_loss_array; ?>;
+var pt_array = new Array();
+for(i=0; i<dt_array.length; ++i)
 {
-	var r = 1.0, g = 1.0, b = 1.0;
-	var dv;
+	var format = d3.time.format("%Y-%m-%d %H:%M:%S");
+	dt_array[i] = format.parse(dt_array[i].slice(0,19));
 	
-	if(v < vmin) v = vmin;
-	if(v > vmax) v = vmax;
-	dv = 1.0*(vmax - vmin);
-	
-	console.log("dv=" + dv);
-		
-	if (v < (vmin + 0.25 * dv)) 
-	{
-		r = 0;
-		g = 4.0 * (v - vmin) / dv;
-	} 
-	else if(v < (vmin + 0.5 * dv))
-	{
-		r = 0;
-		b = 1 + 4.0 * (vmin + 0.25 * dv - v) / dv;
-	}
-	else if(v < (vmin + 0.75 * dv)) 
-	{
-		r = 4.0 * (v - vmin - 0.5 * dv) / dv;
-		b = 0;
-	} 
-	else 
-	{
-		g = 1 + 4.0 * (vmin + 0.75 * dv - v) / dv;
-		b = 0;
-	}
+	//ignore point outside date range
+	if((dt_array[i].getTime() < date_start.getTime()) || (dt_array[i].getTime() >= date_end.getTime())) continue;
 
-	r = Math.round(r*255);
-	g = Math.round(g*255);
-	b = Math.round(b*255);
-
-	return [r, g, b];
+	pt_array.push({dt: dt_array[i], loss: loss_array[i]});
 }
+pt_array.sort(function cmp(pt1, pt2) { return (pt1.dt.getTime() - pt2.dt.getTime()); });
 
-if(plot_type == "jet")
-{
 
-	var page_width = $(window).width(), page_height = $(window).height(),
-		margin = {top: 20, right: 20, bottom: 60, left: 55},
-		width = page_width - margin.left - margin.right - 230,
-		height = page_height - margin.top - margin.bottom - 12;
-	
-	var x = d3.scale.ordinal()
-		.rangeRoundBands([0, width], .1);
-
-	var y = d3.scale.linear()
-		.rangeRound([height, 0]);
-
-	var svg = d3.select("body").append("svg")
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
-		.append("g")
-			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-	
-	for(i=0; i<=100; ++i)
-	{
-	var rgb = get_colour(i*0.01, 0.0, 1.0);
-	console.log("rgb=" + rgb);
-	svg.append("rect")
-		.attr("width", x.rangeBand())
-		.attr("y", i)
-		.attr("height", 4)
-		.style("fill", "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")");
-	}
-}	
-else if(plot_type == "linear2")
+if(plot_type == "linear2")
 {
 	var max_y_plot2 = 0.1;
 
@@ -248,29 +205,45 @@ else if(plot_type == "linear2")
 		width = page_width - margin.left - margin.right - 230,
 		height1 = page_height/2.0 - margin.top - margin.bottom - 12,
 		height2 = page_height/2.0 - margin.top - margin.bottom - 12;
+	
+	var x1, x2;
+	if(compress_time_series)
+	{
+		x1 = d3.scale.linear().range([0, width]);
+		x2 = d3.scale.linear().range([0, width]);
+	}
+	else
+	{
+		x1 = d3.time.scale().range([0, width]);
+		x2 = d3.time.scale().range([0, width]);
+	}
 
-	var x1 = d3.time.scale()
-		.range([0, width]);
-	var x2 = d3.time.scale()
-		.range([0, width]);
-	var y1 = d3.scale.linear()
-		.range([height1, 0]);
-	var y2 = d3.scale.linear()
-		.range([height2, 0]);
+	var y1 = d3.scale.linear().range([height1, 0]);
+	var y2 = d3.scale.linear().range([height2, 0]);
 
 	var xAxis1 = d3.svg.axis()
 		.scale(x1)
 		.orient("bottom")
 		.tickSize(-height1, 0, 0)
-		.tickFormat(d3.time.format("%d/%m"))
-		.tickValues(date_array);
 	var xAxis2 = d3.svg.axis()
 		.scale(x2)
 		.orient("bottom")
 		.tickSize(-height2, 0, 0)
+	if(!compress_time_series)
+	{
+		xAxis1
 		.tickFormat(d3.time.format("%d/%m"))
 		.tickValues(date_array);
-	
+		xAxis2
+		.tickFormat(d3.time.format("%d/%m"))
+		.tickValues(date_array);
+	}
+	else
+	{
+		xAxis1.tickValues([]);
+		xAxis2.tickValues([]);
+	}
+		
 	var yAxis1 = d3.svg.axis()
 		.scale(y1)
 		.orient("left")
@@ -298,10 +271,18 @@ else if(plot_type == "linear2")
 		.attr("height", height2 + margin.top + margin.bottom)
 		.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	x1.domain([date_array[0], date_array[date_array.length - 1]]);
-	x2.domain([date_array[0], date_array[date_array.length - 1]]);
 	
+	if(!compress_time_series)
+	{
+		x1.domain([date_array[0], date_array[date_array.length - 1]]);
+		x2.domain([date_array[0], date_array[date_array.length - 1]]);
+	}
+	else
+	{
+		x1.domain([0, pt_array.length - 1]);
+		x2.domain([0, pt_array.length - 1]);
+	}
+
 	y1.domain([-0.02, 1.02]);
 	var delta = 0.002
 	y2.domain([0.0 - delta, max_y_plot2 + delta]);
@@ -329,22 +310,26 @@ else if(plot_type == "linear2")
 			.attr("dx", "-2.1em")
 			.attr("transform", "rotate(-65)");
 
-
 	//add points
-	var dt_array = <?php echo $js_dt_array; ?>;
-	var loss_array = <?php echo $js_loss_array; ?>;
-	for(i=0; i<dt_array.length; ++i)
+	for(i=0; i<pt_array.length; ++i)
 	{
-		var format = d3.time.format("%Y-%m-%d %H:%M:%S");
-		dt_array[i] = format.parse(dt_array[i].slice(0,19));
-		
-		//ignore point outside date range
-		if((dt_array[i].getTime() < date_start.getTime()) || (dt_array[i].getTime() >= date_end.getTime())) continue;
-		
-		var cx1 = x1(dt_array[i]);
-		var cx2 = x2(dt_array[i]);
-		var cy1 = y1(loss_array[i]);
-		var cy2 = y2(Math.min(max_y_plot2, loss_array[i]));
+		var dt = pt_array[i].dt;
+		var loss = pt_array[i].loss;
+			
+		var cx1, cx2;
+		if(!compress_time_series)
+		{
+			cx1 = x1(dt);
+			cx2 = x2(dt);
+		}
+		else
+		{ 
+			cx1 = x1(i);
+			cx2 = x2(i);
+		}
+
+		var cy1 = y1(loss);
+		var cy2 = y2(Math.min(max_y_plot2, loss));
 			
 		svg1.append("circle")
 			.attr("class", "dot")
@@ -371,8 +356,10 @@ else
 
 	var min_loss_log = 0.004;
 
-	var x = d3.time.scale()
-		.range([0, width]);
+	var x;
+	if(compress_time_series) x = d3.scale.linear().range([0, width]);
+	else x = d3.time.scale().range([0, width]);
+
 	var y = d3.scale.linear();
 	if(plot_type == "polypoint") y.range([height, height/2.0, 0.0]);
 	else y.range([height, 0]);
@@ -391,8 +378,14 @@ else
 		.scale(x)
 		.orient("bottom")
 		.tickSize(-height, 0, 0)
+	if(!compress_time_series)
+	{
+		xAxis
 		.tickFormat(d3.time.format("%d/%m"))
 		.tickValues(date_array);
+	}
+	else xAxis.tickValues([]);
+
 	var yAxis = d3.svg.axis()
 		.scale(y)
 		.orient("left")
@@ -426,7 +419,8 @@ else
 		.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	x.domain([date_array[0], date_array[date_array.length - 1]]);
+	if(!compress_time_series) x.domain([date_array[0], date_array[date_array.length - 1]]);
+	else x.domain([0, pt_array.length - 1]);
 
 	svg.append("text")
 		.style("font-size", "13px")
@@ -435,7 +429,17 @@ else
 		.attr("dx", "-24em")
 		.attr("dy", "-2.3em")
 		.attr("transform", "rotate(-90)")
-
+	
+	if(compress_time_series)
+	{
+		svg.append("text")
+		.style("font-size", "13px")
+		.attr("class", "y label")
+		.attr("transform", "translate(" + width + "," + (margin.top + height) + ")")
+		.attr("dx", "-2.3em")
+		.text("time");
+	}
+	
 	svg.append("g")
 		.attr("class", "x axis")	
 		.attr("transform", "translate(0," + height + ")")
@@ -447,26 +451,23 @@ else
 		.attr("class", "y axis")
 		.call(yAxis)
 
-	//add points
-	var dt_array = <?php echo $js_dt_array; ?>;
-	var loss_array = <?php echo $js_loss_array; ?>;
-	for(i=0; i<dt_array.length; ++i)
+	for(i=0; i<pt_array.length; ++i)
 	{
-		var format = d3.time.format("%Y-%m-%d %H:%M:%S");
-		dt_array[i] = format.parse(dt_array[i].slice(0,19));
-		
-		//ignore point outside date range
-		if((dt_array[i].getTime() < date_start.getTime()) || (dt_array[i].getTime() >= date_end.getTime())) continue;
-		
-		var cx = x(dt_array[i]);
+		var dt = pt_array[i].dt;
+		var loss = pt_array[i].loss;
+			
+		var cx;
+		if(!compress_time_series) cx = x(dt);
+		else cx = x(i);
+
 		var cy;
-		if(plot_type == "band") cy = y(get_band(loss_array[i]));
-		else if(plot_type == "log") cy = y(Math.max(min_loss_log, parseFloat(loss_array[i])));
-		else cy = y(loss_array[i]);
+		if(plot_type == "band") cy = y(get_band(loss));
+		else if(plot_type == "log") cy = y(Math.max(min_loss_log, parseFloat(loss)));
+		else cy = y(loss);
 			
 		svg.append("circle")
 			.attr("class", "dot")
-			.attr("r", 1.1)
+			.attr("r", 1.0)
 			.attr("cx", cx)
 			.attr("cy", cy);
 	}
