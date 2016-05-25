@@ -92,7 +92,7 @@ if(isset($_GET["compress_time_series"]) && $_GET["compress_time_series"] == "fal
 
 $selected_ma_true = $selected_ma_false = "";
 if(isset($_GET["moving_average"]) && $_GET["moving_average"] == "true") $selected_ma_true = "selected";
-if(isset($_GET["moving_average"]) && $_GET["moving_average"] == "false") $selected_ma = "selected";
+if(isset($_GET["moving_average"]) && $_GET["moving_average"] == "false") $selected_ma_false = "selected";
 
 ?>
 
