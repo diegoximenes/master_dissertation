@@ -90,6 +90,10 @@ $selected_compress_true = $selected_compress_false = "";
 if(isset($_GET["compress_time_series"]) && $_GET["compress_time_series"] == "true") $selected_compress_true = "selected";
 if(isset($_GET["compress_time_series"]) && $_GET["compress_time_series"] == "false") $selected_compress_false = "selected";
 
+$selected_ma_true = $selected_ma_false = "";
+if(isset($_GET["moving_average"]) && $_GET["moving_average"] == "true") $selected_ma_true = "selected";
+if(isset($_GET["moving_average"]) && $_GET["moving_average"] == "false") $selected_ma = "selected";
+
 ?>
 
 <select name="plot_type">
@@ -101,8 +105,13 @@ if(isset($_GET["compress_time_series"]) && $_GET["compress_time_series"] == "fal
 </select>
 
 <select name="compress_time_series">
-<option value="false" <?php echo "$selected_compress_false"; ?> >Not compressed</option>
-<option value="true" <?php echo "$selected_compress_true"; ?> >Compressed</option>
+<option value="false" <?php echo "$selected_compress_false"; ?> >not compressed</option>
+<option value="true" <?php echo "$selected_compress_true"; ?> >compressed</option>
+</select>
+
+<select name="moving_average">
+<option value="false" <?php echo "$selected_ma_false"; ?> >raw</option>
+<option value="true" <?php echo "$selected_ma_true"; ?> >moving average</option>
 </select>
 
 <input type="submit" class="button" value="Plot"></input>
@@ -144,7 +153,11 @@ $js_loss_array = json_encode($loss_array);
 
 <script>
 
+//x[t] = x[t - ma_window_len] + ... + x[t] + ... + x[t + ma_window_len] 
+var ma_window_len = 2;
+
 var compress_time_series = <?php echo $_GET["compress_time_series"]; ?>;
+var moving_average = <?php echo $_GET["moving_average"]; ?>;
 
 Date.prototype.addDays = function(days) {
     var dat = new Date(this.valueOf())
@@ -195,6 +208,21 @@ for(i=0; i<dt_array.length; ++i)
 }
 pt_array.sort(function cmp(pt1, pt2) { return (pt1.dt.getTime() - pt2.dt.getTime()); });
 
+if(moving_average)
+{
+	var ma_array = new Array();
+	for(i=0; i<pt_array.length; ++i)
+	{
+		var sum = 0.0, cnt = 0;
+		for(j = Math.max(0, i - ma_window_len); j <= Math.min(pt_array.length - 1, i + ma_window_len); ++j) 
+		{
+			sum += parseFloat(pt_array[j].loss);
+			cnt++;
+		}
+		ma_array.push((1.0*sum)/cnt);
+	}
+	for(i=0; i<pt_array.length; ++i) pt_array[i].loss = ma_array[i];
+}
 
 if(plot_type == "linear2")
 {
