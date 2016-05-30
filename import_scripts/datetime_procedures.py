@@ -21,7 +21,10 @@ def from_sp_to_utc(dt):
 
 def from_datetime_to_epoch(dt):
 	return (dt - datetime(1970, 1, 1)).total_seconds()
-            
+
+def in_dt_range(dt, dt_start, dt_end):
+	return ((dt >= dt_start) and (dt <= dt_end + timedelta(days = 1)))
+
 def get_datetime_sp(str_datetime):
 	date = str_datetime.split()[0]
 	time = str_datetime.split()[1]

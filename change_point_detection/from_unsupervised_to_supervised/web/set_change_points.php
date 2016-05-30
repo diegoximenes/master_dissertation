@@ -46,6 +46,8 @@ body
 </head>
 
 <?php
+$number_of_users_per_time_series = 5;
+
 session_start();
 
 $db = pg_connect("host=localhost dbname=from_unsupervised_to_supervised user=postgres password=admin");
@@ -76,12 +78,19 @@ if(isset($_POST["email"]))
 }
 else if(!isset($_SESSION["id_user"]))
 {
-	header("Location: ./set_change_points.php");
+	header("Location: ./index.html");
 	exit;
 }
 
-//select all time series that the user didn't see
-$sql = "SELECT time_series.id, time_series.date_start, time_series.date_end, time_series.csv_path FROM time_series WHERE time_series.id NOT IN (SELECT change_points.id_time_series from change_points WHERE change_points.id_user='".$_SESSION['id_user']."' ORDER BY time_series.id ASC)";
+//prioritizes time series that have almost the necessary number of classifications
+$sql = "
+SELECT possible_time_series_table.id_time_series, date_start, date_end, csv_path, COUNT(id_user) AS count_id_user 
+FROM (SELECT time_series.id as id_time_series, date_start, date_end, csv_path FROM time_series WHERE time_series.id NOT IN (SELECT change_points.id_time_series FROM change_points WHERE change_points.id_user = '".$_SESSION['id_user']."')) AS possible_time_series_table 
+LEFT JOIN change_points 
+ON possible_time_series_table.id_time_series = change_points.id_time_series 
+GROUP BY possible_time_series_table.id_time_series, date_start, date_end, csv_path 
+ORDER BY COUNT(id_user) ASC, possible_time_series_table.id_time_series ASC
+";
 $ret = pg_query($db, $sql);
 if(!$ret) { echo pg_last_error($db); exit; }
 if(pg_num_rows($ret) == 0)
@@ -89,11 +98,21 @@ if(pg_num_rows($ret) == 0)
 	echo "<center><h1>Thank you, you've seen all available time series.</h1></center>";
 	exit;
 }
-$row = pg_fetch_assoc($ret);
-$_SESSION["id_time_series"] = $row["id"];
-$date_start = $row["date_start"];
-$date_end = $row["date_end"];
-$csv_path = $row["csv_path"]; 
+//echo "id_user=".$_SESSION['id_user']."<br>";
+$selected_time_series = false;
+while($row = pg_fetch_assoc($ret))
+{
+	if(($selected_time_series == false) || ($row["count_id_user"] < $number_of_users_per_time_series))
+	{
+		//echo $row['id_time_series'].",".$row['count_id_user']."<br>";
+		$selected_time_series = true;
+		$_SESSION["id_time_series"] = $row["id_time_series"];
+		$date_start = $row["date_start"];
+		$date_end = $row["date_end"];
+		$csv_path = $row["csv_path"]; 
+	}
+	if($row["count_id_user"] >= $number_of_users_per_time_series) break;
+}
 
 /*
 //prioritizes time series that no one have seen

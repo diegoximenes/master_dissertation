@@ -12,7 +12,7 @@ import datetime_procedures
 		- key: datetime
 		- value: mean of measures in strdt bin
 """
-def get_dt_mean(in_file_path, target_month, target_year, metric, dt_start, dt_end):
+def get_dt_mean(in_file_path, metric, dt_start, dt_end):
 	dt_list = datetime_procedures.generate_dt_list(dt_start, dt_end)
 		
 	dt_cntSum = {}
@@ -41,12 +41,12 @@ def get_dt_mean(in_file_path, target_month, target_year, metric, dt_start, dt_en
 	- raw_x: sorted datetimes
 	- raw_y: values, according with raw_x
 """
-def get_raw_data(in_file_path, target_month, target_year, metric):
+def get_raw_data(in_file_path, metric, dt_start, dt_end):
 	l = []
 	df = pd.read_csv(in_file_path)
 	for idx, row in df.iterrows():
 		dt = datetime_procedures.from_strDatetime_to_datetime(row["dt"])
-		l.append([dt, row[metric]])
+		if datetime_procedures.in_dt_range(dt, dt_start, dt_end): l.append([dt, row[metric]])
 	raw_x, raw_y = [], []
 	l.sort()
 	for p in l:

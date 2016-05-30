@@ -18,7 +18,7 @@ import time_series, plot_procedures, datetime_procedures
 from time_series import TimeSeries
 
 #PARAMETERS
-target_year, target_month = 2015, 12
+target_year, target_month = 2016, 5
 metric = "loss"
 
 date_dir = str(target_year) + "_" + str(target_month).zfill(2)

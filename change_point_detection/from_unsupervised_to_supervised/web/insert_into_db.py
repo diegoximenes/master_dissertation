@@ -38,12 +38,16 @@ cursor = conn.cursor()
 month_date_start = str(target_month).zfill(2) + "/01/" + str(target_year)
 month_date_end = str(target_month).zfill(2) + "/" + str(calendar.monthrange(target_year, target_month)[-1]).zfill(2) + "/" + str(target_year)
 
+cnt = 0
 in_dir = "../../input/" + date_dir
 for server in os.listdir(in_dir):
 	for file_name in os.listdir(in_dir + "/" + server + "/"): 
 		mac = file_name.split(".")[0]
 		csv_path = in_dir + "/" + server + "/" + file_name
-	
+		
+		cnt += 1
+		if cnt > 5: break
+			
 		if time_range_type == "month":
 			if has_enough_data(csv_path, month_date_start, month_date_end) == False: continue
 

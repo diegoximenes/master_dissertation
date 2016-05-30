@@ -16,7 +16,7 @@ import datetime_procedures, read_input
 	- dt_end: datetime of the last day considered
 """
 class TimeSeries:
-	def __init__(self, in_file_path = None, target_month = None, target_year = None, metric = None):
+	def __init__(self, in_file_path = None, target_month = None, target_year = None, metric = None, dt_start = None, dt_end = None):
 		self.dt_mean = {}
 		self.x = []
 		self.y = []
@@ -24,18 +24,21 @@ class TimeSeries:
 		self.raw_y = []
 		self.dt_start = None
 		self.dt_end = None
+			
+		if dt_start != None and dt_end != None: self.dt_start, self.dt_end = dt_start, dt_end
 
 		if in_file_path != None: self.read(in_file_path, target_month, target_year, metric)
 				
 	def read(self, in_file_path, target_month, target_year, metric):
-		self.dt_start = datetime.datetime(target_year, target_month, 1)
-		self.dt_end = datetime.datetime(target_year, target_month, calendar.monthrange(target_year, target_month)[-1])
+		if self.dt_start == None or self.dt_end == None:
+			self.dt_start = datetime.datetime(target_year, target_month, 1)
+			self.dt_end = datetime.datetime(target_year, target_month, calendar.monthrange(target_year, target_month)[-1])
 
-		self.dt_mean = read_input.get_dt_mean(in_file_path, target_month, target_year, metric, self.dt_start, self.dt_end)
+		self.dt_mean = read_input.get_dt_mean(in_file_path, metric, self.dt_start, self.dt_end)
 		ts = from_dic_to_list_ts(self.dt_mean)
 		self.x = ts[0]
 		self.y = ts[1]
-		self.raw_x, self.raw_y = read_input.get_raw_data(in_file_path, target_month, target_year, metric)
+		self.raw_x, self.raw_y = read_input.get_raw_data(in_file_path, metric, self.dt_start, self.dt_end)
 
 """
 - description:
