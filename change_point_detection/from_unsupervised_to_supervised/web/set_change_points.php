@@ -46,7 +46,7 @@ body
 </head>
 
 <?php
-$number_of_users_per_time_series = 5;
+$number_of_users_per_time_series = 3;
 
 session_start();
 
@@ -95,7 +95,7 @@ $ret = pg_query($db, $sql);
 if(!$ret) { echo pg_last_error($db); exit; }
 if(pg_num_rows($ret) == 0)
 {
-	echo "<center><h1>Thank you, you've seen all available time series.</h1></center>";
+	echo "<center><h1>Thank you, you've classified all available time series.</h1></center>";
 	exit;
 }
 //echo "id_user=".$_SESSION['id_user']."<br>";

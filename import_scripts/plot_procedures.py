@@ -30,6 +30,7 @@ def plot_ts(ts, out_file_path, plot_raw_data = True, dt_axvline = [], ylabel = "
 	plt.ylabel(ylabel)
 	if compressed == False: plt.xlim([ts.dt_start, ts.dt_end + datetime.timedelta(days = 1)])
 	plt.xticks(xticks, xticks_labels, rotation = "vertical")
+	plt.yticks(np.arange(0, 1 + 0.05, 0.05))
 	if plot_raw_data: 
 		if compressed: plt.scatter(range(len(ts.raw_x)), ts.raw_y, s = 9)
 		else: plt.scatter(ts.raw_x, ts.raw_y, s = 9)
