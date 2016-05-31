@@ -46,7 +46,7 @@ body
 </head>
 
 <?php
-$number_of_users_per_time_series = 3;
+$number_of_users_per_time_series = 4;
 
 session_start();
 
