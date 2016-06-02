@@ -323,13 +323,15 @@ function plot(id_div_plot, plot_type)
 			.attr("cy", cy);
 	}
 	
+	var y1 = y(y.domain()[0]), y2 = y(y.domain()[1]);
+	if(plot_type == "polypoint") y2 = y(y.domain()[2]);
 	var mouse_line = svg.append("g")
 						.datum({x: null, visible: false});
 	mouse_line.append("line")
 		.attr("x1", 0)
-		.attr("y1", y(y.domain()[0]))
+		.attr("y1", y1)
 		.attr("x2", 0)
-		.attr("y2", y(y.domain()[1]))
+		.attr("y2", y2)
 		.style("stroke-width", 2)
 		.style("stroke", "#009999")
 		.style("fill", "none");
