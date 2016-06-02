@@ -7,7 +7,7 @@ import datetime_procedures, time_series, plot_procedures
 from time_series import TimeSeries
 
 #parameters
-target_year, target_month = 2015, 12
+target_year, target_month = 2016, 5
 metric = "loss"
 
 date_dir = str(target_year) + "_" + str(target_month).zfill(2)
@@ -44,7 +44,7 @@ def get_data():
 		
 		create_dirs_server(row["server"])	
 		create_dirs_user(row["email"])
-
+		
 		in_file_path = "../../input/" + date_dir + "/" + row["server"] + "/" + row["mac"] + ".csv"
 		ts = TimeSeries(in_file_path, target_month, target_year, metric)
 

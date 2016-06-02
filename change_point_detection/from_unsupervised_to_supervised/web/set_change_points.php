@@ -42,6 +42,11 @@ body
 	pointer-events: all;
 }
 
+ul li 
+{
+	padding-top: 10px;
+}
+
 </style>
 </head>
 
@@ -114,42 +119,6 @@ while($row = pg_fetch_assoc($ret))
 	if($row["count_id_user"] >= $number_of_users_per_time_series) break;
 }
 
-/*
-//prioritizes time series that no one have seen
-$sql = "SELECT time_series.id, time_series.date_start, time_series.date_end, time_series.csv_path FROM time_series WHERE time_series.id NOT IN (SELECT change_points.id_time_series from change_points)";
-$ret = pg_query($db, $sql);
-if(!$ret) { echo pg_last_error($db); exit; }
-if(pg_num_rows($ret) == 0)
-{
-	//select all time series that the user didn't see
-	$sql = "SELECT time_series.id, time_series.date_start, time_series.date_end, time_series.csv_path FROM time_series WHERE time_series.id NOT IN (SELECT change_points.id_time_series from change_points WHERE change_points.id_user='".$_SESSION['id_user']."')";
-	$ret = pg_query($db, $sql);
-	if(!$ret) { echo pg_last_error($db); exit; }
-}
-if(pg_num_rows($ret) == 0)
-{
-	echo "<center><h1>Thank you, you've seen all available time series.</h1></center>";
-	exit;
-}
-$available_ts_id = array();
-$available_ts_date_start = array();
-$available_ts_date_end = array();
-$available_ts_csv_path = array();
-while($row = pg_fetch_assoc($ret))
-{
-	array_push($available_ts_id, $row["id"]);
-	array_push($available_ts_date_start, $row["date_start"]);
-	array_push($available_ts_date_end, $row["date_end"]);
-	array_push($available_ts_csv_path, $row["csv_path"]);
-}
-//randomly select an available time series
-$rand_idx = rand(0, count($available_ts_id)-1);
-$_SESSION["id_time_series"] = $available_ts_id[$rand_idx];
-$date_start = $available_ts_date_start[$rand_idx]; 
-$date_end = $available_ts_date_end[$rand_idx]; 
-$csv_path = $available_ts_csv_path[$rand_idx]; 
-*/
-
 //parse csv file
 $dt_array = array();
 $loss_array = array();
@@ -217,11 +186,9 @@ pt_array.sort(function cmp(pt1, pt2) { return (pt1.dt.getTime() - pt2.dt.getTime
 
 var button_width = 220;
 var page_width = $(window).width(), page_height = $(window).height(),
-	margin = {top: 20, right: 20, bottom: 30, left: 45},
+	margin = {top: 20, right: 20, bottom: 40, left: 45},
 	width = page_width - margin.left - margin.right - button_width,
 	height = page_height - margin.top - margin.bottom - 10;
-width = Math.max(width, 900);
-height = Math.max(height, 400);
 
 function plot(id_div_plot, plot_type)
 {
@@ -238,12 +205,12 @@ function plot(id_div_plot, plot_type)
 	else x.domain([0, pt_array.length - 1]);
 
 	if(plot_type == "linear") y.domain([-0.02, 1.02])
-	else if(plot_type == "polypoint") y.domain([-0.002, 0.1, 1.02])
+	else if(plot_type == "polypoint") y.domain([-0.004, 0.1, 1.02])
 	else if(plot_type == "band") y.domain([-0.5, 3.5])
 	else if(plot_type == "log")
 	{
 		y = d3.scale.log()
-			.domain([0.003, 1.01])
+			.domain([0.0036, 1.01])
 			.range([height, 0])
 	}
 	
@@ -258,7 +225,12 @@ function plot(id_div_plot, plot_type)
 		.tickFormat(d3.time.format("%d/%m"))
 		.tickValues(date_array);
 	}
-	else xAxis.tickValues([]);
+	else
+	{ 
+		var tick_values = [];
+		for(i=0; i<pt_array.length; i+=20) tick_values.push(i);
+		xAxis.tickValues(tick_values);
+	}
 
 	var yAxis = d3.svg.axis()
 		.scale(y)
@@ -313,6 +285,7 @@ function plot(id_div_plot, plot_type)
 		.attr("class", "y label")
 		.attr("transform", "translate(" + width + "," + (margin.top + height) + ")")
 		.attr("dx", "-2.3em")
+		.attr("dy", "0.8em")
 		.text("time");
 	}
 	
@@ -322,8 +295,8 @@ function plot(id_div_plot, plot_type)
 		.attr("transform", "translate(0," + height + ")")
 		.call(xAxis)
 		.selectAll("text")
-			.attr("dx", "-2.1em")
-			.attr("transform", "rotate(-65)");
+			.attr("dy", "1.0em");
+			//.attr("transform", "rotate(-65)");
 	svg.append("g")
 		.attr("class", "y axis")
 		.call(yAxis);
@@ -349,13 +322,17 @@ function plot(id_div_plot, plot_type)
 			.attr("cx", cx)
 			.attr("cy", cy);
 	}
-
-	//add area to handle mouse events
+	
+	//add rect to handle mouse events
 	svg.append("rect")
+		.attr("id", "rect_mouse_events")
 		.attr("class", "overlay")
 		.attr("width", width)
 		.attr("height", height)
-		.on("click", add_change_point);
+		.on("mousedown", add_change_point)
+		.on("mousemove", plot_mouse_position_line)
+		.on("mouseover", plot_mouse_position_line)
+		.on("mouseout", remove_mouse_position_line);
 	
 	return [x, y, svg];
 }
@@ -367,6 +344,62 @@ var ret_log = plot("div_plot_log", "log");
 var x_linear = ret_linear[0], y_linear = ret_linear[1], svg_linear = ret_linear[2];
 var x_polypoint = ret_polypoint[0], y_polypoint = ret_polypoint[1], svg_polypoint = ret_polypoint[2];
 var x_log = ret_log[0], y_log = ret_log[1], svg_log = ret_log[2];
+
+function remove_mouse_position_line()
+{
+	svg_linear.selectAll("#current_mouse_line").remove();
+	svg_polypoint.selectAll("#current_mouse_line").remove();
+	svg_log.selectAll("#current_mouse_line").remove();
+}
+
+function plot_mouse_position_line()
+{
+	var px = x_linear.invert(d3.mouse(this)[0]);
+	var py = y_linear.invert(d3.mouse(this)[1]);
+	
+	remove_mouse_position_line();
+	
+	svg_linear.append("line")
+		.attr("id", "current_mouse_line")
+		.attr("x1", x_linear(px))		
+		.attr("y1", y_linear(y_linear.domain()[0]))
+		.attr("x2", x_linear(px))
+		.attr("y2", y_linear(y_linear.domain()[1]))
+		.style("stroke-width", 2)
+		.style("stroke", "#009999")
+		.style("fill", "none");
+	svg_polypoint.append("line")
+		.attr("id", "current_mouse_line")
+		.attr("x1", x_linear(px))		
+		.attr("y1", y_linear(y_linear.domain()[0]))
+		.attr("x2", x_linear(px))
+		.attr("y2", y_linear(y_linear.domain()[1]))
+		.style("stroke-width", 2)
+		.style("stroke", "#009999")
+		.style("fill", "none");
+	svg_log.append("line")
+		.attr("id", "current_mouse_line")
+		.attr("x1", x_linear(px))		
+		.attr("y1", y_linear(y_linear.domain()[0]))
+		.attr("x2", x_linear(px))
+		.attr("y2", y_linear(y_linear.domain()[1]))
+		.style("stroke-width", 2)
+		.style("stroke", "#009999")
+		.style("fill", "none");
+	
+	move_mouse_rect_to_front();
+}
+
+d3.selection.prototype.moveToFront = function() 
+{  
+	return this.each(function() { this.parentNode.appendChild(this); });
+};
+function move_mouse_rect_to_front()
+{
+	svg_linear.selectAll("#rect_mouse_events").moveToFront();
+	svg_polypoint.selectAll("#rect_mouse_events").moveToFront();
+	svg_log.selectAll("#rect_mouse_events").moveToFront();
+}
 
 var change_points_array = [], change_points_plot_type_array = [];
 function add_change_point()
@@ -409,8 +442,8 @@ function add_change_point()
 		.style("stroke-width", 2)
 		.style("stroke", "red")
 		.style("fill", "none");
-
-	//window.alert("x=" + px + ", y=" + py);
+	
+	move_mouse_rect_to_front();
 }
 
 function remove_change_point()
@@ -493,6 +526,25 @@ $(window).on('beforeunload', function() { clear_page(false); });
 </table>
 
 <div style="padding-top:120px">
+<button type="button" class="btn btn-primary" style="width: 210px;" data-toggle="modal" data-target=".bs-example-modal-lg">Show tips</button><br>
+</div>
+
+<div data-dismiss="modal" class="modal fade bs-example-modal-lg container-fluid" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h3 class="modal-title">Tips</h3>
+			</div>
+			<div class="modal-body" id="tips" style="font-size: 16px;"></div>
+		</div>
+	</div>
+</div>
+<script> 
+$(function(){ $("#tips").load("tips.html"); });
+</script> 
+
+<div style="padding-top:6px">
 <button type="button" class="btn btn-primary" style="width: 210px;" onclick="remove_change_point();">Remove last change point</button><br>
 </div>
 
