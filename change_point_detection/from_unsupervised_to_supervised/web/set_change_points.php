@@ -323,6 +323,25 @@ function plot(id_div_plot, plot_type)
 			.attr("cy", cy);
 	}
 	
+	var mouse_line = svg.append("g")
+						.datum({x: null, visible: false});
+	mouse_line.append("line")
+		.attr("x1", 0)
+		.attr("y1", y(y.domain()[0]))
+		.attr("x2", 0)
+		.attr("y2", y(y.domain()[1]))
+		.style("stroke-width", 2)
+		.style("stroke", "#009999")
+		.style("fill", "none");
+	mouse_line.update = function()
+	{
+		this.attr("transform", function(d)
+		{
+			if(d.visible == true) return "translate(" + d.x + ", 0)";
+		})
+		.style("opacity", function(d) { return d.visible ? 1 : 0});
+	}
+
 	//add rect to handle mouse events
 	svg.append("rect")
 		.attr("id", "rect_mouse_events")
@@ -330,75 +349,46 @@ function plot(id_div_plot, plot_type)
 		.attr("width", width)
 		.attr("height", height)
 		.on("mousedown", add_change_point)
-		.on("mousemove", plot_mouse_position_line)
-		.on("mouseover", plot_mouse_position_line)
-		.on("mouseout", remove_mouse_position_line);
+		.on("mousemove", handle_mouse_move)
+		.on("mouseover", handle_mouse_move)
+		.on("mouseout", handle_mouse_out);
 	
-	return [x, y, svg];
+	return [x, y, svg, mouse_line];
 }
 
 var ret_linear = plot("div_plot_linear", "linear");
 var ret_polypoint = plot("div_plot_polypoint", "polypoint");
 var ret_log = plot("div_plot_log", "log");
 
-var x_linear = ret_linear[0], y_linear = ret_linear[1], svg_linear = ret_linear[2];
-var x_polypoint = ret_polypoint[0], y_polypoint = ret_polypoint[1], svg_polypoint = ret_polypoint[2];
-var x_log = ret_log[0], y_log = ret_log[1], svg_log = ret_log[2];
+var x_linear = ret_linear[0], y_linear = ret_linear[1], svg_linear = ret_linear[2], mouse_line_linear = ret_linear[3];
+var x_polypoint = ret_polypoint[0], y_polypoint = ret_polypoint[1], svg_polypoint = ret_polypoint[2], mouse_line_polypoint = ret_polypoint[3];
+var x_log = ret_log[0], y_log = ret_log[1], svg_log = ret_log[2], mouse_line_log = ret_log[3];
 
-function remove_mouse_position_line()
+function handle_mouse_out()
 {
-	svg_linear.selectAll("#current_mouse_line").remove();
-	svg_polypoint.selectAll("#current_mouse_line").remove();
-	svg_log.selectAll("#current_mouse_line").remove();
+	mouse_line_linear.datum({x: null, visible: false});
+	mouse_line_linear.update();
+	
+	mouse_line_polypoint.datum({x: null, visible: false});
+	mouse_line_polypoint.update();
+	
+	mouse_line_log.datum({x: null, visible: false});
+	mouse_line_log.update();
 }
 
-function plot_mouse_position_line()
+function handle_mouse_move()
 {
 	var px = x_linear.invert(d3.mouse(this)[0]);
 	var py = y_linear.invert(d3.mouse(this)[1]);
 	
-	remove_mouse_position_line();
+	mouse_line_linear.datum({x: x_linear(px), visible: true});
+	mouse_line_linear.update();
 	
-	svg_linear.append("line")
-		.attr("id", "current_mouse_line")
-		.attr("x1", x_linear(px))		
-		.attr("y1", y_linear(y_linear.domain()[0]))
-		.attr("x2", x_linear(px))
-		.attr("y2", y_linear(y_linear.domain()[1]))
-		.style("stroke-width", 2)
-		.style("stroke", "#009999")
-		.style("fill", "none");
-	svg_polypoint.append("line")
-		.attr("id", "current_mouse_line")
-		.attr("x1", x_linear(px))		
-		.attr("y1", y_linear(y_linear.domain()[0]))
-		.attr("x2", x_linear(px))
-		.attr("y2", y_linear(y_linear.domain()[1]))
-		.style("stroke-width", 2)
-		.style("stroke", "#009999")
-		.style("fill", "none");
-	svg_log.append("line")
-		.attr("id", "current_mouse_line")
-		.attr("x1", x_linear(px))		
-		.attr("y1", y_linear(y_linear.domain()[0]))
-		.attr("x2", x_linear(px))
-		.attr("y2", y_linear(y_linear.domain()[1]))
-		.style("stroke-width", 2)
-		.style("stroke", "#009999")
-		.style("fill", "none");
+	mouse_line_polypoint.datum({x: x_polypoint(px), visible: true});
+	mouse_line_polypoint.update();
 	
-	move_mouse_rect_to_front();
-}
-
-d3.selection.prototype.moveToFront = function() 
-{  
-	return this.each(function() { this.parentNode.appendChild(this); });
-};
-function move_mouse_rect_to_front()
-{
-	svg_linear.selectAll("#rect_mouse_events").moveToFront();
-	svg_polypoint.selectAll("#rect_mouse_events").moveToFront();
-	svg_log.selectAll("#rect_mouse_events").moveToFront();
+	mouse_line_log.datum({x: x_log(px), visible: true});
+	mouse_line_log.update();
 }
 
 var change_points_array = [], change_points_plot_type_array = [];
@@ -442,8 +432,6 @@ function add_change_point()
 		.style("stroke-width", 2)
 		.style("stroke", "red")
 		.style("fill", "none");
-	
-	move_mouse_rect_to_front();
 }
 
 function remove_change_point()
