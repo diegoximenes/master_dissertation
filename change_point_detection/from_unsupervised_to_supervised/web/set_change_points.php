@@ -343,6 +343,7 @@ function plot(id_div_plot, plot_type)
 		})
 		.style("opacity", function(d) { return d.visible ? 1 : 0});
 	}
+	mouse_line.update();
 
 	//add rect to handle mouse events
 	svg.append("rect")
@@ -404,8 +405,8 @@ function add_change_point()
 	if(compress_time_series) change_points_array.push(pt_array[Math.min(pt_array.length-1, Math.round(px))].dt);
 	else change_points_array.push(px);
 	change_points_plot_type_array.push(plot_type);
-	//console.log(change_points_array);
-	//console.log(change_points_plot_type_array);
+	console.log(change_points_array);
+	console.log(change_points_plot_type_array);
 	
 	svg_linear.append("line")
 		.attr("id", "change_point_" + change_points_array.length)
@@ -444,6 +445,7 @@ function remove_change_point()
 		svg_polypoint.selectAll("#change_point_" + change_points_array.length).remove();
 		svg_log.selectAll("#change_point_" + change_points_array.length).remove();
 		change_points_array.pop();
+		change_points_plot_type_array.pop();
 	}
 }
 
