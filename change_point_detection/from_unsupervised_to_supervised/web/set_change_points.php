@@ -405,8 +405,8 @@ function add_change_point()
 	if(compress_time_series) change_points_array.push(pt_array[Math.min(pt_array.length-1, Math.round(px))].dt);
 	else change_points_array.push(px);
 	change_points_plot_type_array.push(plot_type);
-	console.log(change_points_array);
-	console.log(change_points_plot_type_array);
+	//console.log(change_points_array);
+	//console.log(change_points_plot_type_array);
 	
 	svg_linear.append("line")
 		.attr("id", "change_point_" + change_points_array.length)
