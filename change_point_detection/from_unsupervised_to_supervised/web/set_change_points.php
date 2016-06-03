@@ -1,3 +1,9 @@
+<?php
+/*
+ALERT: database store change point datetime in UTC. CSV and javascript handle in local time
+*/
+?>
+
 <!doctype html>
 <html>
 <head>

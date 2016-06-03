@@ -39,7 +39,7 @@ def get_data():
 				str_time = strdt.split("T")[1].split(".")[0]
 				dt = datetime.datetime(int(str_date.split("-")[0]), int(str_date.split("-")[1]), int(str_date.split("-")[2]), int(str_time.split(":")[0]), int(str_time.split(":")[1]), int(str_time.split(":")[2]))
 				dt_sp = datetime_procedures.from_utc_to_sp(dt)
-				dt = datetime.datetime(dt_sp.year, dt_sp.month, dt_sp.day, dt_sp.hour, dt_sp.minute)
+				dt = datetime.datetime(dt_sp.year, dt_sp.month, dt_sp.day, dt_sp.hour, dt_sp.minute, dt_sp.second)
 				dt_cp_list.append(dt)
 		
 		create_dirs_server(row["server"])	
@@ -49,9 +49,9 @@ def get_data():
 		ts = TimeSeries(in_file_path, target_month, target_year, metric)
 
 		out_file_path = "./plots/per_server/" + row["server"] + "/" + row["mac"] + "_" + row["email"] + ".png"
-		plot_procedures.plot_ts(ts, out_file_path , ylabel = "loss", ylim = [-0.02, 1.02], dt_axvline = dt_cp_list)
+		plot_procedures.plot_ts(ts, out_file_path , ylabel = "loss", ylim = [-0.02, 1.02], dt_axvline = dt_cp_list, compressed = True)
 
 		out_file_path = "./plots/per_user/" + row["email"] + "/" + row["server"] + "_" + row["mac"] + ".png"
-		plot_procedures.plot_ts(ts, out_file_path , ylabel = "loss", ylim = [-0.02, 1.02], dt_axvline = dt_cp_list)
+		plot_procedures.plot_ts(ts, out_file_path , ylabel = "loss", ylim = [-0.02, 1.02], dt_axvline = dt_cp_list, compressed = True)
 
 get_data()

@@ -203,6 +203,8 @@ for(i=0; i<dt_array.length; ++i)
 	
 	//ignore point outside date range
 	if((dt_array[i].getTime() < date_start.getTime()) || (dt_array[i].getTime() >= date_end.getTime())) continue;
+	
+	//console.log(dt_array[i]);
 
 	pt_array.push({dt: dt_array[i], loss: loss_array[i]});
 }

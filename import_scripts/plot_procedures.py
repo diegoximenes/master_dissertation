@@ -23,7 +23,14 @@ def plot_ts(ts, out_file_path, plot_raw_data = True, dt_axvline = [], ylabel = "
 	if compressed: xticks, xticks_labels = [], []
 	else: xticks, xticks_labels = get_xticks(ts.dt_start, ts.dt_end)	
 	
-	for dt in dt_axvline: plt.axvline(dt, color = "r", linewidth = 2.0)
+	if compressed:	
+		dt_id = {}
+		for id in xrange(len(ts.raw_x)): dt_id[ts.raw_x[id]] = id
+		
+	for dt in dt_axvline: 
+		if compressed: xvline = dt_id[dt]
+		else: xvline = dt
+		plt.axvline(xvline, color = "r", linewidth = 2.0)
 
 	plt.grid()
 	if ylim != None: plt.ylim(ylim)
