@@ -76,7 +76,7 @@ if(isset($_POST["email"]))
 	//add new user
 	if(!pg_num_rows($ret)) 
 	{
-		$sql = "INSERT INTO users (email) VALUES ('$email') RETURNING id";
+		$sql = "INSERT INTO users (email, insertion_time) VALUES ('$email', CURRENT_TIMESTAMP) RETURNING id";
 		$ret = pg_query($db, $sql);
 		if(!$ret)
 		{
@@ -106,7 +106,7 @@ $ret = pg_query($db, $sql);
 if(!$ret) { echo pg_last_error($db); exit; }
 if(pg_num_rows($ret) == 0)
 {
-	echo "<center><h1>Thank you, you've classified all available time series.</h1></center>";
+	echo "<center><h1>Thank you, you have classified all available time series.</h1></center>";
 	exit;
 }
 //echo "id_user=".$_SESSION['id_user']."<br>";

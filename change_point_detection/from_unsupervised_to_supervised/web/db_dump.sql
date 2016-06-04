@@ -36,7 +36,8 @@ CREATE TABLE change_points (
     id_user bigint,
     id_time_series bigint,
     change_points text,
-    change_points_plot_type text
+    change_points_plot_type text,
+    insertion_time timestamp with time zone
 );
 
 
@@ -85,7 +86,8 @@ ALTER SEQUENCE probes_id_seq OWNED BY time_series.id;
 
 CREATE TABLE users (
     id bigint NOT NULL,
-    email text
+    email text,
+    insertion_time timestamp with time zone
 );
 
 
