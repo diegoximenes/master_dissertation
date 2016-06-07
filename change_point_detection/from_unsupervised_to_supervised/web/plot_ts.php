@@ -67,7 +67,7 @@ body
 $db = pg_connect("host=localhost dbname=from_unsupervised_to_supervised user=postgres password=admin");
 if(!$db) die("Error : Unable to connect to database.\n");
 
-$sql = "SELECT id, mac, server FROM time_series";
+$sql = "SELECT id, mac, server, date_start, date_end FROM time_series ORDER BY server ASC, mac ASC, date_start ASC, date_end ASC";
 $ret = pg_query($db, $sql);
 if(!$ret) { echo pg_last_error($db); exit; }
 echo "<select name='ts_id'>";
@@ -75,7 +75,7 @@ while($row = pg_fetch_assoc($ret))
 {
 	if(isset($_GET["ts_id"]) && $_GET["ts_id"] == $row["id"]) $selected = "selected";
 	else $selected = "";
-	echo "<option value='".$row["id"]."' $selected>".$row["server"]."_".$row["mac"]."</option>";
+	echo "<option value='".$row["id"]."' $selected>".$row["server"]."_".$row["mac"]."_".$row["date_start"]."_".$row["date_end"]."</option>";
 }
 echo "</select>";
 
@@ -231,7 +231,7 @@ if(plot_type == "linear2")
 	var max_y_plot2 = 0.1;
 
 	var page_width = $(window).width(), page_height = $(window).height(),
-		margin = {top: 20, right: 20, bottom: 60, left: 55},
+		margin = {top: 20, right: 20, bottom: 90, left: 55},
 		width = page_width - margin.left - margin.right - 230,
 		height1 = page_height/2.0 - margin.top - margin.bottom - 12,
 		height2 = page_height/2.0 - margin.top - margin.bottom - 12;
@@ -378,7 +378,7 @@ if(plot_type == "linear2")
 else
 {
 	var page_width = $(window).width(), page_height = $(window).height();
-		margin = {top: 20, right: 20, bottom: 60, left: 55},
+		margin = {top: 20, right: 20, bottom: 90, left: 55},
 		width = page_width - margin.left - margin.right - 230,
 		height = page_height - margin.top - margin.bottom - 12;
 	width = Math.max(width, 900);
