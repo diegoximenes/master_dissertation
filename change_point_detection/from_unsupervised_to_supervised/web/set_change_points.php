@@ -57,7 +57,7 @@ ul li
 </head>
 
 <?php
-$number_of_users_per_time_series = 4;
+$number_of_users_per_time_series = 10;
 
 session_start();
 
