@@ -125,6 +125,20 @@ while($row = pg_fetch_assoc($ret))
 	if($row["count_id_user"] >= $number_of_users_per_time_series) break;
 }
 
+//get number of time series
+$sql = "SELECT COUNT(*) AS cnt_time_series FROM time_series";
+$ret = pg_query($db, $sql);
+if(!$ret) { echo pg_last_error($db); exit; }
+$row = pg_fetch_assoc($ret);
+$cnt_time_series = $row["cnt_time_series"];
+
+//get number classfied time series by current user
+$sql = "SELECT COUNT(id_time_series) AS cnt_classified_time_series FROM change_points WHERE change_points.id_user='".$_SESSION['id_user']."'";
+$ret = pg_query($db, $sql);
+if(!$ret) { echo pg_last_error($db); exit; }
+$row = pg_fetch_assoc($ret);
+$cnt_classified_time_series = $row["cnt_classified_time_series"];
+
 //parse csv file
 $dt_array = array();
 $loss_array = array();
@@ -139,7 +153,7 @@ $js_dt_array = json_encode($dt_array);
 $js_loss_array = json_encode($loss_array);
 ?>
 
-<body>
+<body onload="set_start_time();">
 
 <div id="div_plot" align="left" style="float: left">
 <div id="div_plot_linear"></div>
@@ -168,6 +182,13 @@ function getDates(startDate, stopDate) {
         currentDate = currentDate.addDays(1);
     }
     return dateArray;
+}
+
+var start_time_epoch;
+function set_start_time()
+{
+	var d =  new Date();
+	start_time_epoch = d.getTime()/1000;
 }
 
 var date_start = new Date("<?php echo "$date_start"; ?>");
@@ -469,6 +490,10 @@ function save_change_points()
 {
 	clear_page(true);
 	
+	var d = new Date();
+	var end_time_epoch = d.getTime()/1000;
+	var classification_time_seconds = end_time_epoch - start_time_epoch;
+		
 	json_change_points_array = JSON.stringify(change_points_array);
 	json_change_points_plot_type_array = JSON.stringify(change_points_plot_type_array);
 	//window.alert(json_change_points_array);
@@ -476,6 +501,7 @@ function save_change_points()
 	$("<form id='change_points_form' method='post' action='save_change_points.php'></form>").appendTo("body");
 	$("<input type='hidden' name='json_change_points_array' value='" + json_change_points_array + "'>").appendTo("#change_points_form");
 	$("<input type='hidden' name='json_change_points_plot_type_array' value='" + json_change_points_plot_type_array + "'>").appendTo("#change_points_form");
+	$("<input type='hidden' name='classification_time_seconds' value='" + Math.round(classification_time_seconds) + "'>").appendTo("#change_points_form");
 	$("#change_points_form").submit();
 }
 
@@ -548,6 +574,12 @@ $(function(){ $("#tips").load("tips.html"); });
 
 <div style="padding-top:6px">
 <button type="button" class="btn btn-primary" style="width: 210px;" onclick="save_change_points();">Save and next</button>
+</div>
+
+<div style="padding-top:30px; width:210px">
+<font size="3">
+Number of classified time series: <?php echo "$cnt_classified_time_series of $cnt_time_series"; ?>
+</font>
 </div>
 
 </div>

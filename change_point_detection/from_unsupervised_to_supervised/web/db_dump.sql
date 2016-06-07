@@ -37,7 +37,8 @@ CREATE TABLE change_points (
     id_time_series bigint,
     change_points text,
     change_points_plot_type text,
-    insertion_time timestamp with time zone
+    insertion_time timestamp with time zone,
+    classification_time_seconds integer
 );
 
 

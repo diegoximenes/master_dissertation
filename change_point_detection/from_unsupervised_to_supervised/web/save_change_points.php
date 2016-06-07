@@ -12,6 +12,7 @@ if(!$db) die("Error : Unable to connect to database.\n");
 
 $change_points_array = json_decode($_POST["json_change_points_array"]);
 $change_points_plot_type_array = json_decode($_POST["json_change_points_plot_type_array"]);
+$classification_time_seconds = $_POST["classification_time_seconds"];
 $str_change_points_array = implode(",", $change_points_array);
 $str_change_points_plot_type_array = implode(",", $change_points_plot_type_array);
 
@@ -22,7 +23,7 @@ echo "id_time_series=".$_SESSION["id_time_series"]."\n";
 echo "str_change_points_array=$str_change_points_array";
 */
 
-$sql = "INSERT INTO change_points (id_user, id_time_series, change_points, change_points_plot_type, insertion_time) VALUES ('".$_SESSION["id_user"]."', '".$_SESSION["id_time_series"]."', '$str_change_points_array', '$str_change_points_plot_type_array', CURRENT_TIMESTAMP)";
+$sql = "INSERT INTO change_points (id_user, id_time_series, change_points, change_points_plot_type, insertion_time, classification_time_seconds) VALUES ('".$_SESSION["id_user"]."', '".$_SESSION["id_time_series"]."', '$str_change_points_array', '$str_change_points_plot_type_array', CURRENT_TIMESTAMP, '$classification_time_seconds')";
 $ret = pg_query($db, $sql);
 if(!$ret)
 {
