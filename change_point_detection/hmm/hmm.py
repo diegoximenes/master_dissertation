@@ -106,7 +106,12 @@ class HMM():
 
             n = len(self.pi)
             hidden_state_ticks = range(n)
-            hidden_state_tick_labels = self.get_hidden_state_tick_labels()
+            hidden_state_tick_labels = []
+            for i in xrange(n):
+                state_distr = self.model.getEmission(i)
+                tick_labels = "{:.2f}" + ",{:.2f}" * (len(state_distr) - 1)
+                hidden_state_tick_labels.append(tick_labels.
+                                                format(*state_distr))
 
             plot_procedures.plot_ts_and_dist(ts, ts_dist,
                                              "{}.png".format(out_path),
@@ -156,16 +161,6 @@ class DiscreteHMM(HMM):
             bin_seqs.append(self.get_bin_list(seq))
         return bin_seqs
 
-    def get_hidden_state_tick_labels(self):
-        n = len(self.pi)
-        hidden_state_tick_labels = []
-        for i in xrange(n):
-            state_distr = self.model.getEmission(i)
-            tick_labels = "{:.2f}" + ",{:.2f}" * (n - 1)
-            hidden_state_tick_labels.append(tick_labels.
-                                            format(*state_distr))
-        return hidden_state_tick_labels
-
     def get_bin(self, y):
         if y >= 0.0 and y <= 0.01:
             return 0
@@ -189,16 +184,6 @@ class GaussianHMM(HMM):
 
     def get_obs_seqs(self, seqs):
         return copy.deepcopy(seqs)
-
-    def get_hidden_state_tick_labels(self):
-        n = len(self.pi)
-        hidden_state_tick_labels = []
-        for i in xrange(n):
-            mu = self.model.getEmission(i)[0]
-            sigma2 = self.model.getEmission(i)[1]
-            hidden_state_tick_labels.append("({:.2f}, {:.2f})".
-                                            format(mu, sigma2))
-        return hidden_state_tick_labels
 
 targets = [["64:66:B3:4F:FE:CE", "SNEDTCPROB01", "05-11-2016", "05-20-2016"],
            ["64:66:B3:7B:9B:B8", "SOODTCLDM24", "05-11-2016", "05-20-2016"],
