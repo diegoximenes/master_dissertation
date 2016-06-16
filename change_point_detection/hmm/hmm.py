@@ -57,30 +57,17 @@ B_left_right_discr = [[0.9, 0.1, 0.0, 0.0], [0.1, 0.7, 0.1, 0.1],
 pi_left_right_discr = [1.0, 0, 0, 0, 0]
 
 
-class DiscreteHMM():
+class HMM():
 
     def __init__(self):
         self.model = None
+        self.emission_domain = None
+        self.emission_distr = None
 
         # initial parameters
         self.A = None
         self.B = None
         self.pi = None
-
-    def get_bin(self, y):
-        if y >= 0.0 and y <= 0.01:
-            return 0
-        elif y > 0.01 and y < 0.03:
-            return 1
-        elif y >= 0.3 and y <= 0.05:
-            return 2
-        return 3
-
-    def get_bin_list(self, l):
-        ret = []
-        for x in l:
-            ret.append(self.get_bin(x))
-        return ret
 
     def train(self, A, B, pi, seqs, out_path=None):
         # save initial point
@@ -88,30 +75,23 @@ class DiscreteHMM():
         self.B = copy.deepcopy(B)
         self.pi = copy.deepcopy(pi)
 
-        # transform seqs in bin_seqs
-        bin_seqs = []
-        for seq in seqs:
-            bin_seqs.append(self.get_bin_list(seq))
+        self.set_emission()
 
-        m = len(self.B[0])  # num of symbols
+        seqs = self.get_obs_seqs(seqs)
 
-        obs_seqs = ghmm.SequenceSet(ghmm.IntegerRange(0, m), bin_seqs)
+        obs_seqs = ghmm.SequenceSet(self.emission_domain, seqs)
 
-        self.model = ghmm.HMMFromMatrices(ghmm.IntegerRange(0, m),
-                                          ghmm.DiscreteDistribution(
-                                              ghmm.IntegerRange(0, m)),
-                                          A, B,
-                                          pi)
+        self.model = ghmm.HMMFromMatrices(self.emission_domain,
+                                          self.emission_distr, A, B, pi)
         self.model.baumWelch(obs_seqs)
 
         if out_path is not None:
             self.print_model_to_file("{}.txt".format(out_path))
 
     def viterbi(self, ts, out_path):
-        bin_seq = self.get_bin_list(self.get_bin_list(ts.raw_y))
-        m = len(self.B[0])
+        seq = self.get_obs_seqs([ts.raw_y])
+        obs_seq = ghmm.SequenceSet(self.emission_domain, seq)
 
-        obs_seq = ghmm.SequenceSet(ghmm.IntegerRange(0, m), [bin_seq])
         hidden_state_path = self.model.viterbi(obs_seq)[0]
 
         # plot
@@ -126,12 +106,7 @@ class DiscreteHMM():
 
             n = len(self.pi)
             hidden_state_ticks = range(n)
-            hidden_state_ticklabels = []
-            for i in xrange(n):
-                state_distr = self.model.getEmission(i)
-                tick_labels = "{:.2f}" + ",{:.2f}" * (n - 1)
-                hidden_state_ticklabels.append(tick_labels.
-                                               format(*state_distr))
+            hidden_state_tick_labels = self.get_hidden_state_tick_labels()
 
             plot_procedures.plot_ts_and_dist(ts, ts_dist,
                                              "{}.png".format(out_path),
@@ -141,7 +116,7 @@ class DiscreteHMM():
                                              dist_ylim=[0 - 0.5, n - 1 + 0.5],
                                              dist_yticks=hidden_state_ticks,
                                              dist_ytick_labels=(
-                                                 hidden_state_ticklabels),
+                                                 hidden_state_tick_labels),
                                              compress=True)
 
     def print_model_to_file(self, out_path):
@@ -168,93 +143,62 @@ class DiscreteHMM():
             f.write("pi={}\n".format(self.pi))
 
 
-class GaussianHMM():
+class DiscreteHMM(HMM):
+    def set_emission(self):
+        m = len(self.B[0])  # num of symbols
+        self.emission_domain = ghmm.IntegerRange(0, m)
+        self.emission_distr = ghmm.DiscreteDistribution(self.emission_domain)
 
-    def __init__(self):
-        self.model = None
+    def get_obs_seqs(self, seqs):
+        # transform seqs in bin_seqs
+        bin_seqs = []
+        for seq in seqs:
+            bin_seqs.append(self.get_bin_list(seq))
+        return bin_seqs
 
-        # initial parameters
-        self.A = None
-        self.B = None
-        self.pi = None
+    def get_hidden_state_tick_labels(self):
+        n = len(self.pi)
+        hidden_state_tick_labels = []
+        for i in xrange(n):
+            state_distr = self.model.getEmission(i)
+            tick_labels = "{:.2f}" + ",{:.2f}" * (n - 1)
+            hidden_state_tick_labels.append(tick_labels.
+                                            format(*state_distr))
+        return hidden_state_tick_labels
 
-    def train(self, A, B, pi, seqs, out_path=None):
-        # save initial point
-        self.A = copy.deepcopy(A)
-        self.B = copy.deepcopy(B)
-        self.pi = copy.deepcopy(pi)
+    def get_bin(self, y):
+        if y >= 0.0 and y <= 0.01:
+            return 0
+        elif y > 0.01 and y < 0.03:
+            return 1
+        elif y >= 0.3 and y <= 0.05:
+            return 2
+        return 3
 
-        obs_seqs = ghmm.SequenceSet(ghmm.Float(), seqs)
+    def get_bin_list(self, l):
+        ret = []
+        for x in l:
+            ret.append(self.get_bin(x))
+        return ret
 
-        self.model = ghmm.HMMFromMatrices(ghmm.Float(),
-                                          ghmm.GaussianDistribution(
-                                              ghmm.Float()),
-                                          A, B,
-                                          pi)
-        self.model.baumWelch(obs_seqs)
 
-        if out_path is not None:
-            self.print_model_to_file("{}.txt".format(out_path))
+class GaussianHMM(HMM):
+    def set_emission(self):
+        self.emission_domain = ghmm.Float()
+        self.emission_distr = ghmm.GaussianDistribution(self.emission_domain)
 
-    def viterbi(self, ts, out_path):
-        obs_seq = ghmm.SequenceSet(ghmm.Float(), [ts.raw_y])
-        hidden_state_path = self.model.viterbi(obs_seq)[0]
+    def get_obs_seqs(self, seqs):
+        return copy.deepcopy(seqs)
 
-        # plot
-        if out_path is not None:
-            ts_dist = time_series.dist_ts(ts)
-            for i in xrange(len(ts.raw_x)):
-                dt = ts.raw_x[i]
-                ts_dist.raw_x.append(dt)
-                ts_dist.raw_y.append(hidden_state_path[i])
-                ts_dist.x.append(dt)
-                ts_dist.y.append(hidden_state_path[i])
-
-            n = len(self.pi)
-            hidden_state_ticks = range(n)
-            hidden_state_ticklabels = []
-            for i in xrange(n):
-                mu = self.model.getEmission(i)[0]
-                sigma2 = self.model.getEmission(i)[1]
-                hidden_state_ticklabels.append("({:.2f}, {:.2f})".
-                                               format(mu, sigma2))
-
-            plot_procedures.plot_ts_and_dist(ts, ts_dist,
-                                             "{}.png".format(out_path),
-                                             ylabel=metric,
-                                             dist_ylabel="hidden states"
-                                             ":(mu, sigma**2)",
-                                             dist_plot_type="scatter",
-                                             dist_ylim=[0 - 0.5, n - 1 + 0.5],
-                                             dist_yticks=hidden_state_ticks,
-                                             dist_ytick_labels=(
-                                                 hidden_state_ticklabels),
-                                             compress=True)
-
-    def print_model_to_file(self, out_path):
-        with open(out_path, "w") as f:
-            n = len(self.pi)
-
-            # print states
-            f.write("n{}=\n".format(n))
-            for i in xrange(n):
-                mu = self.model.getEmission(i)[0]
-                sigma2 = self.model.getEmission(i)[1]
-                pi = self.model.getInitial(i)
-                f.write("state={}, mu={:.5f}, sigma**2={:.5f}, pi={:.5f}\n".
-                        format(i, mu, sigma2, pi))
-
-            # print transitions
-            for i in xrange(n):
-                for j in xrange(n):
-                    f.write("p({},{})={:.5f}\n".
-                            format(str(i), str(j),
-                                   self.model.getTransition(i, j)))
-
-            # print initial point
-            f.write("A={}\n".format(self.A))
-            f.write("B={}\n".format(self.B))
-            f.write("pi={}\n".format(self.pi))
+    def get_hidden_state_tick_labels(self):
+        n = len(self.pi)
+        hidden_state_tick_labels = []
+        for i in xrange(n):
+            mu = self.model.getEmission(i)[0]
+            sigma2 = self.model.getEmission(i)[1]
+            hidden_state_tick_labels.append("({:.2f}, {:.2f})".
+                                            format(mu, sigma2))
+        return hidden_state_tick_labels
 
 targets = [["64:66:B3:4F:FE:CE", "SNEDTCPROB01", "05-11-2016", "05-20-2016"],
            ["64:66:B3:7B:9B:B8", "SOODTCLDM24", "05-11-2016", "05-20-2016"],

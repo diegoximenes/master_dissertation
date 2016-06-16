@@ -11,8 +11,9 @@ def get_xticks(dt_start, dt_end):
     for i in range((dt_end - dt_start).days + 2):
         dt = dt_start + datetime.timedelta(days=i)
         xticks.append(dt)
-        xticks_labels.append("%s/%s" % (str(dt.day).zfill(2),
-                                        str(dt.month).zfill(2)))
+        xticks_labels.append("{}/{}".
+                             format(str(dt.day).zfill(2),
+                                    str(dt.month).zfill(2)))
     return xticks, xticks_labels
 
 
