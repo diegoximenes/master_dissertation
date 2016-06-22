@@ -1,4 +1,6 @@
 import read_input
+import copy
+import scipy.signal
 
 
 class TimeSeries:
@@ -6,7 +8,7 @@ class TimeSeries:
     - description: by now univariate time series
     - attributes:
         - dt_mean: mean of hourly dt of specified period
-        - x: hourly dt of specified period
+        - x: sorted hourly dt of specified period
         - y: mean values associated with x
         - raw_x: sorted raw datetime
         - raw_y: value, according with raw_x
@@ -52,38 +54,82 @@ def dist_ts(ts):
     return TimeSeries(dt_start=ts.dt_start, dt_end=ts.dt_end)
 
 
+def ma_smoothing_list(y, window_len):
+    """
+    - description: apply ma smoothing on arrays
+    - argument:
+        - y: if y[t] == None, than this position is
+        ignored on the computation
+        - window_len:
+    - returns:
+        - ret_y:
+    """
+
+    ret_y = []
+    for i in xrange(len(y)):
+        ysum, ycnt = 0, 0
+        for j in range(max(0, i - window_len / 2),
+                       min(len(y) - 1, i + window_len / 2) + 1):
+            if y[j] is not None:
+                ysum += y[j]
+                ycnt += 1
+
+        if ycnt > 0:
+            val = float(ysum) / ycnt
+        else:
+            val = None
+        ret_y.append(val)
+    return ret_y
+
+
 def ma_smoothing(ts, window_len=11):
     """
     - description:
-        - apply centered smoothing moving average.
+        - apply centered smoothing moving average to raw and hourly time
+        series.  Useful to check periodicity visually.
           Example: ts[t] = (ts[t-1] + ts[t] + ts[t+1])/3
     - argument:
-        - ts: must not be compressed
+        - ts:
         - window_len: must be odd
     - returns:
         - TimeSeries not compressed
     """
 
     ts_ret = TimeSeries(dt_start=ts.dt_start, dt_end=ts.dt_end)
-    ts_ret.raw_x = list(ts.raw_x)
-    ts_ret.raw_y = list(ts.raw_y)
 
-    for i in xrange(len(ts.y)):
-        ysum, ycnt = 0, 0
-        for j in range(max(0, i - window_len / 2),
-                       min(len(ts.y) - 1, i + window_len / 2) + 1):
-            if ts.y[j] is not None:
-                ysum += ts.y[j]
-                ycnt += 1
+    # apply ma to hourly time series. Example:
+    # y[t] = ((y[t-1] != None) * y[t-1] + (y[t] != None) * y[t] +
+    #         (y[t-1] != None) * y[t+1]) / ((y[t-1] != None) +
+    #                                       (y[t] != None) +
+    #                                       (y[t+1] != None))
+    ts_ret.x = copy.deepcopy(ts.x)
+    ts_ret.y = ma_smoothing_list(ts.y, window_len)
+    for i in xrange(len(ts_ret.x)):
+        ts_ret.dt_mean[ts_ret.x[i]] = ts_ret.y[i]
 
-        ts_ret.x.append(ts.x[i])
+    # apply ma to raw ts
+    ts_ret.raw_x = copy.deepcopy(ts.raw_x)
+    ts_ret.raw_y = ma_smoothing_list(ts_ret.raw_y, window_len)
 
-        if ycnt > 0:
-            val = float(ysum) / ycnt
-        else:
-            val = None
-        ts_ret.y.append(val)
-        ts_ret.dt_mean[ts.x[i]] = val
+    return ts_ret
+
+
+def median_filter(ts, window_len=3):
+    """
+    - description: useful to remove outliers.
+    - arguments:
+    - returns:
+    """
+
+    ts_ret = TimeSeries(dt_start=ts.dt_start, dt_end=ts.dt_end)
+
+    ts_ret.x = copy.deepcopy(ts.x)
+    ts_ret.y = scipy.signal(ts.y, window_len)
+    for i in xrange(len(ts_ret.x)):
+        ts_ret.dt_mean[ts_ret.x[i]] = ts_ret.y[i]
+
+    ts_ret.raw_x = copy.deepcopy(ts.raw_x)
+    ts_ret.raw_y = scipy.signal(ts.raw_y, window_len)
 
     return ts_ret
 
