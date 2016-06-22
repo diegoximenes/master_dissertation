@@ -1,3 +1,4 @@
+import copy
 import datetime
 import numpy as np
 import matplotlib
@@ -62,10 +63,48 @@ def plot_ts(ts, out_path, plot_raw_data=True, dt_axvline=[], ylabel="",
     plt.close("all")
 
 
-def plot_ts_and_dist(ts, ts_dist, out_path, plot_raw_data=True, ylabel="",
-                     dist_ylabel="", ylim=None, dist_ylim=None,
-                     dist_plot_type="plot", dist_yticks=None,
-                     dist_ytick_labels=None, compress=False):
+def get_shared_compress(x1, y1, x2, y2):
+    """
+    - description: ret_x2 will be a subset of ret_x1: ret_x1[i] == ret_x2[j]
+    iff x1[i] == x2[j]
+    - arguments:
+        - x1:
+        - y1:
+        - x2:
+        - y2:
+    -returns:
+        - ret_x1: = range(len(x1))
+        - ret_y1: = y1
+        - ret_x2:
+        - ret_y2:
+    """
+
+    ret_x1, ret_y1 = range(len(x1)), copy.deepcopy(y1)
+    ret_x2, ret_y2 = [], []
+
+    i, j = 0, 0
+    while (i < len(x1)) and (j < len(x2)):
+        if x1[i] == x2[j]:
+            ret_x2.append(i)
+            ret_y2.append(y2[j])
+        elif x1[i] < x2[j]:
+            i += 1
+        else:  # x1[i] > x2[j]
+            j += 1
+
+    return ret_x1, ret_y1, ret_x2, ret_y2
+
+
+def plot_ts_share_x(ts1, ts2, out_path, plot_raw_data=True, compress=False,
+                    ylabel1="", ylim1=None, ylabel2="", ylim2=None,
+                    plot_type2="plot", yticks2=None, ytick_labels2=None):
+    """
+    - description: use ts1 as base ts (top plot). Only plot ts2[t] if t is
+    present in ts1
+    - arguments:
+    - returns:
+    """
+
     plt.clf()
     matplotlib.rcParams.update({'font.size': 13})
     f, ax = plt.subplots(2, 1, figsize=(16, 12), sharex="col")
@@ -73,48 +112,54 @@ def plot_ts_and_dist(ts, ts_dist, out_path, plot_raw_data=True, ylabel="",
     if compress:
         xticks, xticks_labels = [], []
     else:
-        xticks, xticks_labels = get_xticks(ts.dt_start, ts.dt_end)
+        xticks, xticks_labels = get_xticks(ts1.dt_start, ts1.dt_end)
 
-    ax[0].grid()
-    ax[0].set_ylabel(ylabel)
-    ax[0].set_xticks(xticks)
-    if not compress:
-        ax[0].set_xlim([ts.dt_start, ts.dt_end + datetime.timedelta(days=1)])
-    ax[0].set_yticks(np.arange(0, 1 + 0.05, 0.05))
-    ax[0].set_ylim([-0.02, 1.02])
     if plot_raw_data:
-        if compress:
-            ax[0].scatter(range(len(ts.raw_x)), ts.raw_y, s=9)
+        if ts1.ts_type == "dist":
+            x1, y1 = ts1.x, ts1.y
         else:
-            ax[0].scatter(ts.raw_x, ts.raw_y, s=9)
+            x1, y1 = ts1.raw_x, ts1.raw_y
+
+        if ts2.ts_type == "dist":
+            x2, y2 = ts2.x, ts2.y
+        else:
+            x2, y2 = ts2.raw_x, ts2.raw_y
+
+        if compress:
+            x1, y1, x2, y2 = get_shared_compress(x1, y1, x2, y2)
     else:
         if compress:
-            plt.scatter(range(len(ts.x)), ts.y, s=9)
+            x1, y1, x2, y2 = get_shared_compress(ts1.x, ts1.y,
+                                                 ts2.x, ts2.y)
         else:
-            plt.scatter(ts.x, ts.y, s=9)
+            x1, y1 = ts1.x, ts1.y
+            x2, y2 = ts2.x, ts2.y
+
+    ax[0].grid()
+    ax[0].set_ylabel(ylabel1)
+    ax[0].set_xticks(xticks)
+    if not compress:
+        ax[0].set_xlim([ts1.dt_start, ts1.dt_end + datetime.timedelta(days=1)])
+    ax[0].set_yticks(np.arange(0, 1 + 0.05, 0.05))
+    ax[0].set_ylim([-0.02, 1.02])
+    ax[0].scatter(x1, y1, s=9)
 
     ax[1].grid()
-    ax[1].set_ylabel(dist_ylabel)
+    ax[1].set_ylabel(ylabel2)
     ax[1].set_xticks(xticks)
     ax[1].set_xticklabels(xticks_labels, rotation="vertical")
     if not compress:
-        ax[1].set_xlim([ts.dt_start, ts.dt_end + datetime.timedelta(days=1)])
-    if dist_ylim is not None:
-        ax[1].set_ylim(dist_ylim)
-    if dist_yticks is not None:
-        ax[1].set_yticks(dist_yticks)
-    if dist_ytick_labels is not None:
-        ax[1].set_yticklabels(dist_ytick_labels)
-    if dist_plot_type == "plot":
-        if compress:
-            ax[1].plot(range(len(ts_dist.x)), ts_dist.y)
-        else:
-            ax[1].plot(ts_dist.x, ts_dist.y)
-    elif dist_plot_type == "scatter":
-        if compress:
-            ax[1].scatter(range(len(ts_dist.x)), ts_dist.y)
-        else:
-            ax[1].scatter(ts_dist.x, ts_dist.y)
+        ax[1].set_xlim([ts1.dt_start, ts1.dt_end + datetime.timedelta(days=1)])
+    if ylim2 is not None:
+        ax[1].set_ylim(ylim2)
+    if yticks2 is not None:
+        ax[1].set_yticks(yticks2)
+    if ytick_labels2 is not None:
+        ax[1].set_yticklabels(ytick_labels2)
+    if plot_type2 == "plot":
+        ax[1].plot(range(len(x2)), y2)
+    else:
+        ax[1].scatter(range(len(x2)), y2)
 
     plt.savefig(out_path)
     plt.close("all")

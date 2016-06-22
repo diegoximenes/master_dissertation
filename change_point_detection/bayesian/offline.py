@@ -29,14 +29,14 @@ def get_change_points(in_path, out_path, dt_start, dt_end):
     prob_list = np.exp(pcp).sum(0)
 
     ts_dist = time_series.dist_ts(ts)
-    for i in xrange(len(ts.raw_x) - 1):
-        ts_dist.x.append(ts.raw_x[i])
+    for i in xrange(len(ts.x) - 1):
+        ts_dist.x.append(ts.x[i])
         ts_dist.y.append(prob_list[i])
-        ts_dist.dt_mean[ts.raw_x[i]] = prob_list[i]
+    ts_dist.set_dt_mean()
 
-    plot_procedures.plot_ts_and_dist(ts, ts_dist, "{}.png".format(out_path),
-                                     ylabel=metric, dist_ylabel="p",
-                                     dist_ylim=[-0.01, 1.01], compress=True)
+    plot_procedures.plot_ts_share_x(ts, ts_dist, "{}.png".format(out_path),
+                                     ylabel1=metric, ylabel2="p",
+                                     ylim2=[-0.01, 1.01], compress=True)
 
 
 def get_datetime(strdate):

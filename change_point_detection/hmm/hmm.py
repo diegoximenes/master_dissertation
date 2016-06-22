@@ -89,7 +89,7 @@ class HMM():
             self.print_model_to_file("{}.txt".format(out_path))
 
     def viterbi(self, ts, out_path):
-        seq = self.get_obs_seqs([ts.raw_y])
+        seq = self.get_obs_seqs([ts.y])
         obs_seq = ghmm.SequenceSet(self.emission_domain, seq)
 
         hidden_state_path = self.model.viterbi(obs_seq)[0]
@@ -97,12 +97,11 @@ class HMM():
         # plot
         if out_path is not None:
             ts_dist = time_series.dist_ts(ts)
-            for i in xrange(len(ts.raw_x)):
-                dt = ts.raw_x[i]
-                ts_dist.raw_x.append(dt)
-                ts_dist.raw_y.append(hidden_state_path[i])
+            for i in xrange(len(ts.x)):
+                dt = ts.x[i]
                 ts_dist.x.append(dt)
                 ts_dist.y.append(hidden_state_path[i])
+            ts_dist.set_dt_mean()
 
             n = len(self.pi)
             hidden_state_ticks = range(n)
@@ -113,16 +112,16 @@ class HMM():
                 hidden_state_tick_labels.append(tick_labels.
                                                 format(*state_distr))
 
-            plot_procedures.plot_ts_and_dist(ts, ts_dist,
-                                             "{}.png".format(out_path),
-                                             ylabel=metric,
-                                             dist_ylabel="",
-                                             dist_plot_type="scatter",
-                                             dist_ylim=[0 - 0.5, n - 1 + 0.5],
-                                             dist_yticks=hidden_state_ticks,
-                                             dist_ytick_labels=(
-                                                 hidden_state_tick_labels),
-                                             compress=True)
+            plot_procedures.plot_ts_share_x(ts, ts_dist,
+                                            "{}.png".format(out_path),
+                                            ylabel=metric,
+                                            dist_ylabel="",
+                                            dist_plot_type="scatter",
+                                            dist_ylim=[0 - 0.5, n - 1 + 0.5],
+                                            dist_yticks=hidden_state_ticks,
+                                            dist_ytick_labels=(
+                                                hidden_state_tick_labels),
+                                            compress=True)
 
     def print_model_to_file(self, out_path):
         with open(out_path, "w") as f:
@@ -234,7 +233,7 @@ def process_train_with_all(hmm, A, B, pi, model_name):
     seqs = []
     for tp in targets:
         ts = get_ts(tp)
-        seqs.append(ts.raw_y)
+        seqs.append(ts.y)
 
     hmm.train(A, B, pi, seqs, "./plots/{}".format(model_name))
 
@@ -255,7 +254,7 @@ def process_train_individual(hmm, A, B, pi, model_name):
         mac, server, dt_start, dt_end = get_tp_params(tp)
         ts = get_ts(tp)
 
-        hmm.train(A, B, pi, [ts.raw_y], "./plots/{}".format(model_name))
+        hmm.train(A, B, pi, [ts.y], "./plots/{}".format(model_name))
 
         out_path = ("./plots/{}_server{}_mac{}_dtstart{}_dtend{}".
                     format(model_name, server, mac, dt_start, dt_end))

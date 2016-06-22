@@ -4,22 +4,24 @@ import pandas as pd
 import dt_procedures
 
 
-def get_dt_mean(in_path, metric, dt_start, dt_end):
+def get_hourly(in_path, metric, dt_start, dt_end):
     """
     - description:
         - returns a dic in which the keys are each hour of the target month
           and the value is the mean of the specified hour
     - arguments
     - returns:
+        - x: sorted dts
+        - y: values associated with x
         - dic:
             - key: datetime
             - value: mean of measures in strdt bin
     """
 
-    dt_list = dt_procedures.generate_dt_list(dt_start, dt_end)
+    x = dt_procedures.generate_dt_list(dt_start, dt_end)
 
     dt_cntSum = {}
-    for dt in dt_list:
+    for dt in x:
         dt_cntSum[dt] = [0, 0]
 
     df = pd.read_csv(in_path)
@@ -39,16 +41,21 @@ def get_dt_mean(in_path, metric, dt_start, dt_end):
         else:
             dt_mean[dt] = None
 
-    return dt_mean
+    y = []
+    for dt in sorted(list(dt_mean.keys())):
+        y.append(dt_mean[dt])
+
+    return x, y
 
 
-def get_raw_data(in_path, metric, dt_start, dt_end):
+def get_raw(in_path, metric, dt_start, dt_end):
     """
     - description:
     - arguments
     - returns:
-        - raw_x: sorted datetimes
-        - raw_y: values, according with raw_x
+        - x: sorted datetimes
+        - y: values, according with raw_x
+        - dt_mean:
     """
 
     l = []
@@ -57,9 +64,11 @@ def get_raw_data(in_path, metric, dt_start, dt_end):
         dt = dt_procedures.from_strdt_to_dt(row["dt"])
         if dt_procedures.in_dt_range(dt, dt_start, dt_end):
             l.append([dt, row[metric]])
-    raw_x, raw_y = [], []
+
+    x, y = [], []
     l.sort()
     for p in l:
-        raw_x.append(p[0])
-        raw_y.append(p[1])
-    return raw_x, raw_y
+        x.append(p[0])
+        y.append(p[1])
+
+    return x, y

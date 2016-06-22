@@ -152,11 +152,11 @@ def sliding_window(in_file_path, out_file_path):
     if ((dist_type == "hellinger") or
             (metric == "loss" and dist_type == "mean")):
         dist_ylim = [-0.01, 1.01]
-    plot_procedures.plot_ts_and_dist(ts, ts_dist,
-                                     out_file_path + "_" + dist_type + ".png",
-                                     ylabel=metric,
-                                     dist_ylabel=dist_type + " dist",
-                                     dist_ylim=dist_ylim)
+    plot_procedures.plot_ts_share_x(ts, ts_dist,
+                                    out_file_path + "_" + dist_type + ".png",
+                                    ylabel=metric,
+                                    dist_ylabel=dist_type + " dist",
+                                    dist_ylim=dist_ylim)
 
 
 def get_change_points():

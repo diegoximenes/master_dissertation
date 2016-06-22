@@ -68,9 +68,9 @@ def majority_voting(tp, email_classificationDts_list):
 
     # transform classifications_dt in classifications_id
     dt_id, id_dt = {}, {}
-    for i in xrange(len(ts.raw_x)):
-        dt_id[ts.raw_x[i]] = i
-        id_dt[i] = ts.raw_x[i]
+    for i in xrange(len(ts.x)):
+        dt_id[ts.x[i]] = i
+        id_dt[i] = ts.x[i]
     email_classificationIds_list = []
     for p in email_classificationDts_list:
         email, class_dt = p[0], p[1]

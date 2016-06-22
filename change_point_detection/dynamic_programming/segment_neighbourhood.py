@@ -168,18 +168,18 @@ def write_cps(cps, seg_types, ts, out_path):
 
 def seg_neighbourhood(in_path, out_path, dt_start, dt_end):
     ts = TimeSeries(in_path, metric, dt_start, dt_end)
-    n = len(ts.raw_y)
+    n = len(ts.y)
 
-    calc_same_left(ts.raw_y)
-    calc_prefix_sum(ts.raw_y)
-    calc_mse(ts.raw_y)
+    calc_same_left(ts.y)
+    calc_prefix_sum(ts.y)
+    calc_mse(ts.y)
     if cost_type == "lik_exp":
-        calc_exp_log_lik(ts.raw_y)
+        calc_exp_log_lik(ts.y)
     elif cost_type == "lik_normal":
-        calc_normal_log_lik(ts.raw_y)
+        calc_normal_log_lik(ts.y)
     elif cost_type == "lik_poisson":
-        calc_prefix_sum_log_fact(ts.raw_y)
-        calc_poisson_log_lik(ts.raw_y)
+        calc_prefix_sum_log_fact(ts.y)
+        calc_poisson_log_lik(ts.y)
 
     # calculate dp
     dp = np.zeros(shape=(max_segs + 1, n + 1))
