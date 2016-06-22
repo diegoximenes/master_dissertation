@@ -124,12 +124,12 @@ def median_filter(ts, window_len=3):
     ts_ret = TimeSeries(dt_start=ts.dt_start, dt_end=ts.dt_end)
 
     ts_ret.x = copy.deepcopy(ts.x)
-    ts_ret.y = scipy.signal(ts.y, window_len)
+    ts_ret.y = scipy.signal.medfilt(ts.y, window_len)
     for i in xrange(len(ts_ret.x)):
         ts_ret.dt_mean[ts_ret.x[i]] = ts_ret.y[i]
 
     ts_ret.raw_x = copy.deepcopy(ts.raw_x)
-    ts_ret.raw_y = scipy.signal(ts.raw_y, window_len)
+    ts_ret.raw_y = scipy.signal.medfilt(ts.raw_y, window_len)
 
     return ts_ret
 
