@@ -5,7 +5,7 @@
 !*/
 !.gitignore
 !*.sh
-!*.r
+!*.R
 !*.py
 !*.c
 !*.cpp
