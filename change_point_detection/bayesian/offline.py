@@ -35,8 +35,8 @@ def get_change_points(in_path, out_path, dt_start, dt_end):
     ts_dist.set_dt_mean()
 
     plot_procedures.plot_ts_share_x(ts, ts_dist, "{}.png".format(out_path),
-                                     ylabel1=metric, ylabel2="p",
-                                     ylim2=[-0.01, 1.01], compress=True)
+                                    ylabel1=metric, ylabel2="p",
+                                    ylim2=[-0.02, 1.02], compress=True)
 
 
 def get_datetime(strdate):

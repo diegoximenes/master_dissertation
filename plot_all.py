@@ -1,6 +1,7 @@
 import os
 import sys
 import datetime
+import numpy as np
 
 sys.path.append("./import_scripts/")
 import plot_procedures
@@ -32,14 +33,14 @@ def filter_ts(ts):
     threshold = 0.01
     min_num_of_measures_greater_than_threshold_in_window = 6
 
-    fraction_of_measures = float(len(ts.raw_x)) / (24 * 2 * num_days)
+    fraction_of_measures = float(len(ts.x)) / (24 * 2 * num_days)
     if fraction_of_measures < min_fraction_of_measures:
         return False
 
-    for i in range(window_len - 1, len(ts.raw_y)):
+    for i in range(window_len - 1, len(ts.y)):
         cnt_greater_than_threshold = 0
         for j in range(i - window_len + 1, i):
-            if ts.raw_y[j] > threshold:
+            if ts.y[j] > threshold:
                 cnt_greater_than_threshold += 1
         if cnt_greater_than_threshold >= \
                 min_num_of_measures_greater_than_threshold_in_window:
@@ -53,6 +54,7 @@ def process():
     for server in os.listdir(in_dir):
         print server
         for file_name in os.listdir("{}/{}".format(in_dir, server)):
+            print file_name
             mac = file_name.split(".")[0]
             in_path = "{}/{}/{}".format(in_dir, server, file_name)
             out_path_filtered = ("./plots/dtstart{}_dtend{}/filtered/{}_{}"
@@ -62,12 +64,17 @@ def process():
                                                          server, mac)
 
             ts = TimeSeries(in_path, metric, dt_start, dt_end)
+            ts_median = TimeSeries(in_path, metric, dt_start, dt_end)
+            ts_median.ma_smoothing()
 
             if filter_ts(ts):
                 out_path = out_path_filtered
             else:
                 out_path = out_path_not_filtered
-            plot_procedures.plot_ts(ts, out_path, ylim=[-0.02, 1.02],
-                                    compress=False)
+            plot_procedures.plot_ts_share_x(ts, ts_median, out_path,
+                                            compress=True,
+                                            plot_type2="scatter",
+                                            ylim2=[-0.02, 1.02],
+                                            yticks2=np.arange(0, 1.05, 0.05))
 
 process()

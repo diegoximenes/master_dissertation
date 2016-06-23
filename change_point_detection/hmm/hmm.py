@@ -98,8 +98,7 @@ class HMM():
         if out_path is not None:
             ts_dist = time_series.dist_ts(ts)
             for i in xrange(len(ts.x)):
-                dt = ts.x[i]
-                ts_dist.x.append(dt)
+                ts_dist.x.append(ts.x[i])
                 ts_dist.y.append(hidden_state_path[i])
             ts_dist.set_dt_mean()
 
@@ -114,12 +113,12 @@ class HMM():
 
             plot_procedures.plot_ts_share_x(ts, ts_dist,
                                             "{}.png".format(out_path),
-                                            ylabel=metric,
-                                            dist_ylabel="",
-                                            dist_plot_type="scatter",
-                                            dist_ylim=[0 - 0.5, n - 1 + 0.5],
-                                            dist_yticks=hidden_state_ticks,
-                                            dist_ytick_labels=(
+                                            ylabel1=metric,
+                                            ylabel2="",
+                                            plot_type2="scatter",
+                                            ylim2=[0 - 0.5, n - 1 + 0.5],
+                                            yticks2=hidden_state_ticks,
+                                            ytick_labels2=(
                                                 hidden_state_tick_labels),
                                             compress=True)
 

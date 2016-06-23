@@ -18,21 +18,21 @@ def get_xticks(dt_start, dt_end):
     return xticks, xticks_labels
 
 
-def plot_ts(ts, out_path, plot_raw_data=True, dt_axvline=[], ylabel="",
-            ylim=None, compress=False):
+def plot_ts(ts, out_path, dt_axvline=[], ylabel="", ylim=None, compress=False):
     plt.clf()
     matplotlib.rcParams.update({'font.size': 13})
     plt.gcf().set_size_inches(15, 12)
 
     if compress:
-        xticks, xticks_labels = [], []
+        xticks = range(0, len(ts.x), 20)
+        xticks_labels = copy.deepcopy(xticks)
     else:
         xticks, xticks_labels = get_xticks(ts.dt_start, ts.dt_end)
 
     if compress:
         dt_id = {}
-        for id in xrange(len(ts.raw_x)):
-            dt_id[ts.raw_x[id]] = id
+        for id in xrange(len(ts.x)):
+            dt_id[ts.x[id]] = id
 
     for dt in dt_axvline:
         if compress:
@@ -49,16 +49,10 @@ def plot_ts(ts, out_path, plot_raw_data=True, dt_axvline=[], ylabel="",
         plt.xlim([ts.dt_start, ts.dt_end + datetime.timedelta(days=1)])
     plt.xticks(xticks, xticks_labels, rotation="vertical")
     plt.yticks(np.arange(0, 1 + 0.05, 0.05))
-    if plot_raw_data:
-        if compress:
-            plt.scatter(range(len(ts.raw_x)), ts.raw_y, s=9)
-        else:
-            plt.scatter(ts.raw_x, ts.raw_y, s=9)
+    if compress:
+        plt.scatter(range(len(ts.x)), ts.y, s=9)
     else:
-        if compress:
-            plt.scatter(range(len(ts.x)), ts.y, s=9)
-        else:
-            plt.scatter(ts.x, ts.y, s=9)
+        plt.scatter(ts.x, ts.y, s=9)
     plt.savefig(out_path)
     plt.close("all")
 
@@ -87,6 +81,8 @@ def get_shared_compress(x1, y1, x2, y2):
         if x1[i] == x2[j]:
             ret_x2.append(i)
             ret_y2.append(y2[j])
+            i += 1
+            j += 1
         elif x1[i] < x2[j]:
             i += 1
         else:  # x1[i] > x2[j]
@@ -95,9 +91,9 @@ def get_shared_compress(x1, y1, x2, y2):
     return ret_x1, ret_y1, ret_x2, ret_y2
 
 
-def plot_ts_share_x(ts1, ts2, out_path, plot_raw_data=True, compress=False,
-                    ylabel1="", ylim1=None, ylabel2="", ylim2=None,
-                    plot_type2="plot", yticks2=None, ytick_labels2=None):
+def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
+                    ylabel2="", ylim2=None, plot_type2="plot", yticks2=None,
+                    ytick_labels2=None):
     """
     - description: use ts1 as base ts (top plot). Only plot ts2[t] if t is
     present in ts1
@@ -110,30 +106,16 @@ def plot_ts_share_x(ts1, ts2, out_path, plot_raw_data=True, compress=False,
     f, ax = plt.subplots(2, 1, figsize=(16, 12), sharex="col")
 
     if compress:
-        xticks, xticks_labels = [], []
+        x1, y1, x2, y2 = get_shared_compress(ts1.x, ts1.y, ts2.x, ts2.y)
+    else:
+        x1, y1 = ts1.x, ts1.y
+        x2, y2 = ts2.x, ts2.y
+
+    if compress:
+        xticks = range(0, len(x1), 20)
+        xticks_labels = copy.deepcopy(xticks)
     else:
         xticks, xticks_labels = get_xticks(ts1.dt_start, ts1.dt_end)
-
-    if plot_raw_data:
-        if ts1.ts_type == "dist":
-            x1, y1 = ts1.x, ts1.y
-        else:
-            x1, y1 = ts1.raw_x, ts1.raw_y
-
-        if ts2.ts_type == "dist":
-            x2, y2 = ts2.x, ts2.y
-        else:
-            x2, y2 = ts2.raw_x, ts2.raw_y
-
-        if compress:
-            x1, y1, x2, y2 = get_shared_compress(x1, y1, x2, y2)
-    else:
-        if compress:
-            x1, y1, x2, y2 = get_shared_compress(ts1.x, ts1.y,
-                                                 ts2.x, ts2.y)
-        else:
-            x1, y1 = ts1.x, ts1.y
-            x2, y2 = ts2.x, ts2.y
 
     ax[0].grid()
     ax[0].set_ylabel(ylabel1)
@@ -157,15 +139,19 @@ def plot_ts_share_x(ts1, ts2, out_path, plot_raw_data=True, compress=False,
     if ytick_labels2 is not None:
         ax[1].set_yticklabels(ytick_labels2)
     if plot_type2 == "plot":
-        ax[1].plot(range(len(x2)), y2)
+        ax[1].plot(x2, y2)
     else:
-        ax[1].scatter(range(len(x2)), y2)
+        ax[1].scatter(x2, y2, s=9)
 
     plt.savefig(out_path)
     plt.close("all")
 
 
 def plotax_ts(ax, ts, plot_raw_data=True, dt_axvline=[], ylabel="", ylim=None):
+    """
+    DEPRECATED
+    """
+
     for dt in dt_axvline:
         plt.axvline(dt, color="r", linewidth=2.0)
 

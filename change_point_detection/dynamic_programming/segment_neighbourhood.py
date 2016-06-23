@@ -157,13 +157,13 @@ def write_cps(cps, seg_types, ts, out_path):
     with open("{}_change_points.csv".format(out_path), "w") as f:
         f.write("change_point\n")
         for cp in cps:
-            f.write(str(ts.raw_x[cp - 1]) + "\n")
+            f.write(str(ts.x[cp - 1]) + "\n")
 
     with open("{}_seg_types.csv".format(out_path), "w") as f:
         f.write("seg_type,left_point,right_point\n")
         for p in seg_types:
-            f.write("{},{},{}".format(p[0], ts.raw_x[p[1] - 1],
-                                      ts.raw_x[p[2] - 1]))
+            f.write("{},{},{}".format(p[0], ts.x[p[1] - 1],
+                                      ts.x[p[2] - 1]))
 
 
 def seg_neighbourhood(in_path, out_path, dt_start, dt_end):
@@ -223,7 +223,7 @@ def seg_neighbourhood(in_path, out_path, dt_start, dt_end):
 
     dt_cps = []
     for cp in cps:
-        dt_cps.append(ts.raw_x[cp - 1])
+        dt_cps.append(ts.x[cp - 1])
     plot_procedures.plot_ts(ts, out_path + ".png", ylabel="loss",
                             ylim=[-0.02, 1.02], dt_axvline=dt_cps,
                             compress=True)

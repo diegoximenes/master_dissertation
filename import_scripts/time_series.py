@@ -1,5 +1,7 @@
-import read_input
 import scipy.signal
+import copy
+
+import read_input
 
 
 class TimeSeries:
@@ -56,12 +58,24 @@ class TimeSeries:
         for i in xrange(len(self.x)):
             self.dt_mean[self.x[i]] = self.y[i]
 
+    def get_description(self):
+        """
+        - description: returns a string describing current ts
+        """
+
+        s = "dtstart{}_dtend{}_type{}_compressed{}".format(self.dt_start,
+                                                           self.dt_end,
+                                                           self.ts_type,
+                                                           self.compressed)
+        return s
+
     def compress(self):
         """
         - description:
             - remove None from time series
         """
 
+        self.compressed = True
         ret_x, ret_y = [], []
         for i in range(len(self.y)):
             if self.y[i] is not None:
@@ -70,7 +84,7 @@ class TimeSeries:
         self.x, self.y = ret_x, ret_y
         self.set_dt_mean()
 
-    def ma_smoothing(self, y, window_len):
+    def ma_smoothing(self, window_len=11):
         """
         - description: apply ma smoothing. If y[t] == None, than this
         position is ignored on the computation. Useful to visually check
@@ -108,8 +122,11 @@ class TimeSeries:
 def dist_ts(ts):
     """
     - description:
-        - return a TimeSeries with same dt_start, dt_end as the argument, but
-          with other attributes empty
+        - return a TimeSeries with same dt_start, dt_end, raw_x, raw_y  as the
+        argument, but with other attributes empty
     """
 
-    return TimeSeries(dt_start=ts.dt_start, dt_end=ts.dt_end, ts_type="dist")
+    ts_ret = TimeSeries(dt_start=ts.dt_start, dt_end=ts.dt_end, ts_type="dist")
+    ts_ret.raw_x = copy.deepcopy(ts.raw_x)
+    ts_ret.raw_y = copy.deepcopy(ts.raw_y)
+    return ts_ret
