@@ -29,7 +29,7 @@ for(i in 1:nrow(df))
 
 #changepoint <- cpt.meanvar(ts, penalty="SIC", method="SegNeigh", Q=10)
 changepoint <- cpt.meanvar(ts, pen.value=200, penalty="Manual", 
-                           method="SegNeigh", Q=10)
+                           method="PELT", Q=10)
 #check slot names: slotNames(changepoint)
 plot(changepoint)
 

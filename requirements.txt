@@ -1,0 +1,12 @@
+- R
+    - changepoint
+- python
+    - pytz
+    - pymongo
+    - pyemd
+    - ghmm
+    - scikit learn
+    - numpy
+    - scipy
+    - pandas
+    - matplotlib
