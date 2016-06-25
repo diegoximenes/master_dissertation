@@ -1,6 +1,7 @@
 - R
     - changepoint
 - python
+    - hopcroftkarp
     - pytz
     - pymongo
     - pyemd
@@ -10,3 +11,4 @@
     - scipy
     - pandas
     - matplotlib
+- mongodb

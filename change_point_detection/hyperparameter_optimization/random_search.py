@@ -10,7 +10,7 @@ from sklearn.cross_validation import ShuffleSplit
 from sklearn.grid_search import ParameterSampler
 
 client = MongoClient()
-db = client["change_point"]
+db = client["change_point_random_search"]
 
 
 class SegmentNeighbourhood():
