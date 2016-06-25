@@ -11,10 +11,10 @@ import sys
 import copy
 import datetime
 
-sys.path.append("../../import_scripts/")
-import time_series
-import plot_procedures
-from time_series import TimeSeries
+sys.path.append("../../../")
+import utils.time_series as time_series
+import utils.plot_procedures as plot_procedures
+from utils.time_series import TimeSeries
 
 # PARAMETERS
 metric = "loss"
@@ -221,7 +221,7 @@ def get_tp_params(tp):
 def get_ts(tp):
     mac, server, dt_start, dt_end = get_tp_params(tp)
     date_dir = "{}_{}".format(dt_start.year, str(dt_start.month).zfill(2))
-    in_path = "../input/{}/{}/{}.csv".format(date_dir, server, mac)
+    in_path = "../../input/{}/{}/{}.csv".format(date_dir, server, mac)
     ts = TimeSeries(in_path, metric, dt_start, dt_end)
     return ts
 

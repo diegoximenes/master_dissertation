@@ -4,9 +4,9 @@ import sys
 import datetime
 import numpy as np
 
-sys.path.append("../../import_scripts/")
-import plot_procedures
-from time_series import TimeSeries
+sys.path.append("../../../")
+import utils.plot_procedures as plot_procedures
+from utils.time_series import TimeSeries
 
 # PARAMETERS
 dt_start = datetime.datetime(2015, 12, 1)
@@ -274,7 +274,7 @@ def process():
         dt_start = get_datetime(date_start)
         dt_end = get_datetime(date_end)
         date_dir = "{}_{}".format(dt_start.year, str(dt_start.month).zfill(2))
-        in_path = "../input/{}/{}/{}.csv".format(date_dir, server, mac)
+        in_path = "../../input/{}/{}/{}.csv".format(date_dir, server, mac)
         out_path = ("./plots/server{}_mac{}_datestart{}_dateend{}".
                     format(server, mac, date_start, date_end))
 

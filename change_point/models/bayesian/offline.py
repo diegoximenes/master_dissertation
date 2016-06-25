@@ -6,10 +6,10 @@ import numpy as np
 import bayesian_changepoint_detection.offline_changepoint_detection as offcd
 from functools import partial
 
-sys.path.append("../../import_scripts/")
-import plot_procedures
-import time_series
-from time_series import TimeSeries
+sys.path.append("../../../")
+import utils.plot_procedures as plot_procedures
+import utils.time_series as time_series
+from utils.time_series import TimeSeries
 
 # PARAMETERS
 metric = "loss"
@@ -86,7 +86,7 @@ def process():
         dt_start = get_datetime(date_start)
         dt_end = get_datetime(date_end)
         date_dir = "{}_{}".format(dt_start.year, str(dt_start.month).zfill(2))
-        in_path = "../input/{}/{}/{}.csv".format(date_dir, server, mac)
+        in_path = "../../input/{}/{}/{}.csv".format(date_dir, server, mac)
         out_path = "./plots/server{}_mac{}_datestart{}_dateend{}".format(
             server, mac, date_start, date_end)
 
