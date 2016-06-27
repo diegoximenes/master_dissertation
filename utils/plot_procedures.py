@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 
 
 def get_xticks(dt_start, dt_end):
-    # return daily xticks
     xticks, xticks_labels = [], []
     for i in range((dt_end - dt_start).days + 2):
         dt = dt_start + datetime.timedelta(days=i)
@@ -59,18 +58,20 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", ylim=None, compress=False):
 
 def get_shared_compress(x1, y1, x2, y2):
     """
-    - description: ret_x2 will be a subset of ret_x1: ret_x1[i] == ret_x2[j]
-    iff x1[i] == x2[j]
-    - arguments:
-        - x1:
-        - y1:
-        - x2:
-        - y2:
-    -returns:
-        - ret_x1: = range(len(x1))
-        - ret_y1: = y1
-        - ret_x2:
-        - ret_y2:
+    ret_x2 will be a subset of ret_x1: ret_x1[i] == ret_x2[j] iff
+    x1[i] == x2[j]
+
+    Args:
+        x1:
+        y1:
+        x2:
+        y2:
+
+    Returns:
+        ret_x1: = range(len(x1))
+        ret_y1: = y1
+        ret_x2:
+        ret_y2:
     """
 
     ret_x1, ret_y1 = range(len(x1)), copy.deepcopy(y1)
@@ -95,10 +96,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
                     ylabel2="", ylim2=None, plot_type2="plot", yticks2=None,
                     ytick_labels2=None):
     """
-    - description: use ts1 as base ts (top plot). Only plot ts2[t] if t is
-    present in ts1
-    - arguments:
-    - returns:
+    use ts1 as base ts (top plot). Only plot ts2[t] if t is present in ts1
     """
 
     plt.clf()

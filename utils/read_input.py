@@ -6,16 +6,15 @@ import dt_procedures
 
 def get_hourly(in_path, metric, dt_start, dt_end):
     """
-    - description:
-        - returns a dic in which the keys are each hour of the target month
-          and the value is the mean of the specified hour
-    - arguments
-    - returns:
-        - x: sorted dts
-        - y: values associated with x
-        - dic:
-            - key: datetime
-            - value: mean of measures in strdt bin
+    returns a dic in which the keys are each hour of the target month and the
+    value is the mean of the specified hour
+
+    Returns:
+        x: sorted dts
+        y: values associated with x
+        dic:
+            key: datetime
+            value: mean of measures in strdt bin
     """
 
     x = dt_procedures.generate_dt_list(dt_start, dt_end)
@@ -50,12 +49,10 @@ def get_hourly(in_path, metric, dt_start, dt_end):
 
 def get_raw(in_path, metric, dt_start, dt_end):
     """
-    - description:
-    - arguments
-    - returns:
-        - x: sorted datetimes
-        - y: values, according with raw_x
-        - dt_mean:
+    Returns:
+        x: sorted datetimes
+        y: values, according with raw_x
+        dt_mean:
     """
 
     l = []

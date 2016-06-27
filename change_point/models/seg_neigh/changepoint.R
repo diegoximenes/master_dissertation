@@ -1,20 +1,28 @@
 library(changepoint)
 
-#args = commandArgs(trailingOnly = TRUE)
-#in_path <- args[1]
-#out_path <- args[2]
-#strdate_start <- args[3]
-#strdate_end <- args[4] 
+args <- commandArgs(trailingOnly = TRUE)
+in_path <- args[1]
+out_path <- args[2]
+strdate_start <- args[3]
+strdate_end <- args[4] 
+pen <- args[5]
 
-in_path = "../input/2016_05/SNEDTCPROB01/64:66:B3:4F:FE:CE.csv"
-out_path <- "cp.csv"
-strdate_start <- "2016-05-11"
-strdate_end <- "2016-05-21" #not included in range
+#in_path = "../../../input/2016_05/SNEDTCPROB01/64:66:B3:4F:FE:CE.csv"
+#out_path <- "cp.csv"
+#strdate_start <- "2016-05-11"
+#strdate_end <- "2016-05-20"
+#pen=7.80167152797
+
+print(in_path)
+print(out_path)
+print(strdate_start)
+print(strdate_end)
+print(pen)
 
 df <- read.csv(in_path, header=T, sep=",")
 
 epoch_start <- as.numeric(as.POSIXct(strdate_start))
-epoch_end <- as.numeric(as.POSIXct(strdate_end))
+epoch_end <- as.numeric(as.POSIXct(strdate_end)) + 24*60*60 #include last day
 
 #csv file is already sorted by dt
 ts <- c()
@@ -28,11 +36,11 @@ for(i in 1:nrow(df))
 }
 
 #changepoint <- cpt.meanvar(ts, penalty="SIC", method="SegNeigh", Q=10)
-changepoint <- cpt.meanvar(ts, pen.value=200, penalty="Manual", 
-                           method="PELT", Q=10)
+changepoint <- cpt.meanvar(ts, pen.value=pen, penalty="Manual", 
+                           method="PELT")
 #check slot names: slotNames(changepoint)
-plot(changepoint)
+#plot(changepoint)
 
-write("changepoint,datetime", out_path)
+write("id,dt", out_path)
 for(cp in slot(changepoint, "cpts")) 
     write(paste(cp, df[cp, "dt"], sep=","), out_path, append=T)

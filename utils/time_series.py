@@ -6,18 +6,19 @@ import read_input
 
 class TimeSeries:
     """
-    - description: by now univariate time series
-    - attributes:
-        - dt_mean: dictionary
-        - x: sorted dt list of specified period
-        - y: mean values associated with x
-        - raw_x:
-        - raw_y:
-        - dt_start: datetime of the first day considered
-        - dt_end: datetime of the last day considered
-        - ts_type: "raw", "hourly", "dist"
-        - compressed: boolean. If type is "raw" then this parameter is
-        irrelevant
+    by now univariate time series
+
+    Attributes:
+        dt_mean: dictionary
+        x: sorted dt list of specified period
+        y: mean values associated with x
+        raw_x:
+        raw_y:
+        dt_start: datetime of the first day considered
+        dt_end: datetime of the last day considered
+        ts_type: "raw", "hourly", "dist"
+        compressed: boolean. If type is "raw" then this parameter is
+            irrelevant
     """
 
     def __init__(self, in_path=None, metric=None, dt_start=None, dt_end=None,
@@ -60,7 +61,7 @@ class TimeSeries:
 
     def get_description(self):
         """
-        - description: returns a string describing current ts
+        returns a string describing current ts
         """
 
         s = "dtstart{}_dtend{}_type{}_compressed{}".format(self.dt_start,
@@ -71,8 +72,7 @@ class TimeSeries:
 
     def compress(self):
         """
-        - description:
-            - remove None from time series
+        remove None from time series
         """
 
         self.compressed = True
@@ -86,9 +86,8 @@ class TimeSeries:
 
     def ma_smoothing(self, window_len=11):
         """
-        - description: apply ma smoothing. If y[t] == None, than this
-        position is ignored on the computation. Useful to visually check
-        periodicity.
+        apply ma smoothing. If y[t] == None, than this position is ignored on
+        the computation. Useful to visually check periodicity.
         """
 
         ret_y = []
@@ -110,9 +109,7 @@ class TimeSeries:
 
     def median_filter(self, window_len=3):
         """
-        - description: useful to remove outliers.
-        - arguments:
-        - returns:
+        useful to remove outliers.
         """
 
         self.y = scipy.signal.medfilt(self.y, window_len)
@@ -121,9 +118,8 @@ class TimeSeries:
 
 def dist_ts(ts):
     """
-    - description:
-        - return a TimeSeries with same dt_start, dt_end, raw_x, raw_y  as the
-        argument, but with other attributes empty
+    return a TimeSeries with same dt_start, dt_end, raw_x, raw_y  as the
+    argument, but with other attributes empty
     """
 
     ts_ret = TimeSeries(dt_start=ts.dt_start, dt_end=ts.dt_end, ts_type="dist")

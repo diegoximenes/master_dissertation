@@ -4,13 +4,30 @@ import sys
 import datetime
 import numpy as np
 
-sys.path.append("../../../")
+base_dir = os.path.join(os.path.dirname(__file__), "../../..")
+sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
 from utils.time_series import TimeSeries
 
+
+class SegmentNeighbourhood():
+    def __init__(self, pen):
+        self.pen = pen
+
+    def fit(self, df):
+        print "fit_df={}\n".format(df)
+        pass
+
+    def predict(self, df):
+        print "predict_df={}\n".format(df)
+        pass
+
+    def score(self, df):
+        print "score_df={}\n".format(df)
+        return 0
+
+
 # PARAMETERS
-dt_start = datetime.datetime(2015, 12, 1)
-dt_end = datetime.datetime(2015, 12, 7)
 metric = "loss"
 
 max_segs = 10  # not used in O(n**2) solution
@@ -241,7 +258,7 @@ def get_datetime(strdate):
     return datetime.datetime(year, month, day)
 
 
-def process():
+def main():
     targets = [["64:66:B3:4F:FE:CE", "SNEDTCPROB01", "05-11-2016",
                 "05-20-2016"],
                ["64:66:B3:7B:9B:B8", "SOODTCLDM24", "05-11-2016",
@@ -281,4 +298,5 @@ def process():
         create_dirs()
         seg_neighbourhood(in_path, out_path, dt_start, dt_end)
 
-process()
+if __name__ == "__main__":
+    main()

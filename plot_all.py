@@ -1,11 +1,12 @@
-import os
 import sys
+import os
 import datetime
 import numpy as np
 
-sys.path.append("./import_scripts/")
-import plot_procedures
-from time_series import TimeSeries
+base_dir = os.path.join(os.path.dirname(__file__), ".")
+sys.path.append(base_dir)
+import utils.plot_procedures as plot_procedures
+from utils.time_series import TimeSeries
 
 # PARAMETERS
 dt_start = datetime.datetime(2016, 5, 11)
@@ -14,15 +15,19 @@ metric = "loss"
 
 dt_end = dt_start + datetime.timedelta(days=num_days - 1)
 date_dir = "{}_{}".format(dt_start.year, str(dt_start.month).zfill(2))
-in_dir = "./change_point_detection/input/{}".format(date_dir)
+in_dir = "{}/input/{}".format(base_dir, date_dir)
+out_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 def create_dirs():
-    for dir in ["./plots/",
-                "./plots/dtstart{}_dtend{}".format(dt_start, dt_end),
-                "./plots/dtstart{}_dtend{}/filtered".format(dt_start, dt_end),
-                "./plots/dtstart{}_dtend{}/not_filtered".format(dt_start,
-                                                                dt_end)]:
+    for dir in ["{}/plots/".format(out_dir),
+                "{}/plots/dtstart{}_dtend{}".format(out_dir, dt_start,
+                                                    dt_end),
+                "{}/plots/dtstart{}_dtend{}/filtered".format(out_dir,
+                                                             dt_start, dt_end),
+                "{}/plots/dtstart{}_dtend{}/not_filtered".format(out_dir,
+                                                                 dt_start,
+                                                                 dt_end)]:
         if not os.path.exists(dir):
             os.makedirs(dir)
 
@@ -57,11 +62,12 @@ def process():
             print file_name
             mac = file_name.split(".")[0]
             in_path = "{}/{}/{}".format(in_dir, server, file_name)
-            out_path_filtered = ("./plots/dtstart{}_dtend{}/filtered/{}_{}"
-                                 ".png").format(dt_start, dt_end, server, mac)
-            out_path_not_filtered = ("./plots/dtstart{}_dtend{}/not_filtered/"
-                                     "{}_{}.png").format(dt_start, dt_end,
-                                                         server, mac)
+            out_path_filtered = ("{}/plots/dtstart{}_dtend{}/filtered/{}_{}"
+                                 ".png").format(out_dir, dt_start, dt_end,
+                                                server, mac)
+            out_path_not_filtered = ("{}/plots/dtstart{}_dtend{}/not_filtered/"
+                                     "{}_{}.png").format(out_dir, dt_start,
+                                                         dt_end, server, mac)
 
             ts = TimeSeries(in_path, metric, dt_start, dt_end)
             ts_median = TimeSeries(in_path, metric, dt_start, dt_end)
@@ -77,4 +83,5 @@ def process():
                                             ylim2=[-0.02, 1.02],
                                             yticks2=np.arange(0, 1.05, 0.05))
 
-process()
+if __name__ == "__main__":
+    process()

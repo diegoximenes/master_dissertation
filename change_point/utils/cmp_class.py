@@ -35,6 +35,12 @@ def conf_mat(correct_class, pred_class, win_len):
     conf = {}
     conf["tp"] = len(max_match) / 2
     conf["fp"] = len(pred_class) - conf["tp"]
-    conf["fn"] - len(correct_class) - conf["tp"]
+    conf["fn"] = len(correct_class) - conf["tp"]
 
     return conf
+
+
+def f1_score(conf):
+    num = float(2 * conf["tp"])
+    den = float(2 * conf["tp"] + conf["fp"] + conf["fn"])
+    return num / den

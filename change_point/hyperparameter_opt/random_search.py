@@ -1,51 +1,47 @@
+import os
+import sys
 import time
 import copy
 import platform
 from datetime import datetime
 import pandas as pd
 import numpy as np
-from pymongo import MongoClient
+import pymongo
 from scipy.stats import uniform
 from sklearn.cross_validation import ShuffleSplit
 from sklearn.grid_search import ParameterSampler
 
-client = MongoClient()
+base_dir = os.path.join(os.path.dirname(__file__), "../..")
+sys.path.append(base_dir)
+from change_point.models.seg_neigh.seg_neigh import SegmentNeighbourhood
+from change_point.utils.cmp_class import f1_score
+
+client = pymongo.MongoClient()
 db = client["change_point_random_search"]
-
-
-class SegmentNeighbourhood():
-    def __init__(self, pen):
-        self.pen = pen
-
-    def fit(self, df):
-        pass
-
-    def predict(self, df):
-        pass
-
-    def score(self, df):
-        return 0
 
 
 class RandomSearch():
     """
-    - attributes:
-        - model_class: model class to be tested
-        - param_distr: dictionary used by ParameterSampler
-        - df: pandas df with train dataset
-        - cv: cross validation iterator
+    Attributes:
+        model_class: model class to be tested
+        param_distr: dictionary used by ParameterSampler
+        df: pandas df with train dataset
+        cv: cross validation iterator
     """
 
-    def __init__(self, model_class, param_distr, train_path):
+    def __init__(self, model_class, param_distr, cmp_class_args, f_cost,
+                 train_path):
         """
-        - args:
-            - model_class:
-            - param_distr:
-            - train_path: path to train file
+        Args:
+            model_class:
+            param_distr:
+            train_path: path to train file
         """
 
         self.model_class = model_class
         self.param_distr = param_distr
+        self.cmp_class_args = cmp_class_args
+        self.f_cost = f_cost
 
         self.df = pd.read_csv(train_path)
 
@@ -57,14 +53,21 @@ class RandomSearch():
         # for train_index, test_index in self.cv:
         #    print("%s %s" % (train_index, test_index))
 
+        collection = db[self.model_class.__name__]
+        collection.create_index([("score", pymongo.ASCENDING),
+                                 ("f_cost", pymongo.ASCENDING)])
+
     def run(self, n_iter):
         params = ParameterSampler(self.param_distr, n_iter=n_iter)
-        for param in params:
+        for run, param in enumerate(params):
+            print "run {}/{}".format(run + 1, len(params))
+
             model = self.model_class(**param)
 
             # Iterate through cv iterator accumalating score.
             # In each iteration train model with train set and get score in
             # validation set. The final score will be the mean of scores.
+            conf = {"tp": 0, "tn": 0, "fp": 0, "fn": 0}
             score, cnt_iter = 0, 0
             fit_time, score_time = 0, 0
             for train_idxs, val_idxs in self.cv:
@@ -75,8 +78,13 @@ class RandomSearch():
                 fit_time += time.time() - start_time
 
                 start_time = time.time()
-                score += model.score(self.df.iloc[val_idxs])
+                lscore, lconf = model.score(self.df.iloc[val_idxs],
+                                            self.cmp_class_args, self.f_cost)
                 score_time += time.time() - start_time
+
+                score += lscore
+                for key in lconf.keys():
+                    conf[key] += lconf[key]
 
             if cnt_iter > 0:
                 score /= float(cnt_iter)
@@ -86,22 +94,28 @@ class RandomSearch():
             # save results in mongodb
             dic = {}
             dic["params"] = copy.deepcopy(param)
+            dic["cmp_class_args"] = copy.deepcopy(self.cmp_class_args)
+            dic["f_cost"] = self.f_cost.__name__
+            dic["score"] = score
+            dic["conf"] = copy.deepcopy(conf)
             dic["exec_stats"] = {}
             dic["exec_stats"]["host"] = platform.node()
             dic["exec_stats"]["fit_time"] = fit_time
             dic["exec_stats"]["score_time"] = score_time
-            dic["exec_stats"]["score"] = score
             dic["exec_stats"]["insertion_dt_utc"] = datetime.utcnow()
             collection = db[self.model_class.__name__]
             collection.insert(dic)
 
 
 def main():
+    cmp_class_args = {"win_len": 10}
     # uniform distribution in [loc, loc + scale]
-    param_distr = {"pen": uniform(loc=0, scale=10)}
+    param_distr = {"pen": uniform(loc=0, scale=1000)}
     random_search = RandomSearch(SegmentNeighbourhood, param_distr,
-                                 "./train.csv")
-    random_search.run(2)
+                                 cmp_class_args, f1_score,
+                                 "{}/change_point/input/train.csv".
+                                 format(base_dir))
+    random_search.run(1)
 
 
 if __name__ == "__main__":

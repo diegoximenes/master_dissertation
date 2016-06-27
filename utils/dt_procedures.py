@@ -31,7 +31,6 @@ def in_dt_range(dt, dt_start, dt_end):
     return ((dt >= dt_start) and (dt <= dt_end + timedelta(days=1)))
 
 
-# get_datetime_sp
 def from_strdtUtc_to_dtSp(strdt):
     return from_utc_to_sp(from_strdt_to_dt(strdt))
 
@@ -44,3 +43,31 @@ def from_strdt_to_dt(strdt):
     hour, minute, second = (int(time.split(":")[0]), int(time.split(":")[1]),
                             int(time.split(":")[2].split("-")[0]))
     return datetime(year, month, day, hour, minute, second)
+
+
+def from_js_strdate_to_dt(strdate):
+    day = int(strdate.split("/")[1])
+    month = int(strdate.split("/")[0])
+    year = int(strdate.split("/")[2])
+    return datetime(year, month, day)
+
+
+def from_js_strdate_to_r_strdate(strdate):
+    return "{}-{}-{}".format(strdate.split("/")[2],
+                             strdate.split("/")[0],
+                             strdate.split("/")[1])
+
+
+def from_js_strdt_to_dt(strdt_js):
+    strdate = strdt_js.split("T")[0]
+    strtime = strdt_js.split("T")[1].split(".000")[0]
+    dt = datetime(int(strdate.split("-")[0]),
+                  int(strdate.split("-")[1]),
+                  int(strdate.split("-")[2]),
+                  int(strtime.split(":")[0]),
+                  int(strtime.split(":")[1]),
+                  int(strtime.split(":")[2]))
+    dt_sp = from_utc_to_sp(dt)
+    dt_ret = datetime(dt_sp.year, dt_sp.month, dt_sp.day, dt_sp.hour,
+                      dt_sp.minute, dt_sp.second)
+    return dt_ret
