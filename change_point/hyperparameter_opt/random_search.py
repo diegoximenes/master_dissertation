@@ -7,7 +7,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 import pymongo
-from scipy.stats import uniform
+from scipy.stats import uniform, randint
 from sklearn.cross_validation import ShuffleSplit
 from sklearn.grid_search import ParameterSampler
 
@@ -78,11 +78,11 @@ class RandomSearch():
                 fit_time += time.time() - start_time
 
                 start_time = time.time()
-                lscore, lconf = model.score(self.df.iloc[val_idxs],
-                                            self.cmp_class_args, self.f_cost)
+                lconf = model.score(self.df.iloc[val_idxs],
+                                    self.cmp_class_args)
                 score_time += time.time() - start_time
 
-                score += lscore
+                score += self.f_cost(lconf)
                 for key in lconf.keys():
                     conf[key] += lconf[key]
 
@@ -110,12 +110,14 @@ class RandomSearch():
 def main():
     cmp_class_args = {"win_len": 10}
     # uniform distribution in [loc, loc + scale]
-    param_distr = {"pen": uniform(loc=0, scale=1000)}
+    param_distr = {"pen": uniform(loc=0, scale=1000),
+                   "distr_type": ["Normal", "Exponential"],
+                   "min_seg_len": randint(2, 15)}
     random_search = RandomSearch(SegmentNeighbourhood, param_distr,
                                  cmp_class_args, f1_score,
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
-    random_search.run(1)
+    random_search.run(10000)
 
 
 if __name__ == "__main__":

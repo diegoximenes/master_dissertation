@@ -5,19 +5,17 @@ in_path <- args[1]
 out_path <- args[2]
 strdate_start <- args[3]
 strdate_end <- args[4] 
-pen <- args[5]
-
-#in_path = "../../../input/2016_05/SNEDTCPROB01/64:66:B3:4F:FE:CE.csv"
-#out_path <- "cp.csv"
-#strdate_start <- "2016-05-11"
-#strdate_end <- "2016-05-20"
-#pen=7.80167152797
+pen <- as.numeric(args[5])
+distr_type <- args[6]
+min_seg_len <- as.numeric(args[7])
 
 print(in_path)
 print(out_path)
 print(strdate_start)
 print(strdate_end)
 print(pen)
+print(distr_type)
+print(min_seg_len)
 
 df <- read.csv(in_path, header=T, sep=",")
 
@@ -35,12 +33,12 @@ for(i in 1:nrow(df))
         ts <- c(ts, df[i, "loss"])
 }
 
-#changepoint <- cpt.meanvar(ts, penalty="SIC", method="SegNeigh", Q=10)
-changepoint <- cpt.meanvar(ts, pen.value=pen, penalty="Manual", 
-                           method="PELT")
+changepoint <- cpt.meanvar(ts, penalty="Manual", 
+                           method="PELT", pen.value=pen, test.stat=distr_type, 
+                           minseglen=min_seg_len)
 #check slot names: slotNames(changepoint)
 #plot(changepoint)
 
 write("id,dt", out_path)
 for(cp in slot(changepoint, "cpts")) 
-    write(paste(cp, df[cp, "dt"], sep=","), out_path, append=T)
+    write(paste(cp - 1, df[cp, "dt"], sep=","), out_path, append=T)

@@ -1,4 +1,28 @@
+import os
+import sys
+import pandas as pd
 from hopcroftkarp import HopcroftKarp
+
+base_dir = os.path.join(os.path.dirname(__file__), "../..")
+sys.path.append(base_dir)
+import utils.dt_procedures as dt_procedures
+
+
+def unpack_pandas_row(row):
+    dt_start = dt_procedures.from_js_strdate_to_dt(row["date_start"])
+    dt_end = dt_procedures.from_js_strdate_to_dt(row["date_end"])
+    date_dir = "{}_{}".format(dt_start.year, str(dt_start.month).zfill(2))
+    in_path = "{}/input/{}/{}/{}.csv".format(base_dir, date_dir, row["server"],
+                                             row["mac"])
+    return in_path, dt_start, dt_end
+
+
+def from_str_to_int_list(str_l):
+    if pd.isnull(str_l):
+        ret = []
+    else:
+        ret = sorted(map(int, str_l.split(",")))
+    return ret
 
 
 def conf_mat(correct_class, pred_class, win_len):

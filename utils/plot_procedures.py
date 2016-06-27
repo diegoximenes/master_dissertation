@@ -17,6 +17,22 @@ def get_xticks(dt_start, dt_end):
     return xticks, xticks_labels
 
 
+def get_dt_id(ts):
+    dt_id = {}
+    for id in xrange(len(ts.x)):
+        dt_id[ts.x[id]] = id
+    return dt_id
+
+
+def plot_axvline(dt_axvline, dt_id, compress, ax):
+    for dt in dt_axvline:
+        if compress:
+            xvline = dt_id[dt]
+        else:
+            xvline = dt
+        ax.axvline(xvline, color="r", linewidth=2.0)
+
+
 def plot_ts(ts, out_path, dt_axvline=[], ylabel="", ylim=None, compress=False):
     plt.clf()
     matplotlib.rcParams.update({'font.size': 13})
@@ -29,16 +45,9 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", ylim=None, compress=False):
         xticks, xticks_labels = get_xticks(ts.dt_start, ts.dt_end)
 
     if compress:
-        dt_id = {}
-        for id in xrange(len(ts.x)):
-            dt_id[ts.x[id]] = id
+        dt_id = get_dt_id(ts)
 
-    for dt in dt_axvline:
-        if compress:
-            xvline = dt_id[dt]
-        else:
-            xvline = dt
-        plt.axvline(xvline, color="r", linewidth=2.0)
+    plot_axvline(dt_axvline, dt_id, compress, plt)
 
     plt.grid()
     if ylim is not None:
@@ -93,8 +102,9 @@ def get_shared_compress(x1, y1, x2, y2):
 
 
 def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
-                    ylabel2="", ylim2=None, plot_type2="plot", yticks2=None,
-                    ytick_labels2=None):
+                    title1="", dt_axvline1=[], ylabel2="", ylim2=None,
+                    title2="", plot_type2="plot", yticks2=None,
+                    ytick_labels2=None, dt_axvline2=[]):
     """
     use ts1 as base ts (top plot). Only plot ts2[t] if t is present in ts1
     """
@@ -105,17 +115,23 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
 
     if compress:
         x1, y1, x2, y2 = get_shared_compress(ts1.x, ts1.y, ts2.x, ts2.y)
+
+        xticks = range(0, len(x1), 20)
+        xticks_labels = copy.deepcopy(xticks)
+
+        dt_id1 = get_dt_id(ts1)
+        dt_id2 = get_dt_id(ts2)
     else:
         x1, y1 = ts1.x, ts1.y
         x2, y2 = ts2.x, ts2.y
 
-    if compress:
-        xticks = range(0, len(x1), 20)
-        xticks_labels = copy.deepcopy(xticks)
-    else:
         xticks, xticks_labels = get_xticks(ts1.dt_start, ts1.dt_end)
 
+    plot_axvline(dt_axvline1, dt_id1, compress, ax[0])
+    plot_axvline(dt_axvline2, dt_id2, compress, ax[1])
+
     ax[0].grid()
+    ax[0].set_title(title1)
     ax[0].set_ylabel(ylabel1)
     ax[0].set_xticks(xticks)
     if not compress:
@@ -125,6 +141,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     ax[0].scatter(x1, y1, s=9)
 
     ax[1].grid()
+    ax[1].set_title(title2)
     ax[1].set_ylabel(ylabel2)
     ax[1].set_xticks(xticks)
     ax[1].set_xticklabels(xticks_labels, rotation="vertical")
