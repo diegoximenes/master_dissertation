@@ -14,7 +14,7 @@ from sklearn.grid_search import ParameterSampler
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 from change_point.models.seg_neigh.seg_neigh import SegmentNeighbourhood
-from change_point.utils.cmp_class import f1_score
+import change_point.utils.cmp_class as cmp_class
 
 client = pymongo.MongoClient()
 db = client["change_point_random_search"]
@@ -29,8 +29,8 @@ class RandomSearch():
         cv: cross validation iterator
     """
 
-    def __init__(self, model_class, param_distr, cmp_class_args, f_cost,
-                 train_path):
+    def __init__(self, model_class, param_distr, cmp_class_args,
+                 preprocess_distr, f_cost, train_path):
         """
         Args:
             model_class:
@@ -39,8 +39,9 @@ class RandomSearch():
         """
 
         self.model_class = model_class
-        self.param_distr = param_distr
-        self.cmp_class_args = cmp_class_args
+        self.param_distr = copy.deepcopy(param_distr)
+        self.cmp_class_args = copy.deepcopy(cmp_class_args)
+        self.preprocess_distr = copy.deepcopy(preprocess_distr)
         self.f_cost = f_cost
 
         self.df = pd.read_csv(train_path)
@@ -58,11 +59,20 @@ class RandomSearch():
                                  ("f_cost", pymongo.ASCENDING)])
 
     def run(self, n_iter):
-        params = ParameterSampler(self.param_distr, n_iter=n_iter)
-        for run, param in enumerate(params):
-            print "run {}/{}".format(run + 1, len(params))
+        ps_param = ParameterSampler(self.param_distr, n_iter=n_iter)
+        ps_preprocess = ParameterSampler(self.preprocess_distr, n_iter=n_iter)
+        for run, (param, preprocess_args) in enumerate(zip(ps_param,
+                                                           ps_preprocess)):
+            print "run {}/{}".format(run + 1, n_iter)
+            print "param={}".format(param)
+            print "preprocess_args={}".format(preprocess_args)
 
-            model = self.model_class(**param)
+            if ((not cmp_class.valid_preprocess_args(preprocess_args)) or
+                    (not cmp_class.valid_param(param))):
+                print "invalid"
+                continue
+
+            model = self.model_class(preprocess_args=preprocess_args, **param)
 
             # Iterate through cv iterator accumalating score.
             # In each iteration train model with train set and get score in
@@ -93,11 +103,12 @@ class RandomSearch():
 
             # save results in mongodb
             dic = {}
-            dic["params"] = copy.deepcopy(param)
-            dic["cmp_class_args"] = copy.deepcopy(self.cmp_class_args)
+            dic["params"] = param
+            dic["cmp_class_args"] = self.cmp_class_args
+            dic["preprocess_args"] = preprocess_args
             dic["f_cost"] = self.f_cost.__name__
             dic["score"] = score
-            dic["conf"] = copy.deepcopy(conf)
+            dic["conf"] = conf
             dic["exec_stats"] = {}
             dic["exec_stats"]["host"] = platform.node()
             dic["exec_stats"]["fit_time"] = fit_time
@@ -109,12 +120,16 @@ class RandomSearch():
 
 def main():
     cmp_class_args = {"win_len": 10}
+    preprocess_distr = {"filter_type": ["none", "ma_smoothing",
+                                        "median_filter"],
+                        "win_len": randint(2, 10)}
     # uniform distribution in [loc, loc + scale]
     param_distr = {"pen": uniform(loc=0, scale=1000),
                    "distr_type": ["Normal", "Exponential"],
                    "min_seg_len": randint(2, 15)}
     random_search = RandomSearch(SegmentNeighbourhood, param_distr,
-                                 cmp_class_args, f1_score,
+                                 cmp_class_args, preprocess_distr,
+                                 cmp_class.f1_score,
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
     random_search.run(10000)

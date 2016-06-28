@@ -6,6 +6,7 @@ from hopcroftkarp import HopcroftKarp
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.dt_procedures as dt_procedures
+from utils.time_series import TimeSeries
 
 
 def unpack_pandas_row(row):
@@ -15,6 +16,29 @@ def unpack_pandas_row(row):
     in_path = "{}/input/{}/{}/{}.csv".format(base_dir, date_dir, row["server"],
                                              row["mac"])
     return in_path, dt_start, dt_end
+
+
+def get_ts(row, preprocess_args):
+    in_path, dt_start, dt_end = unpack_pandas_row(row)
+    ts = TimeSeries(in_path, "loss", dt_start, dt_end)
+
+    if preprocess_args["filter_type"] == "ma_smoothing":
+        ts.ma_smoothing(preprocess_args["win_len"])
+    elif preprocess_args["filter_type"] == "median_filter":
+        ts.median_filter(preprocess_args["win_len"])
+
+    return ts
+
+
+def valid_preprocess_args(preprocess_args):
+    if ((preprocess_args["filter_type"] == "median_filter") and
+            (preprocess_args["win_len"] % 2 == 0)):
+        return False
+    return True
+
+
+def valid_param(param):
+    return True
 
 
 def from_str_to_int_list(str_l):

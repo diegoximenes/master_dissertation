@@ -6,7 +6,6 @@ import numpy as np
 
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
-import utils.dt_procedures as dt_procedures
 import utils.plot_procedures as plot_procedures
 from utils.time_series import TimeSeries
 import change_point.utils.cmp_class as cmp_class
@@ -15,7 +14,8 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class SegmentNeighbourhood():
-    def __init__(self, pen, distr_type, min_seg_len):
+    def __init__(self, preprocess_args, pen, distr_type, min_seg_len):
+        self.preprocess_args = preprocess_args
         self.pen = pen
         self.distr_type = distr_type
         self.min_seg_len = min_seg_len
@@ -24,22 +24,27 @@ class SegmentNeighbourhood():
         pass
 
     def predict(self, row):
-        in_path, _, _ = cmp_class.unpack_pandas_row(row)
+        ts = cmp_class.get_ts(row, self.preprocess_args)
 
-        date_start_r = \
-            dt_procedures.from_js_strdate_to_r_strdate(row["date_start"])
-        date_end_r = \
-            dt_procedures.from_js_strdate_to_r_strdate(row["date_end"])
+        # write ts to file to be consumed by R
+        with open("{}/tmp_ts".format(script_dir), "w") as f:
+            f.write("id,val\n")
+            for i in xrange(len(ts.y)):
+                f.write("{},{}\n".format(i, ts.y[i]))
 
         subprocess.call(["/usr/bin/Rscript",
-                         "{}/changepoint.R".format(script_dir), in_path,
-                         "{}/tmp_pred".format(script_dir), date_start_r,
-                         date_end_r, str(self.pen), self.distr_type,
+                         "{}/changepoint.R".format(script_dir),
+                         "{}/tmp_ts".format(script_dir),
+                         "{}/tmp_pred".format(script_dir),
+                         str(self.pen), self.distr_type,
                          str(self.min_seg_len)],
-                        stdout=open(os.devnull, "w"), stderr=subprocess.STDOUT)
+                        stdout=open(os.devnull, "w"),
+                        stderr=subprocess.STDOUT)
 
         df = pd.read_csv("{}/tmp_pred".format(script_dir))
+
         os.remove("{}/tmp_pred".format(script_dir))
+        os.remove("{}/tmp_ts".format(script_dir))
 
         return sorted(df["id"].values)
 

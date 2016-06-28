@@ -107,12 +107,15 @@ class TimeSeries:
         self.y = ret_y
         self.set_dt_mean()
 
-    def median_filter(self, window_len=3):
+    def median_filter(self, win_len=3):
         """
         useful to remove outliers.
+
+        Args:
+            win_len: must be odd
         """
 
-        self.y = scipy.signal.medfilt(self.y, window_len)
+        self.y = scipy.signal.medfilt(self.y, win_len)
         self.set_dt_mean()
 
 
