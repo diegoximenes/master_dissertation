@@ -66,7 +66,8 @@ def create_dirs():
 
 def main():
     cmp_class_args = {"win_len": 10}
-    param = {"pen": 99.94483005243893}
+    param = {"pen": 26.98043505142611, "min_seg_len": 14,
+             "distr_type": "Normal"}
     seg_neigh = SegmentNeighbourhood(**param)
     train_path = "{}/change_point/input/train.csv".format(base_dir)
 
