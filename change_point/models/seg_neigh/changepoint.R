@@ -14,7 +14,7 @@ print(distr_type)
 print(min_seg_len)
 
 df <- read.csv(in_path, header=T, sep=",")
-ts <- df[,2]
+ts <- df[,1]
 
 changepoint <- cpt.meanvar(ts, penalty="Manual", 
                            method="PELT", pen.value=pen, test.stat=distr_type, 

@@ -28,9 +28,8 @@ class SegmentNeighbourhood():
 
         # write ts to file to be consumed by R
         with open("{}/tmp_ts".format(script_dir), "w") as f:
-            f.write("id,val\n")
             for i in xrange(len(ts.y)):
-                f.write("{},{}\n".format(i, ts.y[i]))
+                f.write("{}\n".format(ts.y[i]))
 
         subprocess.call(["/usr/bin/Rscript",
                          "{}/changepoint.R".format(script_dir),
