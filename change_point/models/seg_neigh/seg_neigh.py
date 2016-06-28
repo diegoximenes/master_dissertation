@@ -31,14 +31,22 @@ class SegmentNeighbourhood():
             for i in xrange(len(ts.y)):
                 f.write("{}\n".format(ts.y[i]))
 
-        subprocess.call(["/usr/bin/Rscript",
-                         "{}/changepoint.R".format(script_dir),
+        subprocess.call(["{}/seg_neigh".format(script_dir),
                          "{}/tmp_ts".format(script_dir),
                          "{}/tmp_pred".format(script_dir),
                          str(self.pen), self.distr_type,
                          str(self.min_seg_len)],
                         stdout=open(os.devnull, "w"),
                         stderr=subprocess.STDOUT)
+
+        # subprocess.call(["/usr/bin/Rscript",
+        #                  "{}/changepoint.R".format(script_dir),
+        #                  "{}/tmp_ts".format(script_dir),
+        #                  "{}/tmp_pred".format(script_dir),
+        #                  str(self.pen), self.distr_type,
+        #                  str(self.min_seg_len)],
+        #                 stdout=open(os.devnull, "w"),
+        #                 stderr=subprocess.STDOUT)
 
         df = pd.read_csv("{}/tmp_pred".format(script_dir))
 

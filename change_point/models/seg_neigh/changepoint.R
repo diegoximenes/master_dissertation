@@ -1,6 +1,6 @@
 library(changepoint)
 
-args <- commandArgs(trailingOnly=TRUE)
+args <- commandArgs(trailingOnly=T)
 in_path <- args[1]
 out_path <- args[2]
 pen <- as.numeric(args[3])
@@ -22,6 +22,6 @@ changepoint <- cpt.meanvar(ts, penalty="Manual",
 #check slot names: slotNames(changepoint)
 #plot(changepoint)
 
-write("id,dt", out_path)
+write("id\n", out_path, append=T)
 for(cp in slot(changepoint, "cpts")) 
-    write(paste(cp - 1, df[cp, "dt"], sep=","), out_path, append=T)
+    write(paste(cp - 1), out_path, append=T)
