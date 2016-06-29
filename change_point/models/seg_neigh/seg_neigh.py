@@ -26,11 +26,12 @@ class SegmentNeighbourhood():
     def predict(self, row):
         ts = cmp_class.get_ts(row, self.preprocess_args)
 
-        # write ts to file to be consumed by R
+        # write ts to file to be consumed
         with open("{}/tmp_ts".format(script_dir), "w") as f:
             for i in xrange(len(ts.y)):
                 f.write("{}\n".format(ts.y[i]))
 
+        # c++ executable call
         subprocess.call(["{}/seg_neigh".format(script_dir),
                          "{}/tmp_ts".format(script_dir),
                          "{}/tmp_pred".format(script_dir),
@@ -39,6 +40,7 @@ class SegmentNeighbourhood():
                         stdout=open(os.devnull, "w"),
                         stderr=subprocess.STDOUT)
 
+        # R script call
         # subprocess.call(["/usr/bin/Rscript",
         #                  "{}/changepoint.R".format(script_dir),
         #                  "{}/tmp_ts".format(script_dir),

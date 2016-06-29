@@ -9,32 +9,14 @@ sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
 from utils.time_series import TimeSeries
 
-
-class SegmentNeighbourhood():
-    def __init__(self, pen):
-        self.pen = pen
-
-    def fit(self, df):
-        print "fit_df={}\n".format(df)
-        pass
-
-    def predict(self, df):
-        print "predict_df={}\n".format(df)
-        pass
-
-    def score(self, df):
-        print "score_df={}\n".format(df)
-        return 0
-
-
 # PARAMETERS
 metric = "loss"
 
-max_segs = 10  # not used in O(n**2) solution
+max_segs = 20  # not used in O(n**2) solution
 min_seg_len = 1
 # cost_type = "mse"
-# cost_type = "lik_normal"
-cost_type = "lik_exp"
+cost_type = "lik_normal"
+# cost_type = "lik_exp"
 # cost_type = "lik_poisson"
 # penalization_type = "aic"
 penalization_type = "sic"
@@ -212,6 +194,27 @@ def seg_neighbourhood(in_path, out_path, dt_start, dt_end):
                 dp[n_segs][i] = min(dp[n_segs][i],
                                     dp[n_segs - 1][j - 1] + seg_cost(j, i)[0])
 
+    # debug
+    # print "dp"
+    # for n_segs in xrange(1, max_segs + 1):
+    #     for i in xrange(1, n + 1):
+    #         print "n_segs={}, i={}, dp={}".format(n_segs, i, dp[n_segs][i])
+    # print "prefix_sum"
+    # for i in xrange(1, n + 1):
+    #     print "i={}, prefix_sum={}".format(i, prefix_sum[i])
+    # print "same_left"
+    # for i in xrange(1, n + 1):
+    #     print "i={}, same_left={}".format(i, same_left[i])
+    # print "mse"
+    # for i in xrange(1, n + 1):
+    #     for j in xrange(i, n + 1):
+    #         print "i={}, j={}, mse={}".format(i, j, mse[i][j])
+    # print "normal_log_lik"
+    # for i in xrange(1, n + 1):
+    #     for j in xrange(i, n + 1):
+    #         print "i={}, j={}, normal_log_lik={}".format(i, j,
+    #                                                      normal_log_lik[i][j])
+
     # get best number of segs
     best_n_segs = 1
     for n_segs in xrange(2, max_segs + 1):
@@ -259,6 +262,7 @@ def get_datetime(strdate):
 
 
 def main():
+    """
     targets = [["64:66:B3:4F:FE:CE", "SNEDTCPROB01", "05-11-2016",
                 "05-20-2016"],
                ["64:66:B3:7B:9B:B8", "SOODTCLDM24", "05-11-2016",
@@ -285,13 +289,16 @@ def main():
                 "05-20-2016"],
                ["64:66:B3:A6:A0:78", "AMRDTCPEV01", "05-01-2016",
                 "05-10-2016"]]
+    """
+    targets = [["64:66:B3:A6:9D:DA", "NHODTCSRV04", "12-01-2015",
+               "12-31-2015"]]
 
     for tp in targets:
         mac, server, date_start, date_end = tp[0], tp[1], tp[2], tp[3]
         dt_start = get_datetime(date_start)
         dt_end = get_datetime(date_end)
         date_dir = "{}_{}".format(dt_start.year, str(dt_start.month).zfill(2))
-        in_path = "../../input/{}/{}/{}.csv".format(date_dir, server, mac)
+        in_path = "../../../input/{}/{}/{}.csv".format(date_dir, server, mac)
         out_path = ("./plots/server{}_mac{}_datestart{}_dateend{}".
                     format(server, mac, date_start, date_end))
 
