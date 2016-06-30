@@ -124,9 +124,11 @@ def main():
                                         "median_filter"],
                         "win_len": randint(2, 10)}
     # uniform distribution in [loc, loc + scale]
-    param_distr = {"pen": uniform(loc=0, scale=1000),
+    param_distr = {"const_pen": uniform(loc=0, scale=1000),
+                   "f_pen": ["n_cps", "n_cps^2", "n_cps * sqrt(n_cps)"],
                    "distr_type": ["Normal", "Exponential"],
-                   "min_seg_len": randint(2, 15)}
+                   "min_seg_len": randint(2, 15),
+                   "max_cps": [20]}
     random_search = RandomSearch(SegmentNeighbourhood, param_distr,
                                  cmp_class_args, preprocess_distr,
                                  cmp_class.f1_score,

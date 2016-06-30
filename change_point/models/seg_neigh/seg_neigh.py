@@ -14,11 +14,14 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class SegmentNeighbourhood():
-    def __init__(self, preprocess_args, pen, distr_type, min_seg_len):
+    def __init__(self, preprocess_args, const_pen, f_pen, distr_type,
+                 min_seg_len, max_cps):
         self.preprocess_args = preprocess_args
-        self.pen = pen
+        self.const_pen = const_pen
+        self.f_pen = f_pen
         self.distr_type = distr_type
         self.min_seg_len = min_seg_len
+        self.max_cps = max_cps
 
     def fit(self, df):
         pass
@@ -35,8 +38,8 @@ class SegmentNeighbourhood():
         subprocess.call(["{}/seg_neigh".format(script_dir),
                          "{}/tmp_ts".format(script_dir),
                          "{}/tmp_pred".format(script_dir),
-                         str(self.pen), self.distr_type,
-                         str(self.min_seg_len)],
+                         str(self.const_pen), self.f_pen, self.distr_type,
+                         str(self.min_seg_len), str(self.max_cps)],
                         stdout=open(os.devnull, "w"),
                         stderr=subprocess.STDOUT)
 
@@ -45,8 +48,8 @@ class SegmentNeighbourhood():
         #                  "{}/changepoint.R".format(script_dir),
         #                  "{}/tmp_ts".format(script_dir),
         #                  "{}/tmp_pred".format(script_dir),
-        #                  str(self.pen), self.distr_type,
-        #                  str(self.min_seg_len)],
+        #                  str(self.const_pen), self.distr_type,
+        #                  str(self.min_seg_len), str(self.max_cps)],
         #                 stdout=open(os.devnull, "w"),
         #                 stderr=subprocess.STDOUT)
 

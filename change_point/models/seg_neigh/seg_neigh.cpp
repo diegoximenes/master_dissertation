@@ -6,6 +6,8 @@
 #include <cstring>
 #include <cmath>
 
+#include "exprtk.hpp"
+
 using namespace std;
 
 #define MAX 1000
@@ -21,12 +23,26 @@ double normal_log_lik[MAX][MAX];
 double exp_log_lik[MAX][MAX];
 double dp[MAX][MAX];
 
-string in_path; 
+double n_cps_expr;
+exprtk::symbol_table<double> symbol_table;
+exprtk::expression<double> pen_expr;
+exprtk::parser<double> parser;
+
+string in_path;
 string out_path;
-double const_pen; 
+double const_pen;
+string f_pen;
 string distr_type;
 int min_seg_len;
-int max_segs;
+int max_cps;
+
+void set_math_expr()
+{
+    symbol_table.add_variable("n_cps", n_cps_expr);
+    symbol_table.add_constants();
+    pen_expr.register_symbol_table(symbol_table);
+    parser.compile(f_pen, pen_expr);
+}
 
 inline int cmp_double(double a, double b)
 {
@@ -47,14 +63,15 @@ inline bool seg_is_degenerate(int i, int j)
 
 inline double seg_cost(int i, int j)
 {
-    if(seg_is_degenerate(i, j)) 
+    if(seg_is_degenerate(i, j))
         return log(0.000001);
-    return -2 * normal_log_lik[i][j]; 
+    return -2 * normal_log_lik[i][j];
 }
 
-inline double penalization(int n_segs)
+inline double eval_pen(int n_cps)
 {
-    return n_segs * const_pen;
+    n_cps_expr = n_cps;
+    return const_pen * pen_expr.value();
 }
 
 void calc_same_left(vector<double> &ts)
@@ -104,8 +121,8 @@ void calc_normal_log_lik(vector<double> &ts)
                 continue;
 
             double squared_std = mse[i][j];
-            normal_log_lik[i][j] = ((-0.5 * (j - i + 1) * 
-                                     log(2 * PI * squared_std) - 
+            normal_log_lik[i][j] = ((-0.5 * (j - i + 1) *
+                                     log(2 * PI * squared_std) -
                                      0.5 * (j - i + 1)));
         }
 }
@@ -127,33 +144,35 @@ void seg_neigh(vector<double> &ts)
     calc_normal_log_lik(ts);
 
     int n = ts.size();
-        
-    int max_segs = 20;
     
+    cout << "dp" << endl;
+
     //calculate dp
     for(int i=1; i<=n; ++i)
-        dp[0][i] = INF;
-    for(int n_segs=1; n_segs<=max_segs; ++n_segs)
+        dp[0][i] = seg_cost(1, i);
+    for(int n_cps=1; n_cps<=max_cps; ++n_cps)
+    {
+        cout << "n_cps=" << n_cps << endl;
         for(int i=1; i<=n; ++i)
         {
-            dp[n_segs][i] = INF;
+            dp[n_cps][i] = INF;
             for(int j=1; j<=i - min_seg_len + 1; ++j)
             {
                 double cost = seg_cost(j, i);
                 if(seg_is_degenerate(j, i))
                     continue;
 
-                dp[n_segs][i] = min(dp[n_segs][i], 
-                                    dp[n_segs - 1][j - 1] + cost);
+                dp[n_cps][i] = min(dp[n_cps][i],
+                                   dp[n_cps - 1][j - 1] + cost);
             }
         }
-    
+    }
     /*
-    //print debug 
+    //print debug
     cout << "dp" << endl;
     for(int i=1; i<=n; ++i)
         for(int j=i; j<=n; ++j)
-            cout << "i=" << i << ", j=" << j << ", dp=" << dp[i][j] 
+            cout << "i=" << i << ", j=" << j << ", dp=" << dp[i][j]
                 << endl;
     cout << "prefix_sum=" << endl;
     for(int i=1; i<=n; ++i)
@@ -168,36 +187,36 @@ void seg_neigh(vector<double> &ts)
     cout << "normal_log_lik=" << endl;
     for(int i=1; i<=n; ++i)
         for(int j=i; j<=n; ++j)
-            cout << "i=" << i << ", j=" << j << ", normal_log_lik=" << 
+            cout << "i=" << i << ", j=" << j << ", normal_log_lik=" <<
             normal_log_lik[i][j] << endl;
     */
 
     //get best number of segs
-    int best_n_segs = 1;
-    for(int n_segs=2; n_segs<=max_segs; ++n_segs)
-        if(cmp_double(dp[n_segs][n] + penalization(n_segs), 
-                      dp[best_n_segs][n] + penalization(best_n_segs)) < 0)
-            best_n_segs = n_segs;
-    
+    int best_n_cps = 0;
+    for(int n_cps=1; n_cps<=max_cps; ++n_cps)
+        if(cmp_double(dp[n_cps][n] + eval_pen(n_cps),
+                      dp[best_n_cps][n] + eval_pen(best_n_cps)) < 0)
+            best_n_cps = n_cps;
+
     //backtrack: get change points
     vector<int> cps;
-    int i = n, n_segs = best_n_segs;
-    while(n_segs > 1)
+    int i = n, n_cps = best_n_cps;
+    while(n_cps > 0)
         for(int j=1; j<=i - min_seg_len + 1; ++j)
         {
             double cost = seg_cost(j, i);
             if(seg_is_degenerate(j, i))
                 continue;
-            
-            if(!cmp_double(dp[n_segs][i], dp[n_segs - 1][j - 1] + cost))
+
+            if(!cmp_double(dp[n_cps][i], dp[n_cps - 1][j - 1] + cost))
             {
                 cps.push_back(j);
                 i = j - 1;
-                --n_segs;
+                --n_cps;
             }
         }
 
-    write_cps(cps); 
+    write_cps(cps);
 }
 
 vector<double> read_ts(string in_path)
@@ -215,20 +234,24 @@ int main(int argc, char *argv[])
     in_path = argv[1];
     out_path = argv[2];
     const_pen = atof(argv[3]);
-    distr_type = argv[4];
-    min_seg_len = atoi(argv[5]);
-    max_segs = atoi(argv[6]); 
-
-    vector<double> ts = read_ts(in_path);
-    seg_neigh(ts);    
+    f_pen = argv[4];
+    distr_type = argv[5];
+    min_seg_len = atoi(argv[6]);
+    max_cps = atoi(argv[7]);
     
+    set_math_expr();
+
     cout << "argc=" << argc << endl;
     cout << "in_path=" << in_path << endl;
     cout << "out_path=" << out_path << endl;
     cout << "const_pen=" << const_pen << endl;
+    cout << "f_pen=" << f_pen << endl;
     cout << "distr_type=" << distr_type << endl;
     cout << "min_seg_len=" << min_seg_len << endl;
-    cout << "max_segs=" << max_segs << endl;
-    
+    cout << "max_cps=" << max_cps << endl;
+
+    vector<double> ts = read_ts(in_path);
+    seg_neigh(ts);
+
     return 0;
 }
