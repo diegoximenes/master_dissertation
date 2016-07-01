@@ -136,6 +136,36 @@ void write_cps(vector<int> &cps)
     f.close();
 }
 
+void debug(vector<double> &ts)
+{
+    int n = ts.size();
+
+    cout << "dp" << endl;
+    for(int i=1; i<=n; ++i)
+        for(int j=i; j<=n; ++j)
+            cout << "i=" << i << ", j=" << j << ", dp=" << dp[i][j]
+                << endl;
+    
+    cout << "prefix_sum=" << endl;
+    for(int i=1; i<=n; ++i)
+        cout << "i=" << i << ", prefix_sum=" << prefix_sum[i] << endl;
+    
+    cout << "same_left=" << endl;
+    for(int i=1; i<=n; ++i)
+        cout << "i=" << i << ", same_left=" << same_left[i] << endl;
+    
+    cout << "mse=" << endl;
+    for(int i=1; i<=n; ++i)
+        for(int j=i; j<=n; ++j)
+            cout << "i=" << i << ", j=" << j << ", mse=" << mse[i][j] << endl;
+    
+    cout << "normal_log_lik=" << endl;
+    for(int i=1; i<=n; ++i)
+        for(int j=i; j<=n; ++j)
+            cout << "i=" << i << ", j=" << j << ", normal_log_lik=" <<
+            normal_log_lik[i][j] << endl;
+}
+
 void seg_neigh(vector<double> &ts)
 {
     calc_prefix_sum(ts);
@@ -145,14 +175,10 @@ void seg_neigh(vector<double> &ts)
 
     int n = ts.size();
     
-    cout << "dp" << endl;
-
     //calculate dp
     for(int i=1; i<=n; ++i)
         dp[0][i] = seg_cost(1, i);
     for(int n_cps=1; n_cps<=max_cps; ++n_cps)
-    {
-        cout << "n_cps=" << n_cps << endl;
         for(int i=1; i<=n; ++i)
         {
             dp[n_cps][i] = INF;
@@ -166,30 +192,8 @@ void seg_neigh(vector<double> &ts)
                                    dp[n_cps - 1][j - 1] + cost);
             }
         }
-    }
-    /*
-    //print debug
-    cout << "dp" << endl;
-    for(int i=1; i<=n; ++i)
-        for(int j=i; j<=n; ++j)
-            cout << "i=" << i << ", j=" << j << ", dp=" << dp[i][j]
-                << endl;
-    cout << "prefix_sum=" << endl;
-    for(int i=1; i<=n; ++i)
-        cout << "i=" << i << ", prefix_sum=" << prefix_sum[i] << endl;
-    cout << "same_left=" << endl;
-    for(int i=1; i<=n; ++i)
-        cout << "i=" << i << ", same_left=" << same_left[i] << endl;
-    cout << "mse=" << endl;
-    for(int i=1; i<=n; ++i)
-        for(int j=i; j<=n; ++j)
-            cout << "i=" << i << ", j=" << j << ", mse=" << mse[i][j] << endl;
-    cout << "normal_log_lik=" << endl;
-    for(int i=1; i<=n; ++i)
-        for(int j=i; j<=n; ++j)
-            cout << "i=" << i << ", j=" << j << ", normal_log_lik=" <<
-            normal_log_lik[i][j] << endl;
-    */
+    
+    //debug(ts);
 
     //get best number of segs
     int best_n_cps = 0;
