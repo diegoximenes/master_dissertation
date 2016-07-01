@@ -119,11 +119,15 @@ class RandomSearch():
 
 
 def main():
+    # uniform: uniform distribution in [loc, loc + scale]
+    # randint(a, b): generate random in [a, b)
+    # polyorder is only used in savgol and must be less than win_len
+
     cmp_class_args = {"win_len": 10}
     preprocess_distr = {"filter_type": ["none", "ma_smoothing",
-                                        "median_filter"],
-                        "win_len": randint(2, 10)}
-    # uniform distribution in [loc, loc + scale]
+                                        "median_filter", "savgol"],
+                        "win_len": randint(2, 10),
+                        "poly_order": randint(1, 4)}
     param_distr = {"const_pen": uniform(loc=0, scale=1000),
                    "f_pen": ["n_cps", "n_cps^2", "n_cps * sqrt(n_cps)"],
                    "distr_type": ["Normal", "Exponential"],
@@ -134,7 +138,7 @@ def main():
                                  cmp_class.f1_score,
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
-    random_search.run(10000)
+    random_search.run(100000)
 
 
 if __name__ == "__main__":

@@ -118,6 +118,10 @@ class TimeSeries:
         self.y = scipy.signal.medfilt(self.y, win_len)
         self.set_dt_mean()
 
+    def savgol(self, win_len, poly_order):
+        self.y = scipy.signal.savgol_filter(self.y, win_len, poly_order)
+        self.set_dt_mean()
+
 
 def dist_ts(ts):
     """

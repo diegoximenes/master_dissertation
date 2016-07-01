@@ -70,14 +70,14 @@ def process():
                                                          dt_end, server, mac)
 
             ts = TimeSeries(in_path, metric, dt_start, dt_end)
-            ts_median = TimeSeries(in_path, metric, dt_start, dt_end)
-            ts_median.ma_smoothing()
+            ts_filter = TimeSeries(in_path, metric, dt_start, dt_end)
+            ts_filter.savgol(7, 3)
 
             if filter_ts(ts):
                 out_path = out_path_filtered
             else:
                 out_path = out_path_not_filtered
-            plot_procedures.plot_ts_share_x(ts, ts_median, out_path,
+            plot_procedures.plot_ts_share_x(ts, ts_filter, out_path,
                                             compress=True,
                                             plot_type2="scatter",
                                             ylim2=[-0.02, 1.02],

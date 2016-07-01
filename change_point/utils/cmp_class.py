@@ -26,6 +26,8 @@ def get_ts(row, preprocess_args):
         ts.ma_smoothing(preprocess_args["win_len"])
     elif preprocess_args["filter_type"] == "median_filter":
         ts.median_filter(preprocess_args["win_len"])
+    elif preprocess_args["filter_type"] == "savgol":
+        ts.savgol(preprocess_args["win_len"], preprocess_args["poly_order"])
 
     return ts
 
@@ -34,6 +36,11 @@ def valid_preprocess_args(preprocess_args):
     if ((preprocess_args["filter_type"] == "median_filter") and
             (preprocess_args["win_len"] % 2 == 0)):
         return False
+    if preprocess_args["filter_type"] == "savgol":
+        if preprocess_args["poly_order"] >= preprocess_args["win_len"]:
+            return False
+        if preprocess_args["win_len"] % 2 == 0:
+            return False
     return True
 
 
