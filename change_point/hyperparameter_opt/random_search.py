@@ -30,7 +30,7 @@ class RandomSearch():
     """
 
     def __init__(self, model_class, param_distr, cmp_class_args,
-                 preprocess_distr, f_cost, train_path):
+                 preprocess_distr, f_metrics, train_path):
         """
         Args:
             model_class:
@@ -42,7 +42,7 @@ class RandomSearch():
         self.param_distr = copy.deepcopy(param_distr)
         self.cmp_class_args = copy.deepcopy(cmp_class_args)
         self.preprocess_distr = copy.deepcopy(preprocess_distr)
-        self.f_cost = f_cost
+        self.f_metrics = copy.deepcopy(f_metrics)
 
         self.df = pd.read_csv(train_path)
 
@@ -56,7 +56,7 @@ class RandomSearch():
 
         collection = db[self.model_class.__name__]
         collection.create_index([("score", pymongo.ASCENDING),
-                                 ("f_cost", pymongo.ASCENDING)])
+                                 ("f_metric", pymongo.ASCENDING)])
 
     def run(self, n_iter):
         ps_param = ParameterSampler(self.param_distr, n_iter=n_iter)
@@ -78,7 +78,9 @@ class RandomSearch():
             # In each iteration train model with train set and get score in
             # validation set. The final score will be the mean of scores.
             conf = {"tp": 0, "tn": 0, "fp": 0, "fn": 0}
-            score, cnt_iter = 0, 0
+            cnt_iter = 0
+            # one score for each score function
+            score = [0] * len(self.f_metrics)
             fit_time, score_time = 0, 0
             for train_idxs, val_idxs in self.cv:
                 cnt_iter += 1
@@ -92,12 +94,17 @@ class RandomSearch():
                                     self.cmp_class_args)
                 score_time += time.time() - start_time
 
-                score += self.f_cost(lconf)
+                # get score for each cost function
+                for i in xrange(len(self.f_metrics)):
+                    score[i] += self.f_metrics[i](lconf)
+
                 for key in lconf.keys():
                     conf[key] += lconf[key]
 
             if cnt_iter > 0:
-                score /= float(cnt_iter)
+                for i in xrange(len(self.f_metrics)):
+                    score[i] /= float(cnt_iter)
+
                 fit_time /= float(cnt_iter)
                 score_time /= float(cnt_iter)
 
@@ -106,22 +113,25 @@ class RandomSearch():
             dic["params"] = param
             dic["cmp_class_args"] = self.cmp_class_args
             dic["preprocess_args"] = preprocess_args
-            dic["f_cost"] = self.f_cost.__name__
-            dic["score"] = score
             dic["conf"] = conf
             dic["exec_stats"] = {}
             dic["exec_stats"]["host"] = platform.node()
             dic["exec_stats"]["fit_time"] = fit_time
             dic["exec_stats"]["score_time"] = score_time
             dic["exec_stats"]["insertion_dt_utc"] = datetime.utcnow()
+            dic["metrics"] = {}
+            for i in xrange(len(self.f_metrics)):
+                dic["metrics"][self.f_metrics[i].__name__] = score[i]
+
             collection = db[self.model_class.__name__]
             collection.insert(dic)
 
 
 def main():
-    # uniform: uniform distribution in [loc, loc + scale]
-    # randint(a, b): generate random in [a, b)
-    # polyorder is only used in savgol and must be less than win_len
+    # uniform: uniform distribution in [loc, loc + scale].
+    # randint(a, b): generate random in [a, b).
+    # polyorder is only used in savgol and must be less than win_len.
+    # const_outlier and f_outlier are only used when remove_outliers_in_win = 1
 
     cmp_class_args = {"win_len": 10}
     preprocess_distr = {"filter_type": ["none", "ma_smoothing",
@@ -132,10 +142,14 @@ def main():
                    "f_pen": ["n_cps", "n_cps^2", "n_cps * sqrt(n_cps)"],
                    "distr_type": ["Normal", "Exponential"],
                    "min_seg_len": randint(2, 15),
-                   "max_cps": [20]}
+                   "max_cps": [20],
+                   "remove_outliers_in_win": [0],
+                   "const_outlier": uniform(loc=0, scale=1),
+                   "f_outlier": ["n"]}
+    f_metrics = [cmp_class.f1_score]
     random_search = RandomSearch(SegmentNeighbourhood, param_distr,
                                  cmp_class_args, preprocess_distr,
-                                 cmp_class.f1_score,
+                                 f_metrics,
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
     random_search.run(100000)

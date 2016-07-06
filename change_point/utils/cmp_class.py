@@ -1,5 +1,6 @@
 import os
 import sys
+import math
 import pandas as pd
 from hopcroftkarp import HopcroftKarp
 
@@ -100,6 +101,36 @@ def conf_mat(correct_class, pred_class, ts, win_len):
 
 
 def f1_score(conf):
-    num = float(2 * conf["tp"])
-    den = float(2 * conf["tp"] + conf["fp"] + conf["fn"])
+    tp = conf["tp"]
+    fp = conf["fp"]
+    fn = conf["fn"]
+    num = float(2 * tp)
+    den = float(2 * tp + fp + fn)
+    return num / den
+
+
+def accuracy(conf):
+    tp = conf["tp"]
+    fp = conf["fp"]
+    fn = conf["fn"]
+    tn = conf["tn"]
+    p = tp + fn
+    n = fp + tn
+    num = float(tp + tn)
+    den = float(p + n)
+    return num / den
+
+
+def mcc(conf):
+    """
+    matthews correlation coefficient
+    """
+
+    tp = conf["tp"]
+    fp = conf["fp"]
+    fn = conf["fn"]
+    tn = conf["tn"]
+
+    num = float(tp * tn - fp * fn)
+    den = math.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
     return num / den

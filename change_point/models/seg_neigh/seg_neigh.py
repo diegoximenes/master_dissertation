@@ -15,13 +15,17 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 class SegmentNeighbourhood():
     def __init__(self, preprocess_args, const_pen, f_pen, distr_type,
-                 min_seg_len, max_cps):
+                 min_seg_len, max_cps, remove_outliers_in_win, const_outlier,
+                 f_outlier):
         self.preprocess_args = preprocess_args
         self.const_pen = const_pen
         self.f_pen = f_pen
         self.distr_type = distr_type
         self.min_seg_len = min_seg_len
         self.max_cps = max_cps
+        self.remove_outliers_in_win = remove_outliers_in_win
+        self.const_outlier = const_outlier
+        self.f_outlier = f_outlier
 
     def fit(self, df):
         pass
@@ -39,7 +43,10 @@ class SegmentNeighbourhood():
                          "{}/tmp_ts".format(script_dir),
                          "{}/tmp_pred".format(script_dir),
                          str(self.const_pen), self.f_pen, self.distr_type,
-                         str(self.min_seg_len), str(self.max_cps)],
+                         str(self.min_seg_len), str(self.max_cps),
+                         str(self.remove_outliers_in_win),
+                         str(self.const_outlier),
+                         self.f_outlier],
                         stdout=open(os.devnull, "w"),
                         stderr=subprocess.STDOUT)
 
@@ -61,6 +68,10 @@ class SegmentNeighbourhood():
         return sorted(df["id"].values)
 
     def score(self, df, cmp_class_args):
+        """
+        returns one confusion matrix considering all df rows
+        """
+
         conf = {"tp": 0, "tn": 0, "fp": 0, "fn": 0}
         for idx, row in df.iterrows():
             pred = self.predict(row)
