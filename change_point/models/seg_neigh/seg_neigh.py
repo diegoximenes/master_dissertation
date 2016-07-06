@@ -65,10 +65,11 @@ class SegmentNeighbourhood():
         for idx, row in df.iterrows():
             pred = self.predict(row)
             correct = cmp_class.from_str_to_int_list(row["change_points_ids"])
+            ts = cmp_class.get_ts(row, self.preprocess_args)
             # print "pred={}".format(pred)
             # print "correct={}".format(correct)
 
-            lconf = cmp_class.conf_mat(correct, pred, **cmp_class_args)
+            lconf = cmp_class.conf_mat(correct, pred, ts, **cmp_class_args)
             for key in lconf.keys():
                 conf[key] += lconf[key]
 

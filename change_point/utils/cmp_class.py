@@ -56,7 +56,7 @@ def from_str_to_int_list(str_l):
     return ret
 
 
-def conf_mat(correct_class, pred_class, win_len):
+def conf_mat(correct_class, pred_class, ts, win_len):
     """
     - description: return confusion matrix as dictionary. Match pred_class to
     correct_class maximizing number of true positives. One change point can be
@@ -86,11 +86,15 @@ def conf_mat(correct_class, pred_class, win_len):
         graph["l{}".format(l)] = neigh
     max_match = HopcroftKarp(graph).maximum_matching()
 
-    # is not clear if tn will be necessary
     conf = {}
     conf["tp"] = len(max_match) / 2
     conf["fp"] = len(pred_class) - conf["tp"]
     conf["fn"] = len(correct_class) - conf["tp"]
+    # tn = number of true not change points - number of wrong predicted change
+    # points
+    # tn = (number of points - number of true change points) - number of wrong
+    # predicted change points
+    conf["tn"] = len(ts.y) - len(correct_class) - conf["fp"]
 
     return conf
 
