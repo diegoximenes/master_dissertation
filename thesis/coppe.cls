@@ -56,7 +56,7 @@
 \RequirePackage[sort&compress]{natbib}
 \RequirePackage{hyphenat}
 \RequirePackage{lastpage}
-\RequirePackage[english,brazil]{babel}
+\RequirePackage[brazil,english]{babel}
 \RequirePackage{ifthen}
 \RequirePackage{graphicx}
 \RequirePackage{setspace}
