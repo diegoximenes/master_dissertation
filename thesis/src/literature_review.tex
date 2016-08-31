@@ -1,12 +1,55 @@
-\chapter{Literature Review of Change Point Detection Problem}
+\chapter{Literature Review of Change Point Detection} 
 
-Here the change point problem will be "defined", including offline and online versions.
+- Here the change point problem will be "defined", including offline and online versions.
+- we deal with univariate unevenly time series. Explain that some methods can be expanded no multivariate
+- unknow number of change points
+- we disconsider changes in periodicity
+
+\section{Notation}
+
+In this work an univariate time series composed of $n$ points is defined by two vectors: $\mathbf{x} = (x_{1}, ..., x_{n})$ and $\mathbf{y} = (y_{1}, ..., y_{n})$. The value $y_{i}$ indicates the $i-$th sampled value and $x_{i}$ indicates the associated sample time. It is assumed that the points are sorted by time, that is, $x_{i - 1} < x_{i}$ for $i = 1, ..., n$. Since we consider unevenly time series $x_{i} - x_{i - 1}$ can be different for different $i$ values. For $s \ge t$ the following convention is adopted $\mathbf{y}_{s:t} = (y_{s}, ..., y_{t})$.
+
+The presence of $k$ change points indicates that the data is splitted into $k+1$ segments, also called windows. Let $\tau_{i}$ indicate the $i-$th change point for $i=1,...,k$. Let $\tau_{0} = 0$ and $\tau_{k + 1} = n$. Then, the $i-$th segment is defined by $\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}}$, assuming that $\tau_{i - 1} < \tau_{i}$ for $i = 0, ..., k + 1$. Therefore $\boldsymbol \tau = (\tau_{0}, ..., \tau_{k + 1})$.
 
 \section{Sliding Window Techniques}
+
+Mainly a change point detection algorithm aim to find $k$ and $\boldsymbol \tau$.
+
 Describe sliding window techniques in change point detection. Describe how two windows can be compared. Probably this technique will not be part of my solution, but I will write about it since is the simplest and most intuitive solution.
 
-\section{Dynamic Programming}  
-Optimization problem will be formulated and the solution algorithm will be presented. Also will be presented pruning techniques such as PELT.
+\section{Combinatorial Optimization Model}  
+
+\subsection{Constrained Case}
+
+Given a fixed value of $k$, one approach is to define a cost function that measure the homogeneity of a segment and therefore choose the change points that globally optimize this homogeneity. Let the cost of the $i$-th segment be defined as $C(y_{\tau_{i - 1} + 1 : \tau_{i}})$. The cost of a segmentation is then $\sum \limits_{i = 1}^{k + 1} C(y_{\tau_{i - 1} + 1 : \tau_{i}})$.
+
+A commom choice for function $C$ is the MSE (Mean Squared Error) which can capture changes in the mean. Another usual approach is to consider a distributin model and use the negative maximum log-likelihood. The latter can capture changes in mean and variance, also considers that data within a segment is iid. Therefore, given a fixed $k$, the optimal segmentation is obtained through the following optimization problem: 
+
+\begin{equation}
+    F_{k, n} = \min_{\boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(y_{\tau_{i - 1} + 1 : \tau_{i}})
+\end{equation}
+
+This problem can be solved using dynamic programming:
+
+\begin{equation}
+    F_{k, t} = 
+    \begin{cases}
+        0, if k = 0 and t = 0 \\
+        \infty, if k = 0 and t > 0 \\
+        \min_{s \in \{0, ..., t - 1\}} \left[ F_{k - 1, s} + C(y_{s + 1 : t}) \right], otherwise
+    \end{cases}
+\end{equation}
+
+\subsection{Segment Cost Function Computation}
+
+- degenerate distribution
+
+\subsection{Penalized Case}
+
+When the number of change points is unknown.
+
+\subsection{Pruning}
+- heuristics
 
 \section{Bayesian Inference}
 I will erase this section if I don't use bayesian inference. Describe Fearnheard (offline) and MacKay (online) solutions. Say that there are other versions.
