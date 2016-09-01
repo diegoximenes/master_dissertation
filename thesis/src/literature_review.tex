@@ -42,23 +42,29 @@ This problem can be solved using dynamic programming:
 
 Given that function $C$ can be evaluated in $O(1)$, the overal time complexity of this algorithm is $O(k n^2)$.
 
-\subsection{Segment Cost Function Computation}
+\subsection{Segment Cost Function}
 
-Several segment cost functions can be evaluated in $O(1)$ after a preprocessing strategy. Next is provided the procedures to achieve this efficiency using MSE, negative log likelihood of normal and exponential distributions.
+Several segment cost functions can be evaluated in $O(1)$ after a preprocessing phase. Next is provided the procedures to achieve this efficiency using MSE, negative maximum log-likelihood of normal and exponential distributions.
 
 \subsubsection{MSE}
+
+Let $\mu_{s, t}$ the mean value of the segment $\mathbf{y}_{s : t}$:
 
 \begin{equation}
     \mu_{s, t} = \frac{\sum \limits_{i = s}^{t} y_{i}}{t - s + 1}
 \end{equation}
 
+Then, the $MSE(\mathbf{y}_{s : t})$ is defined as:
+
 \begin{equation}
     \begin{aligned}
         MSE(\mathbf{y}_{s : t}) = \frac{\sum \limits_{i = s}^{t} (y_{i} - \mu_{s, t})^{2}}{t - s + 1} \\
-        = \frac{\sum \limits_{i = s}^{t} (x_{i}^{2} - 2 x_{i} \mu_{s, t} + \mu_{s, t}^{2})}{t - s + 1} \\
-        = \frac{\sum \limits_{i = s}^{t} x_{i}^{2} - 2 \mu_{s, t} \sum \limits_{i = s}^{t} x_{i} + (t - s + 1) \mu_{s, t}^{2}}{t - s + 1} \\
+        = \frac{\sum \limits_{i = s}^{t} (y_{i}^{2} - 2 y_{i} \mu_{s, t} + \mu_{s, t}^{2})}{t - s + 1} \\
+        = \frac{\sum \limits_{i = s}^{t} y_{i}^{2} - 2 \mu_{s, t} \sum \limits_{i = s}^{t} y_{i} + (t - s + 1) \mu_{s, t}^{2}}{t - s + 1} \\
     \end{aligned}
 \end{equation}
+
+Let $S_{i} = \sum \limits_{j = 0}^{i} y_{j}$, that is, $\mathbf{S}$ represents the prefix sum of $\mathbf{y}$ for different indexes. $\mathbf{S}$ can be computed in $O(n)$ with the following dynamic programming procedure: 
 
 \begin{equation}
     S_{i} = 
@@ -68,6 +74,8 @@ Several segment cost functions can be evaluated in $O(1)$ after a preprocessing 
     \end{cases}
 \end{equation}
 
+Let $Q_{i} = \sum \limits_{j = 0}^{i} y_{j}^{2}$. As with $\mathbf{S}$, $\mathbf{Q}$ can be computed in $O(n)$: 
+
 \begin{equation}
     Q_{i} = 
     \begin{cases}
@@ -76,17 +84,24 @@ Several segment cost functions can be evaluated in $O(1)$ after a preprocessing 
     \end{cases}
 \end{equation}
 
+Given that $\mathbf{S}$ and $\mathbf{Q}$ are previously computed, it is possible to evaluate the following equations in $O(1)$: 
+
 \begin{equation}
+    \label{mean_o1}
     \mu_{s, t} = \frac{S_{t} - S_{s - 1}}{t - s + 1}
 \end{equation}
 
 \begin{equation}
-    \sum \limits_{i = s}^{t} x_{i}^{2} = Q_{t} - Q_{s - 1}
+    \label{prefixsum1_o1}
+    \sum \limits_{i = s}^{t} y_{i} = S_{t} - S_{s - 1}
 \end{equation}
 
 \begin{equation}
-    \sum \limits_{i = s}^{t} x_{i} = S_{t} - S_{s - 1}
+    \label{prefixsum2_o1}
+    \sum \limits_{i = s}^{t} y_{i}^{2} = Q_{t} - Q_{s - 1}
 \end{equation}
+
+With equations \ref{mean_o1} \ref{pre}
 
 \subsubsection{Negative Log-Likelihood of Normal Distribution}
 \subsubsection{Negative Log-Likelihood of Exponential Distribution}

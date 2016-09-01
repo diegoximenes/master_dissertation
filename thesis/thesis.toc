@@ -11,13 +11,13 @@
 \contentsline {section}{\numberline {2.2}Sliding Window Techniques}{2}{section.2.2}
 \contentsline {section}{\numberline {2.3}Combinatorial Optimization Model}{3}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Constrained Case}{3}{subsection.2.3.1}
-\contentsline {subsection}{\numberline {2.3.2}Segment Cost Function Computation}{3}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.2}Segment Cost Function}{3}{subsection.2.3.2}
 \contentsline {subsubsection}{MSE}{3}{section*.4}
 \contentsline {subsubsection}{Negative Log-Likelihood of Normal Distribution}{4}{section*.5}
 \contentsline {subsubsection}{Negative Log-Likelihood of Exponential Distribution}{4}{section*.6}
 \contentsline {subsection}{\numberline {2.3.3}Penalized Case}{4}{subsection.2.3.3}
-\contentsline {subsection}{\numberline {2.3.4}Pruning}{4}{subsection.2.3.4}
-\contentsline {section}{\numberline {2.4}Bayesian Inference}{4}{section.2.4}
+\contentsline {subsection}{\numberline {2.3.4}Pruning}{5}{subsection.2.3.4}
+\contentsline {section}{\numberline {2.4}Bayesian Inference}{5}{section.2.4}
 \contentsline {section}{\numberline {2.5}HMM}{5}{section.2.5}
 \contentsline {section}{\numberline {2.6}Other Algorithms}{5}{section.2.6}
 \contentsline {section}{\numberline {2.7}Performance Evaluation}{5}{section.2.7}
