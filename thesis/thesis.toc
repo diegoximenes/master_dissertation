@@ -12,30 +12,33 @@
 \contentsline {section}{\numberline {2.3}Combinatorial Optimization Model}{3}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Constrained Case}{3}{subsection.2.3.1}
 \contentsline {subsection}{\numberline {2.3.2}Segment Cost Function Computation}{3}{subsection.2.3.2}
-\contentsline {subsection}{\numberline {2.3.3}Penalized Case}{3}{subsection.2.3.3}
-\contentsline {subsection}{\numberline {2.3.4}Pruning}{3}{subsection.2.3.4}
-\contentsline {section}{\numberline {2.4}Bayesian Inference}{3}{section.2.4}
-\contentsline {section}{\numberline {2.5}HMM}{4}{section.2.5}
-\contentsline {section}{\numberline {2.6}Other Algorithms}{4}{section.2.6}
-\contentsline {section}{\numberline {2.7}Performance Evaluation}{4}{section.2.7}
-\contentsline {chapter}{\numberline {3}Dataset}{5}{chapter.3}
-\contentsline {section}{\numberline {3.1}Description of End-to-End Packet Loss Measurements Time Series}{5}{section.3.1}
-\contentsline {section}{\numberline {3.2}Change Points Classification Survey}{5}{section.3.2}
-\contentsline {chapter}{\numberline {4}Applying Change Point Detection}{6}{chapter.4}
-\contentsline {section}{\numberline {4.1}Preprocessing}{6}{section.4.1}
-\contentsline {section}{\numberline {4.2}Tuning Hyperparameters}{6}{section.4.2}
-\contentsline {subsection}{\numberline {4.2.1}Grid Search and Randomized Grid Search}{6}{subsection.4.2.1}
-\contentsline {subsection}{\numberline {4.2.2}Bayesian Optimization}{6}{subsection.4.2.2}
-\contentsline {subsection}{\numberline {4.2.3}Particle Swarm Optimization}{6}{subsection.4.2.3}
-\contentsline {section}{\numberline {4.3}Sliding Window}{7}{section.4.3}
-\contentsline {section}{\numberline {4.4}Dynamic Programming}{7}{section.4.4}
-\contentsline {section}{\numberline {4.5}HMM}{7}{section.4.5}
-\contentsline {section}{\numberline {4.6}Bayesian Inference}{7}{section.4.6}
-\contentsline {section}{\numberline {4.7}LSTM}{7}{section.4.7}
-\contentsline {section}{\numberline {4.8}Ensembles}{7}{section.4.8}
-\contentsline {chapter}{\numberline {5}Results}{8}{chapter.5}
-\contentsline {section}{\numberline {5.1}Classification Accuracy}{8}{section.5.1}
-\contentsline {section}{\numberline {5.2}Unsupervised Analysis}{8}{section.5.2}
-\contentsline {section}{\numberline {5.3}Algorithms Comparison}{8}{section.5.3}
-\contentsline {chapter}{\numberline {6}Conclusions}{9}{chapter.6}
-\contentsline {chapter}{Bibliography}{10}{chapter*.4}
+\contentsline {subsubsection}{MSE}{3}{section*.4}
+\contentsline {subsubsection}{Negative Log-Likelihood of Normal Distribution}{4}{section*.5}
+\contentsline {subsubsection}{Negative Log-Likelihood of Exponential Distribution}{4}{section*.6}
+\contentsline {subsection}{\numberline {2.3.3}Penalized Case}{4}{subsection.2.3.3}
+\contentsline {subsection}{\numberline {2.3.4}Pruning}{4}{subsection.2.3.4}
+\contentsline {section}{\numberline {2.4}Bayesian Inference}{4}{section.2.4}
+\contentsline {section}{\numberline {2.5}HMM}{5}{section.2.5}
+\contentsline {section}{\numberline {2.6}Other Algorithms}{5}{section.2.6}
+\contentsline {section}{\numberline {2.7}Performance Evaluation}{5}{section.2.7}
+\contentsline {chapter}{\numberline {3}Dataset}{6}{chapter.3}
+\contentsline {section}{\numberline {3.1}Description of End-to-End Packet Loss Measurements Time Series}{6}{section.3.1}
+\contentsline {section}{\numberline {3.2}Change Points Classification Survey}{6}{section.3.2}
+\contentsline {chapter}{\numberline {4}Applying Change Point Detection}{7}{chapter.4}
+\contentsline {section}{\numberline {4.1}Preprocessing}{7}{section.4.1}
+\contentsline {section}{\numberline {4.2}Tuning Hyperparameters}{7}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Grid Search and Randomized Grid Search}{7}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Bayesian Optimization}{7}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Particle Swarm Optimization}{7}{subsection.4.2.3}
+\contentsline {section}{\numberline {4.3}Sliding Window}{8}{section.4.3}
+\contentsline {section}{\numberline {4.4}Dynamic Programming}{8}{section.4.4}
+\contentsline {section}{\numberline {4.5}HMM}{8}{section.4.5}
+\contentsline {section}{\numberline {4.6}Bayesian Inference}{8}{section.4.6}
+\contentsline {section}{\numberline {4.7}LSTM}{8}{section.4.7}
+\contentsline {section}{\numberline {4.8}Ensembles}{8}{section.4.8}
+\contentsline {chapter}{\numberline {5}Results}{9}{chapter.5}
+\contentsline {section}{\numberline {5.1}Classification Accuracy}{9}{section.5.1}
+\contentsline {section}{\numberline {5.2}Unsupervised Analysis}{9}{section.5.2}
+\contentsline {section}{\numberline {5.3}Algorithms Comparison}{9}{section.5.3}
+\contentsline {chapter}{\numberline {6}Conclusions}{10}{chapter.6}
+\contentsline {chapter}{Bibliography}{11}{chapter*.7}

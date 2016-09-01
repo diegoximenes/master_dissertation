@@ -34,13 +34,62 @@ This problem can be solved using dynamic programming:
 \begin{equation}
     F_{k, t} = 
     \begin{cases}
-        0, if k = 0 and t = 0 \\
-        \infty, if k = 0 and t > 0 \\
-        \min_{s \in \{0, ..., t - 1\}} \left[ F_{k - 1, s} + C(y_{s + 1 : t}) \right], otherwise
+        0, & \text{if } k = 0 \text{ and } t = 0 \\
+        \infty, & \text{if } k = 0 \text{ and } t > 0 \\
+        \displaystyle \min_{s \in \{0, ..., t - 1\}} \left[ F_{k - 1, s} + C(y_{s + 1 : t}) \right], & \text{ otherwise}
     \end{cases}
 \end{equation}
 
+Given that function $C$ can be evaluated in $O(1)$, the overal time complexity of this algorithm is $O(k n^2)$.
+
 \subsection{Segment Cost Function Computation}
+
+Several segment cost functions can be evaluated in $O(1)$ after a preprocessing strategy. Next is provided the procedures to achieve this efficiency using MSE, negative log likelihood of normal and exponential distributions.
+
+\subsubsection{MSE}
+
+\begin{equation}
+    \mu_{s, t} = \frac{\sum \limits_{i = s}^{t} y_{i}}{t - s + 1}
+\end{equation}
+
+\begin{equation}
+    \begin{aligned}
+        MSE(\mathbf{y}_{s : t}) = \frac{\sum \limits_{i = s}^{t} (y_{i} - \mu_{s, t})^{2}}{t - s + 1} \\
+        = \frac{\sum \limits_{i = s}^{t} (x_{i}^{2} - 2 x_{i} \mu_{s, t} + \mu_{s, t}^{2})}{t - s + 1} \\
+        = \frac{\sum \limits_{i = s}^{t} x_{i}^{2} - 2 \mu_{s, t} \sum \limits_{i = s}^{t} x_{i} + (t - s + 1) \mu_{s, t}^{2}}{t - s + 1} \\
+    \end{aligned}
+\end{equation}
+
+\begin{equation}
+    S_{i} = 
+    \begin{cases}
+        0, & \text{if } i = 0 \\
+        S_{i - 1} + y_{i}, & \text{otherwise}
+    \end{cases}
+\end{equation}
+
+\begin{equation}
+    Q_{i} = 
+    \begin{cases}
+        0, & \text{if } i = 0 \\
+        Q_{i - 1} + y_{i}^{2}, & \text{otherwise}
+    \end{cases}
+\end{equation}
+
+\begin{equation}
+    \mu_{s, t} = \frac{S_{t} - S_{s - 1}}{t - s + 1}
+\end{equation}
+
+\begin{equation}
+    \sum \limits_{i = s}^{t} x_{i}^{2} = Q_{t} - Q_{s - 1}
+\end{equation}
+
+\begin{equation}
+    \sum \limits_{i = s}^{t} x_{i} = S_{t} - S_{s - 1}
+\end{equation}
+
+\subsubsection{Negative Log-Likelihood of Normal Distribution}
+\subsubsection{Negative Log-Likelihood of Exponential Distribution}
 
 - degenerate distribution
 
