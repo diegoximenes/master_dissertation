@@ -3,6 +3,7 @@
 - Here the change point problem will be "defined", including offline and online versions.
 - we deal with univariate unevenly time series. Explain that some methods can be expanded no multivariate
 - unknow number of change points
+- segments and time series with different length
 - we disconsider changes in periodicity
 
 \section{Notation}
@@ -17,7 +18,7 @@ Mainly a change point detection algorithm aim to find $k$ and $\boldsymbol \tau$
 
 Describe sliding window techniques in change point detection. Describe how two windows can be compared. Probably this technique will not be part of my solution, but I will write about it since is the simplest and most intuitive solution.
 
-\section{Combinatorial Optimization Model}  
+\section{Optimization Model}  
 
 \subsection{Constrained Case}
 
@@ -41,6 +42,8 @@ This problem can be solved using dynamic programming:
 \end{equation}
 
 The overal time complexity of this algorithm is $O(k n^2 f(n))$, where $f(n)$ is the time complexity to evaluate $C$.
+
+The formulation can consider a minimum value of a segment
 
 \subsection{Segment Cost Function}
 
@@ -112,22 +115,23 @@ The pdf of a Gaussian distribution is given by:
     N(x | \mu, \sigma^{2}) = \frac{1}{\sqrt{2 \pi \sigma^{2}}} e^{\frac{-(x - \mu)^{2}}{2 \sigma^{2}}}
 \end{equation}
 
-The maximum likelihood estimators are:
+The maximum likelihood estimators for the segment $\mathbf{y}_{s : t}$ are:
 
 \begin{equation}
-    \widehat{\mu} = \frac{\sum \limits_{i = 1}^{n}}{n} 
+    \widehat{\mu}_{s, t} = \frac{\sum \limits_{i = s}^{t} y_{i}}{t - s + 1} 
 \end{equation}
 
 \begin{equation}
-    \widehat{\sigma}^{2} = \frac{\sum \limits_{i = 1}^{n}}{n} 
+    \widehat{\sigma}_{s, t}^{2} = \frac{\sum \limits_{i = s}^{t} (y_{i} - \widehat{\mu}_{s, t})^{2}}{t - s + 1} 
 \end{equation}
 
 Through these equations is possible to observe that negative of the maximum log likelihood can be expressed using $MSE$:
 
 \begin{equation}
     \begin{aligned}
-        NLL = \frac{n \ln(2 \pi)}{2} + \frac{n \ln(\sigma^{2})}{2} + \frac{\sum \limits_{i = 1}^{n} (y_{i} - \mu)^{2}}{2 \sigma^{2}} \\
-        = \frac{n \ln(2 \pi)}{2} + \frac{n \ln(MSE)}{2} + \frac{n MSE}{2 \sigma^{2}} \\
+        NLL_{s, t} = \frac{(t - s + 1) \ln(2 \pi)}{2} + \frac{(t - s + 1) \ln(\widehat{\sigma}_{s, t}^{2})}{2} + \frac{\sum \limits_{i = s}^{t} (y_{i} - \widehat{\mu}_{s, t})^{2}}{2 \widehat{\sigma}_{s, t}^{2}} \\
+        %= \frac{(t - s + 1) \ln(2 \pi)}{2} + \frac{(t - s + 1) \ln(MSE_{s, t})}{2} + \frac{t - s + 1}{2} 
+        = \left( \frac{t - s + 1}{2} \right) [\ln(2 \pi) + \ln(MSE_{s, t}) + 1]
     \end{aligned}
 \end{equation}
 
@@ -138,16 +142,26 @@ Therefore, the negative log likelihood can also be computed in $O(1)$ with an $O
 The pdf of an exponential distribution is given by:
 
 \begin{equation}
+    f(x) = 
+    \begin{cases}
+        \lambda e^{- \lambda x}, & \text{if } x \in [0, \infty) \\
+        0, & \text{otherwise}
+    \end{cases}
 \end{equation}
 
-The maximum likelihood estimator is:
+The maximum likelihood estimator of the segment $\mathbf{y}_{s : t}$ is:
 
 \begin{equation}
+    \widehat{\lambda}_{s, t} = \frac{(t - s + 1)}{\sum \limits_{i = s}^{t} y_{i}}
 \end{equation}
 
 The negative log likelihood can be expressed by:
 
 \begin{equation}
+    \begin{aligned}
+        NLL_{s, t} = - (t - s + 1) \ln(\widehat{\lambda}_{s, t}) + \widehat{\lambda}_{s, t} \sum \limits_{i = s}^{t} y_{i} \\
+        = - (t - s + 1) \left[ \ln \left( \frac{t - s + 1}{S_{t} - S_{s - 1}} \right) + 1 \right] \\
+    \end{aligned}
 \end{equation}
 
 Therefore the exponential distribution can also be used as a cost function with $O(1)$ evaluation and $O(n)$ precomputation.
@@ -158,14 +172,49 @@ Since the likelihood of different continuous distributions can`t be directly com
 
 However, when considering discrete distributions is possible to direct compare the likelihood of two different 
 
+\subsubsection{Negative Log-Likelihood of Poisson Distribution}
 \subsubsection{Negative Log-Likelihood of Binomial Distribution}
 
 \subsection{Penalized Case}
 
-When the number of change points is unknown.
+When the number of change points is unknown a common approach is to solve the constrained case for different values of k and penalize this number of change points, the bigger k biggest is the penalty.
+
+Let $g(k)$ be the penalty function. Then the new optimization problem is:
+
+\begin{equation}
+    \min_{k} F_{k, n} + g(k)
+\end{equation}
+
+An approach to solve this problem is to solve the constrained for $k = 0, ..., K$. This lead to an $O(K^{2} n^{2} f(n))$
+
+However if the penalty function is linear in $k$ the problem can be formulated in a more efficient way.
+
+Let the penalty function be in the form:
+
+\begin{equation}
+    g(k) = (\alpha + 1) k
+\end{equation}
+
+Therefore the optimization problem can be formulated as:
+
+\begin{equation}
+    \begin{aligned}
+        G_{n} = \min_{k, \boldsymbol \tau_{1 : k}} \left[ \sum \limits_{i = 1}^{k + 1} C(y_{\tau_{i - 1} + 1 : \tau_{i}}) + (\alpha + 1) k \right] \\
+        = \min_{k, \boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} \left[ C(y_{\tau_{i - 1} + 1 : \tau_{i}}) + \alpha \right] \\
+    \end{aligned}
+\end{equation}
+
+This problem can be solved using dynamic programming:
+
+\begin{equation}
+    G_{t} = 
+    \begin{cases}
+        0, & \text{if } t = 0 \\
+        \displaystyle \min_{s \in \{0, ..., t - 1\}} \left[ G_{s} + C(y_{s + 1 : t}) + \alpha \right], & \text{ otherwise}
+    \end{cases}
+\end{equation}
 
 \subsection{Pruning}
-- heuristics
 
 \section{Bayesian Inference}
 I will erase this section if I don't use bayesian inference. Describe Fearnheard (offline) and MacKay (online) solutions. Say that there are other versions.
@@ -175,6 +224,8 @@ I will not describe HMM algorithms (viterbi, baum welch, etc), I will only descr
 
 \section{Other Algorithms}
 Only cite other used algorithms and say why I chose the previous one to analyse.
+
+- Binary Segmentation
 
 \section{Performance Evaluation}
   Describe how datasets are constructed in literature. Describe how an algorithm output is evaluated.
