@@ -40,11 +40,11 @@ This problem can be solved using dynamic programming:
     \end{cases}
 \end{equation}
 
-Given that function $C$ can be evaluated in $O(1)$, the overal time complexity of this algorithm is $O(k n^2)$.
+The overal time complexity of this algorithm is $O(k n^2 f(n))$, where $f(n)$ is the time complexity to evaluate $C$.
 
 \subsection{Segment Cost Function}
 
-Several segment cost functions can be evaluated in $O(1)$ after a preprocessing phase. Next is provided the procedures to achieve this efficiency using MSE, negative maximum log-likelihood of normal and exponential distributions.
+Several segment cost functions can be evaluated in $O(1)$ after a preprocessing phase, implying in an overall $O(k n^2)$ time complexity. Next is provided the procedures to achieve this efficiency using MSE, negative maximum log-likelihood of normal and exponential distributions.
 
 \subsubsection{MSE}
 
@@ -57,6 +57,7 @@ Let $\mu_{s, t}$ the mean value of the segment $\mathbf{y}_{s : t}$:
 Then, the $MSE(\mathbf{y}_{s : t})$ is defined as:
 
 \begin{equation}
+    \label{mse}
     \begin{aligned}
         MSE(\mathbf{y}_{s : t}) = \frac{\sum \limits_{i = s}^{t} (y_{i} - \mu_{s, t})^{2}}{t - s + 1} \\
         = \frac{\sum \limits_{i = s}^{t} (y_{i}^{2} - 2 y_{i} \mu_{s, t} + \mu_{s, t}^{2})}{t - s + 1} \\
@@ -101,12 +102,63 @@ Given that $\mathbf{S}$ and $\mathbf{Q}$ are previously computed, it is possible
     \sum \limits_{i = s}^{t} y_{i}^{2} = Q_{t} - Q_{s - 1}
 \end{equation}
 
-With equations \ref{mean_o1} \ref{pre}
+With equations \ref{mean_o1}, \ref{prefixsum1_o1}, \ref{prefixsum2_o1} it is possible to observe that \ref{mse} can be computed in $O(1)$ given an $O(n)$ precomputation.  
 
 \subsubsection{Negative Log-Likelihood of Normal Distribution}
+
+The pdf of a Gaussian distribution is given by:
+
+\begin{equation}
+    N(x | \mu, \sigma^{2}) = \frac{1}{\sqrt{2 \pi \sigma^{2}}} e^{\frac{-(x - \mu)^{2}}{2 \sigma^{2}}}
+\end{equation}
+
+The maximum likelihood estimators are:
+
+\begin{equation}
+    \widehat{\mu} = \frac{\sum \limits_{i = 1}^{n}}{n} 
+\end{equation}
+
+\begin{equation}
+    \widehat{\sigma}^{2} = \frac{\sum \limits_{i = 1}^{n}}{n} 
+\end{equation}
+
+Through these equations is possible to observe that negative of the maximum log likelihood can be expressed using $MSE$:
+
+\begin{equation}
+    \begin{aligned}
+        NLL = \frac{n \ln(2 \pi)}{2} + \frac{n \ln(\sigma^{2})}{2} + \frac{\sum \limits_{i = 1}^{n} (y_{i} - \mu)^{2}}{2 \sigma^{2}} \\
+        = \frac{n \ln(2 \pi)}{2} + \frac{n \ln(MSE)}{2} + \frac{n MSE}{2 \sigma^{2}} \\
+    \end{aligned}
+\end{equation}
+
+Therefore, the negative log likelihood can also be computed in $O(1)$ with an $O(n)$ precomputation.
+
 \subsubsection{Negative Log-Likelihood of Exponential Distribution}
 
-- degenerate distribution
+The pdf of an exponential distribution is given by:
+
+\begin{equation}
+\end{equation}
+
+The maximum likelihood estimator is:
+
+\begin{equation}
+\end{equation}
+
+The negative log likelihood can be expressed by:
+
+\begin{equation}
+\end{equation}
+
+Therefore the exponential distribution can also be used as a cost function with $O(1)$ evaluation and $O(n)$ precomputation.
+
+Using continuous distributions as the cost function can led to practical dificulties. The first one is that segments can form degenerate distributions, that is, the points of a segment can have zero variance. In these cases the negative likelihood functions will not be defined. Two approaches to avoid this situation is 1) try to avoid degenerate segments adding a white noise to the time series. 2) consider a constant and small value to degenerate segments. Since a single point compose a degenerate distribution to handle this case the options are the xonstant value or doesn`t allow segments with length equal to one.
+
+Since the likelihood of different continuous distributions can`t be directly compared, is not possible to apply the segmentation algorithm considering different types of continuos distributions. One possibility to handle this is to apply automatic methods to check which kind of distribution fits better to the segment, such as Kolmogorov-Smirnov. This was not approached in this work due to the computation time efficiency decrease and that since we deal with small number of data possibly these methods would have a poor performance.
+
+However, when considering discrete distributions is possible to direct compare the likelihood of two different 
+
+\subsubsection{Negative Log-Likelihood of Binomial Distribution}
 
 \subsection{Penalized Case}
 

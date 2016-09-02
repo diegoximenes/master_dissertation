@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.9.1)  1 SEP 2016 18:11
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.9.1)  1 SEP 2016 19:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -549,21 +549,21 @@ Chapter 1.
 Chapter 2.
 [2
 
-] [3] [4]) (./src/dataset.tex [5]
+] [3] [4]) (./src/dataset.tex [5] [6]
 Chapter 3.
-) (./src/applying_change_point.tex [6
+) (./src/applying_change_point.tex [7
 
 ]
 Chapter 4.
-[7
+[8
 
-]) (./src/results.tex [8]
+]) (./src/results.tex [9]
 Chapter 5.
-) (./src/conclusion.tex [9
+) (./src/conclusion.tex [10
 
 ]
 Chapter 6.
-) [10
+) [11
 
 ] (./thesis.bbl
 
@@ -571,7 +571,7 @@ LaTeX Warning: Empty `thebibliography' environment on input line 9.
 
 ) 
 AED: lastpage setting LastPage
-[11
+[12
 
 
 ]
@@ -585,10 +585,10 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 60.
  ) 
 Here is how much of TeX's memory you used:
- 7695 strings out of 495004
- 108852 string characters out of 6180663
- 212493 words of memory out of 5000000
- 10679 multiletter control sequences out of 15000+600000
+ 7701 strings out of 495004
+ 108924 string characters out of 6180663
+ 213526 words of memory out of 5000000
+ 10680 multiletter control sequences out of 15000+600000
  12871 words of font info for 47 fonts, out of 8000000 for 9000
  16 hyphenation exceptions out of 8191
  35i,11n,30p,625b,447s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -605,10 +605,10 @@ msfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cms
 y6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
 
-Output written on thesis.pdf (20 pages, 202855 bytes).
+Output written on thesis.pdf (21 pages, 207481 bytes).
 PDF statistics:
- 375 PDF objects out of 1000 (max. 8388607)
- 335 compressed objects within 4 object streams
- 72 named destinations out of 1000 (max. 500000)
+ 388 PDF objects out of 1000 (max. 8388607)
+ 347 compressed objects within 4 object streams
+ 77 named destinations out of 1000 (max. 500000)
  310 words of extra memory for PDF output out of 10000 (max. 10000000)
 
