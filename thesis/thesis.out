@@ -3,40 +3,32 @@
 \BOOKMARK [0][-]{chapter.1}{Introduction}{}% 3
 \BOOKMARK [1][-]{section.1.1}{Contributions}{chapter.1}% 4
 \BOOKMARK [1][-]{section.1.2}{Dissertation Outline}{chapter.1}% 5
-\BOOKMARK [0][-]{chapter.2}{Literature Review of Change Point Detection}{}% 6
-\BOOKMARK [1][-]{section.2.1}{Notation}{chapter.2}% 7
-\BOOKMARK [1][-]{section.2.2}{Sliding Window Techniques}{chapter.2}% 8
-\BOOKMARK [2][-]{subsection.2.2.1}{Empirical distributions distance}{section.2.2}% 9
-\BOOKMARK [1][-]{section.2.3}{Optimization Model}{chapter.2}% 10
-\BOOKMARK [2][-]{subsection.2.3.1}{Constrained Case}{section.2.3}% 11
-\BOOKMARK [2][-]{subsection.2.3.2}{Segment Cost Function}{section.2.3}% 12
-\BOOKMARK [2][-]{subsection.2.3.3}{Penalized Case}{section.2.3}% 13
-\BOOKMARK [2][-]{subsection.2.3.4}{Pruning}{section.2.3}% 14
-\BOOKMARK [2][-]{subsection.2.3.5}{pDPA}{section.2.3}% 15
-\BOOKMARK [2][-]{subsection.2.3.6}{PELT}{section.2.3}% 16
-\BOOKMARK [2][-]{subsection.2.3.7}{FPOP??}{section.2.3}% 17
-\BOOKMARK [1][-]{section.2.4}{Bayesian Inference}{chapter.2}% 18
-\BOOKMARK [1][-]{section.2.5}{HMM}{chapter.2}% 19
-\BOOKMARK [1][-]{section.2.6}{Other Algorithms}{chapter.2}% 20
-\BOOKMARK [1][-]{section.2.7}{Performance Evaluation}{chapter.2}% 21
-\BOOKMARK [0][-]{chapter.3}{Dataset}{}% 22
-\BOOKMARK [1][-]{section.3.1}{Description of End-to-End Packet Loss Measurements Time Series}{chapter.3}% 23
-\BOOKMARK [1][-]{section.3.2}{Change Points Classification Survey}{chapter.3}% 24
-\BOOKMARK [0][-]{chapter.4}{Applying Change Point Detection}{}% 25
-\BOOKMARK [1][-]{section.4.1}{Preprocessing}{chapter.4}% 26
-\BOOKMARK [1][-]{section.4.2}{Tuning Hyperparameters}{chapter.4}% 27
-\BOOKMARK [2][-]{subsection.4.2.1}{Grid Search and Randomized Grid Search}{section.4.2}% 28
-\BOOKMARK [2][-]{subsection.4.2.2}{Bayesian Optimization}{section.4.2}% 29
-\BOOKMARK [2][-]{subsection.4.2.3}{Particle Swarm Optimization}{section.4.2}% 30
-\BOOKMARK [1][-]{section.4.3}{Sliding Window}{chapter.4}% 31
-\BOOKMARK [1][-]{section.4.4}{Dynamic Programming}{chapter.4}% 32
-\BOOKMARK [1][-]{section.4.5}{HMM}{chapter.4}% 33
-\BOOKMARK [1][-]{section.4.6}{Bayesian Inference}{chapter.4}% 34
-\BOOKMARK [1][-]{section.4.7}{LSTM}{chapter.4}% 35
-\BOOKMARK [1][-]{section.4.8}{Ensembles}{chapter.4}% 36
-\BOOKMARK [0][-]{chapter.5}{Results}{}% 37
-\BOOKMARK [1][-]{section.5.1}{Classification Accuracy}{chapter.5}% 38
-\BOOKMARK [1][-]{section.5.2}{Unsupervised Analysis}{chapter.5}% 39
-\BOOKMARK [1][-]{section.5.3}{Algorithms Comparison}{chapter.5}% 40
-\BOOKMARK [0][-]{chapter.6}{Conclusions}{}% 41
-\BOOKMARK [0][-]{chapter*.11}{Bibliography}{}% 42
+\BOOKMARK [0][-]{chapter.2}{Change Point Detection}{}% 6
+\BOOKMARK [1][-]{section.2.1}{Problem Definition}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.2}{Notation}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.3}{Sliding Window Techniques}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.4}{Optimization Model}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.5}{Bayesian Inference}{chapter.2}% 11
+\BOOKMARK [1][-]{section.2.6}{HMM \(Hidden Markov Model\)}{chapter.2}% 12
+\BOOKMARK [1][-]{section.2.7}{Performance Evaluation}{chapter.2}% 13
+\BOOKMARK [0][-]{chapter.3}{Dataset}{}% 14
+\BOOKMARK [1][-]{section.3.1}{Description of End-to-End Packet Loss Measurements Time Series}{chapter.3}% 15
+\BOOKMARK [1][-]{section.3.2}{Change Points Classification Survey}{chapter.3}% 16
+\BOOKMARK [0][-]{chapter.4}{Applying Change Point Detection}{}% 17
+\BOOKMARK [1][-]{section.4.1}{Preprocessing}{chapter.4}% 18
+\BOOKMARK [1][-]{section.4.2}{Tuning Hyperparameters}{chapter.4}% 19
+\BOOKMARK [2][-]{subsection.4.2.1}{Grid Search and Randomized Grid Search}{section.4.2}% 20
+\BOOKMARK [2][-]{subsection.4.2.2}{Bayesian Optimization}{section.4.2}% 21
+\BOOKMARK [2][-]{subsection.4.2.3}{Particle Swarm Optimization}{section.4.2}% 22
+\BOOKMARK [1][-]{section.4.3}{Sliding Window}{chapter.4}% 23
+\BOOKMARK [1][-]{section.4.4}{Dynamic Programming}{chapter.4}% 24
+\BOOKMARK [1][-]{section.4.5}{HMM}{chapter.4}% 25
+\BOOKMARK [1][-]{section.4.6}{Bayesian Inference}{chapter.4}% 26
+\BOOKMARK [1][-]{section.4.7}{LSTM}{chapter.4}% 27
+\BOOKMARK [1][-]{section.4.8}{Ensembles}{chapter.4}% 28
+\BOOKMARK [0][-]{chapter.5}{Results}{}% 29
+\BOOKMARK [1][-]{section.5.1}{Classification Accuracy}{chapter.5}% 30
+\BOOKMARK [1][-]{section.5.2}{Unsupervised Analysis}{chapter.5}% 31
+\BOOKMARK [1][-]{section.5.3}{Algorithms Comparison}{chapter.5}% 32
+\BOOKMARK [0][-]{chapter.6}{Conclusions}{}% 33
+\BOOKMARK [0][-]{chapter*.4}{Bibliography}{}% 34

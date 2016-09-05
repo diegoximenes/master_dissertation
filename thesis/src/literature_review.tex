@@ -1,300 +1,107 @@
-\chapter{Literature Review of Change Point Detection} 
+\chapter{Change Point Detection} 
 
-- Here the change point problem will be "defined", including offline and online versions.
-- we deal with univariate unevenly time series. Explain that some methods can be expanded no multivariate
-- unknow number of change points
-- segments and time series with different length
-- we disconsider changes in periodicity
+A change point detection algorithm is concerned to identify points in time where the statistical properties of a time series have changed. This problem have a broad application in different knowledge fields, and in general, the algorithms performance are closely related with the data characteristics. Also, when the latent information of the procedures which generated a time series is abscent the target statistical properties and other features can be considered subjective, bringing difficulties not only in the detection phase but also in the problem formalization.
+
+In this context, this chapter formalizes the problem and briefly presents several change point detection algorithms. The literature of this area is extensive, and it is common to find methods which presents a poor performance due to the fact that doens't fit the data caracteristics and detection goals, or because it was only analyzed through a theoretical and limited perspective. Therefore it was chosen a set of methods that can provide a good practical and theoretical perspective and also flexibility to adaptations and better handling of input peculiarities. Also through the presentation is presented several obstacle when dealing with real data and some adopted solutions which are not presented in the literature.
+
+\section{Problem Definition}
+
+The problem can be categorized in offline or online. In the offline version, to decide that a point in $t$ is a change point the algorithm has available all the time series, including information past and future of $t$. In the other hand, in the online version the information is available up to time $t$. It is intuitive that the offline version is more robust since there is more information to make a decision. In practice, to increase the statistical confidence of the decision, the online definition is relaxed and to decide if a point in time $t$ is a change point it is possible to use information to a small window ni the future, that means wait until more data is available, it is a trade off between minimize the time to detect a change and correctly detect that it is really a change point. Therefore in some cases, the online version can transformed in the offline version modifying the input availability. The choice between these options are defined by the application domain, in some applications data are processed in real time and the change points must be detected as soon as possible, but in others the change points are idenifyied by historical purpouses data of all time series is available. 
+
+In this work it is considered the following input and change points caracteristics, which were defined considering the final application area:
+\begin{itemize}
+    \item Univariate time series. However, is possible to easily extend several methods presented here to deal with multivariate data.
+    \item Unevenly time series, that is, data is not regularly sampled in time.
+    \item Unknow number of change points.
+    \item Time series with different lengths.
+    \item Different number of points between change points.
+    \item It is focused on changes in the underlying mean and distribution, disconsidering other kind of changes such as periodicity.
+    \item Outliers are not considered statistical changes.
+    \item There is no latent information of the time series.
+    \item It is considered the online and offline options.
+\end{itemize}
 
 \section{Notation}
 
-In this work an univariate time series composed of $n$ points is defined by two vectors: $\mathbf{x} = (x_{1}, ..., x_{n})$ and $\mathbf{y} = (y_{1}, ..., y_{n})$. The value $y_{i}$ indicates the $i-$th sampled value and $x_{i}$ indicates the associated sample time. It is assumed that the points are sorted by time, that is, $x_{i - 1} < x_{i}$ for $i = 1, ..., n$. Since we consider unevenly time series $x_{i} - x_{i - 1}$ can be different for different $i$ values. For $s \ge t$ the following convention is adopted $\mathbf{y}_{s:t} = (y_{s}, ..., y_{t})$.
+An univariate time series composed of $n$ points is defined by two vectors: $\mathbf{x} = (x_{1}, ..., x_{n})$ and $\mathbf{y} = (y_{1}, ..., y_{n})$. The value $y_{i}$ indicates the $i-$th sampled value and $x_{i}$ indicates the associated sample time. It is assumed that the points are sorted by time, that is, $x_{i - 1} < x_{i}$ for $i = 1, ..., n$. Since we consider unevenly time series $x_{i} - x_{i - 1}$ can be different for different $i$ values. For $s \ge t$ the following convention is adopted $\mathbf{y}_{s:t} = (y_{s}, ..., y_{t})$.
 
-The presence of $k$ change points indicates that the data is splitted into $k+1$ segments, also called windows. Let $\tau_{i}$ indicate the $i-$th change point for $i=1,...,k$. Let $\tau_{0} = 0$ and $\tau_{k + 1} = n$. Then, the $i-$th segment is defined by $\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}}$, assuming that $\tau_{i - 1} < \tau_{i}$ for $i = 0, ..., k + 1$. Therefore $\boldsymbol \tau = (\tau_{0}, ..., \tau_{k + 1})$.
+The presence of $k$ change points indicates that the data is splitted into $k+1$ segments, also called windows. Let $\tau_{i}$ indicate the $i-$th change point for $i=1,...,k$. Also let $\tau_{0} = 0$, $\tau_{k + 1} = n$ and $\boldsymbol \tau = (\tau_{0}, ..., \tau_{k + 1})$. Then, the $i-$th segment is defined by $\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}}$, assuming that $\tau_{i - 1} < \tau_{i}$ for $i = 1, ..., k + 1$.
 
 \section{Sliding Window Techniques}
 
-Mainly a change point detection algorithm aim to find $k$ and $\boldsymbol \tau$.
+Through the previous definitions, mainly a change point detection algorithms aim to find both $k$ and $\boldsymbol \tau$.
 
-The sliding windows techniques uses two sliding windows over the data stream and then reduce the problem of detecting change points over data to the problem of testing wheter two windows were generated by different distributions.
+The sliding windows techniques uses two sliding windows over the data stream and then reduce the problem of detecting change points over data to the problem of testing wheter data from the two windows were generated by different distributions. The most common approach is to consider the distance between the two empirical distributions as the base to infer the change points. Let $d(\mathbf{a}, \mathbf{b})$ be the distance between two empirical distributions defined by two windows. Above is a pseudocode of a simple algorithm.
 
-\subsection{Empirical distributions distance}
+\begin{algorithm}[H]
+\caption{Sliding Window}
+	\begin{algorithmic}[1]
+		\State $i \gets 1$
+		\While{$i + 2 m - 1 \leq n$}
+             \If{$d(\mathbf{y}_{i : i + m - 1}, \mathbf{y}_{i + m : i + 2m - 1})$}
+                \State Report $i + m - 1$ as a change point
+		        \State $i \gets i + m$
+             \Else
+		        \State $i \gets i + 1$
+             \EndIf
+        \EndWhile
+	\end{algorithmic}
+\end{algorithm}
 
-\subsubsection{L-1 Norm}
+n this approach when the distance between the distributions of the two windows are above some threshold than a change point is reported. This is a common a aproach for a online application, however it is possible to increase the precision in offline cases. As an example the figure presents the distance between two sliding windows in a simulated time series. The segment from $1$ to $x$ was generated sampling a $N(..., ...)$ and the segment from $x+1$ to $y$ was generated sampling from a $N(..., ...)$.
 
-\subsubsection{Bhattacarya Distance}
+It is possible to observer that peak of the distance is the exact location where the distributions changed. However using the threshold method it is possible to infer the localtion of the change point translated to the past. Therefore, instead of using a threshold is possible to use peak detection algorithm is distance of two sliding windows function.
 
-For discrete distributions:
+The choice which distance function to use have a great impact on the performance. There are several empirical distributions functions that could provide a quantitative metric of distance between distributions such as mahalanobis distance, bhattacarya distance, hellinger distance, jensen shannon and Kullback–Leibler divergence. In practice the Kullback-Leibler and bhattacarya distance were not considered besides they can be used to compare distributions they are not distance fucntions since doesn't obey the trinagle rule. To work with real data the other cited ones involves represents the distributions through binarization, and these metrics compute the distance through a bin to bin comparison. But in the following toy problem it is  
 
-\begin{equation}
-    B(p, q) = - \ln \left( \sum \limits_{x \in X} \sqrt{p(x) q(x)} \right)
-\end{equation}
-
-It is important to note that the Bhattacarya distance doesn't obey the triangle inequality and that $0 \leq B(p, q) \leq \infty$.
-
-\subsubsection{Hellinger Distance}
-
-\begin{equation}
-    H(p, q) = \sqrt{\frac{\sum \limits_{x \in X} |p(x) - q(x)|}{2}}
-\end{equation}
-
-It is possible to observe that $0 \leq H(p, q) \leq 1$.
-
-In practical scenarios all above distributions comparisons involve binarization of distributions and after that a comparison phase. Also all cmoparisons are through bin to bin comparison which can lead to indefined situations as the following toy example: 
-
-It is possible to observe that 
-
-\subsubsection{EMD distance}
+The work \ref state that to improve performance it is possible to use parallell executions of the same this same sliding window algorithm but with different windows sizes, which enable to capture segments with different sizes more easily.
 
 \section{Optimization Model}  
 
-\subsection{Constrained Case}
+Given a fixed value of $k$, one approach is to define a cost function that measure the homogeneity of a segment and therefore choose the change points that globally optimize this homogeneity. Let the cost of the $i$-th segment be defined as $C(y_{\tau_{i - 1} + 1 : \tau_{i}})$. The cost of a segmentation is then sum of all segments costs.
 
-Given a fixed value of $k$, one approach is to define a cost function that measure the homogeneity of a segment and therefore choose the change points that globally optimize this homogeneity. Let the cost of the $i$-th segment be defined as $C(y_{\tau_{i - 1} + 1 : \tau_{i}})$. The cost of a segmentation is then $\sum \limits_{i = 1}^{k + 1} C(y_{\tau_{i - 1} + 1 : \tau_{i}})$.
+A commom choice for function $C$ is the MSE (Mean Squared Error) which can capture changes in the mean. Another usual approach is to consider a distribution changes through negative maximum log-likelihood functions, considering that data within a segment is iid. 
 
-A commom choice for function $C$ is the MSE (Mean Squared Error) which can capture changes in the mean. Another usual approach is to consider a distributin model and use the negative maximum log-likelihood. The latter can capture changes in mean and variance, also considers that data within a segment is iid. Therefore, given a fixed $k$, the optimal segmentation is obtained through the following optimization problem: 
-
-\begin{equation}
-    F_{k, n} = \min_{\boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(y_{\tau_{i - 1} + 1 : \tau_{i}})
-\end{equation}
-
-This problem can be solved using dynamic programming:
+Therefore, given a fixed $k$, the optimal segmentation is obtained through the following optimization problem, which is called the constrained case: 
 
 \begin{equation}
-    F_{k, t} = 
-    \begin{cases}
-        0, & \text{if } k = 0 \text{ and } t = 0 \\
-        \infty, & \text{if } k = 0 \text{ and } t > 0 \\
-        \displaystyle \min_{s \in \{0, ..., t - 1\}} \left[ F_{k - 1, s} + C(y_{s + 1 : t}) \right], & \text{ otherwise}
-    \end{cases}
+    \min_{\boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(y_{\tau_{i - 1} + 1 : \tau_{i}})
 \end{equation}
 
-The overal time complexity of this algorithm is $O(k n^2 f(n))$, where $f(n)$ is the time complexity to evaluate $C$.
-
-The formulation can consider a minimum value of a segment
-
-\subsection{Segment Cost Function}
-
-Several segment cost functions can be evaluated in $O(1)$ after a preprocessing phase, implying in an overall $O(k n^2)$ time complexity. Next is provided the procedures to achieve this efficiency using MSE, negative maximum log-likelihood of normal and exponential distributions.
-
-\subsubsection{MSE}
-
-Let $\mu_{s, t}$ the mean value of the segment $\mathbf{y}_{s : t}$:
-
-\begin{equation}
-    \mu_{s, t} = \frac{\sum \limits_{i = s}^{t} y_{i}}{t - s + 1}
-\end{equation}
-
-Then, the $MSE(\mathbf{y}_{s : t})$ is defined as:
-
-\begin{equation}
-    \label{mse}
-    \begin{aligned}
-        MSE(\mathbf{y}_{s : t}) = \frac{\sum \limits_{i = s}^{t} (y_{i} - \mu_{s, t})^{2}}{t - s + 1} \\
-        = \frac{\sum \limits_{i = s}^{t} (y_{i}^{2} - 2 y_{i} \mu_{s, t} + \mu_{s, t}^{2})}{t - s + 1} \\
-        = \frac{\sum \limits_{i = s}^{t} y_{i}^{2} - 2 \mu_{s, t} \sum \limits_{i = s}^{t} y_{i} + (t - s + 1) \mu_{s, t}^{2}}{t - s + 1} \\
-    \end{aligned}
-\end{equation}
-
-Let $S_{i} = \sum \limits_{j = 0}^{i} y_{j}$, that is, $\mathbf{S}$ represents the prefix sum of $\mathbf{y}$ for different indexes. $\mathbf{S}$ can be computed in $O(n)$ with the following dynamic programming procedure: 
-
-\begin{equation}
-    S_{i} = 
-    \begin{cases}
-        0, & \text{if } i = 0 \\
-        S_{i - 1} + y_{i}, & \text{otherwise}
-    \end{cases}
-\end{equation}
-
-Let $Q_{i} = \sum \limits_{j = 0}^{i} y_{j}^{2}$. As with $\mathbf{S}$, $\mathbf{Q}$ can be computed in $O(n)$: 
-
-\begin{equation}
-    Q_{i} = 
-    \begin{cases}
-        0, & \text{if } i = 0 \\
-        Q_{i - 1} + y_{i}^{2}, & \text{otherwise}
-    \end{cases}
-\end{equation}
-
-Given that $\mathbf{S}$ and $\mathbf{Q}$ are previously computed, it is possible to evaluate the following equations in $O(1)$: 
-
-\begin{equation}
-    \label{mean_o1}
-    \mu_{s, t} = \frac{S_{t} - S_{s - 1}}{t - s + 1}
-\end{equation}
-
-\begin{equation}
-    \label{prefixsum1_o1}
-    \sum \limits_{i = s}^{t} y_{i} = S_{t} - S_{s - 1}
-\end{equation}
-
-\begin{equation}
-    \label{prefixsum2_o1}
-    \sum \limits_{i = s}^{t} y_{i}^{2} = Q_{t} - Q_{s - 1}
-\end{equation}
-
-With equations \ref{mean_o1}, \ref{prefixsum1_o1}, \ref{prefixsum2_o1} it is possible to observe that \ref{mse} can be computed in $O(1)$ given an $O(n)$ precomputation.  
-
-\subsubsection{Negative Log-Likelihood of Normal Distribution}
-
-The pdf of a Gaussian distribution is given by:
-
-\begin{equation}
-    N(x | \mu, \sigma^{2}) = \frac{1}{\sqrt{2 \pi \sigma^{2}}} e^{\frac{-(x - \mu)^{2}}{2 \sigma^{2}}}
-\end{equation}
-
-The maximum likelihood estimators for the segment $\mathbf{y}_{s : t}$ are:
-
-\begin{equation}
-    \widehat{\mu}_{s, t} = \frac{\sum \limits_{i = s}^{t} y_{i}}{t - s + 1} 
-\end{equation}
-
-\begin{equation}
-    \widehat{\sigma}_{s, t}^{2} = \frac{\sum \limits_{i = s}^{t} (y_{i} - \widehat{\mu}_{s, t})^{2}}{t - s + 1} 
-\end{equation}
-
-Through these equations is possible to observe that negative of the maximum log likelihood can be expressed using $MSE$:
-
-\begin{equation}
-    \begin{aligned}
-        NLL_{s, t} = \frac{(t - s + 1) \ln(2 \pi)}{2} + \frac{(t - s + 1) \ln(\widehat{\sigma}_{s, t}^{2})}{2} + \frac{\sum \limits_{i = s}^{t} (y_{i} - \widehat{\mu}_{s, t})^{2}}{2 \widehat{\sigma}_{s, t}^{2}} \\
-        %= \frac{(t - s + 1) \ln(2 \pi)}{2} + \frac{(t - s + 1) \ln(MSE_{s, t})}{2} + \frac{t - s + 1}{2} 
-        = \left( \frac{t - s + 1}{2} \right) [\ln(2 \pi) + \ln(MSE_{s, t}) + 1]
-    \end{aligned}
-\end{equation}
-
-Therefore, the negative log likelihood can also be computed in $O(1)$ with an $O(n)$ precomputation.
-
-\subsubsection{Negative Log-Likelihood of Exponential Distribution}
-
-The pdf of an exponential distribution is given by:
-
-\begin{equation}
-    f(x) = 
-    \begin{cases}
-        \lambda e^{- \lambda x}, & \text{if } x \in [0, \infty) \\
-        0, & \text{otherwise}
-    \end{cases}
-\end{equation}
-
-The maximum likelihood estimator of the segment $\mathbf{y}_{s : t}$ is:
-
-\begin{equation}
-    \widehat{\lambda}_{s, t} = \frac{(t - s + 1)}{\sum \limits_{i = s}^{t} y_{i}}
-\end{equation}
-
-The negative log likelihood can be expressed by:
-
-\begin{equation}
-    \begin{aligned}
-        NLL_{s, t} = - (t - s + 1) \ln(\widehat{\lambda}_{s, t}) + \widehat{\lambda}_{s, t} \sum \limits_{i = s}^{t} y_{i} \\
-        = - (t - s + 1) \left[ \ln \left( \frac{t - s + 1}{S_{t} - S_{s - 1}} \right) + 1 \right] \\
-    \end{aligned}
-\end{equation}
-
-Therefore the exponential distribution can also be used as a cost function with $O(1)$ evaluation and $O(n)$ precomputation.
+This problem can be solved using dynamic programming with $O(k n^2 f(n))$ time complexity, where $f(n)$ is related with $C$ evaluation. Several segment cost functions can be evaluated in $O(1)$ after a $O(n)$ preprocessing phase, implying in an overall $O(k n^2)$ complexity. It is possible to proof that MSE, negative maximum log-likelihood function of normal, exponential, poisson and binomial distributions have this characterestic. Also the formulation can consider a minimum value of a segment length.
 
 Using both of these continuous distributions as the cost function can led to practical dificulties. The first one is that segments can form degenerate distributions, that is, the points of a segment can have zero variance. In these cases the negative likelihood functions will not be defined. Two approaches to avoid this situation is 1) try to avoid degenerate segments adding a white noise to the time series. 2) consider a constant and small value to degenerate segments. Since a single point compose a degenerate distribution to handle this case the options are the xonstant value or doesn`t allow segments with length equal to one.
 
 Since the likelihood of different continuous distributions can`t be directly compared, is not possible to apply the segmentation algorithm considering different types of continuos distributions. One possibility to handle this is to apply automatic methods to check which kind of distribution fits better to the segment, such as Kolmogorov-Smirnov. This was not approached in this work due to the computation time efficiency decrease and that since we deal with small number of data possibly these methods would have a poor performance.
 
-Also is possible to prove that the Poisson and Binomial distributions can be evaluated in $O(1)$ with a $O(n)$ precomputation. Using discrete distributions is possible to direct compare the likelihood of two different distribution types. 
+Using discrete distributions is possible to direct compare the likelihood of two different distribution types. 
 
-% \subsubsection{Negative Log-Likelihood of Poisson Distribution}
-%
-% The pdf of a poisson distribution is given by:
-%
-% \begin{equation}
-%     f(x) = \frac{\lambda^{x} e^{- \lambda}}{x!}
-% \end{equation}
-%
-% The maximum likelihood estimator of the segment $\mathbf{y}_{s : t}$ is:
-%
-% \begin{equation}
-%     \widehat{\lambda}_{s, t} = \frac{(t - s + 1)}{\sum \limits_{i = s}^{t} y_{i}}
-% \end{equation}
-%
-% Let $R_{i} = \prod \limits_{j = 1}^{i} y_{j}$, that is , $\mathbf{R}$ represents the prefix product of $\mathbf{y}$ for different indexes. $\mathbf{R}$ can be computed in $O(n)$ using the following dynamic programming procedure:
-%
-% \begin{equation}
-%     R_{i} = 
-%     \begin{cases}
-%         1, & \text{if } i = 0 \\
-%         R_{i - 1} y_{i}, & \text{otherwise}
-%     \end{cases}
-% \end{equation}
-%
-% The negative log likelihood can be expressed by:
-%
-% \begin{equation}
-%     \begin{aligned}
-%         NLL_{s, t} = (t - s + 1) \ln(\widehat{\lambda}_{s, t}) - \sum \limits_{i = s}^{t} y_{i} \ln(\widehat{\lambda}_{s, t}) + \ln \left( \prod \limits_{i = s}^{t} y_{i} \right) \\
-%     = \ln \left( \frac{t - s + 1}{S_{t} - S_{s - 1}} \right) \left[ 1 - \sum \limits_{i = s}^{t} y_{i} \right] + \ln \left( \frac{R_{t}}{R_{s - 1}} \right) \\
-%     \end{aligned}
-% \end{equation}
-%
-% \subsubsection{Negative Log-Likelihood of Binomial Distribution}
-
-\subsection{Penalized Case}
-
-When the number of change points is unknown a common approach is to solve the constrained case for different values of k and penalize this number of change points, the bigger k biggest is the penalty.
-
-Let $g(k)$ be the penalty function. Then the new optimization problem is:
+When the number of change points is unknown a common approach is to introduce a non decreasing penalty function $g(k)$, the bigger k biggest is the penalty. Then the new optimization problem is, which is called the penalized case:
 
 \begin{equation}
-    \min_{k} F_{k, n} + g(k)
+    \min_{k, \boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(y_{\tau_{i - 1} + 1 : \tau_{i}}) + g(k)
 \end{equation}
 
-An approach to solve this problem is to solve the constrained for $k = 0, ..., K$. This lead to an $O(K^{2} n^{2} f(n))$
+An approach to solve this problem is to solve the constrained for $k = 0, ..., K$. This lead to an $O(K^{2} n^{2} f(n))$. However if the penalty function is linear in $k$ the problem can be formulated in a more efficient way and solved in $O(n^{2} f(n))$ time complexity with dynamic programming..
 
-However if the penalty function is linear in $k$ the problem can be formulated in a more efficient way.
-
-Let the penalty function be in the form:
-
-\begin{equation}
-    g(k) = (\alpha + 1) k
-\end{equation}
-
-Therefore the optimization problem can be formulated as:
-
-\begin{equation}
-    \begin{aligned}
-        G_{n} = \min_{k, \boldsymbol \tau_{1 : k}} \left[ \sum \limits_{i = 1}^{k + 1} C(y_{\tau_{i - 1} + 1 : \tau_{i}}) + (\alpha + 1) k \right] \\
-        = \min_{k, \boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} \left[ C(y_{\tau_{i - 1} + 1 : \tau_{i}}) + \alpha \right] \\
-    \end{aligned}
-\end{equation}
-
-This problem can be solved using dynamic programming:
-
-\begin{equation}
-    G_{t} = 
-    \begin{cases}
-        0, & \text{if } t = 0 \\
-        \displaystyle \min_{s \in \{0, ..., t - 1\}} \left[ G_{s} + C(y_{s + 1 : t}) + \alpha \right], & \text{ otherwise}
-    \end{cases}
-\end{equation}
-
-This algorithm has $O(n^{2} f(n))$ time complexity.
-
-\subsection{Pruning}
-
-\subsection{pDPA}
-\subsection{PELT}
-
-The idea is that is possible to eliminate some values of $\tau$ which can never be minima from the transition computation of the dynamic programming procedure. 
-
-\subsection{FPOP??}
+Also there are several pruning algorithms to speedup the computation with the idea of eliminating from the dynamic programming computation some values of $\tau$ which can never lead to the optimial solution. Which is the case of the followinf algorithms pDPA, PELT and FPOF.
 
 \section{Bayesian Inference}
 I will erase this section if I don't use bayesian inference. Describe Fearnheard (offline) and MacKay (online) solutions. Say that there are other versions.
 
-\section{HMM}
-I will not describe HMM algorithms (viterbi, baum welch, etc), I will only describe how HMM have been used in change point detection. Describe Left-Right HMM, full HMM, and Regularized HMM in this problem.
+\section{HMM (Hidden Markov Model)}
 
-\section{Other Algorithms}
-Only cite other used algorithms and say why I chose the previous one to analyse.
+There are several approaches to change point detection using HMM. The idea that each segment of the time series if associated with a specific latent variable of the procedure that generate the time series has a direct interpretation through a HMM model. Each hidden state of a HMM model is direct associated with a segment and the observation distribution is the distribution of that segment. Therefore using a HMM to detect change points is directly connected to identifying when the hidden state change in the HMM when processing the time series through the model.
 
-- Binary Segmentation
+There are several approaches in the training phase and in the detection phase. For example, given a trained HMM is possible to get the time series to be processed and get best hidden state path that this time series would have theough the viterbi algorithm, then the change points would be the points in time where the hidden states changed. Also is possible to evaluate the probability of change the hidden state in time $t$ and apply a threshold method or peak detection as in the sliding window method. For the training phase is possible to use several time series to train the model using baum welch or simply train only with the same time series that will be processed.
+
+It is important to note that structure of hidden state graph has a big impact in the performance. Using a full connected structure the number of states will defined the number of different distribution parameters of the different segments. Using a left to right structure the number of hidden states will impact the number of segments.
+
+In \ref{} is stated that when using a full connected structure the the time that a time series keeps in a single hidden state is low, therefore there are a lot of transitions between hidden states and therefore a lot of change points. To overcome this problem \ref{} suggest using a penalization using a dirichlet prior giving priority to the time series be at the same state in the training phase.
+
+% \section{Other Algorithms}
+% - Binary Segmentation
+% - Increase model window untill likelihood is bigger than threshold 
 
 \section{Performance Evaluation}
   Describe how datasets are constructed in literature. Describe how an algorithm output is evaluated.
