@@ -1,21 +1,23 @@
 \chapter{Change Point Detection} 
 
-A change point detection algorithm is concerned to identify points in time where the statistical properties of a time series have changed. This problem have a broad application in different knowledge fields, and in general, the algorithms performance are closely related with the data characteristics. Also, when the latent information of the procedures which generated a time series is abscent the target statistical properties and other features can be considered subjective, bringing difficulties not only in the detection phase but also in the problem formalization.
+A change point detection algorithm is concerned to identify points in time where the statistical properties of a time series have changed. This problem have a broad application in different knowledge fields, and in general, the algorithms performance are closely related with the data characteristics. Also, when the latent information of the procedures which generated a time series are abscent the target statistical properties and other features can be considered subjectives, bringing difficulties not only in the detection phase but also in the problem formalization.
 
-In this context, this chapter formalizes the problem and briefly presents several change point detection algorithms. The literature of this area is extensive, and it is common to find methods which presents a poor performance due to the fact that doens't fit the data caracteristics and detection goals, or because it was only analyzed through a theoretical and limited perspective. Therefore it was chosen a set of methods that can provide a good practical and theoretical perspective and also flexibility to adaptations and better handling of input peculiarities. Also through the presentation is presented several obstacle when dealing with real data and some adopted solutions which are not presented in the literature.
+In this context this chapter formalizes the problem and briefly discuss several change point detection algorithms. The literature of this area is extensive, and it is common to find methods which presents a poor performance due to a variety of reasons, such as the algorithms are too specific to a data characteristic or because the mechanisms were only analyzed through theoretical aspects. Therefore it was chosen a set of methods that can provide a good practical and theoretical perspective and also flexibility to insert adaptations that can better handle some input peculiarities. Also, through this chapter is exposed several obstacles when dealing with real data and some adopted solutions which are not presented in the literature.
 
 \section{Problem Definition}
 
-The problem can be categorized in offline or online. In the offline version, to decide that a point in $t$ is a change point the algorithm has available all the time series, including information past and future of $t$. In the other hand, in the online version the information is available up to time $t$. It is intuitive that the offline version is more robust since there is more information to make a decision. In practice, to increase the statistical confidence of the decision, the online definition is relaxed and to decide if a point in time $t$ is a change point it is possible to use information to a small window ni the future, that means wait until more data is available, it is a trade off between minimize the time to detect a change and correctly detect that it is really a change point. Therefore in some cases, the online version can transformed in the offline version modifying the input availability. The choice between these options are defined by the application domain, in some applications data are processed in real time and the change points must be detected as soon as possible, but in others the change points are idenifyied by historical purpouses data of all time series is available. 
+The problem can be categorized in offline or online. In the offline version, to decide if a specific point at time $t$ is a change point the solver has available the whole time series, including past and future information on $t$. In the other hand, in the online version the information is available up to time $t$. The choice between these options are defined by the application domain, in some cases data are processed in real time and the change points should be detected as soon as possible, but in others the change points are identifyied by historical purpouses and offline algorithms can be used. 
 
-In this work it is considered the following input and change points caracteristics, which were defined considering the final application area:
+It is intuitive that the offline case is more robust since there are more information to make a decision. In practice, to increase the statistical confidence of the decision, the online definition is relaxed and to decide if a point at time $t$ is a change point it is possible to use data up to a small window in future of $t$, which in real time processing means that the application should wait until more data are available. This trick consists of a trade-off between minimizing the time to detect a change and correctly classify a point. Therefore, in some cases, the online version can be transformed in the offline version by only modifying the input availability. 
+
+In this work it is considered the following input and change points caracteristics, which were defined considering the final application scenario:
 \begin{itemize}
-    \item Univariate time series. However, is possible to easily extend several methods presented here to deal with multivariate data.
+    \item Univariate time series. However, it is possible to easily extend several methods presented here to deal with multivariate data.
     \item Unevenly time series, that is, data is not regularly sampled in time.
     \item Unknow number of change points.
     \item Time series with different lengths.
     \item Different number of points between change points.
-    \item It is focused on changes in the underlying mean and distribution, disconsidering other kind of changes such as periodicity.
+    \item Focus on changes in the underlying mean and distribution, disconsidering other kinds of changes such as in periodicity.
     \item Outliers are not considered statistical changes.
     \item There is no latent information of the time series.
     \item It is considered the online and offline options.
@@ -48,7 +50,7 @@ The sliding windows techniques uses two sliding windows over the data stream and
 	\end{algorithmic}
 \end{algorithm}
 
-n this approach when the distance between the distributions of the two windows are above some threshold than a change point is reported. This is a common a aproach for a online application, however it is possible to increase the precision in offline cases. As an example the figure presents the distance between two sliding windows in a simulated time series. The segment from $1$ to $x$ was generated sampling a $N(..., ...)$ and the segment from $x+1$ to $y$ was generated sampling from a $N(..., ...)$.
+In this approach when the distance between the distributions of the two windows are above some threshold than a change point is reported. This is a common a aproach for a online application, however it is possible to increase the precision in offline cases. As an example the figure presents the distance between two sliding windows in a simulated time series. The segment from $1$ to $x$ was generated sampling a $N(..., ...)$ and the segment from $x+1$ to $y$ was generated sampling from a $N(..., ...)$.
 
 It is possible to observer that peak of the distance is the exact location where the distributions changed. However using the threshold method it is possible to infer the localtion of the change point translated to the past. Therefore, instead of using a threshold is possible to use peak detection algorithm is distance of two sliding windows function.
 
@@ -105,4 +107,6 @@ In \ref{} is stated that when using a full connected structure the the time that
 
 \section{Performance Evaluation}
   Describe how datasets are constructed in literature. Describe how an algorithm output is evaluated.
+
+This problem can viewed as a binary classification of all points in a time series, the points are classified in change points or not change points.
 
