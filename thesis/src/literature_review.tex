@@ -1,16 +1,16 @@
 \chapter{Change Point Detection} 
 
-A change point detection algorithm is concerned to identify points in time where the statistical properties of a time series have changed. This problem have a broad application in different knowledge fields, and in general, the algorithms performance are closely related with the input characteristics. Also, when the latent information of the procedures which generated a time series are abscent the target statistical properties can be considered subjective, bringing difficulties not only in the detection phase but also in the problem formalization.
+A change point detection algorithm is concerned to identify points in time where the statistical properties of a time series have changed. This problem have a broad application in different knowledge fields, and in general, the algorithms performance are closely related with the input characteristics. Also, when the latent information of the procedures that generated a time series are abscent the target statistical properties can be considered subjective, bringing difficulties not only in the detection phase but also in the problem formalization.
 
-In this context this chapter specifies the problem and briefly discusses several change point detection algorithms. The literature of this area is extensive, and it is common to find methods which presents a poor performance due to a variety of reasons, such as the algorithms are too specific to a data characteristic or because the mechanisms were only analyzed through theoretical aspects. Therefore it was chosen a set of methods that can provide a good practical and theoretical perspective and also flexibility to insert adaptations that can better handle some input peculiarities. Also, through this chapter is exposed several obstacles when dealing with real data and some adopted solutions which are not described in literature.
+In this context this chapter specifies the problem and briefly discusses several change point detection algorithms. The literature of this area is extensive, and it is common to find methods that presents a poor performance due to a variety of reasons, such as they are too specific or because the mechanisms were only analyzed through theoretical aspects. Therefore, it was chosen a set of methods that can provide a good practical and theoretical perspective, and also flexibility to insert adaptations that can better handle some input peculiarities. Futhermore, through this chapter is exposed several obstacles when dealing with real data and some adopted solutions which are not described in literature.
 
 \section{Problem Definition}
 
 The problem can be categorized in offline or online. In the offline version, to decide if a specific point at time $t$ is a change point the solver has available the whole time series, including past and future information on $t$. In the other hand, in the online version the information is available up to time $t$. The choice between these options are defined by the application domain, in some cases data are processed in real time and the change points should be detected as soon as possible, but in others the change points are identifyied by historical purpouses and offline algorithms can be used. 
 
-It is intuitive that the offline case is more robust since there are more information to make a decision. In practice, to increase the statistical confidence of the decision, the online definition is relaxed and to decide if a point at time $t$ is a change point it is possible to use data up to a small window in future of $t$, which in real time processing means that the application should wait until more data are available. This trick plays a trade-off between minimizing the time to detect a change and correctly classify a point. Therefore, in some cases, the online version can be transformed in the offline version by only modifying the input availability. 
+It is intuitive that the offline case is more robust since there are more information to make a classification. In practice, to increase the statistical confidence of a decision, the online definition is relaxed and to decide if a point at time $t$ is a change point it is possible to use data up to a small window in future of $t$, which in real time processing means that the application should wait until more data are available. This trick plays a trade-off between minimizing the time to detect a change and correctly classify a point. Therefore, in some cases, the online version can be transformed in the offline version by only modifying the input availability. 
 
-In this work it is considered the following input and change points caracteristics, which were defined considering the final application scenario:
+In this work it is considered the following input and change points characteristics, which were defined considering the final application scenario:
 \begin{itemize}
     \item Univariate time series. However, it is possible to easily extend several methods presented here to deal with multivariate data.
     \item Unevenly time series, that is, data is not regularly sampled in time.
@@ -25,19 +25,19 @@ In this work it is considered the following input and change points caracteristi
 
 \section{Notation}
 
-An univariate time series composed of $n$ points is defined by two vectors: $\mathbf{x} = (x_{1}, ..., x_{n})$ and $\mathbf{y} = (y_{1}, ..., y_{n})$. The value $y_{i}$ indicates the $i-$th sampled value and $x_{i}$ indicates the associated sample time. It is assumed that the points are sorted by time, that is, $x_{i - 1} < x_{i}$ for $i = 2, ..., n$. Since unevenly time series is considered, $x_{i} - x_{i - 1}$ can be different for different $i$ values. For $s \ge t$ the following convention is adopted $\mathbf{y}_{s:t} = (y_{s}, ..., y_{t})$.
+An univariate time series composed of $n$ points is defined by two vectors, $\mathbf{x} = (x_{1}, ..., x_{n})$ and $\mathbf{y} = (y_{1}, ..., y_{n})$. The value $y_{i}$ indicates the $i-$th sampled value and $x_{i}$ indicates the associated sample time. It is assumed that the points are sorted by time, that is, $x_{i - 1} < x_{i}$ for $i = 2, ..., n$. Since unevenly time series is considered, $x_{i} - x_{i - 1}$ can be different for different $i$ values. For $s \ge t$ the following convention is adopted $\mathbf{y}_{s:t} = (y_{s}, ..., y_{t})$.
 
-The presence of $k$ change points indicates that the data is splitted into $k+1$ segments, also called windows. Let $\tau_{i}$ indicate the $i-$th change point for $i=1,...,k$. Also let $\tau_{0} = 0$, $\tau_{k + 1} = n$ and $\boldsymbol \tau = (\tau_{0}, ..., \tau_{k + 1})$. Then, the $i-$th segment is defined by $\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}}$, assuming that $\tau_{i - 1} < \tau_{i}$ for $i = 1, ..., k + 1$.
+The presence of $k$ change points implies that data is splitted into $k+1$ segments, also called windows. Let $\tau_{i}$ indicate the $i-$th change point for $i=1,...,k$. Also let $\tau_{0} = 0$, $\tau_{k + 1} = n$ and $\boldsymbol \tau = (\tau_{0}, ..., \tau_{k + 1})$. Then, the $i-$th segment is defined by $\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}}$, assuming that $\tau_{i - 1} < \tau_{i}$ for $i = 1, ..., k + 1$.
 
 Through the previous definitions, change point detection algorithms mainly aim to find both $k$ and $\boldsymbol \tau$.
 
 \section{Sliding Window Techniques}
 
-Sliding window techniques use two sliding windows over the time series and reduce the problem of detecting change points to the problem of testing whether data from the windows were generated by different distributions. One approach is to consider a distance metric between the two empirical distributions as the base to infer the change points. Let $d(\mathbf{a}, \mathbf{b})$ be the distance between two empirical distributions defined by the windows $\mathbf{a}$ and $\mathbf{b}$, and considering windows of length $m$, the \ref{alg:sliding_window} presents a simple sliding window algorithm.
+Sliding window techniques use two sliding windows over the time series, and reduce the problem of detecting change points to the problem of testing whether data from the windows were generated by different distributions. One approach is to consider a distance metric between two empirical distributions as the base to infer the change points. Letting $d(\mathbf{a}, \mathbf{b})$ be the distance between two empirical distributions defined by the windows $\mathbf{a}$ and $\mathbf{b}$, and considering windows of length $m$, the Algorithm~\ref{alg:sliding_window} presents a simple sliding window method.
 
-\begin{algorithm}[H]
-    \label{alg:sliding_window}
+\begin{algorithm}
     \caption{Sliding Window}
+    \label{alg:sliding_window}
 	\begin{algorithmic}[1]
 		\State $i \gets 1$
 		\While{$i + 2 m - 1 \leq n$}
@@ -51,17 +51,17 @@ Sliding window techniques use two sliding windows over the time series and reduc
 	\end{algorithmic}
 \end{algorithm}
 
-In this method, when the distance between the distributions of the two windows is above some threshold $\alpha$ a change point is reported. This is a common aproach for an online application, however it is possible to increase the classification accuracy in offline cases. As an example, the top plot of figure \ref{} presents a simulated time series, the segment $\mathbf{y}_{1 : k}$ was generated sampling a $N(..., ...)$ distribution and $\mathbf{y}_{x + 1 : y}$ was sampled through $N(..., ...)$. The bottom plot of the same figure presents the associated distance between two sliding windows, where the point $(i, d_{i})$ represents the distance between the windows $\mathbf{y}_{i - m : i - 1}$ and $\mathbf{y}_{i : i + m - 1}$.
+In this method, when the distance between the distributions is above some threshold $\alpha$ a change point is reported. This is a commom aproach for an online application, however it is possible to increase the classification accuracy in offline cases. As an example, the top plot of figure \ref{} presents a simulated time series, the segment $\mathbf{y}_{1 : k}$ was generated sampling a $N(..., ...)$ distribution and $\mathbf{y}_{x + 1 : y}$ was sampled through $N(..., ...)$. The bottom plot of the same figure presents the associated hellinger distance between two sliding windows, where the point $(i, d_{i})$ represents the distance between the windows $\mathbf{y}_{i - m : i - 1}$ and $\mathbf{y}_{i : i + m - 1}$.
 
 It can be observed that the peak of the distance is in the exact location where the distribution changed. However, using the threshold method is possible to prematuraly infer the location of the change point. Therefore, an alternative is to use a peak detection algorithm in the distance of two sliding windows time series.
 
-The distance function choice can signifanctly impact the performance. There are several empirical distribution distances such as mahalanobis distance, hellinger distance, jensen shannon and EMD (Earth's Mover's Distance).  
+The distance function choice can significantly impact the performance. There are several empirical distribution distances such as mahalanobis distance, hellinger distance, jensen shannon and EMD (Earth Mover's Distance).  
 
-A performance improvement can be achieved concurrently executing the same sliding window algorithm with different window lengths, which enable the segmentation of segments with different sizes more easily.
+A performance improvement can be achieved concurrently executing the same sliding window algorithm with different window lengths, which enable the segmentation with different windows sizes more easily.
 
 \section{Optimization Model}  
 
-Given a fixed value of $k$, one approach is to define a cost function that measure the homogeneity of a segment and therefore choose the change points that globally optimize this homogeneity. Let the cost of the $i$-th segment be defined as $C(y_{\tau_{i - 1} + 1 : \tau_{i}})$. The cost of a segmentation is the sum of all segments costs.
+Given a fixed value of $k$, one approach is to define a cost function that measure the homogeneity of a segment and therefore choose the change points that globally optimize this homogeneity. Let the cost of the $i$-th segment be defined as $C(\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}})$. The cost of a segmentation is then the sum of all segments costs.
 
 A commom choice for function $C$ is the MSE (Mean Squared Error) which can capture changes in the mean. Another usual approach is to consider distribution changes through negative maximum log-likelihood functions, considering that data within a segment is iid. 
 
