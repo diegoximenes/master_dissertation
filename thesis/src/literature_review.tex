@@ -1,14 +1,14 @@
 \chapter{Change Point Detection} 
 
-A change point detection algorithm is concerned to identify points in time where the statistical properties of a time series have changed. This problem have a broad application in different knowledge fields, and in general, the algorithms performance are closely related with the data characteristics. Also, when the latent information of the procedures which generated a time series are abscent the target statistical properties and other features can be considered subjectives, bringing difficulties not only in the detection phase but also in the problem formalization.
+A change point detection algorithm is concerned to identify points in time where the statistical properties of a time series have changed. This problem have a broad application in different knowledge fields, and in general, the algorithms performance are closely related with the input characteristics. Also, when the latent information of the procedures which generated a time series are abscent the target statistical properties can be considered subjective, bringing difficulties not only in the detection phase but also in the problem formalization.
 
-In this context this chapter formalizes the problem and briefly discuss several change point detection algorithms. The literature of this area is extensive, and it is common to find methods which presents a poor performance due to a variety of reasons, such as the algorithms are too specific to a data characteristic or because the mechanisms were only analyzed through theoretical aspects. Therefore it was chosen a set of methods that can provide a good practical and theoretical perspective and also flexibility to insert adaptations that can better handle some input peculiarities. Also, through this chapter is exposed several obstacles when dealing with real data and some adopted solutions which are not presented in the literature.
+In this context this chapter specifies the problem and briefly discusses several change point detection algorithms. The literature of this area is extensive, and it is common to find methods which presents a poor performance due to a variety of reasons, such as the algorithms are too specific to a data characteristic or because the mechanisms were only analyzed through theoretical aspects. Therefore it was chosen a set of methods that can provide a good practical and theoretical perspective and also flexibility to insert adaptations that can better handle some input peculiarities. Also, through this chapter is exposed several obstacles when dealing with real data and some adopted solutions which are not described in literature.
 
 \section{Problem Definition}
 
 The problem can be categorized in offline or online. In the offline version, to decide if a specific point at time $t$ is a change point the solver has available the whole time series, including past and future information on $t$. In the other hand, in the online version the information is available up to time $t$. The choice between these options are defined by the application domain, in some cases data are processed in real time and the change points should be detected as soon as possible, but in others the change points are identifyied by historical purpouses and offline algorithms can be used. 
 
-It is intuitive that the offline case is more robust since there are more information to make a decision. In practice, to increase the statistical confidence of the decision, the online definition is relaxed and to decide if a point at time $t$ is a change point it is possible to use data up to a small window in future of $t$, which in real time processing means that the application should wait until more data are available. This trick consists of a trade-off between minimizing the time to detect a change and correctly classify a point. Therefore, in some cases, the online version can be transformed in the offline version by only modifying the input availability. 
+It is intuitive that the offline case is more robust since there are more information to make a decision. In practice, to increase the statistical confidence of the decision, the online definition is relaxed and to decide if a point at time $t$ is a change point it is possible to use data up to a small window in future of $t$, which in real time processing means that the application should wait until more data are available. This trick plays a trade-off between minimizing the time to detect a change and correctly classify a point. Therefore, in some cases, the online version can be transformed in the offline version by only modifying the input availability. 
 
 In this work it is considered the following input and change points caracteristics, which were defined considering the final application scenario:
 \begin{itemize}
@@ -25,22 +25,23 @@ In this work it is considered the following input and change points caracteristi
 
 \section{Notation}
 
-An univariate time series composed of $n$ points is defined by two vectors: $\mathbf{x} = (x_{1}, ..., x_{n})$ and $\mathbf{y} = (y_{1}, ..., y_{n})$. The value $y_{i}$ indicates the $i-$th sampled value and $x_{i}$ indicates the associated sample time. It is assumed that the points are sorted by time, that is, $x_{i - 1} < x_{i}$ for $i = 1, ..., n$. Since we consider unevenly time series $x_{i} - x_{i - 1}$ can be different for different $i$ values. For $s \ge t$ the following convention is adopted $\mathbf{y}_{s:t} = (y_{s}, ..., y_{t})$.
+An univariate time series composed of $n$ points is defined by two vectors: $\mathbf{x} = (x_{1}, ..., x_{n})$ and $\mathbf{y} = (y_{1}, ..., y_{n})$. The value $y_{i}$ indicates the $i-$th sampled value and $x_{i}$ indicates the associated sample time. It is assumed that the points are sorted by time, that is, $x_{i - 1} < x_{i}$ for $i = 2, ..., n$. Since unevenly time series is considered, $x_{i} - x_{i - 1}$ can be different for different $i$ values. For $s \ge t$ the following convention is adopted $\mathbf{y}_{s:t} = (y_{s}, ..., y_{t})$.
 
 The presence of $k$ change points indicates that the data is splitted into $k+1$ segments, also called windows. Let $\tau_{i}$ indicate the $i-$th change point for $i=1,...,k$. Also let $\tau_{0} = 0$, $\tau_{k + 1} = n$ and $\boldsymbol \tau = (\tau_{0}, ..., \tau_{k + 1})$. Then, the $i-$th segment is defined by $\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}}$, assuming that $\tau_{i - 1} < \tau_{i}$ for $i = 1, ..., k + 1$.
 
+Through the previous definitions, change point detection algorithms mainly aim to find both $k$ and $\boldsymbol \tau$.
+
 \section{Sliding Window Techniques}
 
-Through the previous definitions, mainly a change point detection algorithms aim to find both $k$ and $\boldsymbol \tau$.
-
-The sliding windows techniques uses two sliding windows over the data stream and then reduce the problem of detecting change points over data to the problem of testing wheter data from the two windows were generated by different distributions. The most common approach is to consider the distance between the two empirical distributions as the base to infer the change points. Let $d(\mathbf{a}, \mathbf{b})$ be the distance between two empirical distributions defined by two windows. Above is a pseudocode of a simple algorithm.
+Sliding window techniques use two sliding windows over the time series and reduce the problem of detecting change points to the problem of testing whether data from the windows were generated by different distributions. One approach is to consider a distance metric between the two empirical distributions as the base to infer the change points. Let $d(\mathbf{a}, \mathbf{b})$ be the distance between two empirical distributions defined by the windows $\mathbf{a}$ and $\mathbf{b}$, and considering windows of length $m$, the \ref{alg:sliding_window} presents a simple sliding window algorithm.
 
 \begin{algorithm}[H]
-\caption{Sliding Window}
+    \label{alg:sliding_window}
+    \caption{Sliding Window}
 	\begin{algorithmic}[1]
 		\State $i \gets 1$
 		\While{$i + 2 m - 1 \leq n$}
-             \If{$d(\mathbf{y}_{i : i + m - 1}, \mathbf{y}_{i + m : i + 2m - 1})$}
+             \If{$d(\mathbf{y}_{i : i + m - 1}, \mathbf{y}_{i + m : i + 2m - 1}) > \alpha$}
                 \State Report $i + m - 1$ as a change point
 		        \State $i \gets i + m$
              \Else
@@ -50,56 +51,56 @@ The sliding windows techniques uses two sliding windows over the data stream and
 	\end{algorithmic}
 \end{algorithm}
 
-In this approach when the distance between the distributions of the two windows are above some threshold than a change point is reported. This is a common a aproach for a online application, however it is possible to increase the precision in offline cases. As an example the figure presents the distance between two sliding windows in a simulated time series. The segment from $1$ to $x$ was generated sampling a $N(..., ...)$ and the segment from $x+1$ to $y$ was generated sampling from a $N(..., ...)$.
+In this method, when the distance between the distributions of the two windows is above some threshold $\alpha$ a change point is reported. This is a common aproach for an online application, however it is possible to increase the classification accuracy in offline cases. As an example, the top plot of figure \ref{} presents a simulated time series, the segment $\mathbf{y}_{1 : k}$ was generated sampling a $N(..., ...)$ distribution and $\mathbf{y}_{x + 1 : y}$ was sampled through $N(..., ...)$. The bottom plot of the same figure presents the associated distance between two sliding windows, where the point $(i, d_{i})$ represents the distance between the windows $\mathbf{y}_{i - m : i - 1}$ and $\mathbf{y}_{i : i + m - 1}$.
 
-It is possible to observer that peak of the distance is the exact location where the distributions changed. However using the threshold method it is possible to infer the localtion of the change point translated to the past. Therefore, instead of using a threshold is possible to use peak detection algorithm is distance of two sliding windows function.
+It can be observed that the peak of the distance is in the exact location where the distribution changed. However, using the threshold method is possible to prematuraly infer the location of the change point. Therefore, an alternative is to use a peak detection algorithm in the distance of two sliding windows time series.
 
-The choice which distance function to use have a great impact on the performance. There are several empirical distributions functions that could provide a quantitative metric of distance between distributions such as mahalanobis distance, bhattacarya distance, hellinger distance, jensen shannon and Kullback–Leibler divergence. In practice the Kullback-Leibler and bhattacarya distance were not considered besides they can be used to compare distributions they are not distance fucntions since doesn't obey the trinagle rule. To work with real data the other cited ones involves represents the distributions through binarization, and these metrics compute the distance through a bin to bin comparison. But in the following toy problem it is  
+The distance function choice can signifanctly impact the performance. There are several empirical distribution distances such as mahalanobis distance, hellinger distance, jensen shannon and EMD (Earth's Mover's Distance).  
 
-The work \ref state that to improve performance it is possible to use parallell executions of the same this same sliding window algorithm but with different windows sizes, which enable to capture segments with different sizes more easily.
+A performance improvement can be achieved concurrently executing the same sliding window algorithm with different window lengths, which enable the segmentation of segments with different sizes more easily.
 
 \section{Optimization Model}  
 
-Given a fixed value of $k$, one approach is to define a cost function that measure the homogeneity of a segment and therefore choose the change points that globally optimize this homogeneity. Let the cost of the $i$-th segment be defined as $C(y_{\tau_{i - 1} + 1 : \tau_{i}})$. The cost of a segmentation is then sum of all segments costs.
+Given a fixed value of $k$, one approach is to define a cost function that measure the homogeneity of a segment and therefore choose the change points that globally optimize this homogeneity. Let the cost of the $i$-th segment be defined as $C(y_{\tau_{i - 1} + 1 : \tau_{i}})$. The cost of a segmentation is the sum of all segments costs.
 
-A commom choice for function $C$ is the MSE (Mean Squared Error) which can capture changes in the mean. Another usual approach is to consider a distribution changes through negative maximum log-likelihood functions, considering that data within a segment is iid. 
+A commom choice for function $C$ is the MSE (Mean Squared Error) which can capture changes in the mean. Another usual approach is to consider distribution changes through negative maximum log-likelihood functions, considering that data within a segment is iid. 
 
 Therefore, given a fixed $k$, the optimal segmentation is obtained through the following optimization problem, which is called the constrained case: 
 
 \begin{equation}
-    \min_{\boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(y_{\tau_{i - 1} + 1 : \tau_{i}})
+    \min_{\boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}})
 \end{equation}
 
 This problem can be solved using dynamic programming with $O(k n^2 f(n))$ time complexity, where $f(n)$ is related with $C$ evaluation. Several segment cost functions can be evaluated in $O(1)$ after a $O(n)$ preprocessing phase, implying in an overall $O(k n^2)$ complexity. It is possible to proof that MSE, negative maximum log-likelihood function of normal, exponential, poisson and binomial distributions have this characterestic. Also the formulation can consider a minimum value of a segment length.
 
-Using both of these continuous distributions as the cost function can led to practical dificulties. The first one is that segments can form degenerate distributions, that is, the points of a segment can have zero variance. In these cases the negative likelihood functions will not be defined. Two approaches to avoid this situation is 1) try to avoid degenerate segments adding a white noise to the time series. 2) consider a constant and small value to degenerate segments. Since a single point compose a degenerate distribution to handle this case the options are the xonstant value or doesn`t allow segments with length equal to one.
+Modelling segments with continuous distributions can lead to practical dificulties. One of them is the fact that segments can form degenerate distributions, that is, the points of a segment can have zero variance, which is always the case of unitary length segments. In these cases the negative maximum likelihood are undefined. Two approaches can be used to avoid this situation. The first one tries to avoid degenerate segments adding a white noise with small variance to the time series. The second one considers that the cost of any degenerate distribution segment is equal to a small constant.
 
-Since the likelihood of different continuous distributions can`t be directly compared, is not possible to apply the segmentation algorithm considering different types of continuos distributions. One possibility to handle this is to apply automatic methods to check which kind of distribution fits better to the segment, such as Kolmogorov-Smirnov. This was not approached in this work due to the computation time efficiency decrease and that since we deal with small number of data possibly these methods would have a poor performance.
+% Using discrete distributions it is possible to easily compare direct compare the likelihood of two different distribution types. 
 
-Using discrete distributions is possible to direct compare the likelihood of two different distribution types. 
+% Since the likelihood of different continuous distributions can`t be directly compared, is not possible to apply the segmentation algorithm considering different types of continuos distributions. One possibility to handle this is to apply automatic methods to check which kind of distribution fits better to the segment, such as Kolmogorov-Smirnov. This was not approached in this work due to the computation time efficiency decrease and that since we deal with small number of data possibly these methods would have a poor performance.
 
-When the number of change points is unknown a common approach is to introduce a non decreasing penalty function $g(k)$, the bigger k biggest is the penalty. Then the new optimization problem is, which is called the penalized case:
+When the number of change points is unknown a common approach is to introduce a non decreasing penalty function $g(k)$. Then the new optimization problem, called penalized case, is:
 
 \begin{equation}
-    \min_{k, \boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(y_{\tau_{i - 1} + 1 : \tau_{i}}) + g(k)
+    \min_{k, \boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}}) + g(k)
 \end{equation}
 
-An approach to solve this problem is to solve the constrained for $k = 0, ..., K$. This lead to an $O(K^{2} n^{2} f(n))$. However if the penalty function is linear in $k$ the problem can be formulated in a more efficient way and solved in $O(n^{2} f(n))$ time complexity with dynamic programming..
+An approach to solve this problem is to solve the constrained case for $k = 0, ..., K$. This lead to an $O(K^{2} n^{2} f(n))$. However if the penalty function is linear in $k$ the problem can be formulated in a more efficiently and solved in $O(n^{2} f(n))$ time complexity with dynamic programming.
 
-Also there are several pruning algorithms to speedup the computation with the idea of eliminating from the dynamic programming computation some values of $\tau$ which can never lead to the optimial solution. Which is the case of the followinf algorithms pDPA, PELT and FPOF.
+Also there are several pruning algorithms to speedup the computation, in general trying to reduce the $\boldsymbol \tau$ search space but maintaning optimality.
 
 \section{Bayesian Inference}
 I will erase this section if I don't use bayesian inference. Describe Fearnheard (offline) and MacKay (online) solutions. Say that there are other versions.
 
 \section{HMM (Hidden Markov Model)}
 
-There are several approaches to change point detection using HMM. The idea that each segment of the time series if associated with a specific latent variable of the procedure that generate the time series has a direct interpretation through a HMM model. Each hidden state of a HMM model is direct associated with a segment and the observation distribution is the distribution of that segment. Therefore using a HMM to detect change points is directly connected to identifying when the hidden state change in the HMM when processing the time series through the model.
+The idea that each segment of the time series is associated with a specific latent parameter of the procedure that generated the time series has a direct interpretation to a HMM model. In this context, each segment of a time series is related to a hidden state of a HMM model, and the observation distribution of this state represents the distribution of that segment. Therefore, the mechanism is resumed to model the target time series using a HMM and assessing when occurs a transition between different hidden states in the hidden state path.
 
-There are several approaches in the training phase and in the detection phase. For example, given a trained HMM is possible to get the time series to be processed and get best hidden state path that this time series would have theough the viterbi algorithm, then the change points would be the points in time where the hidden states changed. Also is possible to evaluate the probability of change the hidden state in time $t$ and apply a threshold method or peak detection as in the sliding window method. For the training phase is possible to use several time series to train the model using baum welch or simply train only with the same time series that will be processed.
+There are several approaches in the detection and training phase. For example, given a trained HMM is possible to analyze the most probable hidden state path that a time series can follow through the viterbi algorithm. Also is possible to evaluate the probability of a transition between different hidden states at time $t$ and apply a threshold method or peak detection as in the sliding window method. For the training phase is possible to use several time series to train a single HMM and use this model to detect change points in all time series. Another way is to train a model using only the time series to be processed.
 
-It is important to note that structure of hidden state graph has a big impact in the performance. Using a full connected structure the number of states will defined the number of different distribution parameters of the different segments. Using a left to right structure the number of hidden states will impact the number of segments.
+It is important to note that structure of the hidden state graph has a big impact in the performance. Using a full connected structure the number of states defines the number of different distribution parameters of the different segments. Using a left to right structure the number of hidden states will induce the number of segments.
 
-In \ref{} is stated that when using a full connected structure the the time that a time series keeps in a single hidden state is low, therefore there are a lot of transitions between hidden states and therefore a lot of change points. To overcome this problem \ref{} suggest using a penalization using a dirichlet prior giving priority to the time series be at the same state in the training phase.
+In \ref{} is stated that when using a full connected structure the time that a time series stays in the same hidden state is low, which can not reflect that fact that in real data the number of change points is also low. To overcome this problem \ref{} suggest to increase the time that a time series stay in the same hidden state through a dirichlet prior penalization.
 
 % \section{Other Algorithms}
 % - Binary Segmentation
