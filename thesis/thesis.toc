@@ -1,8 +1,8 @@
 \select@language {english}
 \select@language {english}
 \select@language {english}
-\contentsline {chapter}{List of Figures}{viii}{chapter*.2}
-\contentsline {chapter}{List of Tables}{ix}{chapter*.3}
+\contentsline {chapter}{List of Figures}{vii}{chapter*.2}
+\contentsline {chapter}{List of Tables}{viii}{chapter*.3}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}Contributions}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}Dissertation Outline}{1}{section.1.2}
@@ -11,27 +11,12 @@
 \contentsline {section}{\numberline {2.2}Notation}{3}{section.2.2}
 \contentsline {section}{\numberline {2.3}Sliding Window Techniques}{4}{section.2.3}
 \contentsline {section}{\numberline {2.4}Optimization Model}{5}{section.2.4}
-\contentsline {section}{\numberline {2.5}Bayesian Inference}{6}{section.2.5}
-\contentsline {section}{\numberline {2.6}HMM (Hidden Markov Model)}{6}{section.2.6}
-\contentsline {section}{\numberline {2.7}Performance Evaluation}{7}{section.2.7}
-\contentsline {chapter}{\numberline {3}Dataset}{8}{chapter.3}
-\contentsline {section}{\numberline {3.1}Description of End-to-End Packet Loss Measurements Time Series}{8}{section.3.1}
-\contentsline {section}{\numberline {3.2}Change Points Classification Survey}{8}{section.3.2}
-\contentsline {chapter}{\numberline {4}Applying Change Point Detection}{9}{chapter.4}
-\contentsline {section}{\numberline {4.1}Preprocessing}{9}{section.4.1}
-\contentsline {section}{\numberline {4.2}Tuning Hyperparameters}{9}{section.4.2}
-\contentsline {subsection}{\numberline {4.2.1}Grid Search and Randomized Grid Search}{9}{subsection.4.2.1}
-\contentsline {subsection}{\numberline {4.2.2}Bayesian Optimization}{9}{subsection.4.2.2}
-\contentsline {subsection}{\numberline {4.2.3}Particle Swarm Optimization}{9}{subsection.4.2.3}
-\contentsline {section}{\numberline {4.3}Sliding Window}{10}{section.4.3}
-\contentsline {section}{\numberline {4.4}Dynamic Programming}{10}{section.4.4}
-\contentsline {section}{\numberline {4.5}HMM}{10}{section.4.5}
-\contentsline {section}{\numberline {4.6}Bayesian Inference}{10}{section.4.6}
-\contentsline {section}{\numberline {4.7}LSTM}{10}{section.4.7}
-\contentsline {section}{\numberline {4.8}Ensembles}{10}{section.4.8}
-\contentsline {chapter}{\numberline {5}Results}{11}{chapter.5}
-\contentsline {section}{\numberline {5.1}Classification Accuracy}{11}{section.5.1}
-\contentsline {section}{\numberline {5.2}Unsupervised Analysis}{11}{section.5.2}
-\contentsline {section}{\numberline {5.3}Algorithms Comparison}{11}{section.5.3}
-\contentsline {chapter}{\numberline {6}Conclusions}{12}{chapter.6}
-\contentsline {chapter}{Bibliography}{13}{chapter*.4}
+\contentsline {section}{\numberline {2.5}HMM (Hidden Markov Model)}{6}{section.2.5}
+\contentsline {section}{\numberline {2.6}Bayesian Inference}{6}{section.2.6}
+\contentsline {chapter}{\numberline {3}Dataset}{7}{chapter.3}
+\contentsline {section}{\numberline {3.1}Description of End-to-End Packet Loss Measurements Time Series}{7}{section.3.1}
+\contentsline {section}{\numberline {3.2}Change Points Classification Survey}{7}{section.3.2}
+\contentsline {section}{\numberline {3.3}Description of Change Points Dataset}{7}{section.3.3}
+\contentsline {section}{\numberline {3.4}Performance Evaluation}{7}{section.3.4}
+\contentsline {chapter}{\numberline {4}Conclusions}{8}{chapter.4}
+\contentsline {chapter}{Bibliography}{9}{chapter*.4}
