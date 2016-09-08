@@ -102,9 +102,10 @@ def get_shared_compress(x1, y1, x2, y2):
 
 
 def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
-                    title1="", dt_axvline1=[], ylabel2="", ylim2=None,
-                    title2="", plot_type2="plot", yticks2=None,
-                    ytick_labels2=None, dt_axvline2=[]):
+                    title1="", dt_axvline1=[], plot_type1="scatter",
+                    ylabel2="", ylim2=None, title2="", plot_type2="plot",
+                    yticks2=None, ytick_labels2=None, dt_axvline2=[],
+                    xlabel=""):
     """
     use ts1 as base ts (top plot). Only plot ts2[t] if t is present in ts1
     """
@@ -116,7 +117,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     if compress:
         x1, y1, x2, y2 = get_shared_compress(ts1.x, ts1.y, ts2.x, ts2.y)
 
-        xticks = range(0, len(x1), 20)
+        xticks = range(0, len(x1), 100)
         xticks_labels = copy.deepcopy(xticks)
 
         dt_id1 = get_dt_id(ts1)
@@ -132,16 +133,23 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
 
     ax[0].grid()
     ax[0].set_title(title1)
-    ax[0].set_ylabel(ylabel1)
+    ax[0].set_ylabel(ylabel1, fontsize=25)
     ax[0].set_xticks(xticks)
     if not compress:
         ax[0].set_xlim([ts1.dt_start, ts1.dt_end + datetime.timedelta(days=1)])
-    ax[0].set_yticks(np.arange(0, 1 + 0.05, 0.05))
-    ax[0].set_ylim([-0.02, 1.02])
-    ax[0].scatter(x1, y1, s=9)
+    if ylim1 is not None:
+        ax[0].set_ylim(ylim1)
+    else:
+        ax[0].set_yticks(np.arange(0, 1 + 0.05, 0.05))
+        ax[0].set_ylim([-0.02, 1.02])
+    if plot_type1 == "plot":
+        ax[0].plot(x1, y1)
+    else:
+        ax[0].scatter(x1, y1, s=9)
 
     ax[1].grid()
     ax[1].set_title(title2)
+    ax[1].set_xlabel(xlabel, fontsize=25)
     ax[1].set_ylabel(ylabel2)
     ax[1].set_xticks(xticks)
     ax[1].set_xticklabels(xticks_labels, rotation="vertical")
