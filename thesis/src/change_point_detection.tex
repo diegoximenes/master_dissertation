@@ -51,7 +51,7 @@ Sliding window techniques use two sliding windows over the time series, and redu
 	\end{algorithmic}
 \end{algorithm}
 
-In this method, when the distance between the distributions is above some threshold $\alpha$ a change point is reported. This is a commom aproach for an online application, however it is possible to increase the classification accuracy in offline cases. As an example, the top plot of figure~\ref{fig:sliding_window_toy_example} presents a simulated time series, the segment $\mathbf{y}_{1 : 1000}$ was generated sampling a $N(1, 0.2)$ distribution and $\mathbf{y}_{1001 : 2000}$ was sampled through $N(5, 0.2)$. The bottom plot of the same figure presents the associated Hellinger distance between two sliding windows, where the point $(i, d_{i})$ represents the distance between the windows $\mathbf{y}_{i - 100 : i - 1}$ and $\mathbf{y}_{i : i + 99}$.
+In this method, when the distance between the distributions is above some threshold $\alpha$ a change point is reported. This is a commom aproach for an online application, however it is possible to increase the classification accuracy in offline cases. As an example, the top plot of figure~\ref{fig:sliding_window_toy_example} presents a simulated time series, the segment $\mathbf{y}_{1 : 1000}$ was generated sampling a $N(1, 0.2)$ distribution and $\mathbf{y}_{1001 : 2000}$ was sampled through $N(5, 0.2)$. The distribution of a window was constructed using binning the data with bins of size 0.02. The bottom plot of the same figure presents the associated Hellinger distance between two sliding windows, where the point $(i, d_{i})$ represents the distance between the windows $\mathbf{y}_{i - 100 : i - 1}$ and $\mathbf{y}_{i : i + 99}$.
 
 \begin{figure}[H]
     \centering
@@ -100,7 +100,7 @@ Also there are several pruning algorithms to speedup the computation, in general
 
 The idea that each segment of the time series is associated with a specific latent parameter of the procedure that generated the time series has a direct interpretation to a HMM model. In this context, each segment of a time series is related to a hidden state of a HMM model, and the observation distribution of this state represents the distribution of that segment. Therefore, the mechanism is resumed to model the target time series using a HMM and assessing when occurs a transition between different hidden states in the hidden state path.
 
-There are several approaches in the detection and training phase. For example, given a trained HMM is possible to analyze the most probable hidden state path that a time series can follow through the viterbi algorithm. Also is possible to evaluate the probability of a transition between different hidden states at time $t$ and apply a threshold method or peak detection as in the sliding window method. For the training phase is possible to use several time series to train a single HMM and use this model to detect change points in all time series. Another way is to train a model using only the time series to be processed.
+There are several approaches in the detection and training phase. For example, given a trained HMM is possible to analyze the most probable hidden state path that a time series can follow through the viterbi algorithm. Also is possible to evaluate the probability of a transition between different hidden states at time $t$ and apply a threshold method together with peak detection as in the sliding window method. For the training phase is possible to use several time series to train a single HMM and use this model to detect change points in all time series. Another way is to train a model using only a single time series to be processed.
 
 It is important to note that structure of the hidden state graph has a big impact in the performance. Using a full connected structure the number of states defines the number of different distribution parameters of the different segments. Using a left to right structure the number of hidden states will induce the number of segments.
 
@@ -112,6 +112,14 @@ In \ref{} is stated that when using a full connected structure the time that a t
 
 \section{Bayesian Inference}
 
-There are several bayesian inference methods for the change point detection problem. Here will be presented two solutions, one offline describe id \ref{} and other online presented in \ref{}.
+There are several bayesian inference methods for the change point detection problem. Here will discussed an offline and an online solution.
 
-The work of \ref{} consider two priors. The first prior models the number of change points, and then a conditional prior on their positions. The second prior models the time between two consecutive change points.
+The work of \ref{} derive a set of recursions based on a set of priors to assess the probability that a point $i$ is a change point. The recursions are based on the calculation of the probability of $\mathbf{y}_{t : n}$ given a change point at $t$, which can be recursevily calculated through the same probability but now considering points $t + 1, ..., n$. With these calculated probabilities is possible to simulate the time of the first change point, and then, assess the conditional distribution of the time of the second change point given given the first, and so on. To achive this, the model assumes that observations are independent, and also indenpendt conjugate priors for each segment. Also assumes the priors to model the number of change points, which 
+
+- observations are independent
+- independent priors for the parameters associated with each segment
+- two priors for the change points: the first prior models the number of change points, and then a conditional prior on their positions. The second prior models the time between two consecutive change points.
+- assume a conjugate prior for the parameter associated with each segment.
+- derive a ser of recursions to perform exact inference
+- The recursions are based on calculating the probability of the data from time t to n, given a change point at time t, in terms of the equivalent probabilities at times t+1, ..., n. Once these probabilities have been calculated for all time points, it is possible to directly simulate from the posterior distribution of the time of the first change point, and then the conditional distribution of the time of the second change point, given the first, and so on. The recursions can also be used to perform exact inference condition on the number of change points, and in some cases to calculate the posterior distribution of the parameters that govern the point process model for the change points.
+- the computational cost is O(n^2)
