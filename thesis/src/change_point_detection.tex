@@ -106,20 +106,10 @@ It is important to note that structure of the hidden state graph has a big impac
 
 In \ref{} is stated that when using a full connected structure the time that a time series stays in the same hidden state is low, which can not reflect that fact that in real data the number of change points is also low. To overcome this problem \ref{} suggest to increase the time that a time series stay in the same hidden state through a dirichlet prior penalization.
 
-% \section{Other Algorithms}
-% - Binary Segmentation
-% - Increase model window untill likelihood is bigger than threshold 
-
 \section{Bayesian Inference}
 
-There are several bayesian inference methods for the change point detection problem. Here will discussed an offline and an online solution.
+There are several bayesian methods for the change point detection problem. The work of \ref{} derive recursions based on a set of priors to assess the probability that a point is a change point in an offline fashion. The algorithm recursevely calculates, for each $i$, the probability of $\mathbf{y}_{i : n}$ given a change point at $i$. With these probabilities is possible to simulate the time of the first change point, and then, compute the conditional distribution of the time of the second change point given given the first, and so on. To achive this, the mechanism assumes that observations are independents, and that each segment is modelled by conjugate priors. Also, the model considers priors to model the number of change points and the time between two consecutive change points. The overall complexity of this method is O().
 
-The work of \ref{} derive a set of recursions based on a set of priors to assess the probability that a point $i$ is a change point. The recursions are based on the calculation of the probability of $\mathbf{y}_{t : n}$ given a change point at $t$, which can be recursevily calculated through the same probability but now considering points $t + 1, ..., n$. With these calculated probabilities is possible to simulate the time of the first change point, and then, assess the conditional distribution of the time of the second change point given given the first, and so on. To achive this, the model assumes that observations are independent, and also indenpendt conjugate priors for each segment. Also assumes the priors to model the number of change points, which 
 
-- observations are independent
-- independent priors for the parameters associated with each segment
-- two priors for the change points: the first prior models the number of change points, and then a conditional prior on their positions. The second prior models the time between two consecutive change points.
-- assume a conjugate prior for the parameter associated with each segment.
-- derive a ser of recursions to perform exact inference
-- The recursions are based on calculating the probability of the data from time t to n, given a change point at time t, in terms of the equivalent probabilities at times t+1, ..., n. Once these probabilities have been calculated for all time points, it is possible to directly simulate from the posterior distribution of the time of the first change point, and then the conditional distribution of the time of the second change point, given the first, and so on. The recursions can also be used to perform exact inference condition on the number of change points, and in some cases to calculate the posterior distribution of the parameters that govern the point process model for the change points.
-- the computational cost is O(n^2)
+
+
