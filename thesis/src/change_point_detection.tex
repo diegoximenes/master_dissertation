@@ -14,8 +14,8 @@ In this work it is considered the following input and change points characterist
 \begin{itemize}
     \item Univariate time series. However, it is possible to easily extend several methods presented here to deal with multivariate data.
     \item Unevenly time series, that is, data is not regularly sampled in time.
-    \item Unknow number of change points.
     \item Time series with different lengths.
+    \item Unknown number of change points.
     \item Different number of points between change points.
     \item Focus on changes in the underlying mean and distribution, disconsidering other kinds of changes such as in periodicity.
     \item Outliers are not considered statistical changes.
@@ -62,9 +62,9 @@ In this method, when the distance between the distributions is above some thresh
 
 It can be observed that there is a peak on the distance in the exact location where the distribution changed. However, using only the threshold method is possible to prematuraly infer the location of the change point. Therefore, an alternative is to also use a peak detection algorithm in the distance of two sliding windows time series.
 
-The distance function choice can significantly impact the performance. There are several empirical distribution distances such as mahalanobis distance, hellinger distance, jensen shannon and EMD (Earth Mover's Distance).  
+The distance function choice can significantly impact the performance. There are several empirical distribution distances such as mahalanobis distance, hellinger distance, jensen shannon and EMD (Earth Mover's Distance) \cite{fast_and_robust_earth_movers_distances}.  
 
-A performance improvement can be achieved concurrently executing the same sliding window algorithm with different window lengths, which enable the segmentation with different windows sizes more easily.
+As stated in \cite{detecting_change_in_data_streams} a performance improvement can be achieved concurrently executing the same sliding window algorithm with different window lengths, which enable the segmentation with different windows sizes more easily.
 
 \section{Optimization Model}  
 
@@ -72,7 +72,7 @@ Given a fixed value of $k$, one approach is to define a cost function that measu
 
 A commom choice for function $C$ is the MSE (Mean Squared Error) which can capture changes in the mean. Another usual approach is to consider distribution changes through negative maximum log-likelihood functions, considering that data within a segment is iid. 
 
-Therefore, given a fixed $k$, the optimal segmentation is obtained through the following optimization problem, which is called the constrained case: 
+Therefore, given a fixed $k$, the optimal segmentation is obtained through the following optimization problem, which is called the constrained case \cite{optimal_detection_of_changepoints_with_a_linear_computational_cost}: 
 
 \begin{equation}
     \min_{\boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}})
@@ -86,7 +86,7 @@ Modelling segments with continuous distributions can lead to practical dificulti
 
 % Since the likelihood of different continuous distributions can`t be directly compared, is not possible to apply the segmentation algorithm considering different types of continuos distributions. One possibility to handle this is to apply automatic methods to check which kind of distribution fits better to the segment, such as Kolmogorov-Smirnov. This was not approached in this work due to the computation time efficiency decrease and that since we deal with small number of data possibly these methods would have a poor performance.
 
-When the number of change points is unknown a common approach is to introduce a non decreasing penalty function $g(k)$. Then the new optimization problem, called penalized case, is:
+When the number of change points is unknown a common approach is to introduce a non decreasing penalty function $g(k)$. Then the new optimization problem, called penalized case, is \cite{optimal_detection_of_changepoints_with_a_linear_computational_cost}:
 
 \begin{equation}
     \min_{k, \boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}}) + g(k)
@@ -94,7 +94,7 @@ When the number of change points is unknown a common approach is to introduce a 
 
 An approach to solve this problem is to solve the constrained case for $k = 0, ..., K$. This lead to an $O(K^{2} n^{2} f(n))$. However if the penalty function is linear in $k$ the problem can be formulated in a more efficiently and solved in $O(n^{2} f(n))$ time complexity with dynamic programming.
 
-Also there are several pruning algorithms to speedup the computation, in general trying to reduce the $\boldsymbol \tau$ search space but maintaning optimality.
+Also there are several pruning algorithms to speedup the computation \cite{optimal_detection_of_changepoints_with_a_linear_computational_cost, on_optimal_multiple_changepoint_algorithms_for_large_data}, in general trying to reduce the $\boldsymbol \tau$ search space but maintaning optimality.
 
 \section{HMM (Hidden Markov Model)}
 
@@ -104,12 +104,10 @@ There are several approaches in the detection and training phase. For example, g
 
 It is important to note that structure of the hidden state graph has a big impact in the performance. Using a full connected structure the number of states defines the number of different distribution parameters of the different segments. Using a left to right structure the number of hidden states will induce the number of segments.
 
-In \ref{} is stated that when using a full connected structure the time that a time series stays in the same hidden state is low, which can not reflect that fact that in real data the number of change points is also low. To overcome this problem \ref{} suggest to increase the time that a time series stay in the same hidden state through a dirichlet prior penalization.
+In \cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series} is stated that when using a full connected structure the time that a time series stays in the same hidden state is low, which can not reflect that fact that in real data the number of change points is also low. To overcome this problem \cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series} suggest to increase the time that a time series stay in the same hidden state through a dirichlet prior penalization.
 
 \section{Bayesian Inference}
 
-There are several bayesian methods for the change point detection problem. The work of \ref{} derive recursions based on a set of priors to assess the probability that a point is a change point in an offline fashion. The algorithm recursevely calculates, for each $i$, the probability of $\mathbf{y}_{i : n}$ given a change point at $i$. With these probabilities is possible to simulate the time of the first change point, and then, compute the conditional distribution of the time of the second change point given given the first, and so on. To achive this, the mechanism assumes that observations are independents, and that each segment is modelled by conjugate priors. Also, the model considers priors to model the number of change points and the time between two consecutive change points. The overall complexity of this method is O().
+There are several bayesian methods for the change point detection problem. Following an offline fashion, the work of \ref{} derive recursions based on a set of priors to assess the probability that a point is a change point. The algorithm recursevely calculates, for each $i$, the probability of $\mathbf{y}_{i : n}$ given a change point at $i$. With these probabilities is possible to simulate the time of the first change point, and then, compute the conditional distribution of the time of the second change point given given the first, and so on. To achive this, the mechanism assumes that observations are independents, and that each segment is modelled by conjugate priors. Also, the procedure considers priors to model the number of change points and the time between two consecutive change points. The overall complexity of this method is $O(n^{2})$ considering that the likelihood of a segment can be evaluated in $O(1)$.
 
-
-
-
+In \cite{bayesian_online_changepoint_detection} it is also considered that parameters of different segments are also independents and that data whithin a window is iid. But the procedure is concerned with the estimation of the posterior distribution of the length of the current time since the last change point given the data so far observedi through an online fashion. To achieve this the method assumes the probability of next run length given the last run length as a prior. Assuming exponential-family likelihoods to model a segment, the time complexity to process a point is linear in the number of already points observed. 
