@@ -7,7 +7,7 @@
 \BOOKMARK [0][-]{chapter.2}{Change Point Detection}{}% 7
 \BOOKMARK [1][-]{section.2.1}{Problem Definition}{chapter.2}% 8
 \BOOKMARK [1][-]{section.2.2}{Notation}{chapter.2}% 9
-\BOOKMARK [1][-]{section.2.3}{Sliding Window Techniques}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.3}{Sliding Windows}{chapter.2}% 10
 \BOOKMARK [1][-]{section.2.4}{Optimization Model}{chapter.2}% 11
 \BOOKMARK [1][-]{section.2.5}{HMM \(Hidden Markov Model\)}{chapter.2}% 12
 \BOOKMARK [1][-]{section.2.6}{Bayesian Inference}{chapter.2}% 13

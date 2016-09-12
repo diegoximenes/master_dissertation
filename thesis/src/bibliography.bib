@@ -42,33 +42,6 @@
     publisher = {VLDB Endowment},
 }
 
-@inproceedings{fast_and_robust_earth_movers_distances,
-  author    = {Ofir Pele and
-               Michael Werman},
-  title     = {Fast and robust Earth Mover's Distances},
-  booktitle = {{IEEE} 12th International Conference on Computer Vision, {ICCV} 2009,
-               Kyoto, Japan, September 27 - October 4, 2009},
-  pages     = {460--467},
-  year      = {2009},
-  crossref  = {DBLP:conf/iccv/2009},
-  url       = {http://dx.doi.org/10.1109/ICCV.2009.5459199},
-  doi       = {10.1109/ICCV.2009.5459199},
-  timestamp = {Fri, 19 Feb 2016 11:45:26 +0100},
-  biburl    = {http://dblp.uni-trier.de/rec/bib/conf/iccv/PeleW09},
-  bibsource = {dblp computer science bibliography, http://dblp.org}
-}
-@proceedings{DBLP:conf/iccv/2009,
-  title     = {{IEEE} 12th International Conference on Computer Vision, {ICCV} 2009,
-               Kyoto, Japan, September 27 - October 4, 2009},
-  publisher = {{IEEE} Computer Society},
-  year      = {2009},
-  url       = {http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=5453389},
-  isbn      = {978-1-4244-4420-5},
-  timestamp = {Fri, 19 Feb 2016 11:45:26 +0100},
-  biburl    = {http://dblp.uni-trier.de/rec/bib/conf/iccv/2009},
-  bibsource = {dblp computer science bibliography, http://dblp.org}
-}
-
 @article{optimal_detection_of_changepoints_with_a_linear_computational_cost,
   title={Optimal detection of changepoints with a linear computational cost},
   author={Killick, Rebecca and Fearnhead, Paul and Eckley, IA},
@@ -87,6 +60,43 @@
   pages={1--15},
   year={2016},
   publisher={Springer US}
+}
+
+@Article{algorithms_for_the_optimal_identification_of_segment_neighborhoods,
+author="Auger, Ivan E.
+and Lawrence, Charles E.",
+title="Algorithms for the optimal identification of segment neighborhoods",
+journal="Bulletin of Mathematical Biology",
+year="1989",
+volume="51",
+number="1",
+pages="39--54",
+abstract="Two algorithms for the efficient identification of segment neighborhoods are presented. A segment neighborhood is a set of contiguous residues that share common features. Two procedures are developed to efficiently find estimates for the parameters of the model that describe these features and for the residues that define the boundaries of each segment neighborhood. The algorithms can accept nearly any model of segment neighborhood, and can be applied with a broad class of best fit functions including least squares and maximum likelihood. The algorithms successively identify the most important features of the sequence. The application of one of these methods to the haemagglutinin protein of influenza virus reveals a possible mechanism for conformational change through the finding of a break in a strong heptad repeat structure.",
+issn="1522-9602",
+doi="10.1007/BF02458835",
+url="http://dx.doi.org/10.1007/BF02458835"
+}
+
+@article{computationally_efficient_changepoint_detection_for_a_range_of_penalties,
+author = {Kaylea Haynes and Idris A. Eckley and Paul Fearnhead},
+title = {Computationally Efficient Changepoint Detection for a Range of Penalties},
+journal = {Journal of Computational and Graphical Statistics},
+volume = {0},
+number = {ja},
+pages = {1-28},
+year = {0},
+doi = {10.1080/10618600.2015.1116445},
+
+URL = { 
+        http://dx.doi.org/10.1080/10618600.2015.1116445
+    
+},
+eprint = { 
+        http://dx.doi.org/10.1080/10618600.2015.1116445
+    
+}
+,
+    abstract = { In the multiple changepoint setting, various search methods have been proposed which involve optimising either a constrained or penalised cost function over possible numbers and locations of changepoints using dynamic programming. Recent work in the penalised optimisation setting has focussed on developing an exact pruning-based approach which, under certain conditions, is linear in the number of data points. Such an approach naturally requires the specification of a penalty to avoid under/over-fitting. Work has been undertaken to identify the appropriate penalty choice for data generating processes with known distributional form, but in many applications the model assumed for the data is not correct and these penalty choices are not always appropriate. To this end we present a method that enables us to find the solution path for all choice of penalty values across a continuous range. This permits an evaluation of the various segmentations to identify a suitable penalty choice. The computational complexity of this approach can be linear in the number of data points and linear in the difference between the number of changepoints in the optimal segmentations for the smallest and largest penalty values. }
 }
 
 @Article{a_hidden_markov_model_segmentation_procedure_for_hydrological_and_environmental_time_series,
@@ -145,16 +155,24 @@ url="http://dx.doi.org/10.1007/s00477-003-0145-5"
   year={2007}
 } 
 
-@Article{exact_and_efficient_bayesian_inference_for_multiple_changepoint_problems,
-author="Fearnhead, Paul",
-title="Exact and efficient Bayesian inference for multiple changepoint problems",
-journal="Statistics and Computing",
-year="2006",
-volume="16",
-number="2",
-pages="203--213",
-abstract="We demonstrate how to perform direct simulation from the posterior distribution of a class of multiple changepoint models where the number of changepoints is unknown. The class of models assumes independence between the posterior distribution of the parameters associated with segments of data between successive changepoints. This approach is based on the use of recursions, and is related to work on product partition models. The computational complexity of the approach is quadratic in the number of observations, but an approximate version, which introduces negligible error, and whose computational cost is roughly linear in the number of observations, is also possible. Our approach can be useful, for example within an MCMC algorithm, even when the independence assumptions do not hold. We demonstrate our approach on coal-mining disaster data and on well-log data. Our method can cope with a range of models, and exact simulation from the posterior distribution is possible in a matter of minutes.",
-issn="1573-1375",
-doi="10.1007/s11222-006-8450-8",
-url="http://dx.doi.org/10.1007/s11222-006-8450-8"
+@article{exact_and_efficient_bayesian_inference_for_multiple_changepoint_problems,
+  author    = {Paul Fearnhead},
+  title     = {Exact and efficient Bayesian inference for multiple changepoint problems},
+  journal   = {Statistics and Computing},
+  volume    = {16},
+  number    = {2},
+  pages     = {203--213},
+  year      = {2006},
+  url       = {http://dx.doi.org/10.1007/s11222-006-8450-8},
+  doi       = {10.1007/s11222-006-8450-8},
+  timestamp = {Mon, 16 Apr 2007 09:06:01 +0200},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/sac/Fearnhead06},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@Misc{hellinger_distance,
+author={Wikipedia},
+title="{Hellinger distance}",
+note={\url{https://en.wikipedia.org/wiki/Hellinger_distance/}},
+year={2016}
 }

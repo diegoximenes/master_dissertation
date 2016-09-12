@@ -65,9 +65,9 @@ def sliding_window(ts):
                                     compress=True,
                                     plot_type1="plot",
                                     ylim1=[0, max(ts.y)],
-                                    ylabel1="$y_{t}$",
-                                    ylabel2="Hellinger Distance",
-                                    xlabel="$t$")
+                                    ylabel1="$y_{i}$",
+                                    ylabel2="$H_{i}$",
+                                    xlabel="$i$")
 
 if __name__ == "__main__":
     ts = simulate()

@@ -1,4 +1,4 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{11}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -6,16 +6,10 @@
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 \newcommand{\enquote}[1]{``#1''}
 
-\bibitem[\MakeUppercase{Pele} e \MakeUppercase{Werman}(2009)Pele e
-  Werman]{fast_and_robust_earth_movers_distances}
-\MakeUppercase{Pele, O., Werman, M.}
-\newblock \enquote{Fast and robust Earth Mover's Distances}. In: \emph{{IEEE}
-  12th International Conference on Computer Vision, {ICCV} 2009, Kyoto, Japan,
-  September 27 - October 4, 2009} \citet{DBLP:conf/iccv/2009}, pp. 460--467.
-\newblock ISBN: 978-1-4244-4420-5.
-\newblock \doi{10.1109/ICCV.2009.5459199}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dx.doi.org/10.1109/ICCV.2009.5459199}\textgreater .
+\bibitem[\MakeUppercase{Wikipedia}(2016)Wikipedia]{hellinger_distance}
+\MakeUppercase{Wikipedia}.
+\newblock \enquote{{Hellinger distance}}. 2016.
+\newblock \url{https://en.wikipedia.org/wiki/Hellinger_distance/}.
 
 \bibitem[\MakeUppercase{Kifer}\emph{ et~al.}(2004)Kifer, Ben-David, e
   Gehrke]{detecting_change_in_data_streams}
@@ -28,13 +22,6 @@
   \textless\url{http://dl.acm.org/citation.cfm?id=1316689.1316707}\textgreater
   .
 
-\bibitem[\MakeUppercase{Killick}\emph{ et~al.}(2012)Killick, Fearnhead, e
-  Eckley]{optimal_detection_of_changepoints_with_a_linear_computational_cost}
-\MakeUppercase{Killick, R., Fearnhead, P., Eckley, I.}
-\newblock \enquote{Optimal detection of changepoints with a linear
-  computational cost}, \emph{Journal of the American Statistical Association},
-  v.~107, n. 500, \penalty0 pp.~1590--1598, 2012.
-
 \bibitem[\MakeUppercase{Maidstone}\emph{ et~al.}(2016)Maidstone, Hocking,
   Rigaill, e
   Fearnhead]{on_optimal_multiple_changepoint_algorithms_for_large_data}
@@ -42,13 +29,22 @@
 \newblock \enquote{On optimal multiple changepoint algorithms for large data},
   \emph{Statistics and Computing}, pp. 1--15, 2016.
 
-\bibitem[DBL(2009)]{DBLP:conf/iccv/2009}
-\emph{{IEEE} 12th International Conference on Computer Vision, {ICCV} 2009,
-  Kyoto, Japan, September 27 - October 4, 2009}, 2009. {IEEE} Computer Society.
-\newblock ISBN: 978-1-4244-4420-5.
+\bibitem[\MakeUppercase{Killick}\emph{ et~al.}(2012)Killick, Fearnhead, e
+  Eckley]{optimal_detection_of_changepoints_with_a_linear_computational_cost}
+\MakeUppercase{Killick, R., Fearnhead, P., Eckley, I.}
+\newblock \enquote{Optimal detection of changepoints with a linear
+  computational cost}, \emph{Journal of the American Statistical Association},
+  v.~107, n. 500, \penalty0 pp.~1590--1598, 2012.
+
+\bibitem[\MakeUppercase{Haynes}\emph{ et~al.}(0)Haynes, Eckley, e
+  Fearnhead]{computationally_efficient_changepoint_detection_for_a_range_of_penalties}
+\MakeUppercase{Haynes, K., Eckley, I.~A., Fearnhead, P.}
+\newblock \enquote{Computationally Efficient Changepoint Detection for a Range
+  of Penalties}, \emph{Journal of Computational and Graphical Statistics},
+  v.~0, n.~ja, \penalty0 pp.~1--28, 0.
+\newblock \doi{10.1080/10618600.2015.1116445}.
 \newblock Dispon{\' i}vel em:
-  \textless\url{http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=5453389}\textgreater
-  .
+  \textless\url{http://dx.doi.org/10.1080/10618600.2015.1116445}\textgreater .
 
 \bibitem[\MakeUppercase{Kehagias}(2004)Kehagias]{a_hidden_markov_model_segmentation_procedure_for_hydrological_and_environmental_time_series}
 \MakeUppercase{Kehagias, A.}
@@ -84,5 +80,31 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://dl.acm.org/citation.cfm?id=2886521.2886573}\textgreater
   .
+
+\bibitem[\MakeUppercase{Fearnhead}(2006)Fearnhead]{exact_and_efficient_bayesian_inference_for_multiple_changepoint_problems}
+\MakeUppercase{Fearnhead, P.}
+\newblock \enquote{Exact and efficient Bayesian inference for multiple
+  changepoint problems}, \emph{Statistics and Computing}, v.~16, n.~2,
+  \penalty0 pp.~203--213, 2006.
+\newblock \doi{10.1007/s11222-006-8450-8}.
+\newblock Dispon{\' i}vel em:
+  \textless\url{http://dx.doi.org/10.1007/s11222-006-8450-8}\textgreater .
+
+\bibitem[\MakeUppercase{Adams} e \MakeUppercase{MacKay}(2007)Adams e
+  MacKay]{bayesian_online_changepoint_detection}
+\MakeUppercase{Adams, R.~P., MacKay, D.~J.}
+\newblock \enquote{Bayesian online changepoint detection}, \emph{arXiv preprint
+  arXiv:0710.3742}, 2007.
+
+\bibitem[\MakeUppercase{Auger} e \MakeUppercase{Lawrence}(1989)Auger e
+  Lawrence]{algorithms_for_the_optimal_identification_of_segment_neighborhoods}
+\MakeUppercase{Auger, I.~E., Lawrence, C.~E.}
+\newblock \enquote{Algorithms for the optimal identification of segment
+  neighborhoods}, \emph{Bulletin of Mathematical Biology}, v.~51, n.~1,
+  \penalty0 pp.~39--54, 1989.
+\newblock ISSN: 1522-9602.
+\newblock \doi{10.1007/BF02458835}.
+\newblock Dispon{\' i}vel em:
+  \textless\url{http://dx.doi.org/10.1007/BF02458835}\textgreater .
 
 \end{thebibliography}

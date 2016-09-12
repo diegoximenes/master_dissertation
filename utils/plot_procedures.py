@@ -150,9 +150,9 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     ax[1].grid()
     ax[1].set_title(title2)
     ax[1].set_xlabel(xlabel, fontsize=25)
-    ax[1].set_ylabel(ylabel2)
+    ax[1].set_ylabel(ylabel2, fontsize=25)
     ax[1].set_xticks(xticks)
-    ax[1].set_xticklabels(xticks_labels, rotation="vertical")
+    ax[1].set_xticklabels(xticks_labels, rotation=45)
     if not compress:
         ax[1].set_xlim([ts1.dt_start, ts1.dt_end + datetime.timedelta(days=1)])
     if ylim2 is not None:
