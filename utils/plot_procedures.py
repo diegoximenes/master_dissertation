@@ -35,8 +35,8 @@ def plot_axvline(dt_axvline, dt_id, compress, ax):
 
 def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None, compress=False):
     plt.clf()
-    matplotlib.rcParams.update({'font.size': 13})
-    plt.gcf().set_size_inches(15, 12)
+    matplotlib.rcParams.update({'font.size': 23})
+    plt.gcf().set_size_inches(15, 13)
 
     if compress:
         xticks = range(0, len(ts.x), 20)
@@ -57,7 +57,7 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None, compre
     if not compress:
         plt.xlim([ts.dt_start, ts.dt_end + datetime.timedelta(days=1)])
     plt.xticks(xticks, xticks_labels, rotation=45)
-    plt.yticks(np.arange(0, 1 + 0.05, 0.05))
+    plt.yticks(np.arange(0, 1 + 0.05, 0.1))
     if compress:
         plt.scatter(range(len(ts.x)), ts.y, s=9)
     else:
@@ -112,7 +112,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     """
 
     plt.clf()
-    matplotlib.rcParams.update({'font.size': 13})
+    matplotlib.rcParams.update({'font.size': 21})
     f, ax = plt.subplots(2, 1, figsize=(16, 12), sharex="col")
 
     if compress:
@@ -134,7 +134,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
 
     ax[0].grid()
     ax[0].set_title(title1)
-    ax[0].set_ylabel(ylabel1, fontsize=25)
+    ax[0].set_ylabel(ylabel1, fontsize=28)
     ax[0].set_xticks(xticks)
     if not compress:
         ax[0].set_xlim([ts1.dt_start, ts1.dt_end + datetime.timedelta(days=1)])
@@ -150,8 +150,8 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
 
     ax[1].grid()
     ax[1].set_title(title2)
-    ax[1].set_xlabel(xlabel, fontsize=25)
-    ax[1].set_ylabel(ylabel2, fontsize=25)
+    ax[1].set_xlabel(xlabel, fontsize=28)
+    ax[1].set_ylabel(ylabel2, fontsize=28)
     ax[1].set_xticks(xticks)
     ax[1].set_xticklabels(xticks_labels, rotation=45)
     if not compress:

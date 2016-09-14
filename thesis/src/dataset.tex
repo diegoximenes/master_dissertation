@@ -6,7 +6,7 @@ This chapter describes the used datasets, presenting their construction methodol
 
 \subsection{Methodology}
 
-The results presented in this work are collected from cable-television infrastructure running DOCSIS with asymmetric download and upload bandwidths. The measurement infrastructure consists of regular home routers connected to the cable modem that run a software (from TGR, developed in partnership with UFRJ) to measure link throughput, round trip latency, loss rates, among others. Each home router communicates with one or more measurement servers devoted to execute the different measurement protocols and to store data. Measurement values from each home router are consolidated twice per hour and, by the end of every day, they are transferred to a database for analysis. The servers are strategically located by the ISP and, since the same home router can connect to more than one server, metrics from the same client to different servers can be contrasted. The resulted time series are unevenly due to a variate of reasons. One of them is that measurements are initiated only if the residential link is not under use by the ISP customer, another one is that the home router can be without Internet access or even eletrical energy.
+The time series presented in this work represent network end-to-end measures of a cable-television infrastructure running DOCSIS, with asymmetric download and upload bandwidths. The measurement infrastructure consists of home routers connected to the cable modem, that run a software developed by TGR in partnership with UFRJ. In this is way is possible to measure several metrics, such as link throughput, round trip latency, loss rates, among others. Each home router communicates with one or more servers devoted to execute the different measurement protocols and to store data. Measurement values from each home router are consolidated twice per hour and, by the end of every day, they are transferred to a database for analysis. The servers are strategically located by the ISP and, since the same home router can connect to more than one server, metrics from the same client to different servers can be contrasted. The resulted time series are unevenly due to a variate of reasons. One of them is that measurements are initiated only if the residential link is not under use by the ISP customer, another one is that the home router can be without Internet access or even eletrical energy.
 
 The focus of this work is to analyze the loss fraction, however, \cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil} presents a further analysis on other metrics. Round trip packet loss fraction between the home router and the associated server is obtained by sending a train of short UDP packets by the home router and bounced back by the server. The interval between two packets in a train is configurable as well as the length of the train. The data presented in this work considers a train of 100 UDP packets of 32 bytes in which packets are 1 milliseconds apart.
 
@@ -14,64 +14,90 @@ The focus of this work is to analyze the loss fraction, however, \cite{a_prelimi
 
 The TGR software run in a subset of the ISP customers in several brazilian states. In the analysis of this section, was analysed the period from 01 may 2016 to 20 may 2016. Were selected every home router that measured at least one time and that all measures occurred to same server which necessaryly belonged to the same ufs. This filter resulted in 1870 clients time series and 1537272 measures.
 
-In figure~\ref{fig:loss_fraction_cdf} is presented the packet loss CDF of all time series. It is possible to note that 93.2\% of the measures have zero losses.
+In figure~\ref{fig:cdf_ccdf} is presented the packet loss CDF of all time series. It is possible to note that 93.2\% of the measures have zero losses.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=1.0\textwidth]{./figures/loss_cdf.png}
-    \caption{Packet loss fraction CDF.}
-    \label{fig:loss_fraction_cdf}
-\end{figure}
+    \makebox[\linewidth][c]
+    {
+        %
+        \centering
+        \begin{subfigure}[b]{0.55\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{./figures/loss_cdf.png}
+            \caption{CDF}
+        \end{subfigure}%
+        ~ 
+        \begin{subfigure}[b]{0.55\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{./figures/ccdf.png}
+            \caption{CCDF}
+        \end{subfigure}
+    }
+    \caption{Packet Loss Fraction}
+    \label{fig:cdf_ccdf}
+\end{figure}%
 
 Figures \ref{fig:acf_ts_1}, \ref{fig:acf_ts_2}, \ref{fig:acf_ts_3} show three examples with common autocorrelation patterns in this dataset together with the time series. Since the time series are unenvely, to compute the autocorrelation function, the raw time series is transformed, and it is only considered the date and hour of a measure, ignoring the minutes and seconds. Therefore, if more than one measure occurs in the same hour, it is considered the mean.
 
 \begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.5\textwidth}
+    \makebox[\linewidth][c]
+    {
+        %
         \centering
-        \includegraphics[width=1.0\textwidth]{./figures/acf_NHODTCSRV04_64:66:B3:50:05:BC.png}
-        \caption{Autocorrelation}
-    \end{subfigure}%
-    ~ 
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-        \includegraphics[width=1.0\textwidth]{./figures/ts_NHODTCSRV04_64:66:B3:50:05:BC.png}
-        \caption{Time Series}
-    \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{./figures/acf_NHODTCSRV04_64:66:B3:50:05:BC.png}
+            \caption{Autocorrelation}
+        \end{subfigure}%
+        ~ 
+        \begin{subfigure}[b]{0.55\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{./figures/ts_NHODTCSRV04_64:66:B3:50:05:BC.png}
+            \caption{Time Series}
+        \end{subfigure}
+    }
     \caption{Client 1}
     \label{fig:acf_ts_1}
-\end{figure}
+\end{figure}%
 
 \begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.5\textwidth}
+    \makebox[\linewidth][c]
+    {
+        %
         \centering
-        \includegraphics[width=1.0\textwidth]{./figures/acf_BREDTCSRV20_64:66:B3:7B:9E:6A.png}
-        \caption{Autocorrelation}
-    \end{subfigure}%
-    ~ 
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-        \includegraphics[width=1.0\textwidth]{./figures/ts_BREDTCSRV20_64:66:B3:7B:9E:6A.png}
-        \caption{Time Series}
-    \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{./figures/acf_BREDTCSRV20_64:66:B3:7B:9E:6A.png}
+            \caption{Autocorrelation}
+        \end{subfigure}%
+        ~ 
+        \begin{subfigure}[b]{0.55\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{./figures/ts_BREDTCSRV20_64:66:B3:7B:9E:6A.png}
+            \caption{Time Series}
+        \end{subfigure}
+    }
     \caption{Client 2}
     \label{fig:acf_ts_2}
 \end{figure}
 
 \begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.5\textwidth}
+    \makebox[\linewidth][c]
+    {
+        %
         \centering
-        \includegraphics[width=1.0\textwidth]{./figures/acf_BHZRENPEV01_64:66:B3:A6:BA:54.png}
-        \caption{Autocorrelation}
-    \end{subfigure}%
-    ~ 
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-        \includegraphics[width=1.0\textwidth]{./figures/ts_BHZRENPEV01_64:66:B3:A6:BA:54.png}
-        \caption{Time Series}
-    \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{./figures/acf_BHZRENPEV01_64:66:B3:A6:BA:54.png}
+            \caption{Autocorrelation}
+        \end{subfigure}%
+        ~ 
+        \begin{subfigure}[b]{0.55\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{./figures/ts_BHZRENPEV01_64:66:B3:A6:BA:54.png}
+            \caption{Time Series}
+        \end{subfigure}
+    }
     \caption{Client 3}
     \label{fig:acf_ts_3}
 \end{figure}
@@ -83,18 +109,22 @@ Also, through a visual analysis, as in the previuous figures, is possible to obs
 As in figure~\ref{fig:acf_ts_1} same clients have a daily pattern in which losses occur more frequently at night, in which the Internet usage is known to be bigger. Figure~\ref{fig:mean_day_hour_ts} corroborates that observation, which presents the mean and variance of the measures that occurred in a specific hour during the 20 days period. This can be a indication of congestion during peak of usage hours.
 
 \begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.5\textwidth}
+    \makebox[\linewidth][c]
+    {
+        %
         \centering
-        \includegraphics[width=1.0\textwidth]{./figures/mean_per_hour_in_a_day_NHODTCSRV04_64:66:B3:50:06:90.png}
-        \caption{Mean and variance per hour}
-    \end{subfigure}%
-    ~ 
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-        \includegraphics[width=1.0\textwidth]{./figures/ts_NHODTCSRV04_64:66:B3:50:06:90.png}
-        \caption{Time Series}
-    \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{./figures/mean_per_hour_in_a_day_NHODTCSRV04_64:66:B3:50:06:90.png}
+            \caption{Mean and variance per hour}
+        \end{subfigure}%
+        ~ 
+        \begin{subfigure}[b]{0.55\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth]{./figures/ts_NHODTCSRV04_64:66:B3:50:06:90.png}
+            \caption{Time Series}
+        \end{subfigure}
+    }
     \caption{Client 1}
     \label{fig:mean_day_hour_ts}
 \end{figure}
@@ -113,6 +143,18 @@ As in other tasks, it is difficult to translate a human visual perception in a s
 In general, when the exact types of target changes are previously know the problem is easier.
 
 \section{Methodology}
+
+It was created an annotation system to a specialist visually indicates the change points of the time series dataset. The user indicated with the mouse the points in time where he thinks that where the cahnge points occurred. To avoid results misunderstanding X axis of the time series represented onlu the time order of the measures, since the time series are unevenly this fact could visually wrong infer change points. Also, since is known that variances in the losses fractions when the losses are low have more impact in the user QoE than when the losses are big, the system also provides two other y scales than linear, the log scale and piecewise linear with bigger length in [0, 0.1] than (0.1, 1.0]. The user can click in any scale.
+
+A single person classified all time series. This person has experiences with academic and industry network measurements and statistical modelling, however without background in change point detection analysis. The user could take the time he wants to make a classification and it was able to classify in different days. Before the user could start the classifications, it was indicated a series of instructions: 
+
+\begin{itemize}
+    \item In the case of packet loss fraction, mean changes between 0 and 0.1 are more sensible to the end users.
+    \item The "time" axis only represents the temporal order of the measurements. However, in general, consecutive points in "time" axis are separated by 30 minutes.
+    \item Outlier is not a statistical change. An outlier is an observation that lies outside the overall pattern of a distribution.
+\end{itemize}
+
+Since several time series of the previously described time series have almost all measures with zero losses, these time series was filtered to reduce the number of time series and keep only the ones which provide change points, increasing the entropy. Also, to better the visualization, it was selected time with 10 days of data, therefore the dataset consists of time series from 1 may 2016 to 10 may 2016, and from 11 may 2016 to 20 may 2016. The specific filter was: it was selected only the time series that has 85\% of the maximum possible data in the specified time period, considering that each home router executes the measurement procedure at most two times in a hour. Reducing to 522 time series. Also it were only selected the time series that have at least one window of length 48 with at least 6 measures with loss fraction bigger than 0.01.
 
 \section{Descriptive Analysis}
 

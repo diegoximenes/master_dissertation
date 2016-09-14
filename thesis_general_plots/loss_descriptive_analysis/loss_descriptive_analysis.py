@@ -11,12 +11,12 @@ import plot_procedures
 
 dt_start = datetime(2016, 5, 1)
 dt_end = datetime(2016, 5, 20)
-# targets = "all"
-targets = [["BHZRENPEV01", "64:66:B3:A6:BA:54"],
-           ["BREDTCSRV20", "64:66:B3:7B:9E:6A"],
-           ["NHODTCSRV04", "64:66:B3:50:05:BC"],
-           ["CPSDTCSRV02", "64:66:B3:7B:9D:C4"],
-           ["NHODTCSRV04", "64:66:B3:50:06:90"]]
+targets = "all"
+# targets = [["BHZRENPEV01", "64:66:B3:A6:BA:54"],
+#            ["BREDTCSRV20", "64:66:B3:7B:9E:6A"],
+#            ["NHODTCSRV04", "64:66:B3:50:05:BC"],
+#            ["CPSDTCSRV02", "64:66:B3:7B:9D:C4"],
+#            ["NHODTCSRV04", "64:66:B3:50:06:90"]]
 
 
 def acf(in_path, server, mac):
@@ -26,12 +26,12 @@ def acf(in_path, server, mac):
 
     print "cnt_pairs={}".format(cnt_pairs)
     plt.clf()
-    matplotlib.rcParams.update({'font.size': 13})
-    plt.gcf().set_size_inches(15, 12)
+    matplotlib.rcParams.update({'font.size': 26})
+    plt.gcf().set_size_inches(15, 13)
     plt.grid()
     plt.ylim([-0.3, 1.0])
     plt.yticks(np.arange(-0.3, 1.1, 0.1))
-    plt.xticks(range(0, 85, 12))
+    plt.xticks(range(0, 85, 12), rotation=45)
     plt.xlabel("Lag (hours)")
     plt.ylabel("ACF")
     plt.plot(lags, acf, marker="o")
@@ -69,12 +69,12 @@ def mean_per_hour_in_a_day(in_path, server, mac):
 
     print "hour_cnt={}".format(hour_cnt)
     plt.clf()
-    matplotlib.rcParams.update({'font.size': 13})
-    plt.gcf().set_size_inches(15, 12)
+    matplotlib.rcParams.update({'font.size': 26})
+    plt.gcf().set_size_inches(15, 13)
     plt.grid()
-    plt.ylabel("Loss Fraction")
+    plt.ylabel("Mean Loss Fraction")
     plt.xlabel("Hour")
-    plt.xticks(range(24))
+    plt.xticks(range(0, 24, 2), rotation=45)
     plt.plot(hour_list, mean_list, marker="o")
     plt.fill_between(hour_list, mean_list - var_list, mean_list + var_list,
                      alpha=0.3)
@@ -114,11 +114,11 @@ def loss_descriptive_analysis():
         in_path = "{}/{}/{}.csv".format(in_dir, server, mac)
         print "server={}, mac={}".format(server, mac)
 
-        acf(in_path, server, mac)
-        mean_per_hour(in_path, server, mac)
-        mean_per_hour_in_a_day(in_path, server, mac)
+        # acf(in_path, server, mac)
+        # mean_per_hour(in_path, server, mac)
+        # mean_per_hour_in_a_day(in_path, server, mac)
 
-    # write_all_samples_to_file(targets, in_dir)
+    write_all_samples_to_file(targets, in_dir)
 
 
 if __name__ == "__main__":
