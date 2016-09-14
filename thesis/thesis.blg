@@ -3,44 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: thesis.aux
 The style file: coppe-unsrt.bst
 Database file #1: ./src/bibliography.bib
-You've used 11 entries,
+You've used 12 entries,
             2630 wiz_defined-function locations,
-            635 strings with 7000 characters,
-and the built_in function-call counts, 5068 in all, are:
-= -- 475
-> -- 161
-< -- 13
-+ -- 74
-- -- 52
-* -- 462
-:= -- 734
-add.period$ -- 53
-call.type$ -- 11
-change.case$ -- 11
-chr.to.int$ -- 11
-cite$ -- 11
-duplicate$ -- 291
-empty$ -- 499
-format.name$ -- 67
-if$ -- 1104
+            646 strings with 7548 characters,
+and the built_in function-call counts, 5697 in all, are:
+= -- 537
+> -- 191
+< -- 14
++ -- 86
+- -- 62
+* -- 519
+:= -- 829
+add.period$ -- 60
+call.type$ -- 12
+change.case$ -- 12
+chr.to.int$ -- 12
+cite$ -- 12
+duplicate$ -- 325
+empty$ -- 551
+format.name$ -- 78
+if$ -- 1245
 int.to.chr$ -- 1
-int.to.str$ -- 12
-missing$ -- 10
-newline$ -- 71
-num.names$ -- 33
-pop$ -- 80
+int.to.str$ -- 13
+missing$ -- 11
+newline$ -- 78
+num.names$ -- 36
+pop$ -- 87
 preamble$ -- 1
-purify$ -- 11
+purify$ -- 12
 quote$ -- 0
-skip$ -- 153
+skip$ -- 172
 stack$ -- 0
-substring$ -- 263
-swap$ -- 101
-text.length$ -- 8
+substring$ -- 290
+swap$ -- 114
+text.length$ -- 9
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 77
+type$ -- 84
 warning$ -- 0
-while$ -- 41
+while$ -- 46
 width$ -- 0
-write$ -- 177
+write$ -- 198

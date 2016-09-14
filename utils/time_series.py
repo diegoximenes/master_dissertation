@@ -1,5 +1,6 @@
 import scipy.signal
 import copy
+import numpy as np
 
 import read_input
 
@@ -121,6 +122,57 @@ class TimeSeries:
     def savgol(self, win_len, poly_order):
         self.y = scipy.signal.savgol_filter(self.y, win_len, poly_order)
         self.set_dt_mean()
+
+    def get_mean(self):
+        sum, cnt = 0.0, 0
+        for x in self.y:
+            if x is not None:
+                sum += x
+                cnt += 1
+        return sum / float(cnt)
+
+    def get_variance(self):
+        mean = self.get_mean()
+        cnt_not_none = self.get_cnt_not_none()
+        ret = - mean ** 2
+        for x in self.y:
+            if x is not None:
+                ret += 1.0 / float(cnt_not_none) * (x ** 2)
+        return ret
+
+    def get_cnt_not_none(self):
+        ret = 0
+        for x in self.y:
+            if x is not None:
+                ret += 1
+        return ret
+
+    def get_acf(self, max_lag):
+        if self.ts_type == "hourly":
+            mean = self.get_mean()
+            variance = self.get_variance()
+
+            if np.isclose(variance, 0.0):
+                return [], [], []
+
+            lag_list = [0]
+            acf_list = [1]
+            cnt_pairs_list = [self.get_cnt_not_none()]
+            for lag in xrange(1, max_lag + 1):
+                cnt, sum = 0, 0.0
+                for i in xrange(lag, len(self.y)):
+                    if ((self.y[i] is not None) and
+                            (self.y[i - lag] is not None)):
+                        cnt += 1
+                        sum += (self.y[i] - mean) * (self.y[i - lag] - mean)
+                if cnt > 0:
+                    lag_list.append(lag)
+                    acf_list.append(1.0 / (float(cnt) * variance) * sum)
+                    cnt_pairs_list.append(cnt)
+
+            return lag_list, acf_list, cnt_pairs_list
+        else:
+            return [], [], []
 
 
 def dist_ts(ts):

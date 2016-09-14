@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.8.30)  12 SEP 2016 18:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.8.30)  13 SEP 2016 22:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -378,6 +378,29 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@every@algorithm=\toks26
 \c@algorithm=\count128
 )
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2016/02/04 v1.7-139 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 67.
+\captionmargin=\dimen135
+\captionmargin@=\dimen136
+\captionwidth=\dimen137
+\caption@tempdima=\dimen138
+\caption@indent=\dimen139
+\caption@parindent=\dimen140
+\caption@hangindent=\dimen141
+)
+\c@ContinuedFloat=\count129
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2016/02/20 v1.1-142 Sub-captions (AR)
+\c@subfigure=\count130
+\c@subtable=\count131
+)
 \@losfile=\write3
 \openout3 = `thesis.syx'.
 
@@ -390,35 +413,35 @@ Writing index of abbreviations file thesis.abx
 (./thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             https://www.ctan.org/pkg/pageslts
-(lastpage)             ! on input line 10.
+(lastpage)             ! on input line 13.
  (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count129
-\scratchdimen=\dimen135
+\scratchcounter=\count132
+\scratchdimen=\dimen142
 \scratchbox=\box32
-\nofMPsegments=\count130
-\nofMParguments=\count131
+\nofMPsegments=\count133
+\nofMParguments=\count134
 \everyMPshowfont=\toks27
-\MPscratchCnt=\count132
-\MPscratchDim=\dimen136
-\MPnumerator=\count133
-\makeMPintoPDFobject=\count134
+\MPscratchCnt=\count135
+\MPscratchDim=\dimen143
+\MPnumerator=\count136
+\makeMPintoPDFobject=\count137
 \everyMPtoPDFconversion=\toks28
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
@@ -471,47 +494,49 @@ e
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box33
-Package hyperref Info: Link coloring OFF on input line 10.
+Package hyperref Info: Link coloring OFF on input line 13.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count135
+\c@section@level=\count138
 )
-LaTeX Info: Redefining \ref on input line 10.
-LaTeX Info: Redefining \pageref on input line 10.
-LaTeX Info: Redefining \nameref on input line 10.
+LaTeX Info: Redefining \ref on input line 13.
+LaTeX Info: Redefining \pageref on input line 13.
+LaTeX Info: Redefining \nameref on input line 13.
 
 (./thesis.out) (./thesis.out)
 \@outlinefile=\write5
 \openout5 = `thesis.out'.
 
-Package hyperref Info: Option `breaklinks' set `true' on input line 29.
-Package hyperref Info: Option `raiselinks' set `true' on input line 29.
-Package hyperref Info: Option `pageanchor' set `true' on input line 29.
- <coppe-logo.pdf, id=84, 177.463pt x 76.285pt>
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+Package hyperref Info: Option `breaklinks' set `true' on input line 32.
+Package hyperref Info: Option `raiselinks' set `true' on input line 32.
+Package hyperref Info: Option `pageanchor' set `true' on input line 32.
+ <coppe-logo.pdf, id=96, 177.463pt x 76.285pt>
 File: coppe-logo.pdf Graphic file (type pdf)
 
 <use coppe-logo.pdf>
-Package pdftex.def Info: coppe-logo.pdf used on input line 29.
+Package pdftex.def Info: coppe-logo.pdf used on input line 32.
 (pdftex.def)             Requested size: 177.46255pt x 76.2848pt.
 
-Underfull \hbox (badness 7740) in paragraph at lines 29--29
+Underfull \hbox (badness 7740) in paragraph at lines 32--32
 []\OT1/cmr/m/n/12 Disserta^^Xc~ao de Mestrado apresentada ao
  []
 
 
-Underfull \hbox (badness 3668) in paragraph at lines 29--29
+Underfull \hbox (badness 3668) in paragraph at lines 32--32
 \OT1/cmr/m/n/12 de Sistemas e Computa^^Xc~ao, COPPE, da
  []
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 29.
+LaTeX Font Info:    Try loading font information for U+msa on input line 32.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 29.
+LaTeX Font Info:    Try loading font information for U+msb on input line 32.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -519,22 +544,22 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./coppe-logo.pdf>]
-Underfull \hbox (badness 3884) in paragraph at lines 30--30
+Underfull \hbox (badness 3884) in paragraph at lines 33--33
 \OT1/cmr/m/n/12 DISSERTA[][]AO SUB-METIDA []AO CORPO DOCENTE DO INSTITUTO
  []
 
 
-Underfull \hbox (badness 3884) in paragraph at lines 30--30
+Underfull \hbox (badness 3884) in paragraph at lines 33--33
 \OT1/cmr/m/n/12 ALBERTO LUIZ COIMBRA DE P[]OS-GRADUA[][]AO E PESQUISA DE
  []
 
 
-Underfull \hbox (badness 2884) in paragraph at lines 30--30
+Underfull \hbox (badness 2884) in paragraph at lines 33--33
 \OT1/cmr/m/n/12 ENGENHARIA (COPPE) DA UNIVERSIDADE FEDERAL DO RIO DE
  []
 
 
-Underfull \hbox (badness 3386) in paragraph at lines 30--30
+Underfull \hbox (badness 3386) in paragraph at lines 33--33
 \OT1/cmr/m/n/12 JANEIRO COMO PARTE DOS REQUISITOS NECESS[]ARIOS PARA A
  []
 
@@ -588,27 +613,134 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 39.
 
-<./figures/sliding_window_toy_example.png, id=178, 1156.32pt x 867.24pt>
+<./figures/sliding_window_toy_example.png, id=201, 1156.32pt x 867.24pt>
 File: ./figures/sliding_window_toy_example.png Graphic file (type png)
 
 <use ./figures/sliding_window_toy_example.png>
 Package pdftex.def Info: ./figures/sliding_window_toy_example.png used on input
  line 58.
 (pdftex.def)             Requested size: 426.79135pt x 320.09303pt.
- [4] [5pdfTeX warning (ext4): destination with the same identifier (name{figure
-.2.1}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.72 
-      <./figures/sliding_window_toy_example.png>] [6]) (./src/dataset.tex
-[7] [8]
+ [4] [5 <./figures/sliding_window_toy_example.png>] [6]) (./src/dataset.tex [7]
+ [8]
 Chapter 3.
-) (./src/conclusion.tex [9
+[9
 
-]
+] <./figures/loss_cdf.png, id=257, 1084.05pt x 867.24pt>
+File: ./figures/loss_cdf.png Graphic file (type png)
+
+<use ./figures/loss_cdf.png>
+Package pdftex.def Info: ./figures/loss_cdf.png used on input line 21.
+(pdftex.def)             Requested size: 426.79135pt x 341.43787pt.
+
+<./figures/acf_NHODTCSRV04_64:66:B3:50:05:BC.png, id=261, 1084.05pt x 867.24pt>
+File: ./figures/acf_NHODTCSRV04_64:66:B3:50:05:BC.png Graphic file (type png)
+<use ./figures/acf_NHODTCSRV04_64:66:B3:50:05:BC.png>
+Package pdftex.def Info: ./figures/acf_NHODTCSRV04_64:66:B3:50:05:BC.png used o
+n input line 32.
+(pdftex.def)             Requested size: 213.39568pt x 170.70569pt.
+
+<./figures/ts_NHODTCSRV04_64:66:B3:50:05:BC.png, id=262, 1084.05pt x 867.24pt>
+File: ./figures/ts_NHODTCSRV04_64:66:B3:50:05:BC.png Graphic file (type png)
+
+<use ./figures/ts_NHODTCSRV04_64:66:B3:50:05:BC.png>
+Package pdftex.def Info: ./figures/ts_NHODTCSRV04_64:66:B3:50:05:BC.png used on
+ input line 38.
+(pdftex.def)             Requested size: 213.39568pt x 170.70569pt.
+
+Overfull \hbox (5.22217pt too wide) in paragraph at lines 30--41
+ [][]  [] 
+ []
+
+[10 <./figures/loss_cdf.png>]
+<./figures/acf_BREDTCSRV20_64:66:B3:7B:9E:6A.png, id=268, 1084.05pt x 867.24pt>
+File: ./figures/acf_BREDTCSRV20_64:66:B3:7B:9E:6A.png Graphic file (type png)
+<use ./figures/acf_BREDTCSRV20_64:66:B3:7B:9E:6A.png>
+Package pdftex.def Info: ./figures/acf_BREDTCSRV20_64:66:B3:7B:9E:6A.png used o
+n input line 49.
+(pdftex.def)             Requested size: 213.39568pt x 170.70569pt.
+
+<./figures/ts_BREDTCSRV20_64:66:B3:7B:9E:6A.png, id=269, 1084.05pt x 867.24pt>
+File: ./figures/ts_BREDTCSRV20_64:66:B3:7B:9E:6A.png Graphic file (type png)
+
+<use ./figures/ts_BREDTCSRV20_64:66:B3:7B:9E:6A.png>
+Package pdftex.def Info: ./figures/ts_BREDTCSRV20_64:66:B3:7B:9E:6A.png used on
+ input line 55.
+(pdftex.def)             Requested size: 213.39568pt x 170.70569pt.
+
+Overfull \hbox (5.22217pt too wide) in paragraph at lines 47--58
+ [][]  [] 
+ []
+
+
+<./figures/acf_BHZRENPEV01_64:66:B3:A6:BA:54.png, id=270, 1084.05pt x 867.24pt>
+File: ./figures/acf_BHZRENPEV01_64:66:B3:A6:BA:54.png Graphic file (type png)
+<use ./figures/acf_BHZRENPEV01_64:66:B3:A6:BA:54.png>
+Package pdftex.def Info: ./figures/acf_BHZRENPEV01_64:66:B3:A6:BA:54.png used o
+n input line 66.
+(pdftex.def)             Requested size: 213.39568pt x 170.70569pt.
+
+<./figures/ts_BHZRENPEV01_64:66:B3:A6:BA:54.png, id=271, 1084.05pt x 867.24pt>
+File: ./figures/ts_BHZRENPEV01_64:66:B3:A6:BA:54.png Graphic file (type png)
+
+<use ./figures/ts_BHZRENPEV01_64:66:B3:A6:BA:54.png>
+Package pdftex.def Info: ./figures/ts_BHZRENPEV01_64:66:B3:A6:BA:54.png used on
+ input line 72.
+(pdftex.def)             Requested size: 213.39568pt x 170.70569pt.
+
+Overfull \hbox (5.22217pt too wide) in paragraph at lines 64--75
+ [][]  [] 
+ []
+
+[11 <./figures/acf_NHODTCSRV04_64:66:B3:50:05:BC.png> <./figures/ts_NHODTCSRV04
+_64:66:B3:50:05:BC.png> <./figures/acf_BREDTCSRV20_64:66:B3:7B:9E:6A.png> <./fi
+gures/ts_BREDTCSRV20_64:66:B3:7B:9E:6A.png> <./figures/acf_BHZRENPEV01_64:66:B3
+:A6:BA:54.png> <./figures/ts_BHZRENPEV01_64:66:B3:A6:BA:54.png>]
+
+LaTeX Warning: Reference `fig:mean_day_hour_ts' on page 12 undefined on input l
+ine 83.
+
+
+<./figures/mean_per_hour_in_a_day_NHODTCSRV04_64:66:B3:50:06:90.png, id=287, 10
+84.05pt x 867.24pt>
+File: ./figures/mean_per_hour_in_a_day_NHODTCSRV04_64:66:B3:50:06:90.png Graphi
+c file (type png)
+
+<use ./figures/mean_per_hour_in_a_day_NHODTCSRV04_64:66:B3:50:06:90.png>
+Package pdftex.def Info: ./figures/mean_per_hour_in_a_day_NHODTCSRV04_64:66:B3:
+50:06:90.png used on input line 89.
+(pdftex.def)             Requested size: 213.39568pt x 170.70569pt.
+
+<./figures/ts_NHODTCSRV04_64:66:B3:50:06:90.png, id=288, 1084.05pt x 867.24pt>
+File: ./figures/ts_NHODTCSRV04_64:66:B3:50:06:90.png Graphic file (type png)
+
+<use ./figures/ts_NHODTCSRV04_64:66:B3:50:06:90.png>
+Package pdftex.def Info: ./figures/ts_NHODTCSRV04_64:66:B3:50:06:90.png used on
+ input line 95.
+(pdftex.def)             Requested size: 213.39568pt x 170.70569pt.
+
+Overfull \hbox (5.22217pt too wide) in paragraph at lines 87--98
+ [][]  [] 
+ []
+
+[12 <./figures/mean_per_hour_in_a_day_NHODTCSRV04_64:66:B3:50:06:90.png> <./fig
+ures/ts_NHODTCSRV04_64:66:B3:50:06:90.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 119--124
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 127--134
+
+ []
+
+[13]) (./src/conclusion.tex
+Underfull \hbox (badness 10000) in paragraph at lines 137--1
+
+ []
+
+[14]
 Chapter 4.
-) [10
+) [15
 
 ] (./thesis.bbl
 LaTeX Font Info:    Try loading font information for OML+cmr on input line 22.
@@ -618,48 +750,64 @@ File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
 (Font)              Font shape `OML/cmm/m/it' tried instead on input line 22.
 
-[11
+[16
 
 
 ]) 
 AED: lastpage setting LastPage
-[12]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 61.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 61.
+[17]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 64.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 64.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 61.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 61.
-Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 330CAC01AA701D1A52A44D780069E445;1254.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 61.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 64.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 64.
+
+
+Package rerunfilecheck Warning: File `thesis.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `thesis.out':
+(rerunfilecheck)             Before: 47A0027FA86BA1168B5F7066E665CB5E;1434
+(rerunfilecheck)             After:  2754788EE4862420EA7CB4371461FEF1;1435.
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 64.
  ) 
 Here is how much of TeX's memory you used:
- 8341 strings out of 494888
- 120913 string characters out of 6179127
- 224962 words of memory out of 5000000
- 11403 multiletter control sequences out of 15000+600000
- 12782 words of font info for 47 fonts, out of 8000000 for 9000
+ 9482 strings out of 494888
+ 143305 string characters out of 6179127
+ 247813 words of memory out of 5000000
+ 12512 multiletter control sequences out of 15000+600000
+ 13687 words of font info for 50 fonts, out of 8000000 for 9000
  38 hyphenation exceptions out of 8191
- 35i,11n,30p,1033b,471s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texl
-ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
-10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on thesis.pdf (20 pages, 379990 bytes).
+ 36i,11n,39p,2099b,471s stack positions out of 5000i,500n,10000p,200000b,80000s
+pdfTeX warning (dest): name{chapter*.9} has been referenced but does not exis
+t, replaced by a fixed one
+
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10
+.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on thesis.pdf (25 pages, 991578 bytes).
 PDF statistics:
- 329 PDF objects out of 1000 (max. 8388607)
- 285 compressed objects within 3 object streams
- 57 named destinations out of 1000 (max. 500000)
- 171 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 408 PDF objects out of 1000 (max. 8388607)
+ 340 compressed objects within 4 object streams
+ 72 named destinations out of 1000 (max. 500000)
+ 240 words of extra memory for PDF output out of 10000 (max. 10000000)
 

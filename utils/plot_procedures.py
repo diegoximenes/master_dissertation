@@ -2,7 +2,7 @@ import copy
 import datetime
 import numpy as np
 import matplotlib
-matplotlib.use("Agg")
+# matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
@@ -33,7 +33,7 @@ def plot_axvline(dt_axvline, dt_id, compress, ax):
         ax.axvline(xvline, color="r", linewidth=2.0)
 
 
-def plot_ts(ts, out_path, dt_axvline=[], ylabel="", ylim=None, compress=False):
+def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None, compress=False):
     plt.clf()
     matplotlib.rcParams.update({'font.size': 13})
     plt.gcf().set_size_inches(15, 12)
@@ -47,15 +47,16 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", ylim=None, compress=False):
     if compress:
         dt_id = get_dt_id(ts)
 
-    plot_axvline(dt_axvline, dt_id, compress, plt)
+    # plot_axvline(dt_axvline, dt_id, compress, plt)
 
     plt.grid()
     if ylim is not None:
         plt.ylim(ylim)
     plt.ylabel(ylabel)
+    plt.xlabel(xlabel)
     if not compress:
         plt.xlim([ts.dt_start, ts.dt_end + datetime.timedelta(days=1)])
-    plt.xticks(xticks, xticks_labels, rotation="vertical")
+    plt.xticks(xticks, xticks_labels, rotation=45)
     plt.yticks(np.arange(0, 1 + 0.05, 0.05))
     if compress:
         plt.scatter(range(len(ts.x)), ts.y, s=9)

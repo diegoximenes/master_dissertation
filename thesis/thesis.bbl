@@ -1,4 +1,4 @@
-\begin{thebibliography}{11}
+\begin{thebibliography}{12}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -95,6 +95,20 @@
 \MakeUppercase{Adams, R.~P., MacKay, D.~J.}
 \newblock \enquote{Bayesian online changepoint detection}, \emph{arXiv preprint
   arXiv:0710.3742}, 2007.
+
+\bibitem[\MakeUppercase{Mendes}\emph{ et~al.}(2016)Mendes, Senges, Santos,
+  Mendon\c{c}a, Le\~{a}o, e
+  Silva]{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil}
+\MakeUppercase{Mendes, D.~X., Senges, G. d.~S., Santos, G. H. A.~d.,
+  \MakeLowercase{et~al.}}
+\newblock \enquote{A Preliminary Performance Measurement Study of Residential
+  Broadband Services in Brazil}. In: \emph{Proceedings of the 2016 Workshop on
+  Fostering Latin-American Research in Data Communication Networks}, LANCOMM
+  '16, pp. 16--18, New York, NY, USA, 2016. ACM.
+\newblock ISBN: 978-1-4503-4426-5.
+\newblock \doi{2940116.2940135}.
+\newblock Dispon{\' i}vel em:
+  \textless\url{http://doi.acm.org/2940116.2940135}\textgreater .
 
 \bibitem[\MakeUppercase{Auger} e \MakeUppercase{Lawrence}(1989)Auger e
   Lawrence]{algorithms_for_the_optimal_identification_of_segment_neighborhoods}
