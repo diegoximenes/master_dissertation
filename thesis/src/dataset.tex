@@ -6,15 +6,17 @@ This chapter describes the used datasets, presenting their construction methodol
 
 \subsection{Methodology}
 
-The time series presented in this work represent network end-to-end measures of a cable-television infrastructure running DOCSIS, with asymmetric download and upload bandwidths. The measurement infrastructure consists of home routers connected to the cable modem, that run a software developed by TGR in partnership with UFRJ. In this is way is possible to measure several metrics, such as link throughput, round trip latency, loss rates, among others. Each home router communicates with one or more servers devoted to execute the different measurement protocols and to store data. Measurement values from each home router are consolidated twice per hour and, by the end of every day, they are transferred to a database for analysis. The servers are strategically located by the ISP and, since the same home router can connect to more than one server, metrics from the same client to different servers can be contrasted. The resulted time series are unevenly due to a variate of reasons. One of them is that measurements are initiated only if the residential link is not under use by the ISP customer, another one is that the home router can be without Internet access or even eletrical energy.
+The time series presented in this work represent network end-to-end measures of a cable-television infrastructure running DOCSIS, with asymmetric download and upload bandwidths. Home routers connected to the cable modem communicates with one or more servers strategically located by the ISP. Measurement results from each home router are consolidated every half hour and, by the end of every day, are transferred to a database for analysis. The software responsible for these procedures was developed by TGR in partneship with UFRJ. 
 
-The focus of this work is to analyze the loss fraction, however, \cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil} presents a further analysis on other metrics. Round trip packet loss fraction between the home router and the associated server is obtained by sending a train of short UDP packets by the home router and bounced back by the server. The interval between two packets in a train is configurable as well as the length of the train. The data presented in this work considers a train of 100 UDP packets of 32 bytes in which packets are 1 milliseconds apart.
+The focus of this work is to analyze the loss fraction, however, \cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil} presents a further analysis on other metrics, such as link throughput, round trip latency and loss bursts. To measure the round trip packet loss fraction between the home router and the associated server, the home router sends a train of short UDP packets, and then the server bounces back them. The data presented here considers a train of 100 UDP packets of 32 bytes and 1 milliseconds apart.
+
+The resulted time series are unevenly due to a range of reasons. One of them is that measurements are initiated only if the residential link is not under use by the ISP customer. Also, it is possible to the home router be without Internet access to start a measurement, or even without electrical energy.
 
 \subsection{Descriptive Analysis}
 
-The TGR software run in a subset of the ISP customers in several brazilian states. In the analysis of this section, was analysed the period from 01 may 2016 to 20 may 2016. Were selected every home router that measured at least one time and that all measures occurred to same server which necessaryly belonged to the same ufs. This filter resulted in 1870 clients time series and 1537272 measures.
+The TGR software run in a subset of the ISP customers in several brazilian states. In the analysis of this section, it was considered the period from 01/may/2016 to 20/may/2016. It was selected every client in which all measures of this period occurred against the same server. Another imposed constraint was that the home router and the server must belong to the same state. This filter resulted in 1870 clients time series and the total of 1537272 measures.
 
-In figure~\ref{fig:cdf_ccdf} is presented the packet loss CDF of all time series. It is possible to note that 93.2\% of the measures have zero losses.
+In figure \ref{fig:loss_fraction_cdf_ccdf} is presented the packet loss fraction CDF and CCDF of all time series. It is possible to note that 93.2\% of the measures have zero losses.
 
 \begin{figure}[H]
     \makebox[\linewidth][c]
@@ -30,14 +32,14 @@ In figure~\ref{fig:cdf_ccdf} is presented the packet loss CDF of all time series
         \begin{subfigure}[b]{0.55\textwidth}
             \centering
             \includegraphics[width=\linewidth]{./figures/ccdf.png}
-            \caption{CCDF}
+            \caption{CCDF in log-log scale}
         \end{subfigure}
     }
     \caption{Packet Loss Fraction}
-    \label{fig:cdf_ccdf}
+    \label{fig:loss_fraction_cdf_ccdf}
 \end{figure}%
 
-Figures \ref{fig:acf_ts_1}, \ref{fig:acf_ts_2}, \ref{fig:acf_ts_3} show three examples with common autocorrelation patterns in this dataset together with the time series. Since the time series are unenvely, to compute the autocorrelation function, the raw time series is transformed, and it is only considered the date and hour of a measure, ignoring the minutes and seconds. Therefore, if more than one measure occurs in the same hour, it is considered the mean.
+Figures \ref{fig:loss_fraction_acf_ts_1}, \ref{fig:loss_fraction_acf_ts_2}, \ref{fig:loss_fraction_acf_ts_3} are three examples of common autocorrelation patterns in this dataset. Since the time series are unenvely, it was considered only the date and hour components of a measure time to compute the autocorrelation function, ignoring then the minutes and seconds information. Therefore, if more than one measure occurred at the same hour and date, it was taken the average of these samples.
 
 \begin{figure}[H]
     \makebox[\linewidth][c]
@@ -57,7 +59,7 @@ Figures \ref{fig:acf_ts_1}, \ref{fig:acf_ts_2}, \ref{fig:acf_ts_3} show three ex
         \end{subfigure}
     }
     \caption{Client 1}
-    \label{fig:acf_ts_1}
+    \label{fig:loss_fraction_acf_ts_1}
 \end{figure}%
 
 \begin{figure}[H]
@@ -78,7 +80,7 @@ Figures \ref{fig:acf_ts_1}, \ref{fig:acf_ts_2}, \ref{fig:acf_ts_3} show three ex
         \end{subfigure}
     }
     \caption{Client 2}
-    \label{fig:acf_ts_2}
+    \label{fig:loss_fraction_acf_ts_2}
 \end{figure}
 
 \begin{figure}[H]
@@ -99,14 +101,12 @@ Figures \ref{fig:acf_ts_1}, \ref{fig:acf_ts_2}, \ref{fig:acf_ts_3} show three ex
         \end{subfigure}
     }
     \caption{Client 3}
-    \label{fig:acf_ts_3}
+    \label{fig:loss_fraction_acf_ts_3}
 \end{figure}
 
-The autocorrelation of figure~\ref{fig:acf_ts_1} have a periodic pattern, with peaks in multiple of 24 hours. In this client, it is possible to observe that losses a more frequent in the end of the day. However, in figure~\ref{fig:acf_ts_2} the autocorrelation quickly decreases and fluctuates around zero. The correspondent time series have a commmon characteristics, until day 06 of may there no measures with losses, however, from then on frequently measures with losses alternated with zero losses measures. Figure~\ref{fig:acf_ts_3} shows an linear decreasing autocorrelation, and the associated time series, which presents abrupts change in the mean. 
+The autocorrelation of figure \ref{fig:loss_fraction_acf_ts_1} have a periodic pattern, with peaks around multiples of 24 hours. In this client, it is possible to observe that losses a more usual at night. However, in figure \ref{fig:loss_fraction_acf_ts_2}, the autocorrelation quickly decreases and fluctuates around zero. The corresponding time series have a common characteristic, from 06/may on measures with losses alternated with zero losses measures. Figure \ref{fig:loss_fraction_acf_ts_3} shows a linear decreasing autocorrelation, and the associated time series presents abrupts changes in the mean. 
 
-Also, through a visual analysis, as in the previuous figures, is possible to observer diverse time series patterns and change point patterns.
-
-As in figure~\ref{fig:acf_ts_1} same clients have a daily pattern in which losses occur more frequently at night, in which the Internet usage is known to be bigger. Figure~\ref{fig:mean_day_hour_ts} corroborates that observation, which presents the mean and variance of the measures that occurred in a specific hour during the 20 days period. This can be a indication of congestion during peak of usage hours.
+As in figure \ref{fig:loss_fraction_acf_ts_1}, some clients have a daily pattern in which losses occur more frequently at night. This fact can b in which the Internet usage is known to be bigger. Figure~\ref{fig:mean_day_hour_ts} corroborates that observation, which presents the mean and variance of the measures that occurred in a specific hour during the 20 days period. This can be a indication of congestion during peak of usage hours.
 
 \begin{figure}[H]
     \makebox[\linewidth][c]
@@ -128,6 +128,8 @@ As in figure~\ref{fig:acf_ts_1} same clients have a daily pattern in which losse
     \caption{Client 1}
     \label{fig:mean_day_hour_ts}
 \end{figure}
+
+Also, through a visual analysis, as in the previous figures, it is possible to observe different time series and change points patterns.
 
 % - mean loss by week day of single client\\
 % - power spectra to check periodicity? \\
