@@ -13,14 +13,12 @@
 \contentsline {section}{\numberline {2.4}Optimization Model}{5}{section.2.4}
 \contentsline {section}{\numberline {2.5}HMM (Hidden Markov Model)}{6}{section.2.5}
 \contentsline {section}{\numberline {2.6}Bayesian Inference}{7}{section.2.6}
-\contentsline {chapter}{\numberline {3}Dataset}{9}{chapter.3}
-\contentsline {section}{\numberline {3.1}End-to-End Packet Loss Fraction Time Series Dataset}{9}{section.3.1}
-\contentsline {subsection}{\numberline {3.1.1}Methodology}{9}{subsection.3.1.1}
-\contentsline {subsection}{\numberline {3.1.2}Descriptive Analysis}{10}{subsection.3.1.2}
-\contentsline {section}{\numberline {3.2}Change Points Dataset}{13}{section.3.2}
-\contentsline {section}{\numberline {3.3}Methodology}{14}{section.3.3}
-\contentsline {section}{\numberline {3.4}Descriptive Analysis}{15}{section.3.4}
-\contentsline {section}{\numberline {3.5}Description of Change Points Dataset}{15}{section.3.5}
-\contentsline {section}{\numberline {3.6}Performance Evaluation}{15}{section.3.6}
+\contentsline {chapter}{\numberline {3}Dataset}{8}{chapter.3}
+\contentsline {section}{\numberline {3.1}End-to-End Packet Loss Fraction Time Series Dataset}{8}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Methodology}{8}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}Descriptive Analysis}{9}{subsection.3.1.2}
+\contentsline {section}{\numberline {3.2}Change Points Dataset}{12}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Methodology}{12}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Descriptive Analysis}{14}{subsection.3.2.2}
 \contentsline {chapter}{\numberline {4}Conclusions}{16}{chapter.4}
-\contentsline {chapter}{Bibliography}{17}{chapter*.10}
+\contentsline {chapter}{Bibliography}{17}{chapter*.14}

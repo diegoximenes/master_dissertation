@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib
 import matplotlib.pylab as plt
 import numpy as np
+from scipy import stats
 
 
 def write_distribution_cdf_ccdf(samples):
@@ -39,30 +40,30 @@ def write_distribution_cdf_ccdf(samples):
 def plot_cdf():
     df = pd.read_csv("./plots/distribution/cdf.csv")
     plt.clf()
-    matplotlib.rcParams.update({'font.size': 26})
-    plt.gcf().set_size_inches(15, 13)
+    matplotlib.rcParams.update({'font.size': 30})
+    plt.gcf().set_size_inches(16, 15)
     plt.xticks(np.arange(0.0, 1.05, 0.05), rotation=45)
     plt.xlabel("X")
     plt.ylim(0.93, 1.001)
     plt.xlim(-0.005, 1.005)
-    plt.ylabel("P[loss fraction $\leq$ X]")
+    plt.ylabel("P[Loss Fraction $\leq$ X]")
     plt.grid()
     plt.plot(df["bin"], df["fraction"], linewidth=2.0, marker="o")
-    plt.savefig("./plots/distribution/loss_cdf.png")
+    plt.savefig("./plots/distribution/cdf.png")
 
 
 def plot_ccdf():
     df = pd.read_csv("./plots/distribution/ccdf.csv")
 
     plt.clf()
-    matplotlib.rcParams.update({'font.size': 26})
+    matplotlib.rcParams.update({'font.size': 30})
     # plt.gcf().set_size_inches(15, 12)
     plt.grid()
-    ax = plt.figure(figsize=(15, 13)).gca()
+    ax = plt.figure(figsize=(16, 15)).gca()
     ax.set_yscale("log")
     ax.set_xscale("log")
     ax.set_xlabel("X")
-    ax.set_ylabel("P[loss fraction > X]")
+    ax.set_ylabel("P[Loss Fraction > X]")
     ax.scatter(df["bin"][1:-2], df["fraction"][1:-2], marker="x", s=50)
     plt.savefig("./plots/distribution/ccdf.png")
 
@@ -96,9 +97,42 @@ def plot_distr():
     # plt.savefig("./plots/distribution/distr.png")
 
 
+def fit_geom():
+    df = pd.read_csv("./plots/distribution/samples.csv")
+    samples = map(lambda x: int(100 * x), df["loss"])
+    n = len(samples)
+    p = float(n) / (sum(samples) + n)
+    print "p={}".format(p)
+
+    x_geom = range(101)
+    y_geom = map(lambda x: p * (1.0 - p)**x, x_geom)
+    print y_geom
+    plt.clf()
+    # plt.hist(samples, bins=range(101), normed=True, log=True)
+    plt.plot(x_geom, y_geom)
+    plt.show()
+
+
+def fit_exp():
+    df = pd.read_csv("./plots/distribution/samples.csv")
+    samples = df["loss"]
+    lamb = float(len(samples)) / sum(samples)
+
+    stats.probplot(samples, dist="expon", plot=plt)
+    plt.show()
+
+    x_exp = np.arange(0.0, 1.01, 0.01)
+    y_exp = map(lambda x: lamb * np.e ** (-lamb * x), x_exp)
+    plt.clf()
+    plt.plot(x_exp, y_exp)
+    plt.show()
+
+
 if __name__ == "__main__":
     # df = pd.read_csv("./plots/distribution/samples.csv")
     # write_distribution_cdf_ccdf(df["loss"])
     plot_ccdf()
     plot_cdf()
     # plot_distr()
+    # fit_geom()
+    # fit_exp()

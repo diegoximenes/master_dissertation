@@ -35,8 +35,8 @@ def plot_axvline(dt_axvline, dt_id, compress, ax):
 
 def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None, compress=False):
     plt.clf()
-    matplotlib.rcParams.update({'font.size': 23})
-    plt.gcf().set_size_inches(15, 13)
+    matplotlib.rcParams.update({'font.size': 27})
+    plt.gcf().set_size_inches(16, 15)
 
     if compress:
         xticks = range(0, len(ts.x), 20)
@@ -46,8 +46,7 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None, compre
 
     if compress:
         dt_id = get_dt_id(ts)
-
-    # plot_axvline(dt_axvline, dt_id, compress, plt)
+        plot_axvline(dt_axvline, dt_id, compress, plt)
 
     plt.grid()
     if ylim is not None:

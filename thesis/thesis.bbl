@@ -1,4 +1,4 @@
-\begin{thebibliography}{12}
+\begin{thebibliography}{15}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -109,6 +109,38 @@
 \newblock \doi{2940116.2940135}.
 \newblock Dispon{\' i}vel em:
   \textless\url{http://doi.acm.org/2940116.2940135}\textgreater .
+
+\bibitem[\MakeUppercase{Liu}\emph{ et~al.}(2013)Liu, Yamada, Collier, e
+  Sugiyama]{change_point_detection_in_time_series_data_by_relative_density_ratio_estimation}
+\MakeUppercase{Liu, S., Yamada, M., Collier, N., \MakeLowercase{et~al.}}
+\newblock \enquote{Change-point detection in time-series data by relative
+  density-ratio estimation}, \emph{Neural Networks}, v.~43, \penalty0 pp.~72 --
+  83, 2013.
+\newblock ISSN: 0893-6080.
+\newblock \doi{http://dx.doi.org/10.1016/j.neunet.2013.01.012}.
+\newblock Dispon{\' i}vel em:
+  \textless\url{http://www.sciencedirect.com/science/article/pii/S0893608013000270}\textgreater
+  .
+
+\bibitem[\MakeUppercase{Hocking}\emph{ et~al.}(2013)Hocking, Rigaill, philippe
+  Vert, e
+  Bach]{learning_sparse_penalties_for_change_point_detection_using_max_margin_interval_regression}
+\MakeUppercase{Hocking, T., Rigaill, G., philippe Vert, J.,
+  \MakeLowercase{et~al.}}
+\newblock \enquote{Learning Sparse Penalties for Change-point Detection using
+  Max Margin Interval Regression}. In: Dasgupta, S., Mcallester, D. (Eds.),
+  \emph{Proceedings of the 30th International Conference on Machine Learning
+  (ICML-13)}, v.~28, pp. 172--180. JMLR Workshop and Conference Proceedings,
+  maio 2013.
+\newblock Dispon{\' i}vel em:
+  \textless\url{http://jmlr.org/proceedings/papers/v28/hocking13.pdf}\textgreater
+  .
+
+\bibitem[\MakeUppercase{James}\emph{ et~al.}(2014)James, Kejariwal, e
+  Matteson]{leveraging_cloud_data_to_mitigate_user_experience_from_breaking_bad}
+\MakeUppercase{James, N.~A., Kejariwal, A., Matteson, D.~S.}
+\newblock \enquote{Leveraging Cloud Data to Mitigate User Experience from"
+  Breaking Bad"}, \emph{arXiv preprint arXiv:1411.7955}, 2014.
 
 \bibitem[\MakeUppercase{Auger} e \MakeUppercase{Lawrence}(1989)Auger e
   Lawrence]{algorithms_for_the_optimal_identification_of_segment_neighborhoods}

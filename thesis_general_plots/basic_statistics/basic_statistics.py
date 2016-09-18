@@ -11,9 +11,10 @@ def stats():
     for server in os.listdir(in_dir):
         cnt_servers += 1
         for file_name in os.listdir("{}/{}".format(in_dir, server)):
-            cnt_clients += 1
             df = pd.read_csv("{}/{}/{}".format(in_dir, server, file_name))
-            cnt_measures += df.shape[0]
+            if df.shape[0] > 0:
+                cnt_clients += 1
+                cnt_measures += df.shape[0]
 
     with open("./basic_statistics.out", "w") as f:
         f.write("cnt_servers={}\n".format(cnt_servers))
