@@ -1,10 +1,12 @@
 import sys
+import os
 import psycopg2
 import datetime
 import psycopg2.extras
 
-sys.path.append("../../utils/")
-import dt_procedures
+base_dir = os.path.join(os.path.dirname(__file__), "../..")
+sys.path.append(base_dir)
+import utils.dt_procedures as dt_procedures
 
 metric = "loss"
 
