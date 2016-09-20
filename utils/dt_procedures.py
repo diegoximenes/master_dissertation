@@ -3,6 +3,10 @@ from datetime import datetime, timedelta
 
 
 def generate_dt_list(dt_start, dt_end):
+    """
+    generate hourly dt list of [dt_start, dt_end]
+    """
+
     l = []
     for day in range((dt_end - dt_start).days + 1):
         dt_day = dt_start + timedelta(days=day)

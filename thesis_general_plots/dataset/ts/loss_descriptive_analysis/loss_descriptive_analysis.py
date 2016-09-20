@@ -5,9 +5,10 @@ import numpy as np
 import matplotlib
 import matplotlib.pylab as plt
 
-sys.path.append("../../utils")
-from time_series import TimeSeries
-import plot_procedures
+base_dir = os.path.join(os.path.dirname(__file__), "../../../..")
+sys.path.append(base_dir)
+from utils.time_series import TimeSeries
+import utils.plot_procedures as plot_procedures
 
 dt_start = datetime(2016, 5, 1)
 dt_end = datetime(2016, 5, 20)
@@ -29,8 +30,6 @@ def acf(in_path, server, mac):
     matplotlib.rcParams.update({'font.size': 30})
     plt.gcf().set_size_inches(16, 15)
     plt.grid()
-    plt.ylim([-0.3, 1.0])
-    plt.yticks(np.arange(-0.3, 1.1, 0.1))
     plt.xticks(range(0, 85, 12), rotation=45)
     plt.xlabel("Lag (hours)")
     plt.ylabel("ACF")
@@ -92,14 +91,14 @@ def write_all_samples_to_file(targets, in_dir):
         print "server={}, mac={}".format(server, mac)
 
     with open("./plots/distribution/samples.csv", "w") as f:
-        f.write("loss\n")
+        f.write("samples\n")
         for x in samples:
             f.write("{}\n".format(x))
 
 
 def loss_descriptive_analysis():
-    in_dir = "../../input/{}_{}/".format(dt_start.year,
-                                         str(dt_start.month).zfill(2))
+    in_dir = "../../../../input/{}_{}/".format(dt_start.year,
+                                               str(dt_start.month).zfill(2))
 
     global targets
     if targets == "all":
@@ -114,11 +113,13 @@ def loss_descriptive_analysis():
         in_path = "{}/{}/{}.csv".format(in_dir, server, mac)
         print "server={}, mac={}".format(server, mac)
 
-        acf(in_path, server, mac)
-        mean_per_hour(in_path, server, mac)
-        mean_per_hour_in_a_day(in_path, server, mac)
+        if targets != "all":
+            acf(in_path, server, mac)
+            mean_per_hour(in_path, server, mac)
+            mean_per_hour_in_a_day(in_path, server, mac)
 
-    # write_all_samples_to_file(targets, in_dir)
+    if targets == "all":
+        write_all_samples_to_file(targets, in_dir)
 
 
 if __name__ == "__main__":

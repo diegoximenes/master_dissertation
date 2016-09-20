@@ -3,8 +3,8 @@ import psycopg2
 import datetime
 import psycopg2.extras
 
-sys.path.append("../../import_scripts/")
-import datetime_procedures
+sys.path.append("../../utils/")
+import dt_procedures
 
 metric = "loss"
 
@@ -18,7 +18,7 @@ def get_datetime(strdt_js):
                            int(strtime.split(":")[0]),
                            int(strtime.split(":")[1]),
                            int(strtime.split(":")[2]))
-    dt_sp = datetime_procedures.from_utc_to_sp(dt)
+    dt_sp = dt_procedures.from_utc_to_sp(dt)
     dt_ret = datetime.datetime(dt_sp.year, dt_sp.month, dt_sp.day, dt_sp.hour,
                                dt_sp.minute, dt_sp.second)
     return dt_ret
@@ -35,15 +35,14 @@ def get_data():
         sys.exit(0)
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    cursor.execute("""
-                   SELECT users.email, time_series.mac, time_series.server, "
+    cursor.execute("SELECT users.email, time_series.mac, time_series.server, "
                    "time_series.date_start, time_series.date_end, "
                    "change_points.change_points "
                    "FROM users, time_series, change_points "
                    "WHERE (change_points.id_user = users.id) AND "
-                   "(change_points.id_time_series = time_series.id)""")
+                   "(change_points.id_time_series = time_series.id)")
 
-    with open("majority_voting_data.csv", "w") as f:
+    with open("classifications.csv", "w") as f:
         f.write("email;mac;server;date_start;date_end;change_points\n")
         for row in cursor.fetchall():
             if row["change_points"] == '':

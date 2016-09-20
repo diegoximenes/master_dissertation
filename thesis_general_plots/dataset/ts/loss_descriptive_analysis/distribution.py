@@ -5,7 +5,7 @@ import numpy as np
 from scipy import stats
 
 
-def write_distribution_cdf_ccdf(samples):
+def write_distr_cdf_ccdf(samples):
     bin_cnt = {}
     cnt_all = 0
     for bin in np.arange(0.0, 1.01, 0.01):
@@ -54,10 +54,8 @@ def plot_cdf():
 
 def plot_ccdf():
     df = pd.read_csv("./plots/distribution/ccdf.csv")
-
     plt.clf()
     matplotlib.rcParams.update({'font.size': 30})
-    # plt.gcf().set_size_inches(15, 12)
     plt.grid()
     ax = plt.figure(figsize=(16, 15)).gca()
     ax.set_yscale("log")
@@ -92,14 +90,14 @@ def plot_distr():
     ax.scatter(x, y, marker="x")
     plt.show()
     # ax.scatter(df["bin"][1:len(df["bin"]) - 1],
-    #            df["fraction"][1:len(df["bin"]) - 1] / df["fraction"][0], s=50,
-    #            marker="x")
+    #            df["fraction"][1:len(df["bin"]) - 1] / df["fraction"][0],
+    #            s=50, marker="x")
     # plt.savefig("./plots/distribution/distr.png")
 
 
 def fit_geom():
     df = pd.read_csv("./plots/distribution/samples.csv")
-    samples = map(lambda x: int(100 * x), df["loss"])
+    samples = map(lambda x: int(100 * x), df["samples"])
     n = len(samples)
     p = float(n) / (sum(samples) + n)
     print "p={}".format(p)
@@ -115,7 +113,7 @@ def fit_geom():
 
 def fit_exp():
     df = pd.read_csv("./plots/distribution/samples.csv")
-    samples = df["loss"]
+    samples = df["samples"]
     lamb = float(len(samples)) / sum(samples)
 
     stats.probplot(samples, dist="expon", plot=plt)
@@ -129,8 +127,8 @@ def fit_exp():
 
 
 if __name__ == "__main__":
-    # df = pd.read_csv("./plots/distribution/samples.csv")
-    # write_distribution_cdf_ccdf(df["loss"])
+    df = pd.read_csv("./plots/distribution/samples.csv")
+    write_distr_cdf_ccdf(df["samples"])
     plot_ccdf()
     plot_cdf()
     # plot_distr()

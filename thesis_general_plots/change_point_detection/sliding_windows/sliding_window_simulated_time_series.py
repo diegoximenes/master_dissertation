@@ -1,40 +1,12 @@
 import sys
+import os
 import numpy as np
-from math import sqrt
 
-sys.path.append("../../utils/")
-import plot_procedures
-from time_series import TimeSeries
-
-
-def hellinger_dist(distr1, distr2):
-    dist = 0.0
-    for i in xrange(len(distr1)):
-        dist += (sqrt(distr1[i]) - sqrt(distr2[i])) ** 2
-    dist /= 2.0
-    dist = sqrt(dist)
-    return dist
-
-
-def get_distr(l):
-    bins = np.arange(0.02, 10.0 + 0.02, 0.02)
-    hist = [0] * len(bins)
-
-    for x in l:
-        bin = 0
-        while bin < len(bins):
-            if x <= bins[bin]:
-                break
-            bin += 1
-        hist[bin] += 1
-
-    return np.asarray(hist) / float(np.sum(hist))
-
-
-def distance(l1, l2):
-    distr1 = get_distr(l1)
-    distr2 = get_distr(l2)
-    return hellinger_dist(distr1, distr2)
+base_dir = os.path.join(os.path.dirname(__file__), "../../..")
+sys.path.append(base_dir)
+import utils.plot_procedures as plot_procedures
+from utils.time_series import TimeSeries
+import change_point.utils.distribution as distribution
 
 
 def simulate():
@@ -55,7 +27,9 @@ def sliding_window(ts):
 
     win_len = 100
     for i in xrange(win_len, len(ts.y) - win_len + 1):
-        dist = distance(ts.y[i - win_len:i], ts.y[i:i + win_len])
+        dist = distribution.hellinger_dist(ts.y[i - win_len:i],
+                                           ts.y[i:i + win_len],
+                                           bins=np.arange(0.02, 10.02, 0.02))
         ts_dist.x.append(ts.x[i])
         ts_dist.y.append(dist)
 

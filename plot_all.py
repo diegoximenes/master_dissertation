@@ -71,7 +71,6 @@ def process():
 
             ts = TimeSeries(in_path, metric, dt_start, dt_end)
             ts_filter = TimeSeries(in_path, metric, dt_start, dt_end)
-            ts_filter.savgol(7, 3)
 
             if filter_ts(ts):
                 out_path = out_path_filtered

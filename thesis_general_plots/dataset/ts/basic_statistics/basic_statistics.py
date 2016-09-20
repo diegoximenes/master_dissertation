@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def stats():
-    in_dir = "../../input/2016_05/"
+    in_dir = "../../../../input/2016_05/"
 
     cnt_servers = 0
     cnt_clients = 0

@@ -1,22 +1,23 @@
 import scipy.signal
 import copy
 import numpy as np
+from datetime import datetime
 
 import read_input
+import dt_procedures
 
 
 class TimeSeries:
     """
-    by now univariate time series
+    univariate time series
 
     Attributes:
-        dt_mean: dictionary
-        x: sorted dt list of specified period
-        y: mean values associated with x
+        x: sorted dt list
+        y: mean values associated with x. Values can be None.
         raw_x:
         raw_y:
-        dt_start: datetime of the first day considered
-        dt_end: datetime of the last day considered
+        dt_start: datetime of the first day
+        dt_end: datetime of the last day
         ts_type: "raw", "hourly", "dist"
         compressed: boolean. If type is "raw" then this parameter is
             irrelevant
@@ -24,7 +25,6 @@ class TimeSeries:
 
     def __init__(self, in_path=None, metric=None, dt_start=None, dt_end=None,
                  ts_type="raw", compressed=False):
-        self.dt_mean = {}
         self.x = []
         self.y = []
         self.raw_x = []
@@ -48,21 +48,38 @@ class TimeSeries:
                                                     self.dt_start, self.dt_end)
 
         if self.ts_type == "raw":
-            self.x, self.y = read_input.get_raw(in_path, metric, self.dt_start,
-                                                self.dt_end)
+            self.x = copy.deepcopy(self.raw_x)
+            self.y = copy.deepcopy(self.raw_y)
         elif self.ts_type == "hourly":
-            self.x, self.y = read_input.get_hourly(in_path, metric,
-                                                   self.dt_start, self.dt_end)
-        self.set_dt_mean()
+            self.x, self.y = self.get_hourly()
 
-    def set_dt_mean(self):
-        self.dt_mean = {}
-        for i in xrange(len(self.x)):
-            self.dt_mean[self.x[i]] = self.y[i]
+    def get_hourly(self):
+        x = dt_procedures.generate_dt_list(self.dt_start, self.dt_end)
+
+        dt_cntSum = {}
+        for dt in x:
+            dt_cntSum[dt] = [0, 0]
+
+        for i in xrange(len(self.raw_x)):
+            dt = self.raw_x[i]
+            dt_rounded = datetime(dt.year, dt.month, dt.day, dt.hour)
+            if dt_rounded not in dt_cntSum:
+                continue
+            dt_cntSum[dt_rounded][0] += 1
+            dt_cntSum[dt_rounded][1] += self.raw_y[i]
+
+        y = []
+        for dt in x:
+            if dt_cntSum[dt][0] > 0:
+                y.append(float(dt_cntSum[dt][1]) / dt_cntSum[dt][0])
+            else:
+                y.append(None)
+
+        return x, y
 
     def get_description(self):
         """
-        returns a string describing current ts
+        returns a string describing ts
         """
 
         s = "dtstart{}_dtend{}_type{}_compressed{}".format(self.dt_start,
@@ -83,19 +100,17 @@ class TimeSeries:
                 ret_x.append(self.x[i])
                 ret_y.append(self.y[i])
         self.x, self.y = ret_x, ret_y
-        self.set_dt_mean()
 
-    def ma_smoothing(self, window_len=11):
+    def ma_smoothing(self, win_len=11):
         """
-        apply ma smoothing. If y[t] == None, than this position is ignored on
-        the computation. Useful to visually check periodicity.
+        If y[t] == None this position is ignored on the computation
         """
 
         ret_y = []
         for i in xrange(len(self.y)):
             ysum, ycnt = 0, 0
-            for j in range(max(0, i - window_len / 2),
-                           min(len(self.y) - 1, i + window_len / 2) + 1):
+            for j in xrange(max(0, i - win_len / 2),
+                            min(len(self.y) - 1, i + win_len / 2) + 1):
                 if self.y[j] is not None:
                     ysum += self.y[j]
                     ycnt += 1
@@ -106,24 +121,23 @@ class TimeSeries:
                 val = None
             ret_y.append(val)
         self.y = ret_y
-        self.set_dt_mean()
 
     def median_filter(self, win_len=3):
         """
-        useful to remove outliers.
-
         Args:
             win_len: must be odd
         """
 
         self.y = scipy.signal.medfilt(self.y, win_len)
-        self.set_dt_mean()
 
     def savgol(self, win_len, poly_order):
         self.y = scipy.signal.savgol_filter(self.y, win_len, poly_order)
-        self.set_dt_mean()
 
     def get_mean(self):
+        """
+        ignore None on the computation
+        """
+
         sum, cnt = 0.0, 0
         for x in self.y:
             if x is not None:
@@ -132,6 +146,10 @@ class TimeSeries:
         return sum / float(cnt)
 
     def get_variance(self):
+        """
+        ignore None on the computation
+        """
+
         mean = self.get_mean()
         cnt_not_none = self.get_cnt_not_none()
         ret = - mean ** 2
@@ -177,7 +195,7 @@ class TimeSeries:
 
 def dist_ts(ts):
     """
-    return a TimeSeries with same dt_start, dt_end, raw_x, raw_y  as the
+    return a TimeSeries with same dt_start, dt_end, raw_x, raw_y as the
     argument, but with other attributes empty
     """
 

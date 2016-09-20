@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 
 
 def get_xticks(dt_start, dt_end):
+    """
+    daily xticks of [dt_start, dt_end]
+    """
     xticks, xticks_labels = [], []
     for i in range((dt_end - dt_start).days + 2):
         dt = dt_start + datetime.timedelta(days=i)
@@ -24,7 +27,9 @@ def get_dt_id(ts):
     return dt_id
 
 
-def plot_axvline(dt_axvline, dt_id, compress, ax):
+def plot_axvline(ts, dt_axvline, compress, ax):
+    if compress:
+        dt_id = get_dt_id(ts)
     for dt in dt_axvline:
         if compress:
             xvline = dt_id[dt]
@@ -33,7 +38,12 @@ def plot_axvline(dt_axvline, dt_id, compress, ax):
         ax.axvline(xvline, color="r", linewidth=2.0)
 
 
-def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None, compress=False):
+def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
+            compress=False):
+    """
+    if compress is true than ts.y must not have None
+    """
+
     plt.clf()
     matplotlib.rcParams.update({'font.size': 27})
     plt.gcf().set_size_inches(16, 15)
@@ -44,9 +54,7 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None, compre
     else:
         xticks, xticks_labels = get_xticks(ts.dt_start, ts.dt_end)
 
-    if compress:
-        dt_id = get_dt_id(ts)
-        plot_axvline(dt_axvline, dt_id, compress, plt)
+    plot_axvline(ts, dt_axvline, compress, plt)
 
     plt.grid()
     if ylim is not None:
@@ -119,17 +127,14 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
 
         xticks = range(0, len(x1), 100)
         xticks_labels = copy.deepcopy(xticks)
-
-        dt_id1 = get_dt_id(ts1)
-        dt_id2 = get_dt_id(ts2)
     else:
         x1, y1 = ts1.x, ts1.y
         x2, y2 = ts2.x, ts2.y
 
         xticks, xticks_labels = get_xticks(ts1.dt_start, ts1.dt_end)
 
-    plot_axvline(dt_axvline1, dt_id1, compress, ax[0])
-    plot_axvline(dt_axvline2, dt_id2, compress, ax[1])
+    plot_axvline(ts1, dt_axvline1, compress, ax[0])
+    plot_axvline(ts2, dt_axvline2, compress, ax[1])
 
     ax[0].grid()
     ax[0].set_title(title1)
