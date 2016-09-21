@@ -122,7 +122,6 @@ class RandomSearch():
             dic["metrics"] = {}
             for i in xrange(len(self.f_metrics)):
                 dic["metrics"][self.f_metrics[i].__name__] = score[i]
-
             collection = db[self.model_class.__name__]
             collection.insert(dic)
 
@@ -131,7 +130,6 @@ def main():
     # uniform: uniform distribution in [loc, loc + scale].
     # randint(a, b): generate random in [a, b).
     # polyorder is only used in savgol and must be less than win_len.
-    # const_outlier and f_outlier are only used when remove_outliers_in_win = 1
 
     cmp_class_args = {"win_len": 10}
     preprocess_distr = {"filter_type": ["none", "ma_smoothing",
@@ -142,10 +140,7 @@ def main():
                    "f_pen": ["n_cps", "n_cps^2", "n_cps * sqrt(n_cps)"],
                    "distr_type": ["Normal", "Exponential"],
                    "min_seg_len": randint(2, 15),
-                   "max_cps": [20],
-                   "remove_outliers_in_win": [0],
-                   "const_outlier": uniform(loc=0, scale=1),
-                   "f_outlier": ["n"]}
+                   "max_cps": [20]}
     f_metrics = [cmp_class.f1_score]
     random_search = RandomSearch(SegmentNeighbourhood, param_distr,
                                  cmp_class_args, preprocess_distr,

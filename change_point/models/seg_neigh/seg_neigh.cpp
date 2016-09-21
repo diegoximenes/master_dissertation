@@ -25,8 +25,8 @@ double dp[MAX][MAX];
 
 //expr vars
 double n_cps_expr, n_expr;
-exprtk::symbol_table<double> symbol_table_pen, symbol_table_outlier;
-exprtk::expression<double> pen_expr, outlier_expr;
+exprtk::symbol_table<double> symbol_table_pen;
+exprtk::expression<double> pen_expr;
 exprtk::parser<double> parser;
 
 //in vars
@@ -37,9 +37,6 @@ string f_pen;
 string distr_type;
 int min_seg_len;
 int max_cps;
-bool remove_outliers_in_win;
-double const_outlier;
-string f_outlier;
 
 void set_math_expr()
 {
@@ -48,12 +45,6 @@ void set_math_expr()
     symbol_table_pen.add_constants();
     pen_expr.register_symbol_table(symbol_table_pen);
     parser.compile(f_pen, pen_expr);
-
-    //outlier
-    symbol_table_outlier.add_variable("n", n_expr);
-    symbol_table_outlier.add_constants();
-    pen_expr.register_symbol_table(symbol_table_outlier);
-    parser.compile(f_outlier, outlier_expr);
 }
 
 inline int cmp_double(double a, double b)
@@ -75,29 +66,15 @@ inline bool seg_is_degenerate(int i, int j)
 
 inline pair<double, bool> seg_cost(int i, int j)
 {
-    if(remove_outliers_in_win == 0)
-    {
-        if(seg_is_degenerate(i, j))
-            return make_pair(log(0.000001), 1);
-        return make_pair(-2 * normal_log_lik[i][j], 0);
-    }
-    else
-    {
-        //calculate
-        return make_pair(0, 0);
-    }
+    if(seg_is_degenerate(i, j))
+        return make_pair(log(0.000001), 1);
+    return make_pair(-2 * normal_log_lik[i][j], 0);
 }
 
 inline double eval_pen(int n_cps)
 {
     n_cps_expr = n_cps;
     return const_pen * pen_expr.value();
-}
-
-inline double eval_outlier(int n)
-{
-    n_expr = n;
-    return const_outlier * outlier_expr.value(); 
 }
 
 void calc_same_left(vector<double> &ts)
@@ -227,13 +204,10 @@ vector<int> get_cps(int n, int best_n_cps)
 
 void preprocess(vector<double> &ts)
 {
-    if(remove_outliers_in_win == 0)
-    {
-        calc_prefix_sum(ts);
-        calc_same_left(ts);
-        calc_mse(ts);
-        calc_normal_log_lik(ts);
-    }
+    calc_prefix_sum(ts);
+    calc_same_left(ts);
+    calc_mse(ts);
+    calc_normal_log_lik(ts);
 }
 
 void seg_neigh(vector<double> &ts)
@@ -287,9 +261,6 @@ int main(int argc, char *argv[])
     distr_type = argv[5];
     min_seg_len = atoi(argv[6]);
     max_cps = atoi(argv[7]);
-    remove_outliers_in_win = atoi(argv[8]);
-    const_outlier = atof(argv[9]);
-    f_outlier = argv[10];    
 
     cout << "argc=" << argc << endl;
     cout << "in_path=" << in_path << endl;
@@ -299,9 +270,6 @@ int main(int argc, char *argv[])
     cout << "distr_type=" << distr_type << endl;
     cout << "min_seg_len=" << min_seg_len << endl;
     cout << "max_cps=" << max_cps << endl;
-    cout << "remove_outliers_in_win=" << remove_outliers_in_win << endl;
-    cout << "const_outlier=" << const_outlier << endl;
-    cout << "f_outlier=" << f_outlier << endl;
 
     set_math_expr();
     vector<double> ts = read_ts(in_path);
