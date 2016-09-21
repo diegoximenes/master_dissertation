@@ -138,7 +138,7 @@ def main():
                         "poly_order": randint(1, 4)}
     param_distr = {"const_pen": uniform(loc=0, scale=1000),
                    "f_pen": ["n_cps", "n_cps^2", "n_cps * sqrt(n_cps)"],
-                   "distr_type": ["Normal", "Exponential"],
+                   "seg_model": ["Normal", "Exponential"],
                    "min_seg_len": randint(2, 15),
                    "max_cps": [20]}
     f_metrics = [cmp_class.f1_score]

@@ -14,12 +14,12 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class SegmentNeighbourhood():
-    def __init__(self, preprocess_args, const_pen, f_pen, distr_type,
+    def __init__(self, preprocess_args, const_pen, f_pen, seg_model,
                  min_seg_len, max_cps):
         self.preprocess_args = preprocess_args
         self.const_pen = const_pen
         self.f_pen = f_pen
-        self.distr_type = distr_type
+        self.seg_model = seg_model
         self.min_seg_len = min_seg_len
         self.max_cps = max_cps
 
@@ -38,7 +38,7 @@ class SegmentNeighbourhood():
         subprocess.call(["{}/seg_neigh".format(script_dir),
                          "{}/tmp_ts".format(script_dir),
                          "{}/tmp_pred".format(script_dir),
-                         str(self.const_pen), self.f_pen, self.distr_type,
+                         str(self.const_pen), self.f_pen, self.seg_model,
                          str(self.min_seg_len), str(self.max_cps)],
                         stdout=open(os.devnull, "w"),
                         stderr=subprocess.STDOUT)
@@ -48,7 +48,7 @@ class SegmentNeighbourhood():
         #                  "{}/changepoint.R".format(script_dir),
         #                  "{}/tmp_ts".format(script_dir),
         #                  "{}/tmp_pred".format(script_dir),
-        #                  str(self.const_pen), self.distr_type,
+        #                  str(self.const_pen), self.seg_model,
         #                  str(self.min_seg_len), str(self.max_cps)],
         #                 stdout=open(os.devnull, "w"),
         #                 stderr=subprocess.STDOUT)
@@ -89,7 +89,7 @@ def create_dirs():
 def main():
     cmp_class_args = {"win_len": 10}
     param = {"pen": 26.98043505142611, "min_seg_len": 14,
-             "distr_type": "Normal"}
+             "seg_model": "Normal"}
     seg_neigh = SegmentNeighbourhood(**param)
     train_path = "{}/change_point/input/train.csv".format(base_dir)
 

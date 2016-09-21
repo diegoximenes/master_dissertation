@@ -18,9 +18,8 @@ const double INF = 1.0 / 0.0;
 
 int same_left[MAX];
 double prefix_sum[MAX];
-double mse[MAX][MAX];
-double normal_log_lik[MAX][MAX];
-double exp_log_lik[MAX][MAX];
+double prefix_squared_sum[MAX];
+double dp_seg_model[MAX][MAX];
 double dp[MAX][MAX];
 
 //expr vars
@@ -34,7 +33,7 @@ string in_path;
 string out_path;
 double const_pen;
 string f_pen;
-string distr_type;
+string seg_model;
 int min_seg_len;
 int max_cps;
 
@@ -47,6 +46,12 @@ void set_math_expr()
     parser.compile(f_pen, pen_expr);
 }
 
+inline double eval_pen(int n_cps)
+{
+    n_cps_expr = n_cps;
+    return const_pen * pen_expr.value();
+}
+
 inline int cmp_double(double a, double b)
 {
     return a + EPS > b ? b + EPS > a ? 0 : 1 : -1;
@@ -55,6 +60,16 @@ inline int cmp_double(double a, double b)
 inline double get_mean(int i, int j)
 {
     return (prefix_sum[j] - prefix_sum[i - 1]) / ((double)(j - i + 1));
+}
+
+inline double get_mse(int i, int j)
+{
+    double sum = prefix_sum[j] - prefix_sum[i - 1];
+    double sum_squared = prefix_squared_sum[j] - prefix_squared_sum[i - 1];
+    double mean = get_mean(i, j);
+    double n = j - i + 1;
+    double mse = (sum_squared - 2 * mean * sum + n * mean * mean) / n;
+    return mse;
 }
 
 inline bool seg_is_degenerate(int i, int j)
@@ -68,13 +83,7 @@ inline pair<double, bool> seg_cost(int i, int j)
 {
     if(seg_is_degenerate(i, j))
         return make_pair(log(0.000001), 1);
-    return make_pair(-2 * normal_log_lik[i][j], 0);
-}
-
-inline double eval_pen(int n_cps)
-{
-    n_cps_expr = n_cps;
-    return const_pen * pen_expr.value();
+    return make_pair(dp_seg_model[i][j], 0);
 }
 
 void calc_same_left(vector<double> &ts)
@@ -90,12 +99,17 @@ void calc_same_left(vector<double> &ts)
     }
 }
 
-void calc_prefix_sum(vector<double> &ts)
+void calc_prefix_sums(vector<double> &ts)
 {
     int n = ts.size();
     prefix_sum[0] = 0;
+    prefix_squared_sum[0] = 0;
     for(int i=1; i<=n; ++i)
+    {
         prefix_sum[i] = prefix_sum[i - 1] + ts[i - 1];
+        prefix_squared_sum[i] = prefix_squared_sum[i - 1] + 
+            ts[i - 1] * ts[i - 1];
+    }
 }
 
 void calc_mse(vector<double> &ts)
@@ -103,18 +117,13 @@ void calc_mse(vector<double> &ts)
     int n = ts.size();
     for(int i=1; i<=n; ++i)
     {
-        mse[i][i] = 0.0;
+        dp_seg_model[i][i] = 0;
         for(int j=i+1; j<=n; ++j)
-        {
-            mse[i][j] = mse[i][j - 1];
-            mse[i][j] += ((double)(j - i) / (double)(j - i + 1) *
-                          (ts[j - 1] - get_mean(i, j - 1)) *
-                          (ts[j - 1] - get_mean(i, j - 1)));
-        }
+            dp_seg_model[i][j] = get_mse(i, j);
     }
 }
 
-void calc_normal_log_lik(vector<double> &ts)
+void calc_negative_normal_log_lik(vector<double> &ts)
 {
     int n = ts.size();
     for(int i=1; i<=n; ++i)
@@ -123,11 +132,21 @@ void calc_normal_log_lik(vector<double> &ts)
             if(seg_is_degenerate(i, j))
                 continue;
 
-            double squared_std = mse[i][j];
-            normal_log_lik[i][j] = ((-0.5 * (j - i + 1) *
-                                     log(2 * PI * squared_std) -
-                                     0.5 * (j - i + 1)));
+            double squared_std = get_mse(i, j);
+            dp_seg_model[i][j] = -((-0.5 * (j - i + 1) * 
+                                   log(2 * PI * squared_std) - 
+                                   0.5 * (j - i + 1)));
         }
+}
+
+vector<double> read_ts(string in_path)
+{
+    vector<double> ts;
+    ifstream f(in_path.c_str());
+    string line;
+    while(getline(f, line))
+        ts.push_back(atof(line.c_str()));
+    return ts;
 }
 
 void write_cps(vector<int> &cps)
@@ -156,17 +175,12 @@ void debug(vector<double> &ts)
     cout << "same_left=" << endl;
     for(int i=1; i<=n; ++i)
         cout << "i=" << i << ", same_left=" << same_left[i] << endl;
-    
-    cout << "mse=" << endl;
+     
+    cout << "dp_seg_model=" << endl;
     for(int i=1; i<=n; ++i)
         for(int j=i; j<=n; ++j)
-            cout << "i=" << i << ", j=" << j << ", mse=" << mse[i][j] << endl;
-    
-    cout << "normal_log_lik=" << endl;
-    for(int i=1; i<=n; ++i)
-        for(int j=i; j<=n; ++j)
-            cout << "i=" << i << ", j=" << j << ", normal_log_lik=" <<
-            normal_log_lik[i][j] << endl;
+            cout << "i=" << i << ", j=" << j << ", dp_seg_model=" <<
+            dp_seg_model[i][j] << endl;
 }
 
 int get_best_n_cps(int n)
@@ -204,10 +218,12 @@ vector<int> get_cps(int n, int best_n_cps)
 
 void preprocess(vector<double> &ts)
 {
-    calc_prefix_sum(ts);
+    calc_prefix_sums(ts);
     calc_same_left(ts);
-    calc_mse(ts);
-    calc_normal_log_lik(ts);
+    if(seg_model == "mse")
+        calc_mse(ts);
+    else if(seg_model == "Normal")
+        calc_negative_normal_log_lik(ts);
 }
 
 void seg_neigh(vector<double> &ts)
@@ -242,23 +258,13 @@ void seg_neigh(vector<double> &ts)
     write_cps(cps);
 }
 
-vector<double> read_ts(string in_path)
-{
-    vector<double> ts;
-    ifstream f(in_path.c_str());
-    string line;
-    while(getline(f, line))
-        ts.push_back(atof(line.c_str()));
-    return ts;
-}
-
 int main(int argc, char *argv[])
 {
     in_path = argv[1];
     out_path = argv[2];
     const_pen = atof(argv[3]);
     f_pen = argv[4];
-    distr_type = argv[5];
+    seg_model = argv[5];
     min_seg_len = atoi(argv[6]);
     max_cps = atoi(argv[7]);
 
@@ -267,7 +273,7 @@ int main(int argc, char *argv[])
     cout << "out_path=" << out_path << endl;
     cout << "const_pen=" << const_pen << endl;
     cout << "f_pen=" << f_pen << endl;
-    cout << "distr_type=" << distr_type << endl;
+    cout << "seg_model=" << seg_model << endl;
     cout << "min_seg_len=" << min_seg_len << endl;
     cout << "max_cps=" << max_cps << endl;
 
