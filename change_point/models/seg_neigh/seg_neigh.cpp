@@ -19,7 +19,7 @@ const double INF = 1.0 / 0.0;
 int same_left[MAX];
 double prefix_sum[MAX];
 double prefix_squared_sum[MAX];
-double dp_seg_model[MAX][MAX];
+double dp_seg_cost[MAX][MAX];
 double dp[MAX][MAX];
 
 //expr vars
@@ -83,7 +83,7 @@ inline pair<double, bool> seg_cost(int i, int j)
 {
     if(seg_is_degenerate(i, j))
         return make_pair(log(0.000001), 1);
-    return make_pair(dp_seg_model[i][j], 0);
+    return make_pair(dp_seg_cost[i][j], 0);
 }
 
 void calc_same_left(vector<double> &ts)
@@ -117,9 +117,9 @@ void calc_mse(vector<double> &ts)
     int n = ts.size();
     for(int i=1; i<=n; ++i)
     {
-        dp_seg_model[i][i] = 0;
+        dp_seg_cost[i][i] = 0;
         for(int j=i+1; j<=n; ++j)
-            dp_seg_model[i][j] = get_mse(i, j);
+            dp_seg_cost[i][j] = get_mse(i, j);
     }
 }
 
@@ -133,7 +133,7 @@ void calc_negative_normal_log_lik(vector<double> &ts)
                 continue;
 
             double squared_std = get_mse(i, j);
-            dp_seg_model[i][j] = -((-0.5 * (j - i + 1) * 
+            dp_seg_cost[i][j] = -((-0.5 * (j - i + 1) * 
                                    log(2 * PI * squared_std) - 
                                    0.5 * (j - i + 1)));
         }
@@ -176,11 +176,11 @@ void debug(vector<double> &ts)
     for(int i=1; i<=n; ++i)
         cout << "i=" << i << ", same_left=" << same_left[i] << endl;
      
-    cout << "dp_seg_model=" << endl;
+    cout << "dp_seg_cost=" << endl;
     for(int i=1; i<=n; ++i)
         for(int j=i; j<=n; ++j)
-            cout << "i=" << i << ", j=" << j << ", dp_seg_model=" <<
-            dp_seg_model[i][j] << endl;
+            cout << "i=" << i << ", j=" << j << ", dp_seg_cost=" <<
+            dp_seg_cost[i][j] << endl;
 }
 
 int get_best_n_cps(int n)
