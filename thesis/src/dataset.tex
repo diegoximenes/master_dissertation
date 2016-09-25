@@ -1,6 +1,6 @@
 \chapter{Dataset}
 
-This chapter describes the used datasets, including their construction methodologies. Since the change point detection algorithms performance can be impacted by the time series characteristics, it is made a brief analysis of the loss measurements results. Also, it is presented an exploratory study of the change points dataset, which provides a quick check on the change points characteristics. 
+This chapter describes the used datasets, including their construction methodologies. Since the perfomance of change point detection algorithms can be impacted by the time series attributes, it is made a brief analysis of the packet loss measurements. Also, it is presented an exploratory study of the change points dataset, which provides a further analysis of the problem difficulty. 
 
 \section{End-to-End Packet Loss Fraction Time Series Dataset}
 
@@ -149,7 +149,9 @@ Figure~\ref{fig:survey_system} presents a system snapshot. The vertical red line
 
 \subsection{Descriptive Analysis}
 
-The resulted dataset consists of 522 time series, 241470 measures, and 866 change points. The change point detection problem can interpreted as a binary classification, which indicates if a point is a change point or not. In the current dataset, these two classes are highly imbalanced, since only 0.4\% of the points are change points. Next, in Figure~\ref{fig:cps_per_ts}, is presented the number of change points per time series distribution.
+The resulted dataset consists of 522 time series, 241470 measures, and 866 change points. The change point detection problem can be interpreted as a binary classification task, in which points are labeled as change points or not change points. These two classes are highly unbalanced in this dataset, since only 0.4\% of the points are change points. 
+
+Next, in Figure~\ref{fig:cps_per_ts}, is presented the number of change points per time series distribution.
 
 \begin{figure}[H]
     \centering
@@ -186,5 +188,3 @@ In Figure~\ref{fig:consecutive_segs_comparison} is made a comparison between con
     \caption{Consecutive segments comparison. Bins of size 0.02.}
     \label{fig:consecutive_segs_comparison}
 \end{figure}
-
-
