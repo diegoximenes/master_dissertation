@@ -55,8 +55,10 @@ class RandomSearch():
         #    print("%s %s" % (train_index, test_index))
 
         collection = db[self.model_class.__name__]
-        collection.create_index([("score", pymongo.ASCENDING),
-                                 ("f_metric", pymongo.ASCENDING)])
+        for i in xrange(len(self.f_metrics)):
+            collection.create_index([("metrics.{}"
+                                      "".format(self.f_metrics[i].__name__),
+                                      pymongo.ASCENDING)])
 
     def run(self, n_iter):
         ps_param = ParameterSampler(self.param_distr, n_iter=n_iter)
@@ -96,14 +98,19 @@ class RandomSearch():
 
                 # get score for each cost function
                 for i in xrange(len(self.f_metrics)):
-                    score[i] += self.f_metrics[i](lconf)
+                    lscore = self.f_metrics[i](lconf)
+                    if lscore is None:
+                        score[i] = None
+                    else:
+                        score[i] += lscore
 
                 for key in lconf.keys():
                     conf[key] += lconf[key]
 
             if cnt_iter > 0:
                 for i in xrange(len(self.f_metrics)):
-                    score[i] /= float(cnt_iter)
+                    if score[i] is not None:
+                        score[i] /= float(cnt_iter)
 
                 fit_time /= float(cnt_iter)
                 score_time /= float(cnt_iter)
@@ -132,16 +139,16 @@ def main():
     # polyorder is only used in savgol and must be less than win_len.
 
     cmp_class_args = {"win_len": 10}
-    preprocess_distr = {"filter_type": ["none", "ma_smoothing",
-                                        "median_filter", "savgol"],
-                        "win_len": randint(2, 10),
-                        "poly_order": randint(1, 4)}
-    param_distr = {"const_pen": uniform(loc=0, scale=1000),
-                   "f_pen": ["n_cps", "n_cps^2", "n_cps * sqrt(n_cps)"],
-                   "seg_model": ["Normal", "Exponential"],
+    preprocess_distr = {"filter_type": ["none", "ma_smoothing"],
+                        "win_len": randint(2, 10)}
+    param_distr = {"const_pen": uniform(loc=0, scale=500),
+                   "f_pen": ["n_cps"],
+                   "seg_model": ["mse", "Normal"],
                    "min_seg_len": randint(2, 15),
                    "max_cps": [20]}
-    f_metrics = [cmp_class.f1_score]
+    f_metrics = [cmp_class.f_half_score, cmp_class.f_1_score,
+                 cmp_class.f_2_score, cmp_class.jcc, cmp_class.acc,
+                 cmp_class.bacc, cmp_class.csi]
     random_search = RandomSearch(SegmentNeighbourhood, param_distr,
                                  cmp_class_args, preprocess_distr,
                                  f_metrics,

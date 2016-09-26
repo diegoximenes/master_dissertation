@@ -1,6 +1,6 @@
 import os
 import sys
-import math
+import numpy as np
 import pandas as pd
 from hopcroftkarp import HopcroftKarp
 
@@ -100,16 +100,51 @@ def conf_mat(correct_class, pred_class, ts, win_len):
     return conf
 
 
-def f1_score(conf):
+def f_beta_score(beta, conf):
     tp = conf["tp"]
     fp = conf["fp"]
     fn = conf["fn"]
-    num = float(2 * tp)
-    den = float(2 * tp + fp + fn)
+    num = float((1 + beta ** 2) * tp)
+    den = float((1 + beta ** 2) * tp + beta ** 2 * fn + fp)
+
+    if np.isclose(den, 0.0):
+        return None
     return num / den
 
 
-def accuracy(conf):
+def f_half_score(conf):
+    return f_beta_score(0.5, conf)
+
+
+def f_1_score(conf):
+    return f_beta_score(1.0, conf)
+
+
+def f_2_score(conf):
+    return f_beta_score(2.0, conf)
+
+
+def jcc(conf):
+    """
+    jaccard's coefficient of community
+    """
+
+    tp = conf["tp"]
+    fp = conf["fp"]
+    fn = conf["fn"]
+    num = float(tp)
+    den = float(tp + fp + fn)
+
+    if np.isclose(den, 0.0):
+        return None
+    return num / den
+
+
+def acc(conf):
+    """
+    accuracy
+    """
+
     tp = conf["tp"]
     fp = conf["fp"]
     fn = conf["fn"]
@@ -118,19 +153,41 @@ def accuracy(conf):
     n = fp + tn
     num = float(tp + tn)
     den = float(p + n)
+
+    if np.isclose(den, 0.0):
+        return None
     return num / den
 
 
-def mcc(conf):
+def bacc(conf):
     """
-    matthews correlation coefficient
+    balanced accuracy
     """
 
     tp = conf["tp"]
     fp = conf["fp"]
     fn = conf["fn"]
     tn = conf["tn"]
+    p = tp + fn
+    n = fp + tn
 
-    num = float(tp * tn - fp * fn)
-    den = math.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
-    return num / den
+    if np.isclose(p, 0.0) or np.isclose(n, 0.0):
+        return None
+    return (float(tp) / p + float(tn) / n) / 2.0
+
+
+def csi(conf):
+    """
+    classification success index
+    """
+
+    tp = conf["tp"]
+    fp = conf["fp"]
+    fn = conf["fn"]
+
+    if np.isclose(tp + fp, 0.0) or np.isclose(tp + fn, 0.0):
+        return None
+
+    ppv = float(tp) / float(tp + fp)
+    tpr = float(tp) / float(tp + fn)
+    return ppv + tpr - 1
