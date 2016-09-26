@@ -55,10 +55,15 @@ class RandomSearch():
         #    print("%s %s" % (train_index, test_index))
 
         collection = db[self.model_class.__name__]
+        # create mongo indexes
         for i in xrange(len(self.f_metrics)):
             collection.create_index([("metrics.{}"
                                       "".format(self.f_metrics[i].__name__),
                                       pymongo.ASCENDING)])
+        collection.create_index([("conf.tn", pymongo.ASCENDING),
+                                 ("conf.fn", pymongo.ASCENDING),
+                                 ("conf.fp", pymongo.ASCENDING),
+                                 ("conf.tp", pymongo.ASCENDING)])
 
     def run(self, n_iter):
         ps_param = ParameterSampler(self.param_distr, n_iter=n_iter)
