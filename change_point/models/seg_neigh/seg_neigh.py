@@ -9,11 +9,12 @@ sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
 from utils.time_series import TimeSeries
 import change_point.utils.cmp_class as cmp_class
+import change_point.models.change_point_alg as change_point_alg
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
-class SegmentNeighbourhood():
+class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
     def __init__(self, preprocess_args, const_pen, f_pen, seg_model,
                  min_seg_len, max_cps):
         self.preprocess_args = preprocess_args
@@ -60,25 +61,6 @@ class SegmentNeighbourhood():
 
         return sorted(df["id"].values)
 
-    def score(self, df, cmp_class_args):
-        """
-        returns one confusion matrix considering all df rows
-        """
-
-        conf = {"tp": 0, "tn": 0, "fp": 0, "fn": 0}
-        for idx, row in df.iterrows():
-            pred = self.predict(row)
-            correct = cmp_class.from_str_to_int_list(row["change_points_ids"])
-            ts = cmp_class.get_ts(row, self.preprocess_args)
-            # print "pred={}".format(pred)
-            # print "correct={}".format(correct)
-
-            lconf = cmp_class.conf_mat(correct, pred, ts, **cmp_class_args)
-            for key in lconf.keys():
-                conf[key] += lconf[key]
-
-        return conf
-
 
 def create_dirs():
     for dir in ["{}/plots/".format(script_dir)]:
@@ -88,15 +70,12 @@ def create_dirs():
 
 def main():
     cmp_class_args = {"win_len": 15}
-    preprocess_args = {"filter_type": "percentile_filter",
-                       "win_len": 5,
-                       "p": 0.5}
-    preprocess_args2 = {"filter_type": "ma_smoothing",
-                        "win_len": 10}
-    param = {"const_pen": 32.403499383065636,
+    preprocess_args = {"filter_type": "ma_smoothing",
+                       "win_len": 15}
+    param = {"const_pen": 86.81489011349758,
              "f_pen": "n_cps",
-             "seg_model": "Exponential",
-             "min_seg_len": 6,
+             "seg_model": "Normal",
+             "min_seg_len": 21,
              "max_cps": 20}
 
     seg_neigh = SegmentNeighbourhood(preprocess_args=preprocess_args, **param)
@@ -105,7 +84,11 @@ def main():
     create_dirs()
 
     df = pd.read_csv(train_path)
+    cnt = 0
     for idx, row in df.iterrows():
+        cnt += 1
+        print "cnt={}".format(cnt)
+
         pred = seg_neigh.predict(row)
         correct = cmp_class.from_str_to_int_list(row["change_points_ids"])
         ts = cmp_class.get_ts(row, preprocess_args)
@@ -121,7 +104,6 @@ def main():
         ts1 = TimeSeries(in_path, "loss", dt_start, dt_end)
         ts2 = TimeSeries(in_path, "loss", dt_start, dt_end)
         cmp_class.preprocess(ts2, preprocess_args)
-        cmp_class.preprocess(ts2, preprocess_args2)
         plot_procedures.plot_ts_share_x(ts1, ts2, out_path, compress=True,
                                         title1="correct",
                                         dt_axvline1=np.asarray(ts.x)[correct],
