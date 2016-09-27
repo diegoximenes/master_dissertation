@@ -87,17 +87,27 @@ def create_dirs():
 
 
 def main():
-    cmp_class_args = {"win_len": 10}
-    param = {"pen": 26.98043505142611, "min_seg_len": 14,
-             "seg_model": "Normal"}
-    seg_neigh = SegmentNeighbourhood(**param)
+    cmp_class_args = {"win_len": 15}
+    preprocess_args = {"filter_type": "percentile_filter",
+                       "win_len": 5,
+                       "p": 0.5}
+    preprocess_args2 = {"filter_type": "ma_smoothing",
+                        "win_len": 10}
+    param = {"const_pen": 32.403499383065636,
+             "f_pen": "n_cps",
+             "seg_model": "Exponential",
+             "min_seg_len": 6,
+             "max_cps": 20}
+
+    seg_neigh = SegmentNeighbourhood(preprocess_args=preprocess_args, **param)
     train_path = "{}/change_point/input/train.csv".format(base_dir)
 
     df = pd.read_csv(train_path)
     for idx, row in df.iterrows():
         pred = seg_neigh.predict(row)
         correct = cmp_class.from_str_to_int_list(row["change_points_ids"])
-        conf = cmp_class.conf_mat(correct, pred, **cmp_class_args)
+        ts = cmp_class.get_ts(row, preprocess_args)
+        conf = cmp_class.conf_mat(correct, pred, ts, **cmp_class_args)
         print "pred={}".format(pred)
         print "correct={}".format(correct)
         print "conf={}".format(conf)
@@ -107,8 +117,11 @@ def main():
         out_path = ("{}/plots/server{}_mac{}_dtstart{}_dtend{}.png".
                     format(script_dir, row["server"], row["mac"], dt_start,
                            dt_end))
-        ts = TimeSeries(in_path, "loss", dt_start, dt_end)
-        plot_procedures.plot_ts_share_x(ts, ts, out_path, compress=True,
+        ts1 = TimeSeries(in_path, "loss", dt_start, dt_end)
+        ts2 = TimeSeries(in_path, "loss", dt_start, dt_end)
+        cmp_class.preprocess(ts2, preprocess_args)
+        cmp_class.preprocess(ts2, preprocess_args2)
+        plot_procedures.plot_ts_share_x(ts1, ts2, out_path, compress=True,
                                         title1="correct",
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],

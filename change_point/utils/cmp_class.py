@@ -19,17 +19,22 @@ def unpack_pandas_row(row):
     return in_path, dt_start, dt_end
 
 
-def get_ts(row, preprocess_args):
-    in_path, dt_start, dt_end = unpack_pandas_row(row)
-    ts = TimeSeries(in_path, "loss", dt_start, dt_end)
-
+def preprocess(ts, preprocess_args):
     if preprocess_args["filter_type"] == "ma_smoothing":
         ts.ma_smoothing(preprocess_args["win_len"])
     elif preprocess_args["filter_type"] == "median_filter":
         ts.median_filter(preprocess_args["win_len"])
     elif preprocess_args["filter_type"] == "savgol":
         ts.savgol(preprocess_args["win_len"], preprocess_args["poly_order"])
+    elif preprocess_args["filter_type"] == "percentile_filter":
+        ts.percentile_filter(preprocess_args["win_len"],
+                             preprocess_args["p"])
 
+
+def get_ts(row, preprocess_args):
+    in_path, dt_start, dt_end = unpack_pandas_row(row)
+    ts = TimeSeries(in_path, "loss", dt_start, dt_end)
+    preprocess(ts, preprocess_args)
     return ts
 
 

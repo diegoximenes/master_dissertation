@@ -129,13 +129,23 @@ void calc_negative_normal_log_lik(vector<double> &ts)
     for(int i=1; i<=n; ++i)
         for(int j=i+1; j<=n; ++j)
         {
-            if(seg_is_degenerate(i, j))
-                continue;
-
             double squared_std = get_mse(i, j);
             dp_seg_cost[i][j] = -((-0.5 * (j - i + 1) * 
                                    log(2 * PI * squared_std) - 
                                    0.5 * (j - i + 1)));
+        }
+}
+
+void calc_negative_exponential_log_lik(vector<double> &ts)
+{
+    int n = ts.size();
+    for(int i=1; i<=n; ++i)
+        for(int j=i+1; j<=n; ++j)
+        {
+            double cnt = j - i + 1;
+            double sum = prefix_sum[j] - prefix_sum[i - 1];
+            double lambda = cnt / sum;
+            dp_seg_cost[i][j] = -(cnt * log(lambda) - lambda * sum);
         }
 }
 
@@ -202,9 +212,6 @@ vector<int> get_cps(int n, int best_n_cps)
         {
             pair<double, bool> p = seg_cost(j, i);
             double cost = p.first;
-            bool seg_is_deg = p.second;
-            if(seg_is_deg)
-                continue;
 
             if(!cmp_double(dp[n_cps][i], dp[n_cps - 1][j - 1] + cost))
             {
@@ -224,6 +231,8 @@ void preprocess(vector<double> &ts)
         calc_mse(ts);
     else if(seg_model == "Normal")
         calc_negative_normal_log_lik(ts);
+    else if(seg_model == "Exponential")
+        calc_negative_exponential_log_lik(ts);
 }
 
 void seg_neigh(vector<double> &ts)
@@ -241,11 +250,7 @@ void seg_neigh(vector<double> &ts)
             {
                 pair<double, bool> p = seg_cost(j, i);
                 double cost = p.first;
-                bool seg_is_deg = p.second;
-
-                if(seg_is_deg)
-                    continue;
-
+                
                 dp[n_cps][i] = min(dp[n_cps][i],
                                    dp[n_cps - 1][j - 1] + cost);
             }

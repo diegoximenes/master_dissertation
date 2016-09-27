@@ -10,7 +10,7 @@ import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
 from change_point.utils.distribution import hellinger_dist
 
-target_email = "gabriel.mendonca@tgr.net.br"
+target_email = "gustavo.santos@tgr.net.br"
 
 
 def create_dirs(email):
@@ -117,21 +117,21 @@ def process():
 
             plot(row, dt_cp_list, ts, dt_start, dt_end)
 
-    write_to_file(cps_per_ts_samples, "./plots/distr/cps_per_ts_samples.csv")
-    write_to_file(first_seg_len_samples,
-                  "./plots/distr/first_seg_len_samples.csv")
-    write_to_file(middle_seg_len_samples,
-                  "./plots/distr/middle_seg_len_samples.csv")
-    write_to_file(last_seg_len_samples,
-                  "./plots/distr/last_seg_len_samples.csv")
-    write_to_file(abs_mean_diff_consecutive_segs,
-                  "./plots/distr/abs_mean_diff_consecutive_segs.csv")
-    write_to_file(hellinger_dist_consecutive_segs,
-                  "./plots/distr/hellinger_dist_consecutive_segs.csv")
-
-    with open("./basic_stats.csv", "w") as f:
-        f.write("cnt_points\n")
-        f.write("{}\n".format(cnt_points))
+    # write_to_file(cps_per_ts_samples, "./plots/distr/cps_per_ts_samples.csv")
+    # write_to_file(first_seg_len_samples,
+    #               "./plots/distr/first_seg_len_samples.csv")
+    # write_to_file(middle_seg_len_samples,
+    #               "./plots/distr/middle_seg_len_samples.csv")
+    # write_to_file(last_seg_len_samples,
+    #               "./plots/distr/last_seg_len_samples.csv")
+    # write_to_file(abs_mean_diff_consecutive_segs,
+    #               "./plots/distr/abs_mean_diff_consecutive_segs.csv")
+    # write_to_file(hellinger_dist_consecutive_segs,
+    #               "./plots/distr/hellinger_dist_consecutive_segs.csv")
+    #
+    # with open("./basic_stats.csv", "w") as f:
+    #     f.write("cnt_points\n")
+    #     f.write("{}\n".format(cnt_points))
 
 
 if __name__ == "__main__":

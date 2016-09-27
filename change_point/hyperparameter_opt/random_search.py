@@ -143,13 +143,13 @@ def main():
     # randint(a, b): generate random in [a, b).
     # polyorder is only used in savgol and must be less than win_len.
 
-    cmp_class_args = {"win_len": 10}
+    cmp_class_args = {"win_len": 15}
     preprocess_distr = {"filter_type": ["none", "ma_smoothing"],
-                        "win_len": randint(2, 10)}
-    param_distr = {"const_pen": uniform(loc=0, scale=500),
+                        "win_len": randint(2, 20)}
+    param_distr = {"const_pen": uniform(loc=0, scale=100),
                    "f_pen": ["n_cps"],
-                   "seg_model": ["mse", "Normal"],
-                   "min_seg_len": randint(2, 15),
+                   "seg_model": ["Exponential", "Normal"],
+                   "min_seg_len": randint(2, 30),
                    "max_cps": [20]}
     f_metrics = [cmp_class.f_half_score, cmp_class.f_1_score,
                  cmp_class.f_2_score, cmp_class.jcc, cmp_class.acc,

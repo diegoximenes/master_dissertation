@@ -122,6 +122,21 @@ class TimeSeries:
             ret_y.append(val)
         self.y = ret_y
 
+    def percentile_filter(self, win_len, p):
+        k = int((p - np.finfo(float).eps) * len(self.y))
+
+        ret_y = []
+        for i in xrange(len(self.y)):
+            l = []
+            for j in xrange(max(0, i - win_len / 2),
+                            min(len(self.y) - 1, i + win_len / 2) + 1):
+                if self.y[j] is not None:
+                    l.append(self.y[j])
+            k = min(k, len(l) - 1)
+            l = np.partition(l, k)
+            ret_y.append(l[k])
+        self.y = ret_y
+
     def median_filter(self, win_len=3):
         """
         Args:
