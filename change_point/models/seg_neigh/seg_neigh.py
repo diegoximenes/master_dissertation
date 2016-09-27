@@ -102,6 +102,8 @@ def main():
     seg_neigh = SegmentNeighbourhood(preprocess_args=preprocess_args, **param)
     train_path = "{}/change_point/input/train.csv".format(base_dir)
 
+    create_dirs()
+
     df = pd.read_csv(train_path)
     for idx, row in df.iterrows():
         pred = seg_neigh.predict(row)
@@ -112,7 +114,6 @@ def main():
         print "correct={}".format(correct)
         print "conf={}".format(conf)
 
-        create_dirs()
         in_path, dt_start, dt_end = cmp_class.unpack_pandas_row(row)
         out_path = ("{}/plots/server{}_mac{}_dtstart{}_dtend{}.png".
                     format(script_dir, row["server"], row["mac"], dt_start,

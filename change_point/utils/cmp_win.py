@@ -27,3 +27,7 @@ def hellinger_dist(l1, l2, bins):
     dist /= 2.0
     dist = sqrt(dist)
     return dist
+
+
+def mean_dist(l1, l2):
+    return abs(np.mean(l1) - np.mean(l2))

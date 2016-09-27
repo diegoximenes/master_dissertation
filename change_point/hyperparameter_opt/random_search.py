@@ -147,7 +147,8 @@ def main():
     preprocess_distr = {"filter_type": ["none", "ma_smoothing"],
                         "win_len": randint(2, 20)}
     param_distr = {"const_pen": uniform(loc=0, scale=100),
-                   "f_pen": ["n_cps"],
+                   "f_pen": ["n_cps", "n_cps * log(n_cps)", "log(n_cps)",
+                             "n_cps * sqrt(n_cps)", "sqrt(n_cps)"],
                    "seg_model": ["Exponential", "Normal"],
                    "min_seg_len": randint(2, 30),
                    "max_cps": [20]}
