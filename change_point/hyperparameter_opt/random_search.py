@@ -16,6 +16,8 @@ sys.path.append(base_dir)
 from change_point.models.seg_neigh.seg_neigh import SegmentNeighbourhood
 from change_point.models.sliding_windows.sliding_windows_online import \
     SlidingWindowsOnline
+from change_point.models.sliding_windows.sliding_windows_offline import \
+    SlidingWindowsOffline
 import change_point.utils.cmp_class as cmp_class
 import change_point.utils.cmp_win as cmp_win
 import change_point.utils.cp_utils as cp_utils
@@ -154,6 +156,14 @@ class RandomSearch():
                             "f_dist": [cmp_win.emd],
                             "bin_size_f_dist": [0.05]}
 
+    def set_sliding_windows_offline(self):
+        self.model_class = SlidingWindowsOffline
+        self.param_distr = {"win_len": randint(20, 50),
+                            "thresh": uniform(loc=0.2, scale=0.7),
+                            "min_peak_dist": randint(10, 20),
+                            "f_dist": [cmp_win.mean_dist],
+                            "bin_size_f_dist": [0.05]}
+
 
 def main():
     # uniform: uniform distribution in [loc, loc + scale].
@@ -172,7 +182,7 @@ def main():
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
     # random_search.set_seg_neigh()
-    random_search.set_sliding_windows_online()
+    random_search.set_sliding_windows_offline()
     random_search.run(100000)
 
 

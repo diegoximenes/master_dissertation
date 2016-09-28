@@ -134,7 +134,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
         xticks, xticks_labels = get_xticks(ts1.dt_start, ts1.dt_end)
 
     plot_axvline(ts1, dt_axvline1, compress, ax[0])
-    plot_axvline(ts2, dt_axvline2, compress, ax[1])
+    plot_axvline(ts1, dt_axvline2, compress, ax[1])
 
     ax[0].grid()
     ax[0].set_title(title1)

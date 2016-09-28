@@ -6,7 +6,7 @@ base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
 from utils.time_series import TimeSeries
-import change_point.utils.distribution as distribution
+import change_point.utils.cmp_win as cmp_win
 
 
 def simulate():
@@ -27,9 +27,9 @@ def sliding_window(ts):
 
     win_len = 100
     for i in xrange(win_len, len(ts.y) - win_len + 1):
-        dist = distribution.hellinger_dist(ts.y[i - win_len:i],
-                                           ts.y[i:i + win_len],
-                                           bins=np.arange(0.02, 10.02, 0.02))
+        dist = cmp_win.hellinger_dist(ts.y[i - win_len:i],
+                                      ts.y[i:i + win_len],
+                                      bins=np.arange(0.02, 10.02, 0.02))
         ts_dist.x.append(ts.x[i])
         ts_dist.y.append(dist)
 
