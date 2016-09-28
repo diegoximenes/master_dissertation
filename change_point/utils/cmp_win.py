@@ -1,9 +1,9 @@
 from math import sqrt
 import numpy as np
+import pyemd
 
 
 def get_distr(samples, bins):
-    bins = np.arange(0.02, 10.0 + 0.02, 0.02)
     hist = [0] * len(bins)
 
     for x in samples:
@@ -31,3 +31,14 @@ def hellinger_dist(l1, l2, bins):
 
 def mean_dist(l1, l2):
     return abs(np.mean(l1) - np.mean(l2))
+
+
+def emd(l1, l2, bins):
+    distr1 = get_distr(l1, bins)
+    distr2 = get_distr(l2, bins)
+    dist_mat = [[0.0] * len(distr1) for i in xrange(len(distr1))]
+    for i in xrange(len(distr1)):
+        for j in xrange(len(distr1)):
+            dist_mat[i][j] = float(abs(j - i))
+    return pyemd.emd(np.asarray(distr1), np.asarray(distr2),
+                     np.asarray(dist_mat))

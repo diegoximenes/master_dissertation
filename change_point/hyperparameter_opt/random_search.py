@@ -151,7 +151,8 @@ class RandomSearch():
         self.model_class = SlidingWindowsOnline
         self.param_distr = {"win_len": randint(20, 50),
                             "thresh": uniform(loc=0.2, scale=0.7),
-                            "f_dist": [cmp_win.mean_dist]}
+                            "f_dist": [cmp_win.emd],
+                            "bin_size_f_dist": [0.05]}
 
 
 def main():

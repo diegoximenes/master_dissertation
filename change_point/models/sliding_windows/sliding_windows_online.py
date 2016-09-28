@@ -17,11 +17,12 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class SlidingWindowsOnline(change_point_alg.ChangePointAlg):
-    def __init__(self, preprocess_args, win_len, f_dist, thresh):
+    def __init__(self, preprocess_args, win_len, thresh, f_dist,
+                 bin_size_f_dist):
         self.preprocess_args = preprocess_args
         self.win_len = win_len
-        self.f_dist = f_dist
         self.thresh = thresh
+        self.f_dist = cp_utils.get_f_dist(f_dist, bin_size_f_dist)
 
     def slide(self, ts):
         ts_dist = time_series.dist_ts(ts)
@@ -48,13 +49,8 @@ class SlidingWindowsOnline(change_point_alg.ChangePointAlg):
         pass
 
     def predict(self, row):
-        """
-        online sliding windows
-        """
-
         ts = cp_utils.get_ts(row, self.preprocess_args)
         cps, _ = self.slide(ts)
-
         return cps
 
 
@@ -69,7 +65,8 @@ def main():
     preprocess_args = {"filter_type": "none"}
     param = {"win_len": 20,
              "thresh": 0.1,
-             "f_dist": cmp_win.mean_dist}
+             "f_dist": cmp_win.emd,
+             "bin_size_f_dist": 0.05}
 
     sliding_windows = SlidingWindowsOnline(preprocess_args=preprocess_args,
                                            **param)

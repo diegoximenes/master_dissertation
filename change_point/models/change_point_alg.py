@@ -29,7 +29,11 @@ class ChangePointAlg:
         """
 
         conf = {"tp": 0, "tn": 0, "fp": 0, "fn": 0}
+        cnt = 0
         for idx, row in df.iterrows():
+            cnt += 1
+            # print "cnt={}".format(cnt)
+
             pred = self.predict(row)
             correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
             ts = cp_utils.get_ts(row, self.preprocess_args)

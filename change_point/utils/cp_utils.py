@@ -1,6 +1,8 @@
 import os
 import sys
+import functools
 import pandas as pd
+import numpy as np
 
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
@@ -10,12 +12,15 @@ from utils.time_series import TimeSeries
 
 def param_pp(dic):
     """
-    pretty print: swap function elements by there name
+    pretty print: swap function elements by their name
     """
     ret_dic = {}
     for key in dic:
         if callable(dic[key]):
-            ret_dic[key] = dic[key].__name__
+            if isinstance(dic[key], functools.partial):
+                ret_dic[key] = dic[key].func.func_name
+            else:
+                ret_dic[key] = dic[key].__name__
         else:
             ret_dic[key] = dic[key]
     return ret_dic
@@ -71,3 +76,12 @@ def valid_preprocess_args(preprocess_args):
 
 def valid_param(param):
     return True
+
+
+def get_f_dist(f_dist, bin_size_f_dist):
+    if f_dist.__name__ == "mean_dist":
+        return f_dist
+
+    bins = np.arange(0.0, 1.0 + bin_size_f_dist, bin_size_f_dist)
+    p_f_dist = functools.partial(f_dist, bins=bins)
+    return p_f_dist
