@@ -9,6 +9,7 @@ sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
 from utils.time_series import TimeSeries
 import change_point.utils.cmp_class as cmp_class
+import change_point.utils.cp_utils as cp_utils
 import change_point.models.change_point_alg as change_point_alg
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -28,7 +29,7 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
         pass
 
     def predict(self, row):
-        ts = cmp_class.get_ts(row, self.preprocess_args)
+        ts = cp_utils.get_ts(row, self.preprocess_args)
 
         # write ts to file to be consumed
         with open("{}/tmp_ts".format(script_dir), "w") as f:
@@ -90,20 +91,20 @@ def main():
         print "cnt={}".format(cnt)
 
         pred = seg_neigh.predict(row)
-        correct = cmp_class.from_str_to_int_list(row["change_points_ids"])
-        ts = cmp_class.get_ts(row, preprocess_args)
+        correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
+        ts = cp_utils.get_ts(row, preprocess_args)
         conf = cmp_class.conf_mat(correct, pred, ts, **cmp_class_args)
         print "pred={}".format(pred)
         print "correct={}".format(correct)
         print "conf={}".format(conf)
 
-        in_path, dt_start, dt_end = cmp_class.unpack_pandas_row(row)
+        in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
         out_path = ("{}/plots/server{}_mac{}_dtstart{}_dtend{}.png".
                     format(script_dir, row["server"], row["mac"], dt_start,
                            dt_end))
         ts1 = TimeSeries(in_path, "loss", dt_start, dt_end)
         ts2 = TimeSeries(in_path, "loss", dt_start, dt_end)
-        cmp_class.preprocess(ts2, preprocess_args)
+        cp_utils.preprocess(ts2, preprocess_args)
         plot_procedures.plot_ts_share_x(ts1, ts2, out_path, compress=True,
                                         title1="correct",
                                         dt_axvline1=np.asarray(ts.x)[correct],

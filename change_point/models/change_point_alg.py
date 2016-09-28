@@ -5,6 +5,7 @@ import abc
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import change_point.utils.cmp_class as cmp_class
+import change_point.utils.cp_utils as cp_utils
 
 
 class ChangePointAlg:
@@ -30,8 +31,8 @@ class ChangePointAlg:
         conf = {"tp": 0, "tn": 0, "fp": 0, "fn": 0}
         for idx, row in df.iterrows():
             pred = self.predict(row)
-            correct = cmp_class.from_str_to_int_list(row["change_points_ids"])
-            ts = cmp_class.get_ts(row, self.preprocess_args)
+            correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
+            ts = cp_utils.get_ts(row, self.preprocess_args)
             # print "pred={}".format(pred)
             # print "correct={}".format(correct)
 

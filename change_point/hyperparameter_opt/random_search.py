@@ -14,32 +14,31 @@ from sklearn.grid_search import ParameterSampler
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 from change_point.models.seg_neigh.seg_neigh import SegmentNeighbourhood
+from change_point.models.sliding_windows.sliding_windows_online import \
+    SlidingWindowsOnline
 import change_point.utils.cmp_class as cmp_class
+import change_point.utils.cmp_win as cmp_win
+import change_point.utils.cp_utils as cp_utils
 
 client = pymongo.MongoClient()
-db = client["change_point_random_search"]
+db = client["change_point"]
+collection = db["random_search"]
 
 
 class RandomSearch():
     """
     Attributes:
-        model_class: model class to be tested
-        param_distr: dictionary used by ParameterSampler
-        df: pandas df with train dataset
-        cv: cross validation iterator
+        model_class:
+        param_distr:
+        cmp_class_args:
+        preprocess_distr:
+        f_metrics:
+        df:
+        cv:
     """
 
-    def __init__(self, model_class, param_distr, cmp_class_args,
-                 preprocess_distr, f_metrics, train_path):
-        """
-        Args:
-            model_class:
-            param_distr:
-            train_path: path to train file
-        """
-
-        self.model_class = model_class
-        self.param_distr = copy.deepcopy(param_distr)
+    def __init__(self, cmp_class_args, preprocess_distr, f_metrics,
+                 train_path):
         self.cmp_class_args = copy.deepcopy(cmp_class_args)
         self.preprocess_distr = copy.deepcopy(preprocess_distr)
         self.f_metrics = copy.deepcopy(f_metrics)
@@ -54,7 +53,6 @@ class RandomSearch():
         # for train_index, test_index in self.cv:
         #    print("%s %s" % (train_index, test_index))
 
-        collection = db[self.model_class.__name__]
         # create mongo indexes
         for i in xrange(len(self.f_metrics)):
             collection.create_index([("metrics.{}"
@@ -64,6 +62,7 @@ class RandomSearch():
                                  ("conf.fn", pymongo.ASCENDING),
                                  ("conf.fp", pymongo.ASCENDING),
                                  ("conf.tp", pymongo.ASCENDING)])
+        collection.create_index([("model_class", pymongo.ASCENDING)])
 
     def run(self, n_iter):
         ps_param = ParameterSampler(self.param_distr, n_iter=n_iter)
@@ -71,11 +70,12 @@ class RandomSearch():
         for run, (param, preprocess_args) in enumerate(zip(ps_param,
                                                            ps_preprocess)):
             print "run {}/{}".format(run + 1, n_iter)
-            print "param={}".format(param)
-            print "preprocess_args={}".format(preprocess_args)
+            print "param={}".format(cp_utils.param_pp(param))
+            print ("preprocess_args={}".
+                   format(cp_utils.param_pp(preprocess_args)))
 
-            if ((not cmp_class.valid_preprocess_args(preprocess_args)) or
-                    (not cmp_class.valid_param(param))):
+            if ((not cp_utils.valid_preprocess_args(preprocess_args)) or
+                    (not cp_utils.valid_param(param))):
                 print "invalid"
                 continue
 
@@ -122,9 +122,10 @@ class RandomSearch():
 
             # save results in mongodb
             dic = {}
-            dic["params"] = param
-            dic["cmp_class_args"] = self.cmp_class_args
-            dic["preprocess_args"] = preprocess_args
+            dic["model_class"] = self.model_class.__name__
+            dic["params"] = cp_utils.param_pp(param)
+            dic["cmp_class_args"] = cp_utils.param_pp(self.cmp_class_args)
+            dic["preprocess_args"] = cp_utils.param_pp(preprocess_args)
             dic["conf"] = conf
             dic["exec_stats"] = {}
             dic["exec_stats"]["host"] = platform.node()
@@ -134,8 +135,23 @@ class RandomSearch():
             dic["metrics"] = {}
             for i in xrange(len(self.f_metrics)):
                 dic["metrics"][self.f_metrics[i].__name__] = score[i]
-            collection = db[self.model_class.__name__]
             collection.insert(dic)
+
+    def set_seg_neigh(self):
+        self.model_class = SegmentNeighbourhood
+        self.param_distr = {"const_pen": uniform(loc=0, scale=100),
+                            "f_pen": ["n_cps", "n_cps * log(n_cps)",
+                                      "log(n_cps)", "n_cps * sqrt(n_cps)",
+                                      "sqrt(n_cps)"],
+                            "seg_model": ["Exponential", "Normal"],
+                            "min_seg_len": randint(2, 30),
+                            "max_cps": [20]}
+
+    def set_sliding_windows_online(self):
+        self.model_class = SlidingWindowsOnline
+        self.param_distr = {"win_len": randint(20, 50),
+                            "thresh": uniform(loc=0.2, scale=0.7),
+                            "f_dist": [cmp_win.mean_dist]}
 
 
 def main():
@@ -146,20 +162,16 @@ def main():
     cmp_class_args = {"win_len": 15}
     preprocess_distr = {"filter_type": ["none", "ma_smoothing"],
                         "win_len": randint(2, 20)}
-    param_distr = {"const_pen": uniform(loc=0, scale=100),
-                   "f_pen": ["n_cps", "n_cps * log(n_cps)", "log(n_cps)",
-                             "n_cps * sqrt(n_cps)", "sqrt(n_cps)"],
-                   "seg_model": ["Exponential", "Normal"],
-                   "min_seg_len": randint(2, 30),
-                   "max_cps": [20]}
     f_metrics = [cmp_class.f_half_score, cmp_class.f_1_score,
                  cmp_class.f_2_score, cmp_class.jcc, cmp_class.acc,
-                 cmp_class.bacc, cmp_class.csi]
-    random_search = RandomSearch(SegmentNeighbourhood, param_distr,
-                                 cmp_class_args, preprocess_distr,
+                 cmp_class.bacc]
+
+    random_search = RandomSearch(cmp_class_args, preprocess_distr,
                                  f_metrics,
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
+    # random_search.set_seg_neigh()
+    random_search.set_sliding_windows_online()
     random_search.run(100000)
 
 
