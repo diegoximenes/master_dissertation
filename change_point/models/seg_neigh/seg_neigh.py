@@ -28,9 +28,7 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
     def fit(self, df):
         pass
 
-    def predict(self, row):
-        ts = cp_utils.get_ts(row, self.preprocess_args)
-
+    def predict(self, ts):
         # write ts to file to be consumed
         with open("{}/tmp_ts".format(script_dir), "w") as f:
             for i in xrange(len(ts.y)):
@@ -90,9 +88,9 @@ def main():
         cnt += 1
         print "cnt={}".format(cnt)
 
-        pred = seg_neigh.predict(row)
-        correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
         ts = cp_utils.get_ts(row, preprocess_args)
+        pred = seg_neigh.predict(ts)
+        correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
         conf = cmp_class.conf_mat(correct, pred, ts, **cmp_class_args)
         print "pred={}".format(pred)
         print "correct={}".format(correct)

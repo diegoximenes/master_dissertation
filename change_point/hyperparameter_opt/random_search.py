@@ -153,15 +153,16 @@ class RandomSearch():
         self.model_class = SlidingWindowsOnline
         self.param_distr = {"win_len": randint(20, 50),
                             "thresh": uniform(loc=0.2, scale=0.7),
-                            "f_dist": [cmp_win.emd],
+                            "f_dist": [cmp_win.mean_dist],
                             "bin_size_f_dist": [0.05]}
 
     def set_sliding_windows_offline(self):
         self.model_class = SlidingWindowsOffline
         self.param_distr = {"win_len": randint(20, 50),
-                            "thresh": uniform(loc=0.2, scale=0.7),
+                            "thresh": uniform(loc=0.08, scale=0.7),
                             "min_peak_dist": randint(10, 20),
-                            "f_dist": [cmp_win.mean_dist],
+                            "f_dist": [cmp_win.mean_dist,
+                                       cmp_win.hellinger_dist],
                             "bin_size_f_dist": [0.05]}
 
 
@@ -181,9 +182,13 @@ def main():
                                  f_metrics,
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
-    # random_search.set_seg_neigh()
+
+    random_search.set_seg_neigh()
+    random_search.run(1)
     random_search.set_sliding_windows_offline()
-    random_search.run(100000)
+    random_search.run(1)
+    random_search.set_sliding_windows_offline()
+    random_search.run(1)
 
 
 if __name__ == "__main__":

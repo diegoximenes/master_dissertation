@@ -32,11 +32,12 @@ class ChangePointAlg:
         cnt = 0
         for idx, row in df.iterrows():
             cnt += 1
-            # print "cnt={}".format(cnt)
 
-            pred = self.predict(row)
-            correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
             ts = cp_utils.get_ts(row, self.preprocess_args)
+            pred = self.predict(ts)
+            correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
+
+            # print "cnt={}".format(cnt)
             # print "pred={}".format(pred)
             # print "correct={}".format(correct)
 

@@ -49,8 +49,7 @@ class SlidingWindowsOnline(change_point_alg.ChangePointAlg):
     def fit(self, df):
         pass
 
-    def predict(self, row):
-        ts = cp_utils.get_ts(row, self.preprocess_args)
+    def predict(self, ts):
         cps, _ = self.slide(ts)
         return cps
 
@@ -82,9 +81,9 @@ def main():
         cnt += 1
         print "cnt={}".format(cnt)
 
-        pred = sliding_windows.predict(row)
-        correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
         ts = cp_utils.get_ts(row, preprocess_args)
+        pred = sliding_windows.predict(ts)
+        correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
         conf = cmp_class.conf_mat(correct, pred, ts, **cmp_class_args)
         print "pred={}".format(pred)
         print "correct={}".format(correct)
