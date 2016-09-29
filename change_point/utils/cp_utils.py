@@ -79,12 +79,16 @@ def valid_param(param):
 
 
 def get_f_dist(f_dist, bin_size_f_dist):
-    if f_dist.__name__ == "mean_dist":
-        return f_dist
+    if isinstance(f_dist, functools.partial):
+        f_dist_name = f_dist.func.func_name
+    else:
+        f_dist_name = f_dist.__name__
 
-    bins = np.arange(0.0, 1.0 + bin_size_f_dist, bin_size_f_dist)
-    p_f_dist = functools.partial(f_dist, bins=bins)
-    return p_f_dist
+    if f_dist_name == "hellinger_dist":
+        bins = np.arange(0.0, 1.0 + bin_size_f_dist, bin_size_f_dist)
+        p_f_dist = functools.partial(f_dist, bins=bins)
+        return p_f_dist
+    return f_dist
 
 
 def detect_peaks(x, mph=None, mpd=1, threshold=0, edge='rising',
