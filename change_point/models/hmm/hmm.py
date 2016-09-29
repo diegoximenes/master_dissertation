@@ -1,126 +1,89 @@
-"""
-ALERT: left right discrete HMM suffer from silent states.
-Example: pi = [1, 0], A = [[0.5, 0.5], [0, 1]], B = [[1, 0], [0, 1]],
-obs = [1, 1]. The HMM always start in the state 0 which have zero
-probability of observing the first observation of obs.
-"""
-
-import ghmm
 import os
 import sys
-import copy
-import datetime
+import ghmm
+import pandas as pd
+import numpy as np
 
-sys.path.append("../../../")
-import utils.time_series as time_series
+base_dir = os.path.join(os.path.dirname(__file__), "../../..")
+sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
+import change_point.utils.cmp_class as cmp_class
+import change_point.utils.cp_utils as cp_utils
+import change_point.models.change_point_alg as change_point_alg
+import utils.time_series as time_series
 from utils.time_series import TimeSeries
 
-# PARAMETERS
-metric = "loss"
-
-# HMM PARAMETERS
-# full gauss
-n_full_gauss = 4
-A_full_gauss = []
-for _ in xrange(n_full_gauss):
-    A_full_gauss.append([1.0 / n_full_gauss] * n_full_gauss)
-B_full_gauss = [[0.0, 0.05], [0.02, 0.02], [0.04, 0.4], [0.1, 2]]
-pi_full_gauss = [1.0 / n_full_gauss] * n_full_gauss
-
-# left right gauss
-n_left_right_gauss = 5
-A_left_right_gauss = [[0.5, 0.5, 0, 0, 0], [0, 0.5, 0.5, 0, 0],
-                      [0, 0, 0.5, 0.5, 0], [0, 0, 0, 0.5, 0.5],
-                      [0, 0, 0, 0, 1.0]]
-B_left_right_gauss = [[0.0, 0.05], [0.1, 0.1], [0.5, 0.1], [0.8, 0.1],
-                      [0.25, 0.1]]
-pi_left_right_gauss = [1.0, 0, 0, 0, 0]
-
-# full discr
-n_full_discr = 4
-A_full_discr = []
-for _ in xrange(n_full_discr):
-    A_full_discr.append([1.0 / n_full_discr] * n_full_discr)
-B_full_discr = [[0.9, 0.1, 0.0, 0.0], [0.1, 0.7, 0.1, 0.1],
-                [0.2, 0.2, 0.5, 0.1], [0.1, 0.1, 0.4, 0.4]]
-pi_full_discr = [1.0 / n_full_discr] * n_full_discr
-
-# left right discr
-n_left_right_discr = 5
-A_left_right_discr = [[0.5, 0.5, 0, 0, 0], [0, 0.5, 0.5, 0, 0],
-                      [0, 0, 0.5, 0.5, 0], [0, 0, 0, 0.5, 0.5],
-                      [0, 0, 0, 0, 1.0]]
-B_left_right_discr = [[0.9, 0.1, 0.0, 0.0], [0.1, 0.7, 0.1, 0.1],
-                      [0.2, 0.2, 0.5, 0.1], [0.1, 0.1, 0.4, 0.4],
-                      [0.25, 0.25, 0.25, 0.25]]
-pi_left_right_discr = [1.0, 0, 0, 0, 0]
+script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
-class HMM():
+class HMM(change_point_alg.ChangePointAlg):
+    def get_seqs_set(self, obs_seqs):
+        obs_seqs = self.get_obs_seqs(obs_seqs)
+        obs_seqs_set = ghmm.SequenceSet(self.emission_domain, obs_seqs)
+        return obs_seqs_set
 
-    def __init__(self):
-        self.model = None
-        self.emission_domain = None
-        self.emission_distr = None
-
-        # initial parameters
-        self.A = None
-        self.B = None
-        self.pi = None
-
-    def train(self, A, B, pi, seqs, out_path=None):
-        # save initial point
-        self.A = copy.deepcopy(A)
-        self.B = copy.deepcopy(B)
-        self.pi = copy.deepcopy(pi)
-
-        self.set_emission()
-
-        seqs = self.get_obs_seqs(seqs)
-
-        obs_seqs = ghmm.SequenceSet(self.emission_domain, seqs)
-
+    def baum_welch(self, obs_seqs):
         self.model = ghmm.HMMFromMatrices(self.emission_domain,
-                                          self.emission_distr, A, B, pi)
-        self.model.baumWelch(obs_seqs)
+                                          self.emission_distr, self.A, self.B,
+                                          self.pi)
+        obs_seqs_set = self.get_seqs_set(obs_seqs)
+        self.model.baumWelch(obs_seqs_set)
 
-        if out_path is not None:
-            self.print_model_to_file("{}.txt".format(out_path))
+    def viterbi(self, ts):
+        obs_seqs_set = self.get_seqs_set([ts.y])
+        hidden_state_path = self.model.viterbi(obs_seqs_set)[0]
+        ts_hidden_state_path = time_series.dist_ts(ts)
+        for i in xrange(len(ts.x)):
+            ts_hidden_state_path.x.append(ts.x[i])
+            ts_hidden_state_path.y.append(hidden_state_path[i])
+        return ts_hidden_state_path
 
-    def viterbi(self, ts, out_path):
-        seq = self.get_obs_seqs([ts.y])
-        obs_seq = ghmm.SequenceSet(self.emission_domain, seq)
+    def xi(self, n, forward, backward, obs_t1, r, s, t):
+        den = 0.0
+        for i in xrange(n):
+            for j in xrange(n):
+                a_ij = self.model.getTransition(i, j)
+                b_j_t1 = self.get_obs_lik(j, obs_t1)
+                den += forward[t][i] * a_ij * b_j_t1 * backward[t + 1][j]
+                print "i={}, j={}, aij={}, b_j_t1={}, obs_t1={}".format(i, j, a_ij,
+                                                               b_j_t1, obs_t1)
+        a_rs = self.model.getTransition(r, s)
+        b_s_t1 = self.get_obs_lik(s, obs_t1)
+        num = forward[t][r] * a_rs * b_s_t1 * backward[t + 1][r]
+        print "num={}, den={}".format(num, den)
+        return num / den
 
-        hidden_state_path = self.model.viterbi(obs_seq)[0]
+    def hidden_state_change_lik(self, ts):
+        """
+        obs.: compare distribution of different states. If they are too similar
+        than they are merged during the probability computation
+        """
 
-        # plot
-        if out_path is not None:
-            ts_dist = time_series.dist_ts(ts)
-            for i in xrange(len(ts.x)):
-                ts_dist.x.append(ts.x[i])
-                ts_dist.y.append(hidden_state_path[i])
-            ts_dist.set_dt_mean()
+        obs_seq = self.get_obs_seqs(ts.y)
+        emission_seq = ghmm.EmissionSequence(self.emission_domain, obs_seq)
 
-            n = len(self.pi)
-            hidden_state_ticks = range(n)
-            hidden_state_tick_labels = []
+        # ALERT: I DON'T KNOW WHAT scale IS
+        forward, scale = self.model.forward(emission_seq)
+        backward = self.model.backward(emission_seq, scale)
+        n = len(self.A)
+
+        ts_hidden_state_change_lik = time_series.dist_ts(ts)
+        for t in xrange(len(ts.y) - 1):
+            lik = 0.0
             for i in xrange(n):
-                state_distr = self.model.getEmission(i)
-                tick_labels = "{:.2f}" + ",{:.2f}" * (len(state_distr) - 1)
-                hidden_state_tick_labels.append(tick_labels.
-                                                format(*state_distr))
+                for j in xrange(n):
+                    if self.states_are_diff(i, j):
+                        lik += self.xi(n, forward, backward, ts.y[t + 1], i, j,
+                                       t)
+                        lxi = self.xi(n, forward, backward, ts.y[t + 1], i, j,
+                                      t)
+                        print "i={}, j={}, t={}, xi={}".format(i, j, t, lxi)
+            print "i={}, j={}, t={}, lik={}".format(i, j, t, lik)
 
-            plot_procedures.plot_ts_share_x(ts, ts_dist,
-                                            "{}.png".format(out_path),
-                                            ylabel1=metric,
-                                            ylabel2="",
-                                            plot_type2="scatter",
-                                            ylim2=[0 - 0.5, n - 1 + 0.5],
-                                            yticks2=hidden_state_ticks,
-                                            ytick_labels2=(
-                                                hidden_state_tick_labels),
-                                            compress=True)
+            ts_hidden_state_change_lik.x.append(ts.x[t])
+            ts_hidden_state_change_lik.y.append(lik)
+
+        return ts_hidden_state_change_lik
 
     def print_model_to_file(self, out_path):
         with open(out_path, "w") as f:
@@ -146,171 +109,121 @@ class HMM():
             f.write("pi={}\n".format(self.pi))
 
 
-class DiscreteHMM(HMM):
-    def set_emission(self):
-        m = len(self.B[0])  # num of symbols
-        self.emission_domain = ghmm.IntegerRange(0, m)
-        self.emission_distr = ghmm.DiscreteDistribution(self.emission_domain)
-
-    def get_obs_seqs(self, seqs):
-        # transform seqs in bin_seqs
-        bin_seqs = []
-        for seq in seqs:
-            bin_seqs.append(self.get_bin_list(seq))
-        return bin_seqs
-
-    def get_bin(self, y):
-        if y >= 0.0 and y <= 0.01:
-            return 0
-        elif y > 0.01 and y < 0.03:
-            return 1
-        elif y >= 0.3 and y <= 0.05:
-            return 2
-        return 3
-
-    def get_bin_list(self, l):
-        ret = []
-        for x in l:
-            ret.append(self.get_bin(x))
-        return ret
-
-
 class GaussianHMM(HMM):
-    def set_emission(self):
+    def __init__(self, preprocess_args, A, B, pi, thresh, min_peak_dist):
+        self.preprocess_args = preprocess_args
+        self.A = A
+        self.B = B
+        self.pi = pi
+        self.thresh = thresh
+        self.min_peak_dist = min_peak_dist
+
         self.emission_domain = ghmm.Float()
         self.emission_distr = ghmm.GaussianDistribution(self.emission_domain)
 
     def get_obs_seqs(self, seqs):
-        return copy.deepcopy(seqs)
+        return seqs
 
-targets = [["64:66:B3:4F:FE:CE", "SNEDTCPROB01", "05-11-2016", "05-20-2016"],
-           ["64:66:B3:7B:9B:B8", "SOODTCLDM24", "05-11-2016", "05-20-2016"],
-           ["64:66:B3:7B:A4:1C", "SPOTVTSRV16", "05-01-2016", "05-10-2016"],
-           ["64:66:B3:50:00:1C", "CPDGDTCLDM14", "05-11-2016", "05-20-2016"],
-           ["64:66:B3:50:00:3C", "CPDGDTCLDM14", "05-11-2016", "05-20-2016"],
-           ["64:66:B3:50:00:30", "CPDGDTCLDM14", "05-11-2016", "05-20-2016"],
-           ["64:66:B3:50:06:82", "NHODTCSRV04", "05-11-2016", "05-20-2016"],
-           ["64:66:B3:A6:9E:DE", "SPOTVTSRV16", "05-01-2016", "05-10-2016"],
-           ["64:66:B3:A6:A9:16", "SPOTVTSRV16", "05-01-2016", "05-10-2016"],
-           ["64:66:B3:A6:AE:76", "SNEDTCPROB01", "05-11-2016", "05-20-2016"],
-           ["64:66:B3:A6:B3:B0", "SOODTCLDM24", "05-11-2016", "05-20-2016"],
-           ["64:66:B3:A6:BC:D8", "SJCDTCSRV01", "05-11-2016", "05-20-2016"],
-           ["64:66:B3:A6:A0:78", "AMRDTCPEV01", "05-01-2016", "05-10-2016"]]
+    def get_mu_sigma(self, state):
+        emission = self.model.getEmission(state)
+        mu, sigma = emission[0], emission[1]
+        return mu, sigma
+
+    def get_obs_lik(self, state, x):
+        mu, sigma = self.get_mu_sigma(state)
+        print "mu={}, sigma={}".format(mu, sigma)
+        lik = np.e ** (-(x - mu) ** 2 / (2 * sigma ** 2))
+        print "lik1={}".format(lik)
+        lik /= np.sqrt(2 * sigma ** 2 * np.pi)
+        print "lik2={}".format(lik)
+        return lik
+
+    def states_are_diff(self, state1, state2):
+        mu1, sigma2 = self.get_mu_sigma(state1)
+        mu2, sigma2 = self.get_mu_sigma(state2)
+        return (abs(mu1 - mu2) >= 0.01)
+
+    def fit(self, df):
+        pass
+
+    def predict(self, row):
+        ts = cp_utils.get_ts(row, self.preprocess_args)
+        self.baum_welch([ts.y])
 
 
 def create_dirs():
-    for dir in ["./plots/"]:
+    for dir in ["{}/plots/".format(script_dir)]:
         if not os.path.exists(dir):
             os.makedirs(dir)
 
 
-def get_datetime(strdate):
-    day = int(strdate.split("-")[1])
-    month = int(strdate.split("-")[0])
-    year = int(strdate.split("-")[2])
-    return datetime.datetime(year, month, day)
+def main():
+    n = 4
+    A = []
+    for _ in xrange(n):
+        A.append([1.0 / n] * n)
+    B = [[0.0, 0.05], [0.05, 0.02], [0.15, 0.05], [0.5, 0.1]]
+    pi = [1.0 / n] * n
 
+    cmp_class_args = {"win_len": 15}
+    preprocess_args = {"filter_type": "none"}
+    param = {"A": A,
+             "B": B,
+             "pi": pi,
+             "thresh": 0.5,
+             "min_peak_dist": 10}
 
-def get_tp_params(tp):
-    mac, server, date_start, date_end = tp[0], tp[1], tp[2], tp[3]
-    dt_start = get_datetime(date_start)
-    dt_end = get_datetime(date_end)
-    return mac, server, dt_start, dt_end
+    hmm = GaussianHMM(preprocess_args=preprocess_args, **param)
+    train_path = "{}/change_point/input/train.csv".format(base_dir)
 
-
-def get_ts(tp):
-    mac, server, dt_start, dt_end = get_tp_params(tp)
-    date_dir = "{}_{}".format(dt_start.year, str(dt_start.month).zfill(2))
-    in_path = "../../input/{}/{}/{}.csv".format(date_dir, server, mac)
-    ts = TimeSeries(in_path, metric, dt_start, dt_end)
-    return ts
-
-
-def process_train_with_all(hmm, A, B, pi, model_name):
-    """train hmm with all sequences and apply viterbi in all"""
-
-    seqs = []
-    for tp in targets:
-        ts = get_ts(tp)
-        seqs.append(ts.y)
-
-    hmm.train(A, B, pi, seqs, "./plots/{}".format(model_name))
-
-    for tp in targets:
-        mac, server, dt_start, dt_end = get_tp_params(tp)
-        out_path = ("./plots/{}_server{}_mac{}_dtstart{}_dtend{}".
-                    format(model_name, server, mac, dt_start, dt_end))
-
-        ts = get_ts(tp)
-        hmm.viterbi(ts, out_path)
-
-
-def process_train_individual(hmm, A, B, pi, model_name):
-    """for each ts train a hmm and use the same hmm to check the best hidden
-    state path"""
-
-    for tp in targets:
-        mac, server, dt_start, dt_end = get_tp_params(tp)
-        ts = get_ts(tp)
-
-        hmm.train(A, B, pi, [ts.y], "./plots/{}".format(model_name))
-
-        out_path = ("./plots/{}_server{}_mac{}_dtstart{}_dtend{}".
-                    format(model_name, server, mac, dt_start, dt_end))
-        hmm.viterbi(ts, out_path)
-
-
-def process():
     create_dirs()
 
-    # gaussian
-    print "train_with_all gaussian_full"
-    hmm = GaussianHMM()
-    process_train_with_all(hmm, A_full_gauss, B_full_gauss, pi_full_gauss,
-                           "train_with_all_gaussian_full")
+    df = pd.read_csv(train_path)
+    cnt = 0
+    for idx, row in df.iterrows():
+        cnt += 1
+        print "cnt={}".format(cnt)
 
-    print "train_with_all gaussian_left_right"
-    hmm = GaussianHMM()
-    process_train_with_all(hmm, A_left_right_gauss, B_left_right_gauss,
-                           pi_left_right_gauss,
-                           "train_with_all_gaussian_left_right")
+        pred = []
+        # pred = hmm.predict(row)
+        correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
+        ts = cp_utils.get_ts(row, preprocess_args)
+        conf = cmp_class.conf_mat(correct, pred, ts, **cmp_class_args)
+        # print "pred={}".format(pred)
+        # print "correct={}".format(correct)
+        # print "conf={}".format(conf)
 
-    print "train_individual gaussian_full"
-    hmm = GaussianHMM()
-    process_train_individual(hmm, A_full_gauss, B_full_gauss, pi_full_gauss,
-                             "train_individual_gaussian_full")
+        hmm.baum_welch([ts.y])
+        ts_hidden_state_path = hmm.viterbi(ts)
+        ts_hidden_state_change_lik = hmm.hidden_state_change_lik(ts)
+        hmm.print_model_to_file("./model.out")
 
-    print "train_individual gaussian_left_right"
-    hmm = GaussianHMM()
-    process_train_individual(hmm, A_left_right_gauss, B_left_right_gauss,
-                             pi_left_right_gauss,
-                             "train_individual_gaussian_left_right")
+        in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
+        out_path = ("{}/plots/server{}_mac{}_dtstart{}_dtend{}.png".
+                    format(script_dir, row["server"], row["mac"], dt_start,
+                           dt_end))
+        ts_raw = TimeSeries(in_path, "loss", dt_start, dt_end)
 
-    # discrete
-    print "train_with_all discr_full"
-    hmm = DiscreteHMM()
-    process_train_with_all(hmm, A_full_discr, B_full_discr, pi_full_discr,
-                           "train_with_all_discr_full")
+        # hidden state path
+        # plot_procedures.plot_ts_share_x(ts_raw, ts_hidden_state_path,
+        #                                 out_path,
+        #                                 compress=True, title1="correct",
+        #                                 dt_axvline1=np.asarray(ts.x)[correct],
+        #                                 dt_axvline2=np.asarray(ts.x)[pred],
+        #                                 title2="predicted: conf={}".
+        #                                 format(conf), plot_type2="scatter",
+        #                                 ylim2=[-1, n])
 
-    """
-    print "train_with_all discr_left_right"
-    hmm = DiscreteHMM()
-    process_train_with_all(hmm, A_left_right_discr, B_left_right_discr,
-                           pi_left_right_discr,
-                           "train_with_left_right_discr")
-    """
+        # hidden state change lik
+        plot_procedures.plot_ts_share_x(ts_raw, ts_hidden_state_change_lik,
+                                        out_path, compress=True,
+                                        title1="correct",
+                                        dt_axvline1=np.asarray(ts.x)[correct],
+                                        dt_axvline2=np.asarray(ts.x)[pred],
+                                        title2="predicted: conf={}".
+                                        format(conf))
+        return
 
-    print "train_individual discr_full"
-    hmm = DiscreteHMM()
-    process_train_individual(hmm, A_full_discr, B_full_discr, pi_full_discr,
-                             "train_individual_discr_full")
 
-    """
-    print "train_individual discr_left_right"
-    hmm = DiscreteHMM()
-    process_train_individual(hmm, A_left_right_discr, B_left_right_discr,
-                             pi_left_right_discr,
-                             "train_individual_discr_left_right")
-    """
-
-process()
+if __name__ == "__main__":
+    main()
