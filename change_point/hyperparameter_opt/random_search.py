@@ -18,6 +18,8 @@ from change_point.models.sliding_windows.sliding_windows_online import \
     SlidingWindowsOnline
 from change_point.models.sliding_windows.sliding_windows_offline import \
     SlidingWindowsOffline
+from change_point.models.bayesian.bayesian_offline import BayesianOffline
+from change_point.models.bayesian.bayesian_online import BayesianOnline
 import change_point.utils.cmp_class as cmp_class
 import change_point.utils.cmp_win as cmp_win
 import change_point.utils.cp_utils as cp_utils
@@ -165,6 +167,17 @@ class RandomSearch():
                                        cmp_win.hellinger_dist],
                             "bin_size_f_dist": [0.05]}
 
+    def set_bayesian_offline(self):
+        self.model_class = BayesianOffline
+        self.param_distr = {"thresh": uniform(loc=0.2, scale=0.7),
+                            "min_peak_dist": randint(10, 20)}
+
+    def set_bayesian_online(self):
+        self.model_class = BayesianOnline
+        self.param_distr = {"future_win_len": [10],
+                            "thresh": uniform(loc=0.2, scale=0.7),
+                            "min_peak_dist": randint(10, 20)}
+
 
 def main():
     # uniform: uniform distribution in [loc, loc + scale].
@@ -183,12 +196,16 @@ def main():
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
 
-    random_search.set_seg_neigh()
+    random_search.set_bayesian_online()
     random_search.run(1)
-    random_search.set_sliding_windows_offline()
-    random_search.run(1)
-    random_search.set_sliding_windows_offline()
-    random_search.run(1)
+    # random_search.set_bayesian_offline()
+    # random_search.run(1)
+    # random_search.set_seg_neigh()
+    # random_search.run(1)
+    # random_search.set_sliding_windows_offline()
+    # random_search.run(1)
+    # random_search.set_sliding_windows_offline()
+    # random_search.run(1)
 
 
 if __name__ == "__main__":

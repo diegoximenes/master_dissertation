@@ -37,7 +37,7 @@ class ChangePointAlg:
             pred = self.predict(ts)
             correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
 
-            # print "cnt={}".format(cnt)
+            print "cnt={}".format(cnt)
             # print "pred={}".format(pred)
             # print "correct={}".format(correct)
 
