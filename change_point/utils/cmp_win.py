@@ -3,15 +3,20 @@ import numpy as np
 import pyemd
 
 
+def get_bin(sample, bins):
+    bin = 0
+    while bin < len(bins):
+        if sample <= bins[bin]:
+            break
+        bin += 1
+    return bin
+
+
 def get_distr(samples, bins):
     hist = [0] * len(bins)
 
     for x in samples:
-        bin = 0
-        while bin < len(bins):
-            if x <= bins[bin]:
-                break
-            bin += 1
+        bin = get_bin(x, bins)
         if bin < len(hist):
             hist[bin] += 1
 

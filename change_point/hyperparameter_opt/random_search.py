@@ -21,6 +21,7 @@ from change_point.models.sliding_windows.sliding_windows_offline import \
 from change_point.models.bayesian.bayesian_offline import BayesianOffline
 from change_point.models.bayesian.bayesian_online import BayesianOnline
 from change_point.models.hmm.gaussian_hmm import GaussianHMM
+from change_point.models.hmm.discrete_hmm import DiscreteHMM
 import change_point.utils.cmp_class as cmp_class
 import change_point.utils.cmp_win as cmp_win
 import change_point.utils.cp_utils as cp_utils
@@ -199,6 +200,27 @@ class RandomSearch():
                             "thresh": uniform(loc=0.2, scale=0.9),
                             "min_peak_dist": randint(5, 20)}
 
+    def set_discrete_hmm(self):
+        n = 4
+        A = []
+        for _ in xrange(n):
+            A.append([1.0 / n] * n)
+        B = [[0.9, 0.1, 0.0, 0.0, 0.0],
+             [0.1, 0.7, 0.1, 0.0, 0.1],
+             [0.2, 0.2, 0.5, 0.1, 0.0],
+             [0.1, 0.1, 0.4, 0.3, 0.1]]
+        pi = [1.0 / n] * n
+        obs_bins = [0.01, 0.05, 0.1, 0.3, 1.0]
+
+        self.model_class = DiscreteHMM
+        self.param_distr = {"A": [A],
+                            "B": [B],
+                            "pi": [pi],
+                            "obs_bins": [obs_bins],
+                            "win_len": randint(5, 50),
+                            "thresh": uniform(loc=0.2, scale=0.9),
+                            "min_peak_dist": randint(5, 20)}
+
 
 def main():
     # uniform: uniform distribution in [loc, loc + scale].
@@ -217,8 +239,10 @@ def main():
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
 
-    random_search.set_gaussian_hmm()
+    random_search.set_discrete_hmm()
     random_search.run(1)
+    # random_search.set_gaussian_hmm()
+    # random_search.run(1)
     # random_search.set_bayesian_online()
     # random_search.run(1)
     # random_search.set_bayesian_offline()

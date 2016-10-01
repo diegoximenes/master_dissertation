@@ -10,6 +10,7 @@ base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
 # import utils.plot_procedures as plot_procedures
 import change_point.utils.cmp_class as cmp_class
+import change_point.utils.cmp_win as cmp_win
 import change_point.utils.cp_utils as cp_utils
 import change_point.models.hmm.hmm as hmm
 from utils.time_series import TimeSeries
@@ -17,43 +18,47 @@ from utils.time_series import TimeSeries
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
-class GaussianHMM(hmm.HMM):
-    def __init__(self, preprocess_args, A, B, pi, win_len, thresh,
+class DiscreteHMM(hmm.HMM):
+    def __init__(self, preprocess_args, A, B, pi, obs_bins, win_len, thresh,
                  min_peak_dist):
         self.preprocess_args = preprocess_args
         self.A = A
         self.B = B
         self.pi = pi
+        self.obs_bins = obs_bins
         self.win_len = win_len
         self.thresh = thresh
         self.min_peak_dist = min_peak_dist
 
-        self.emission_domain = ghmm.Float()
-        self.emission_distr = ghmm.GaussianDistribution(self.emission_domain)
+        m = len(self.B[0])  # num of symbols
+        self.emission_domain = ghmm.IntegerRange(0, m)
+        self.emission_distr = ghmm.DiscreteDistribution(self.emission_domain)
 
     def get_obs_seqs(self, seqs):
-        return seqs
+        """
+        transform seqs in bin_seqs
+        """
 
-    def get_mu_sigma(self, state):
-        emission = self.model.getEmission(state)
-        mu, sigma = emission[0], emission[1]
-        return mu, sigma
+        bin_seqs = []
+        for seq in seqs:
+            bin_seq = []
+            for x in seq:
+                bin_seq.append(cmp_win.get_bin(x, self.obs_bins))
+            bin_seqs.append(bin_seq)
+        return bin_seqs
 
+    # TODO
     def get_obs_lik(self, state, x):
-        mu, sigma = self.get_mu_sigma(state)
-        lik = np.e ** (-(x - mu) ** 2 / (2 * sigma ** 2))
-        lik /= np.sqrt(2 * sigma ** 2 * np.pi)
-        return lik
+        return 1.0
 
+    # TODO
     def states_are_diff(self, state1, state2):
-        mu1, sigma1 = self.get_mu_sigma(state1)
-        mu2, sigma2 = self.get_mu_sigma(state2)
-        return (abs(mu1 - mu2) >= 0.01)
+        return True
 
 
 def create_dirs():
     for dir in ["{}/plots/".format(script_dir),
-                "{}/plots/gaussian/".format(script_dir)]:
+                "{}/plots/discrete/".format(script_dir)]:
         if not os.path.exists(dir):
             os.makedirs(dir)
 
@@ -63,19 +68,24 @@ def main():
     A = []
     for _ in xrange(n):
         A.append([1.0 / n] * n)
-    B = [[0.0, 0.05], [0.05, 0.02], [0.15, 0.05], [0.5, 0.1]]
+    B = [[0.9, 0.1, 0.0, 0.0, 0.0],
+         [0.1, 0.7, 0.1, 0.0, 0.1],
+         [0.2, 0.2, 0.5, 0.1, 0.0],
+         [0.1, 0.1, 0.4, 0.3, 0.1]]
     pi = [1.0 / n] * n
+    obs_bins = [0.01, 0.05, 0.1, 0.3, 1.0]
 
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "none"}
     param = {"A": A,
              "B": B,
              "pi": pi,
+             "obs_bins": obs_bins,
              "win_len": 6,
              "thresh": 0.8,
              "min_peak_dist": 6}
 
-    hmm = GaussianHMM(preprocess_args=preprocess_args, **param)
+    hmm = DiscreteHMM(preprocess_args=preprocess_args, **param)
     train_path = "{}/change_point/input/train.csv".format(base_dir)
 
     create_dirs()
@@ -99,7 +109,7 @@ def main():
         # hmm.print_model_to_file("./model.out")
 
         in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
-        out_path = ("{}/plots/gaussian/server{}_mac{}_dtstart{}_dtend{}.png".
+        out_path = ("{}/plots/discrete/server{}_mac{}_dtstart{}_dtend{}.png".
                     format(script_dir, row["server"], row["mac"], dt_start,
                            dt_end))
         ts_raw = TimeSeries(in_path, "loss", dt_start, dt_end)
