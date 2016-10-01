@@ -78,14 +78,15 @@ def valid_param(param):
     return True
 
 
-def get_f_dist(f_dist, bin_size_f_dist):
+def get_f_dist(f_dist, bin_size_f_dist, min_bin_f_dist, max_bin_f_dist):
     if isinstance(f_dist, functools.partial):
         f_dist_name = f_dist.func.func_name
     else:
         f_dist_name = f_dist.__name__
 
     if f_dist_name == "hellinger_dist":
-        bins = np.arange(0.0, 1.0 + bin_size_f_dist, bin_size_f_dist)
+        bins = np.arange(min_bin_f_dist, max_bin_f_dist + bin_size_f_dist,
+                         bin_size_f_dist)
         p_f_dist = functools.partial(f_dist, bins=bins)
         return p_f_dist
     return f_dist

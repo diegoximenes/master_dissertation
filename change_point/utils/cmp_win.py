@@ -12,7 +12,8 @@ def get_distr(samples, bins):
             if x <= bins[bin]:
                 break
             bin += 1
-        hist[bin] += 1
+        if bin < len(hist):
+            hist[bin] += 1
 
     return np.asarray(hist) / float(np.sum(hist))
 
@@ -42,19 +43,3 @@ def emd(l1, l2, bins):
             dist_mat[i][j] = float(abs(j - i))
     return pyemd.emd(np.asarray(distr1), np.asarray(distr2),
                      np.asarray(dist_mat))
-
-
-def hmm_win_dist(l1, l2, n, bins=[]):
-    distr1 = [0] * n
-    distr2 = [0] * n
-    for x in l1:
-        distr1[x] += 1
-    for x in l2:
-        distr2[x] += 1
-    dist = 0.0
-    for i in xrange(n):
-        distr1[i] /= float(n)
-        distr2[i] /= float(n)
-        dist += abs(distr1[i] - distr2[i])
-    dist /= 2.0
-    return dist

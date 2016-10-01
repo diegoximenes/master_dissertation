@@ -18,12 +18,13 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 class SlidingWindowsOffline(change_point_alg.ChangePointAlg):
     def __init__(self, preprocess_args, win_len, thresh, min_peak_dist, f_dist,
-                 bin_size_f_dist):
+                 bin_size_f_dist, min_bin_f_dist, max_bin_f_dist):
         self.preprocess_args = preprocess_args
         self.win_len = win_len
         self.thresh = thresh
         self.min_peak_dist = min_peak_dist
-        self.f_dist = cp_utils.get_f_dist(f_dist, bin_size_f_dist)
+        self.f_dist = cp_utils.get_f_dist(f_dist, bin_size_f_dist,
+                                          min_bin_f_dist, max_bin_f_dist)
 
     def get_ts_dist(self, ts):
         ts_dist = time_series.dist_ts(ts)
@@ -62,7 +63,9 @@ def main():
              "thresh": 0.1,
              "min_peak_dist": 10,
              "f_dist": cmp_win.mean_dist,
-             "bin_size_f_dist": 0.05}
+             "bin_size_f_dist": 0.05,
+             "min_bin_f_dist": 0.0,
+             "max_bin_f_dist": 1.0}
 
     sliding_windows = SlidingWindowsOffline(preprocess_args=preprocess_args,
                                             **param)

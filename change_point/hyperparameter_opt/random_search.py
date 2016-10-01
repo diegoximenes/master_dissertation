@@ -20,6 +20,7 @@ from change_point.models.sliding_windows.sliding_windows_offline import \
     SlidingWindowsOffline
 from change_point.models.bayesian.bayesian_offline import BayesianOffline
 from change_point.models.bayesian.bayesian_online import BayesianOnline
+from change_point.models.hmm.gaussian_hmm import GaussianHMM
 import change_point.utils.cmp_class as cmp_class
 import change_point.utils.cmp_win as cmp_win
 import change_point.utils.cp_utils as cp_utils
@@ -156,7 +157,9 @@ class RandomSearch():
         self.param_distr = {"win_len": randint(20, 50),
                             "thresh": uniform(loc=0.2, scale=0.7),
                             "f_dist": [cmp_win.mean_dist],
-                            "bin_size_f_dist": [0.05]}
+                            "bin_size_f_dist": [0.05],
+                            "min_bin_f_dist": [0.0],
+                            "max_bin_f_dist": [1.0]}
 
     def set_sliding_windows_offline(self):
         self.model_class = SlidingWindowsOffline
@@ -165,7 +168,9 @@ class RandomSearch():
                             "min_peak_dist": randint(10, 20),
                             "f_dist": [cmp_win.mean_dist,
                                        cmp_win.hellinger_dist],
-                            "bin_size_f_dist": [0.05]}
+                            "bin_size_f_dist": [0.05],
+                            "min_bin_f_dist": [0.0],
+                            "max_bin_f_dist": [1.0]}
 
     def set_bayesian_offline(self):
         self.model_class = BayesianOffline
@@ -177,6 +182,22 @@ class RandomSearch():
         self.param_distr = {"future_win_len": [10],
                             "thresh": uniform(loc=0.2, scale=0.7),
                             "min_peak_dist": randint(10, 20)}
+
+    def set_gaussian_hmm(self):
+        n = 4
+        A = []
+        for _ in xrange(n):
+            A.append([1.0 / n] * n)
+        B = [[0.0, 0.05], [0.05, 0.02], [0.15, 0.05], [0.5, 0.1]]
+        pi = [1.0 / n] * n
+
+        self.model_class = GaussianHMM
+        self.param_distr = {"A": [A],
+                            "B": [B],
+                            "pi": [pi],
+                            "win_len": randint(5, 50),
+                            "thresh": uniform(loc=0.2, scale=0.9),
+                            "min_peak_dist": randint(5, 20)}
 
 
 def main():
@@ -196,15 +217,17 @@ def main():
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
 
-    random_search.set_bayesian_online()
+    random_search.set_gaussian_hmm()
     random_search.run(1)
+    # random_search.set_bayesian_online()
+    # random_search.run(1)
     # random_search.set_bayesian_offline()
     # random_search.run(1)
     # random_search.set_seg_neigh()
     # random_search.run(1)
     # random_search.set_sliding_windows_offline()
     # random_search.run(1)
-    # random_search.set_sliding_windows_offline()
+    # random_search.set_sliding_windows_online()
     # random_search.run(1)
 
 
