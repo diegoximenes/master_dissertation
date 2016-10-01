@@ -20,16 +20,18 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class BayesianOnline(change_point_alg.ChangePointAlg):
-    def __init__(self, preprocess_args, future_win_len, thresh, min_peak_dist):
+    def __init__(self, preprocess_args, hazard_lambda, future_win_len, thresh,
+                 min_peak_dist):
         self.preprocess_args = preprocess_args
+        self.hazard_lambda = hazard_lambda
         self.future_win_len = future_win_len
         self.thresh = thresh
         self.min_peak_dist = min_peak_dist
 
     def get_cp_prob(self, ts):
+        f_hazard = partial(oncd.constant_hazard, self.hazard_lambda)
         prob_length, map_estimates = oncd.online_changepoint_detection(
-            np.asarray(ts.y), partial(oncd.constant_hazard, 250),
-            oncd.StudentT(0.1, .01, 1, 0))
+            np.asarray(ts.y), f_hazard, oncd.StudentT(0.1, .01, 1, 0))
 
         cp_prob = prob_length[self.future_win_len, self.future_win_len:-1]
 
@@ -73,7 +75,8 @@ def create_dirs():
 def main():
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "none"}
-    param = {"future_win_len": 10,
+    param = {"hazard_lambda": 100,
+             "future_win_len": 10,
              "thresh": 0.1,
              "min_peak_dist": 10}
 

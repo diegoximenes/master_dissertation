@@ -18,16 +18,28 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class BayesianOffline(change_point_alg.ChangePointAlg):
-    def __init__(self, preprocess_args, thresh, min_peak_dist):
+    def __init__(self, preprocess_args, prior, p, k, thresh, min_peak_dist):
+        self.prior = prior
+        self.p = p
+        self.k = k
         self.preprocess_args = preprocess_args
         self.thresh = thresh
         self.min_peak_dist = min_peak_dist
 
+    def get_prior(self, prior, p, k, l):
+        if prior == offcd.const_prior:
+            return partial(prior, l=l)
+        elif prior == offcd.geometric_prior:
+            return partial(prior, p=p)
+        elif prior == offcd.neg_binominal_prior:
+            return partial(prior, k=k, p=p)
+
     def get_cp_prob(self, ts):
         l = np.asarray(ts.y)
+        prior = self.get_prior(self.prior, self.p, self.k, len(l) + 1)
+
         q, p, pcp = offcd.offline_changepoint_detection(
-            l, partial(offcd.const_prior, l=len(l) + 1),
-            offcd.gaussian_obs_log_likelihood, truncate=-40)
+            l, prior, offcd.gaussian_obs_log_likelihood, truncate=-40)
         cp_prob = np.exp(pcp).sum(0)
 
         ts_cp_prob = time_series.dist_ts(ts)
@@ -56,7 +68,10 @@ def create_dirs():
 def main():
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "none"}
-    param = {"thresh": 0.1,
+    param = {"prior": offcd.geometric_prior,
+             "p": 0.1,
+             "k": 10,
+             "thresh": 0.1,
              "min_peak_dist": 10}
 
     bayesian = BayesianOffline(preprocess_args=preprocess_args, **param)
