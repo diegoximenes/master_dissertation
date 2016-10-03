@@ -1,15 +1,12 @@
 import os
 import sys
 import time
-import copy
 import platform
 from datetime import datetime
 import pandas as pd
 import numpy as np
 import pymongo
-from scipy.stats import uniform, randint
 from sklearn.cross_validation import ShuffleSplit
-from sklearn.grid_search import ParameterSampler
 
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
@@ -22,11 +19,9 @@ from change_point.models.bayesian.bayesian_offline import BayesianOffline
 from change_point.models.bayesian.bayesian_online import BayesianOnline
 from change_point.models.hmm.gaussian_hmm import GaussianHMM
 from change_point.models.hmm.discrete_hmm import DiscreteHMM
-import change_point.models.bayesian.bayesian_changepoint_detection.\
-    offline_changepoint_detection as offcd
 import change_point.utils.cmp_class as cmp_class
-import change_point.utils.cmp_win as cmp_win
 import change_point.utils.cp_utils as cp_utils
+import change_point.hyperparameter_opt.param_sampler as param_sampler
 
 client = pymongo.MongoClient()
 db = client["change_point"]
@@ -34,22 +29,9 @@ collection = db["random_search"]
 
 
 class RandomSearch():
-    """
-    Attributes:
-        model_class:
-        param_distr:
-        cmp_class_args:
-        preprocess_distr:
-        f_metrics:
-        df:
-        cv:
-    """
-
-    def __init__(self, cmp_class_args, preprocess_distr, f_metrics,
-                 train_path):
-        self.cmp_class_args = copy.deepcopy(cmp_class_args)
-        self.preprocess_distr = copy.deepcopy(preprocess_distr)
-        self.f_metrics = copy.deepcopy(f_metrics)
+    def __init__(self, cmp_class_args, f_metrics, train_path):
+        self.cmp_class_args = cmp_class_args
+        self.f_metrics = f_metrics
 
         self.df = pd.read_csv(train_path)
 
@@ -72,11 +54,11 @@ class RandomSearch():
                                  ("conf.tp", pymongo.ASCENDING)])
         collection.create_index([("model_class", pymongo.ASCENDING)])
 
-    def run(self, n_iter):
-        ps_param = ParameterSampler(self.param_distr, n_iter=n_iter)
-        ps_preprocess = ParameterSampler(self.preprocess_distr, n_iter=n_iter)
-        for run, (param, preprocess_args) in enumerate(zip(ps_param,
-                                                           ps_preprocess)):
+    def run(self, model_class, n_iter):
+        for run in xrange(n_iter):
+            param = param_sampler.sample_param(model_class)
+            preprocess_args = param_sampler.sample_preprocess()
+
             print "run {}/{}".format(run + 1, n_iter)
             print "param={}".format(cp_utils.param_pp(param))
             print ("preprocess_args={}".
@@ -87,7 +69,7 @@ class RandomSearch():
                 print "invalid"
                 continue
 
-            model = self.model_class(preprocess_args=preprocess_args, **param)
+            model = model_class(preprocess_args=preprocess_args, **param)
 
             # Iterate through cv iterator accumalating score.
             # In each iteration train model with train set and get score in
@@ -130,7 +112,7 @@ class RandomSearch():
 
             # save results in mongodb
             dic = {}
-            dic["model_class"] = self.model_class.__name__
+            dic["model_class"] = model_class.__name__
             dic["params"] = cp_utils.param_pp(param)
             dic["cmp_class_args"] = cp_utils.param_pp(self.cmp_class_args)
             dic["preprocess_args"] = cp_utils.param_pp(preprocess_args)
@@ -145,122 +127,23 @@ class RandomSearch():
                 dic["metrics"][self.f_metrics[i].__name__] = score[i]
             collection.insert(dic)
 
-    def set_seg_neigh(self):
-        self.model_class = SegmentNeighbourhood
-        self.param_distr = {"const_pen": uniform(loc=0, scale=100),
-                            "f_pen": ["n_cps", "n_cps * log(n_cps)",
-                                      "log(n_cps)", "n_cps * sqrt(n_cps)",
-                                      "sqrt(n_cps)"],
-                            "seg_model": ["Exponential", "Normal"],
-                            "min_seg_len": randint(2, 30),
-                            "max_cps": [20]}
-
-    def set_sliding_windows_online(self):
-        self.model_class = SlidingWindowsOnline
-        self.param_distr = {"win_len": randint(20, 50),
-                            "thresh": uniform(loc=0.2, scale=0.7),
-                            "f_dist": [cmp_win.mean_dist,
-                                       cmp_win.hellinger_dist],
-                            "bin_size_f_dist": [0.05],
-                            "min_bin_f_dist": [0.0],
-                            "max_bin_f_dist": [1.0]}
-
-    def set_sliding_windows_offline(self):
-        self.model_class = SlidingWindowsOffline
-        self.param_distr = {"win_len": randint(20, 50),
-                            "thresh": uniform(loc=0.08, scale=0.7),
-                            "min_peak_dist": randint(10, 20),
-                            "f_dist": [cmp_win.mean_dist,
-                                       cmp_win.hellinger_dist],
-                            "bin_size_f_dist": [0.05],
-                            "min_bin_f_dist": [0.0],
-                            "max_bin_f_dist": [1.0]}
-
-    def set_bayesian_offline(self):
-        self.model_class = BayesianOffline
-        self.param_distr = {"prior": [offcd.const_prior, offcd.geometric_prior,
-                                      offcd.neg_binominal_prior],
-                            "p": uniform(loc=0.0, scale=1.0),
-                            "k": randint(1, 100),
-                            "thresh": uniform(loc=0.2, scale=0.7),
-                            "min_peak_dist": randint(10, 20)}
-
-    def set_bayesian_online(self):
-        self.model_class = BayesianOnline
-        self.param_distr = {"hazard_lambda": uniform(10, 300),
-                            "future_win_len": [10],
-                            "thresh": uniform(loc=0.2, scale=0.7),
-                            "min_peak_dist": randint(10, 20)}
-
-    def set_gaussian_hmm(self):
-        n = 4
-        A = []
-        for _ in xrange(n):
-            A.append([1.0 / n] * n)
-        B = [[0.0, 0.05], [0.05, 0.02], [0.15, 0.05], [0.5, 0.1]]
-        pi = [1.0 / n] * n
-
-        self.model_class = GaussianHMM
-        self.param_distr = {"A": [A],
-                            "B": [B],
-                            "pi": [pi],
-                            "win_len": randint(5, 50),
-                            "thresh": uniform(loc=0.2, scale=0.9),
-                            "min_peak_dist": randint(5, 20)}
-
-    def set_discrete_hmm(self):
-        n = 4
-        A = []
-        for _ in xrange(n):
-            A.append([1.0 / n] * n)
-        B = [[0.9, 0.1, 0.0, 0.0, 0.0],
-             [0.1, 0.7, 0.1, 0.0, 0.1],
-             [0.2, 0.2, 0.5, 0.1, 0.0],
-             [0.1, 0.1, 0.4, 0.3, 0.1]]
-        pi = [1.0 / n] * n
-        obs_bins = [0.01, 0.05, 0.1, 0.3, 1.0]
-
-        self.model_class = DiscreteHMM
-        self.param_distr = {"A": [A],
-                            "B": [B],
-                            "pi": [pi],
-                            "obs_bins": [obs_bins],
-                            "win_len": randint(5, 50),
-                            "thresh": uniform(loc=0.2, scale=0.9),
-                            "min_peak_dist": randint(5, 20)}
-
 
 def main():
-    # uniform: uniform distribution in [loc, loc + scale].
-    # randint(a, b): generate random in [a, b).
-    # polyorder is only used in savgol and must be less than win_len.
-
     cmp_class_args = {"win_len": 15}
-    preprocess_distr = {"filter_type": ["none", "ma_smoothing"],
-                        "win_len": randint(2, 20)}
     f_metrics = [cmp_class.f_half_score, cmp_class.f_1_score,
                  cmp_class.f_2_score, cmp_class.jcc, cmp_class.acc,
                  cmp_class.bacc]
 
-    random_search = RandomSearch(cmp_class_args, preprocess_distr,
-                                 f_metrics,
+    random_search = RandomSearch(cmp_class_args, f_metrics,
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
-
-    # random_search.set_discrete_hmm()
-    # random_search.run(1)
-    # random_search.set_gaussian_hmm()
-    # random_search.run(1)
-    random_search.set_bayesian_online()
-    random_search.run(1)
-    # random_search.set_bayesian_offline()
-    # random_search.run(1)
-    # random_search.set_seg_neigh()
-    # random_search.run(1)
-    # random_search.set_sliding_windows_offline()
-    # random_search.run(1)
-    # random_search.set_sliding_windows_online()
-    # random_search.run(1)
+    random_search.run(SegmentNeighbourhood, 1)
+    random_search.run(SlidingWindowsOffline, 1)
+    random_search.run(SlidingWindowsOnline, 1)
+    random_search.run(GaussianHMM, 1)
+    random_search.run(DiscreteHMM, 1)
+    random_search.run(BayesianOffline, 1)
+    random_search.run(BayesianOnline, 1)
 
 
 if __name__ == "__main__":
