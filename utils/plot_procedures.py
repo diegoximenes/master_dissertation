@@ -173,26 +173,3 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
 
     plt.savefig(out_path)
     plt.close("all")
-
-
-def plotax_ts(ax, ts, plot_raw_data=True, dt_axvline=[], ylabel="", ylim=None):
-    """
-    DEPRECATED
-    """
-
-    for dt in dt_axvline:
-        plt.axvline(dt, color="r", linewidth=2.0)
-
-    xticks, xticks_labels = get_xticks(ts.dt_start, ts.dt_end)
-
-    ax.grid()
-    ax.set_xticks(xticks)
-    ax.set_xticklabels(xticks_labels, rotation="vertical")
-    ax.set_xlim([ts.dt_start, ts.dt_end + datetime.timedelta(days=1)])
-    if ylim is not None:
-        ax.set_ylim(ylim)
-    ax.set_ylabel(ylabel)
-    if plot_raw_data:
-        ax.scatter(ts.raw_x, ts.raw_y, s=9)
-    else:
-        ax.scatter(ts.x, ts.y, s=9)

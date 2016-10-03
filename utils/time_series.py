@@ -1,5 +1,4 @@
 import scipy.signal
-import copy
 import numpy as np
 from datetime import datetime
 
@@ -14,12 +13,10 @@ class TimeSeries:
     Attributes:
         x: sorted dt list
         y: mean values associated with x. Values can be None.
-        raw_x:
-        raw_y:
         dt_start: datetime of the first day
         dt_end: datetime of the last day
         ts_type: "raw", "hourly", "dist"
-        compressed: boolean. If type is "raw" then this parameter is
+        compressed: boolean. If ts_type is "raw" then this parameter is
             irrelevant
     """
 
@@ -27,8 +24,6 @@ class TimeSeries:
                  ts_type="raw", compressed=False):
         self.x = []
         self.y = []
-        self.raw_x = []
-        self.raw_y = []
         self.dt_start = dt_start
         self.dt_end = dt_end
         self.ts_type = ts_type
@@ -44,29 +39,29 @@ class TimeSeries:
                     self.compress()
 
     def read(self, in_path, metric):
-        self.raw_x, self.raw_y = read_input.get_raw(in_path, metric,
-                                                    self.dt_start, self.dt_end)
+        raw_x, raw_y = read_input.get_raw(in_path, metric, self.dt_start,
+                                          self.dt_end)
 
         if self.ts_type == "raw":
-            self.x = copy.deepcopy(self.raw_x)
-            self.y = copy.deepcopy(self.raw_y)
+            self.x = raw_x
+            self.y = raw_y
         elif self.ts_type == "hourly":
-            self.x, self.y = self.get_hourly()
+            self.x, self.y = self.get_hourly(raw_x, raw_y)
 
-    def get_hourly(self):
+    def get_hourly(self, raw_x, raw_y):
         x = dt_procedures.generate_dt_list(self.dt_start, self.dt_end)
 
         dt_cntSum = {}
         for dt in x:
             dt_cntSum[dt] = [0, 0]
 
-        for i in xrange(len(self.raw_x)):
-            dt = self.raw_x[i]
+        for i in xrange(len(raw_x)):
+            dt = raw_x[i]
             dt_rounded = datetime(dt.year, dt.month, dt.day, dt.hour)
             if dt_rounded not in dt_cntSum:
                 continue
             dt_cntSum[dt_rounded][0] += 1
-            dt_cntSum[dt_rounded][1] += self.raw_y[i]
+            dt_cntSum[dt_rounded][1] += raw_y[i]
 
         y = []
         for dt in x:
@@ -76,17 +71,6 @@ class TimeSeries:
                 y.append(None)
 
         return x, y
-
-    def get_description(self):
-        """
-        returns a string describing ts
-        """
-
-        s = "dtstart{}_dtend{}_type{}_compressed{}".format(self.dt_start,
-                                                           self.dt_end,
-                                                           self.ts_type,
-                                                           self.compressed)
-        return s
 
     def compress(self):
         """
@@ -136,14 +120,6 @@ class TimeSeries:
             l = np.partition(l, k)
             ret_y.append(l[k])
         self.y = ret_y
-
-    def median_filter(self, win_len=3):
-        """
-        Args:
-            win_len: must be odd
-        """
-
-        self.y = scipy.signal.medfilt(self.y, win_len)
 
     def savgol(self, win_len, poly_order):
         self.y = scipy.signal.savgol_filter(self.y, win_len, poly_order)
@@ -210,11 +186,9 @@ class TimeSeries:
 
 def dist_ts(ts):
     """
-    return a TimeSeries with same dt_start, dt_end, raw_x, raw_y as the
-    argument, but with other attributes empty
+    return a TimeSeries with same dt_start, dt_end as the
+    argument ts, but with other attributes empty
     """
 
     ts_ret = TimeSeries(dt_start=ts.dt_start, dt_end=ts.dt_end, ts_type="dist")
-    ts_ret.raw_x = copy.deepcopy(ts.raw_x)
-    ts_ret.raw_y = copy.deepcopy(ts.raw_y)
     return ts_ret

@@ -7,7 +7,7 @@ def get_raw(in_path, metric, dt_start, dt_end):
     """
     Returns:
         x: sorted datetimes
-        y: values, according with raw_x
+        y: values, according with x
     """
 
     l = []
