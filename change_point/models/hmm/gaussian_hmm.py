@@ -18,9 +18,10 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class GaussianHMM(hmm.HMM):
-    def __init__(self, preprocess_args, A, B, pi, win_len, thresh,
-                 min_peak_dist):
+    def __init__(self, preprocess_args, graph_structure_type, A, B, pi,
+                 win_len, thresh, min_peak_dist):
         self.preprocess_args = preprocess_args
+        self.graph_structure_type = graph_structure_type
         self.A = A
         self.B = B
         self.pi = pi

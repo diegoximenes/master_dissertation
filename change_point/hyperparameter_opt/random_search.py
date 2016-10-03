@@ -137,13 +137,13 @@ def main():
     random_search = RandomSearch(cmp_class_args, f_metrics,
                                  "{}/change_point/input/train.csv".
                                  format(base_dir))
-    random_search.run(SegmentNeighbourhood, 1)
-    random_search.run(SlidingWindowsOffline, 1)
-    random_search.run(SlidingWindowsOnline, 1)
-    random_search.run(GaussianHMM, 1)
+    # random_search.run(SegmentNeighbourhood, 1)
+    # random_search.run(SlidingWindowsOffline, 1)
+    # random_search.run(SlidingWindowsOnline, 1)
+    # random_search.run(GaussianHMM, 1)
     random_search.run(DiscreteHMM, 1)
-    random_search.run(BayesianOffline, 1)
-    random_search.run(BayesianOnline, 1)
+    # random_search.run(BayesianOffline, 1)
+    # random_search.run(BayesianOnline, 1)
 
 
 if __name__ == "__main__":
