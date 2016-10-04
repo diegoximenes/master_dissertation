@@ -7,9 +7,6 @@ import numpy as np
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
-from utils.time_series import TimeSeries
-import change_point.utils.cmp_class as cmp_class
-import change_point.utils.cp_utils as cp_utils
 import change_point.models.change_point_alg as change_point_alg
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -60,6 +57,17 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
 
         return sorted(df["id"].values)
 
+    def plot(self, ts, ts_raw, correct, pred, conf, out_path):
+        plot_procedures.plot_ts_share_x(ts_raw, ts, out_path, compress=True,
+                                        title1="correct",
+                                        dt_axvline1=np.asarray(ts.x)[correct],
+                                        dt_axvline2=np.asarray(ts.x)[pred],
+                                        ylim2=[-0.02, 1.02],
+                                        yticks2=np.arange(0, 1.05, 0.05),
+                                        title2="predicted. conf={}".
+                                        format(conf),
+                                        plot_type2="scatter")
+
 
 def create_dirs():
     for dir in ["{}/plots/".format(script_dir)]:
@@ -77,41 +85,13 @@ def main():
              "min_seg_len": 21,
              "max_cps": 20}
 
-    seg_neigh = SegmentNeighbourhood(preprocess_args=preprocess_args, **param)
-    train_path = "{}/change_point/input/train.csv".format(base_dir)
+    model = SegmentNeighbourhood(preprocess_args=preprocess_args, **param)
 
     create_dirs()
+    train_path = "{}/change_point/input/train.csv".format(base_dir)
+    out_dir_path = "{}/plots/".format(script_dir)
+    model.plot_all(train_path, out_dir_path, cmp_class_args)
 
-    df = pd.read_csv(train_path)
-    cnt = 0
-    for idx, row in df.iterrows():
-        cnt += 1
-        print "cnt={}".format(cnt)
-
-        ts = cp_utils.get_ts(row, preprocess_args)
-        pred = seg_neigh.predict(ts)
-        correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
-        conf = cmp_class.conf_mat(correct, pred, ts, **cmp_class_args)
-        print "pred={}".format(pred)
-        print "correct={}".format(correct)
-        print "conf={}".format(conf)
-
-        in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
-        out_path = ("{}/plots/server{}_mac{}_dtstart{}_dtend{}.png".
-                    format(script_dir, row["server"], row["mac"], dt_start,
-                           dt_end))
-        ts1 = TimeSeries(in_path, "loss", dt_start, dt_end)
-        ts2 = TimeSeries(in_path, "loss", dt_start, dt_end)
-        cp_utils.preprocess(ts2, preprocess_args)
-        plot_procedures.plot_ts_share_x(ts1, ts2, out_path, compress=True,
-                                        title1="correct",
-                                        dt_axvline1=np.asarray(ts.x)[correct],
-                                        dt_axvline2=np.asarray(ts.x)[pred],
-                                        ylim2=[-0.02, 1.02],
-                                        yticks2=np.arange(0, 1.05, 0.05),
-                                        title2="predicted: conf={}".
-                                        format(conf),
-                                        plot_type2="scatter")
 
 if __name__ == "__main__":
     main()

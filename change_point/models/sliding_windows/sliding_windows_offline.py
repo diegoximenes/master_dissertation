@@ -1,17 +1,14 @@
 import os
 import sys
-import pandas as pd
 import numpy as np
 
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
 import utils.time_series as time_series
-import change_point.utils.cmp_class as cmp_class
 import change_point.utils.cp_utils as cp_utils
 import change_point.utils.cmp_win as cmp_win
 import change_point.models.change_point_alg as change_point_alg
-from utils.time_series import TimeSeries
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 
@@ -48,6 +45,18 @@ class SlidingWindowsOffline(change_point_alg.ChangePointAlg):
         cps = np.asarray(dist_peaks) + self.win_len
         return cps
 
+    def plot(self, ts, ts_raw, correct, pred, conf, out_path):
+        ts_dist = self.get_ts_dist(ts)
+
+        plot_procedures.plot_ts_share_x(ts_raw, ts_dist, out_path,
+                                        compress=True, title1="correct",
+                                        dt_axvline1=np.asarray(ts.x)[correct],
+                                        dt_axvline2=np.asarray(ts.x)[pred],
+                                        ylim2=[-0.02, 1.02],
+                                        yticks2=np.arange(0, 1.05, 0.05),
+                                        title2="predicted. conf={}".
+                                        format(conf))
+
 
 def create_dirs():
     for dir in ["{}/plots/".format(script_dir),
@@ -67,42 +76,13 @@ def main():
              "min_bin_f_dist": 0.0,
              "max_bin_f_dist": 1.0}
 
-    sliding_windows = SlidingWindowsOffline(preprocess_args=preprocess_args,
-                                            **param)
-    train_path = "{}/change_point/input/train.csv".format(base_dir)
+    model = SlidingWindowsOffline(preprocess_args=preprocess_args, **param)
 
     create_dirs()
+    train_path = "{}/change_point/input/train.csv".format(base_dir)
+    out_dir_path = "{}/plots/offline/".format(script_dir)
+    model.plot_all(train_path, out_dir_path, cmp_class_args)
 
-    df = pd.read_csv(train_path)
-    cnt = 0
-    for idx, row in df.iterrows():
-        cnt += 1
-        print "cnt={}".format(cnt)
-
-        ts = cp_utils.get_ts(row, preprocess_args)
-        pred = sliding_windows.predict(ts)
-        correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
-        conf = cmp_class.conf_mat(correct, pred, ts, **cmp_class_args)
-        print "pred={}".format(pred)
-        print "correct={}".format(correct)
-        print "conf={}".format(conf)
-
-        ts_dist = sliding_windows.get_ts_dist(ts)
-
-        in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
-        out_path = ("{}/plots/offline/server{}_mac{}_dtstart{}_dtend{}.png".
-                    format(script_dir, row["server"], row["mac"], dt_start,
-                           dt_end))
-        ts_raw = TimeSeries(in_path, "loss", dt_start, dt_end)
-
-        plot_procedures.plot_ts_share_x(ts_raw, ts_dist, out_path,
-                                        compress=True, title1="correct",
-                                        dt_axvline1=np.asarray(ts.x)[correct],
-                                        dt_axvline2=np.asarray(ts.x)[pred],
-                                        ylim2=[-0.02, 1.02],
-                                        yticks2=np.arange(0, 1.05, 0.05),
-                                        title2="predicted: conf={}".
-                                        format(conf))
 
 if __name__ == "__main__":
     main()

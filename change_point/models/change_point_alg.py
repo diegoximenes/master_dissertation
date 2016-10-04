@@ -1,11 +1,13 @@
 import os
 import sys
 import abc
+import pandas as pd
 
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import change_point.utils.cmp_class as cmp_class
 import change_point.utils.cp_utils as cp_utils
+from utils.time_series import TimeSeries
 
 
 class ChangePointAlg:
@@ -46,3 +48,30 @@ class ChangePointAlg:
                 conf[key] += lconf[key]
 
         return conf
+
+    def plot_all(self, train_path, out_dir_path, cmp_class_args):
+        df = pd.read_csv(train_path)
+        cnt = 0
+        for idx, row in df.iterrows():
+            cnt += 1
+            print "cnt={}".format(cnt)
+
+            ts_preprocessed = cp_utils.get_ts(row, self.preprocess_args)
+            pred = self.predict(ts_preprocessed)
+            correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
+            conf = cmp_class.conf_mat(correct, pred, ts_preprocessed,
+                                      **cmp_class_args)
+            print "pred={}".format(pred)
+            print "correct={}".format(correct)
+            print "conf={}".format(conf)
+
+            in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
+            out_path = ("{}/server{}_mac{}_dtstart{}_dtend{}.png".
+                        format(out_dir_path, row["server"], row["mac"],
+                               dt_start, dt_end))
+            ts_raw = TimeSeries(in_path, "loss", dt_start, dt_end)
+            self.plot(ts_preprocessed, ts_raw, correct, pred, conf, out_path)
+
+    @abc.abstractmethod
+    def plot():
+        pass

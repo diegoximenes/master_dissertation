@@ -1,6 +1,9 @@
 import os
 import sys
 import ghmm
+import numpy as np
+import matplotlib
+import matplotlib.pylab as plt
 
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
@@ -144,3 +147,34 @@ class HMM(change_point_alg.ChangePointAlg):
     def predict(self, ts):
         pred, _, _ = self.viterbi_sliding_windows_pipeline(ts)
         return pred
+
+    def plot_pipeline(self, ts_raw, ts_hidden_state_path,
+                      hidden_states_y_ticks_labels, hidden_states_y_label,
+                      ts_sliding_windows_dist, correct, pred, conf, out_path):
+        plt.clf()
+        matplotlib.rcParams.update({'font.size': 21})
+        f, ax = plt.subplots(3, 1, figsize=(16, 12), sharex="col")
+        ax[0].grid()
+        ax[0].set_title("correct")
+        ax[0].set_ylim([-0.02, 1.02])
+        ax[0].set_yticks(np.arange(0.0, 1.0 + 0.1, 0.1))
+        ax[0].set_xticks(range(0, len(ts_raw.y), 100))
+        for xvline in correct:
+            ax[0].axvline(xvline, color="r", linewidth=2.0)
+        ax[0].scatter(range(len(ts_raw.y)), ts_raw.y)
+        ax[1].grid()
+        ax[1].set_title("hidden state path")
+        ax[1].set_ylabel(hidden_states_y_label)
+        ax[1].set_yticks(range(len(self.A)))
+        ax[1].set_yticklabels(hidden_states_y_ticks_labels, fontsize=15)
+        ax[1].set_ylim([-1, len(self.A)])
+        ax[1].scatter(range(len(ts_hidden_state_path.y)),
+                      ts_hidden_state_path.y)
+        ax[2].grid()
+        ax[2].set_title("sliding windows offline. conf={}".format(conf))
+        ax[2].set_ylim([-0.02, 1.02])
+        for xvline in pred:
+            ax[2].axvline(xvline, color="r", linewidth=2.0)
+        ax[2].plot(np.arange(len(ts_sliding_windows_dist.y)) + self.win_len,
+                   ts_sliding_windows_dist.y)
+        plt.savefig(out_path)
