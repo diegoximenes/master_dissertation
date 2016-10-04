@@ -148,9 +148,11 @@ class HMM(change_point_alg.ChangePointAlg):
         pred, _, _ = self.viterbi_sliding_windows_pipeline(ts)
         return pred
 
-    def plot_pipeline(self, ts_raw, ts_hidden_state_path,
-                      hidden_states_y_ticks_labels, hidden_states_y_label,
-                      ts_sliding_windows_dist, correct, pred, conf, out_path):
+    def plot_pipeline(self, ts, ts_raw, hidden_states_y_ticks_labels,
+                      hidden_states_y_label, correct, pred, conf, out_path):
+        _, ts_hidden_state_path, ts_sliding_windows_dist = \
+            self.viterbi_sliding_windows_pipeline(ts)
+
         plt.clf()
         matplotlib.rcParams.update({'font.size': 21})
         f, ax = plt.subplots(3, 1, figsize=(16, 12), sharex="col")

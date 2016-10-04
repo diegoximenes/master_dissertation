@@ -45,19 +45,14 @@ class GaussianHMM(hmm.HMM):
         return (abs(mu1 - mu2) >= 0.01)
 
     def plot(self, ts, ts_raw, correct, pred, conf, out_path):
-        _, ts_hidden_state_path, ts_sliding_windows_dist = \
-            self.viterbi_sliding_windows_pipeline(ts)
-
         hidden_state_y_ticks_labels = map(self.model.getEmission,
                                           range(len(self.A)))
         hidden_state_y_ticks_labels = map(lambda (mean, var):
                                           ("({:.3f}, {:.3f})".format(mean,
                                                                      var)),
                                           hidden_state_y_ticks_labels)
-        self.plot_pipeline(ts_raw, ts_hidden_state_path,
-                           hidden_state_y_ticks_labels, "(mean, variance)",
-                           ts_sliding_windows_dist, correct, pred, conf,
-                           out_path)
+        self.plot_pipeline(ts, ts_raw, hidden_state_y_ticks_labels,
+                           "(mean, variance)", correct, pred, conf, out_path)
 
 
 def create_dirs():

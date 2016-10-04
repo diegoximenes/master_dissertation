@@ -49,9 +49,6 @@ class DiscreteHMM(hmm.HMM):
         return True
 
     def plot(self, ts, ts_raw, correct, pred, conf, out_path):
-        _, ts_hidden_state_path, ts_sliding_windows_dist = \
-            self.viterbi_sliding_windows_pipeline(ts)
-
         # write states distribution to a file
         hidden_state_y_ticks_labels = map(self.model.getEmission,
                                           range(len(self.A)))
@@ -60,10 +57,8 @@ class DiscreteHMM(hmm.HMM):
             for i in xrange(len(hidden_state_y_ticks_labels)):
                 f.write("{},{}\n".format(i, hidden_state_y_ticks_labels[i]))
 
-        self.plot_pipeline(ts_raw, ts_hidden_state_path,
-                           range(len(self.A)), "",
-                           ts_sliding_windows_dist, correct, pred, conf,
-                           out_path)
+        self.plot_pipeline(ts, ts_raw, range(len(self.A)), "", correct, pred,
+                           conf, out_path)
 
 
 def create_dirs():
