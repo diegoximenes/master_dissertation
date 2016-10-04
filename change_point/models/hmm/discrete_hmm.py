@@ -44,9 +44,13 @@ class DiscreteHMM(hmm.HMM):
     def get_obs_lik(self, state, x):
         return 1.0
 
-    # TODO
     def states_are_diff(self, state1, state2):
-        return True
+        distr1 = self.model.getEmission(state1)
+        distr2 = self.model.getEmission(state2)
+        for i in xrange(len(distr1)):
+            if abs(distr1[i] - distr2[i]) >= 0.01:
+                return True
+        return False
 
     def plot(self, ts, ts_raw, correct, pred, conf, out_path):
         # write states distribution to a file
