@@ -69,8 +69,9 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
                                         plot_type2="scatter")
 
 
-def create_dirs():
-    for dir in ["{}/plots/".format(script_dir)]:
+def create_dirs(dataset):
+    for dir in ["{}/plots/".format(script_dir),
+                "{}/plots/{}/".format(script_dir, dataset)]:
         if not os.path.exists(dir):
             os.makedirs(dir)
 
@@ -78,19 +79,19 @@ def create_dirs():
 def main():
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "ma_smoothing",
-                       "win_len": 15}
-    param = {"const_pen": 86.81489011349758,
+                       "win_len": 9}
+    param = {"const_pen": 57.120860475387616,
              "f_pen": "n_cps",
-             "seg_model": "Normal",
-             "min_seg_len": 21,
+             "seg_model": "Exponential",
+             "min_seg_len": 15,
              "max_cps": 20}
+    dataset = "rosam@land.ufrj.br"
 
     model = SegmentNeighbourhood(preprocess_args=preprocess_args, **param)
 
-    create_dirs()
-    train_path = "{}/change_point/input/train.csv".format(base_dir)
-    out_dir_path = "{}/plots/".format(script_dir)
-    model.plot_all(train_path, out_dir_path, cmp_class_args)
+    create_dirs(dataset)
+    out_dir_path = "{}/plots/{}/".format(script_dir, dataset)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

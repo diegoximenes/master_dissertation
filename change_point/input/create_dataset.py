@@ -13,9 +13,13 @@ import utils.dt_procedures as dt_procedures
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 
+target_email = "rosam@land.ufrj.br"
 
-def split_train_test(in_path="{}/dataset.csv".format(script_dir),
-                     train_size=0.7):
+
+def split_train_test():
+    in_path = "{}/{}/dataset.csv".format(script_dir, target_email)
+    train_size = 0.7
+
     test_size = 1 - train_size
     df = pd.read_csv(in_path)
 
@@ -26,15 +30,18 @@ def split_train_test(in_path="{}/dataset.csv".format(script_dir),
     df_test = df.iloc[idxs[len(df_train):len(df_train) +
                            int(math.ceil(test_size * len(df)))]]
 
-    df_train.to_csv("{}/train.csv".format(script_dir),
+    df_train.to_csv("{}/{}/train.csv".format(script_dir, target_email),
                     index_label="id_dataset")
-    df_test.to_csv("{}/test.csv".format(script_dir), index_label="id_dataset")
+    df_test.to_csv("{}/{}/test.csv".format(script_dir, target_email),
+                   index_label="id_dataset")
 
 
-def create_dataset(in_path="{}/data_web_system.csv".format(script_dir)):
+def create_dataset():
+    in_path = "{}/{}/data_web_system.csv".format(script_dir, target_email)
     df = pd.read_csv(in_path)
-    df_ret = df[df["email"] == "gabriel.mendonca@tgr.net.br"]
-    df_ret.to_csv("{}/dataset.csv".format(script_dir), index=False)
+    df_ret = df[df["email"] == target_email]
+    df_ret.to_csv("{}/{}/dataset.csv".format(script_dir, target_email),
+                  index=False)
 
 
 def from_dt_to_id(in_path, metric, dt_start, dt_end, l_dt):
@@ -53,12 +60,13 @@ def from_dt_to_id(in_path, metric, dt_start, dt_end, l_dt):
     return l_id
 
 
-def add_cp_ids(in_path="{}/data_web_system.csv".format(script_dir)):
+def add_cp_ids():
     """
     write to in_path a new column: the change points ids (index of change
     points when points are sorted by measure datetime)
     """
 
+    in_path = "{}/{}/data_web_system.csv".format(script_dir, target_email)
     df = pd.read_csv(in_path, sep=";")
     if "change_points_ids" not in df:
         cp_ids = []
@@ -77,14 +85,22 @@ def add_cp_ids(in_path="{}/data_web_system.csv".format(script_dir)):
             else:
                 cp_ids.append("")
         df["change_points_ids"] = cp_ids
-        df.to_csv("{}/data_web_system.csv".format(script_dir), index=False)
+        df.to_csv("{}/{}/data_web_system.csv".format(script_dir, target_email),
+                  index=False)
+
+
+def create_dirs():
+    for dir in ["{}/change_point/input/{}".format(base_dir, target_email)]:
+        if not os.path.exists(dir):
+            os.makedirs(dir)
 
 
 if __name__ == "__main__":
+    create_dirs()
     shutil.copyfile("{}/change_point/from_unsupervised_to_supervised/"
                     "classifications.csv".format(base_dir),
-                    "{}/change_point/input/data_web_system.csv"
-                    "".format(base_dir))
+                    "{}/change_point/input/{}/data_web_system.csv"
+                    "".format(base_dir, target_email))
     add_cp_ids()
     create_dataset()
     split_train_test()

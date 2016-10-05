@@ -29,10 +29,13 @@ collection = db["random_search"]
 
 
 class RandomSearch():
-    def __init__(self, cmp_class_args, f_metrics, train_path):
+    def __init__(self, cmp_class_args, f_metrics, dataset):
         self.cmp_class_args = cmp_class_args
         self.f_metrics = f_metrics
+        self.dataset = dataset
 
+        train_path = "{}/change_point/input/{}/train.csv".format(base_dir,
+                                                                 dataset)
         self.df = pd.read_csv(train_path)
 
         # Every time cv is iterated can generate different results.
@@ -113,6 +116,7 @@ class RandomSearch():
             # save results in mongodb
             dic = {}
             dic["model_class"] = model_class.__name__
+            dic["dataset"] = self.dataset
             dic["params"] = cp_utils.param_pp(param)
             dic["cmp_class_args"] = cp_utils.param_pp(self.cmp_class_args)
             dic["preprocess_args"] = cp_utils.param_pp(preprocess_args)
@@ -129,21 +133,21 @@ class RandomSearch():
 
 
 def main():
+    dataset = "rosam@land.ufrj.br"
     cmp_class_args = {"win_len": 15}
     f_metrics = [cmp_class.f_half_score, cmp_class.f_1_score,
                  cmp_class.f_2_score, cmp_class.jcc, cmp_class.acc,
                  cmp_class.bacc]
 
-    random_search = RandomSearch(cmp_class_args, f_metrics,
-                                 "{}/change_point/input/train.csv".
-                                 format(base_dir))
-    # random_search.run(SegmentNeighbourhood, 1)
-    # random_search.run(SlidingWindowsOffline, 1)
-    # random_search.run(SlidingWindowsOnline, 1)
-    # random_search.run(GaussianHMM, 1)
+    random_search = RandomSearch(cmp_class_args, f_metrics, dataset)
+
+    random_search.run(SegmentNeighbourhood, 1)
+    random_search.run(SlidingWindowsOffline, 1)
+    random_search.run(SlidingWindowsOnline, 1)
+    random_search.run(GaussianHMM, 1)
     random_search.run(DiscreteHMM, 1)
+    random_search.run(BayesianOnline, 1)
     # random_search.run(BayesianOffline, 1)
-    # random_search.run(BayesianOnline, 1)
 
 
 if __name__ == "__main__":

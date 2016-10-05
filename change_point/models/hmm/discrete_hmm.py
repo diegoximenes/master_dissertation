@@ -65,9 +65,10 @@ class DiscreteHMM(hmm.HMM):
                            conf, out_path)
 
 
-def create_dirs():
+def create_dirs(dataset):
     for dir in ["{}/plots/".format(script_dir),
-                "{}/plots/discrete/".format(script_dir)]:
+                "{}/plots/{}/".format(script_dir, dataset),
+                "{}/plots/{}/discrete/".format(script_dir, dataset)]:
         if not os.path.exists(dir):
             os.makedirs(dir)
 
@@ -91,16 +92,16 @@ def main():
              "B": B,
              "pi": pi,
              "obs_bins": obs_bins,
-             "win_len": 6,
-             "thresh": 0.8,
-             "min_peak_dist": 6}
+             "win_len": 9,
+             "thresh": 0.5001054151917693,
+             "min_peak_dist": 7}
+    dataset = "rosam@land.ufrj.br"
 
     model = DiscreteHMM(preprocess_args=preprocess_args, **param)
 
-    create_dirs()
-    train_path = "{}/change_point/input/train.csv".format(base_dir)
-    out_dir_path = "{}/plots/discrete/".format(script_dir)
-    model.plot_all(train_path, out_dir_path, cmp_class_args)
+    create_dirs(dataset)
+    out_dir_path = "{}/plots/{}/discrete/".format(script_dir, dataset)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

@@ -49,7 +49,10 @@ class ChangePointAlg:
 
         return conf
 
-    def plot_all(self, train_path, out_dir_path, cmp_class_args):
+    def plot_all(self, dataset, out_dir_path, cmp_class_args):
+        train_path = "{}/change_point/input/{}/train.csv".format(base_dir,
+                                                                 dataset)
+
         df = pd.read_csv(train_path)
         cnt = 0
         for idx, row in df.iterrows():

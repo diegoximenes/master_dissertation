@@ -164,7 +164,7 @@ def fullcov_obs_log_likelihood(data, t, s):
 
     N0 = dim          # weakest prior we can use to retain proper prior
     V0 = np.var(x)*np.eye(dim)
-    
+
     # Improvement over np.outer
     # http://stackoverflow.com/questions/17437523/python-fast-way-to-sum-outer-products
     # Vn = V0 + np.array([np.outer(x[i], x[i].T) for i in xrange(x.shape[0])]).sum(0)

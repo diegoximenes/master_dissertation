@@ -58,9 +58,10 @@ class SlidingWindowsOffline(change_point_alg.ChangePointAlg):
                                         format(conf))
 
 
-def create_dirs():
+def create_dirs(dataset):
     for dir in ["{}/plots/".format(script_dir),
-                "{}/plots/offline/".format(script_dir)]:
+                "{}/plots/{}/".format(script_dir, dataset),
+                "{}/plots/{}/offline/".format(script_dir, dataset)]:
         if not os.path.exists(dir):
             os.makedirs(dir)
 
@@ -68,20 +69,20 @@ def create_dirs():
 def main():
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "none"}
-    param = {"win_len": 20,
-             "thresh": 0.1,
-             "min_peak_dist": 10,
-             "f_dist": cmp_win.mean_dist,
+    param = {"win_len": 22,
+             "thresh": 0.40232781537055823,
+             "min_peak_dist": 12,
+             "f_dist": cmp_win.hellinger_dist,
              "bin_size_f_dist": 0.05,
              "min_bin_f_dist": 0.0,
              "max_bin_f_dist": 1.0}
+    dataset = "rosam@land.ufrj.br"
 
     model = SlidingWindowsOffline(preprocess_args=preprocess_args, **param)
 
-    create_dirs()
-    train_path = "{}/change_point/input/train.csv".format(base_dir)
-    out_dir_path = "{}/plots/offline/".format(script_dir)
-    model.plot_all(train_path, out_dir_path, cmp_class_args)
+    create_dirs(dataset)
+    out_dir_path = "{}/plots/{}/offline/".format(script_dir, dataset)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":
