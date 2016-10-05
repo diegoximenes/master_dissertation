@@ -69,8 +69,8 @@ class ChangePointAlg:
             print "conf={}".format(conf)
 
             in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
-            out_path = ("{}/server{}_mac{}_dtstart{}_dtend{}.png".
-                        format(out_dir_path, row["server"], row["mac"],
+            out_path = ("{}/id{}_server{}_mac{}_dtstart{}_dtend{}.png".
+                        format(out_dir_path, idx, row["server"], row["mac"],
                                dt_start, dt_end))
             ts_raw = TimeSeries(in_path, "loss", dt_start, dt_end)
             self.plot(ts_preprocessed, ts_raw, correct, pred, conf, out_path)

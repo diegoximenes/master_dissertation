@@ -97,7 +97,7 @@ if __name__ == "__main__":
     for target_email in ["gabriel.mendonca@tgr.net.br",
                          "gustavo.santos@tgr.net.br",
                          "rosam@land.ufrj.br",
-                         "guisenges@land.ufrj.br"
+                         "guisenges@land.ufrj.br",
                          "edmundo@land.ufrj.br"]:
         create_dirs(target_email)
         shutil.copyfile("{}/change_point/from_unsupervised_to_supervised/"

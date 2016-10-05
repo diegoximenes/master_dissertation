@@ -34,8 +34,8 @@ class RandomSearch():
         self.f_metrics = f_metrics
         self.dataset = dataset
 
-        train_path = "{}/change_point/input/{}/train.csv".format(base_dir,
-                                                                 dataset)
+        train_path = "{}/change_point/input/{}/dataset.csv".format(base_dir,
+                                                                   dataset)
         self.df = pd.read_csv(train_path)
 
         # Every time cv is iterated can generate different results.
@@ -62,6 +62,7 @@ class RandomSearch():
             param = param_sampler.sample_param(model_class)
             preprocess_args = param_sampler.sample_preprocess()
 
+            print "model_class={}".format(model_class.__name__)
             print "run {}/{}".format(run + 1, n_iter)
             print "param={}".format(cp_utils.param_pp(param))
             print ("preprocess_args={}".
