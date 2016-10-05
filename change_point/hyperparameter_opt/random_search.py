@@ -141,12 +141,12 @@ def main():
 
     random_search = RandomSearch(cmp_class_args, f_metrics, dataset)
 
-    random_search.run(SegmentNeighbourhood, 1)
-    random_search.run(SlidingWindowsOffline, 1)
-    random_search.run(SlidingWindowsOnline, 1)
-    random_search.run(GaussianHMM, 1)
-    random_search.run(DiscreteHMM, 1)
-    random_search.run(BayesianOnline, 1)
+    random_search.run(SegmentNeighbourhood, 50)
+    random_search.run(SlidingWindowsOffline, 50)
+    random_search.run(SlidingWindowsOnline, 50)
+    random_search.run(GaussianHMM, 50)
+    random_search.run(DiscreteHMM, 50)
+    random_search.run(BayesianOnline, 50)
     # random_search.run(BayesianOffline, 1)
 
 

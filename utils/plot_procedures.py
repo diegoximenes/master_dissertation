@@ -64,7 +64,7 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
     if not compress:
         plt.xlim([ts.dt_start, ts.dt_end + datetime.timedelta(days=1)])
     plt.xticks(xticks, xticks_labels, rotation=45)
-    plt.yticks(np.arange(0, 1 + 0.05, 0.1))
+    plt.yticks(np.arange(0, 1 + 0.05, 0.05))
     if compress:
         plt.scatter(range(len(ts.x)), ts.y, s=9)
     else:

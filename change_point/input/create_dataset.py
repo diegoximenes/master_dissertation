@@ -13,10 +13,8 @@ import utils.dt_procedures as dt_procedures
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 
-target_email = "rosam@land.ufrj.br"
 
-
-def split_train_test():
+def split_train_test(target_email):
     in_path = "{}/{}/dataset.csv".format(script_dir, target_email)
     train_size = 0.7
 
@@ -36,7 +34,7 @@ def split_train_test():
                    index_label="id_dataset")
 
 
-def create_dataset():
+def create_dataset(target_email):
     in_path = "{}/{}/data_web_system.csv".format(script_dir, target_email)
     df = pd.read_csv(in_path)
     df_ret = df[df["email"] == target_email]
@@ -60,7 +58,7 @@ def from_dt_to_id(in_path, metric, dt_start, dt_end, l_dt):
     return l_id
 
 
-def add_cp_ids():
+def add_cp_ids(target_email):
     """
     write to in_path a new column: the change points ids (index of change
     points when points are sorted by measure datetime)
@@ -89,18 +87,23 @@ def add_cp_ids():
                   index=False)
 
 
-def create_dirs():
+def create_dirs(target_email):
     for dir in ["{}/change_point/input/{}".format(base_dir, target_email)]:
         if not os.path.exists(dir):
             os.makedirs(dir)
 
 
 if __name__ == "__main__":
-    create_dirs()
-    shutil.copyfile("{}/change_point/from_unsupervised_to_supervised/"
-                    "classifications.csv".format(base_dir),
-                    "{}/change_point/input/{}/data_web_system.csv"
-                    "".format(base_dir, target_email))
-    add_cp_ids()
-    create_dataset()
-    split_train_test()
+    for target_email in ["gabriel.mendonca@tgr.net.br",
+                         "gustavo.santos@tgr.net.br",
+                         "rosam@land.ufrj.br",
+                         "guisenges@land.ufrj.br"
+                         "edmundo@land.ufrj.br"]:
+        create_dirs(target_email)
+        shutil.copyfile("{}/change_point/from_unsupervised_to_supervised/"
+                        "classifications.csv".format(base_dir),
+                        "{}/change_point/input/{}/data_web_system.csv"
+                        "".format(base_dir, target_email))
+        add_cp_ids(target_email)
+        create_dataset(target_email)
+        split_train_test(target_email)
