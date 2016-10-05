@@ -16,6 +16,17 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 class SlidingWindowsOffline(change_point_alg.ChangePointAlg):
     def __init__(self, preprocess_args, win_len, thresh, min_peak_dist, f_dist,
                  bin_size_f_dist, min_bin_f_dist, max_bin_f_dist):
+        """
+        Args:
+            preprocess_args:
+            win_len: windows lengths of the sliding window offline
+            thresh: in the peak detection, detect peaks that are greater than
+                    thresh
+            min_peak_dist: in the peak detection, detect peaks that are at
+                           least separated by minimum peak distance
+            f_dist = distance function between the windows
+        """
+
         self.preprocess_args = preprocess_args
         self.win_len = win_len
         self.thresh = thresh

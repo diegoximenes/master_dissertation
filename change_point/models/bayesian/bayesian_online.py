@@ -19,6 +19,18 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 class BayesianOnline(change_point_alg.ChangePointAlg):
     def __init__(self, preprocess_args, hazard_lambda, future_win_len, thresh,
                  min_peak_dist):
+        """
+        Args:
+            preprocess_args:
+            hazard_lambda: prior on p(current run lenght | last run length)
+            future_win_len: to decide if t is a change point, it is considered
+                            the [0:t + future_win_len] interval
+            thresh: in the peak detection, detect peaks that are greater than
+                    thresh
+            min_peak_dist: in the peak detection, detect peaks that are at
+                           least separated by minimum peak distance
+        """
+
         self.preprocess_args = preprocess_args
         self.hazard_lambda = hazard_lambda
         self.future_win_len = future_win_len

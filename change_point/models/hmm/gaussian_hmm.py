@@ -13,6 +13,21 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 class GaussianHMM(hmm.HMM):
     def __init__(self, preprocess_args, graph_structure_type, A, B, pi,
                  win_len, thresh, min_peak_dist):
+        """
+        Args:
+            preprocess_args:
+            graph_structure_type: "predefined", "fully", "left_to_right"
+            A: initial hidden states graph
+            B: initial hidden states distribution
+            pi: initial hidden states probabilities
+            win_len: windows lengths of the sliding window offline
+            thresh: in the peak detection, detect peaks that are greater than
+                    thresh
+            min_peak_dist: in the peak detection, detect peaks that are at
+                           least separated by minimum peak distance
+
+        """
+
         self.preprocess_args = preprocess_args
         self.graph_structure_type = graph_structure_type
         self.A = A

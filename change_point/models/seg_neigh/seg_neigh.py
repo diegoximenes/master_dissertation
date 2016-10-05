@@ -15,6 +15,17 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
     def __init__(self, preprocess_args, const_pen, f_pen, seg_model,
                  min_seg_len, max_cps):
+        """
+        Args:
+            preprocess_args:
+            const_pen: penalization constant to be used in f_pen
+            f_pen: penalization function wrt to (c_cps) number of change points
+            seg_model: cost function to be used to asess segment homogeneity:
+                       "Normal", "Exponential", "MSE"
+            min_seg_len: minimum segment length
+            max_cps: maximum number of change points in a time series
+        """
+
         self.preprocess_args = preprocess_args
         self.const_pen = const_pen
         self.f_pen = f_pen
