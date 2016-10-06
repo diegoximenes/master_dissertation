@@ -1,5 +1,6 @@
 import os
 import sys
+import copy
 import pymongo
 from bson import json_util
 
@@ -15,6 +16,7 @@ from change_point.models.bayesian.bayesian_online import BayesianOnline
 from change_point.models.hmm.gaussian_hmm import GaussianHMM
 from change_point.models.hmm.discrete_hmm import DiscreteHMM
 import change_point.utils.cmp_class as cmp_class
+import change_point.utils.cmp_win as cmp_win
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 
@@ -26,6 +28,15 @@ def create_dirs(dataset, model_class_name):
                                          model_class_name)]:
         if not os.path.exists(dir):
             os.makedirs(dir)
+
+
+def get_params(model_class_name, params):
+    params_ret = copy.deepcopy(params)
+    if ((model_class_name == SlidingWindowsOffline.__name__) or
+            (model_class_name == SlidingWindowsOnline.__name__)):
+        f_dist = getattr(cmp_win, params["f_dist"])
+        params_ret["f_dist"] = f_dist
+    return params_ret
 
 
 def plot_best_hyperparameters():
@@ -49,7 +60,7 @@ def plot_best_hyperparameters():
             for doc in cursor:
                 cmp_class_args = doc["cmp_class_args"]
                 preprocess_args = doc["preprocess_args"]
-                params = doc["params"]
+                params = get_params(doc["model_class"], doc["params"])
 
                 create_dirs(dataset, model_class.__name__)
                 out_dir_path = "{}/plots/{}/{}/".format(script_dir, dataset,
