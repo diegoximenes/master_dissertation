@@ -25,7 +25,8 @@ def valid_doc(doc):
 
 def valid_doc_loss(doc):
     # check loss existence
-    if (("rtt" not in doc) or ("loss" not in doc["rtt"])):
+    if (("rtt" not in doc) or ("loss" not in doc["rtt"]) or
+            ("lat" not in doc["rtt"])):
         return False
 
     loss = float(doc["rtt"]["loss"])
@@ -35,6 +36,12 @@ def valid_doc_loss(doc):
     if (loss < 1) and ("s" not in doc["rtt"]["lat"]):
         return False
 
+    return True
+
+
+def valid_doc_traceroute(doc):
+    if (("tcrt" not in doc) or ("hops" not in doc["tcrt"])):
+        return False
     return True
 
 
@@ -55,11 +62,16 @@ def get_data_to_file(cursor, out_dir_path):
         dt = dt_procedures.from_utc_to_sp(doc["_id"]["date"])
         loss = float(doc["rtt"]["loss"])
 
+        if valid_doc_traceroute(doc):
+            traceroute = doc["tcrt"]["hops"]
+        else:
+            traceroute = None
+
         if server not in server_mac_dtMeasuresUf:
             server_mac_dtMeasuresUf[server] = {}
         if mac not in server_mac_dtMeasuresUf[server]:
             server_mac_dtMeasuresUf[server][mac] = []
-        server_mac_dtMeasuresUf[server][mac].append([dt, uf, loss])
+        server_mac_dtMeasuresUf[server][mac].append([dt, uf, loss, traceroute])
 
     if not os.path.exists(out_dir_path):
         os.makedirs(out_dir_path)
@@ -72,6 +84,6 @@ def get_data_to_file(cursor, out_dir_path):
 
             with open("{}/{}/{}.csv".format(out_dir_path, server, mac), "w") \
                     as f:
-                f.write("dt,uf,loss\n")
+                f.write("dt,uf,loss,traceroute\n")
                 for t in server_mac_dtMeasuresUf[server][mac]:
-                    f.write("{},{},{}\n".format(t[0], t[1], t[2]))
+                    f.write("{},{},{},{}\n".format(*t))
