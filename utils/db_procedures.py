@@ -1,7 +1,3 @@
-import os
-import dt_procedures
-
-
 def valid_doc(doc):
     # check mac, date existence
     if (("_id" not in doc) or ("mac" not in doc["_id"]) or
@@ -45,45 +41,33 @@ def valid_doc_traceroute(doc):
     return True
 
 
-def get_data_to_file(cursor, out_dir_path):
-    server_mac_dtMeasuresUf = {}
+def get_macs(cursor):
+    """
+    only consider clients that measured against a single server in the cursor
+    documents. Returns a list with the macs and another one with the associated
+    servers
+    """
 
+    mac_servers = {}
     cnt = 0
     for doc in cursor:
         cnt += 1
-        print cnt
+        print "db_procedures.get_macs, cnt={}".format(cnt)
 
-        if (not valid_doc(doc)) or (not valid_doc_loss(doc)):
+        if not valid_doc(doc):
             continue
 
         mac = doc["_id"]["mac"]
-        uf = doc["uf"]
         server = doc["host"]
-        dt = dt_procedures.from_utc_to_sp(doc["_id"]["date"])
-        loss = float(doc["rtt"]["loss"])
 
-        if valid_doc_traceroute(doc):
-            traceroute = doc["tcrt"]["hops"]
-        else:
-            traceroute = None
+        if mac not in mac_servers:
+            mac_servers[mac] = set()
+        mac_servers[mac].add(server)
 
-        if server not in server_mac_dtMeasuresUf:
-            server_mac_dtMeasuresUf[server] = {}
-        if mac not in server_mac_dtMeasuresUf[server]:
-            server_mac_dtMeasuresUf[server][mac] = []
-        server_mac_dtMeasuresUf[server][mac].append([dt, uf, loss, traceroute])
-
-    if not os.path.exists(out_dir_path):
-        os.makedirs(out_dir_path)
-    for server in server_mac_dtMeasuresUf:
-        if not os.path.exists("{}/{}".format(out_dir_path, server)):
-            os.makedirs("{}/{}".format(out_dir_path, server))
-
-        for mac in server_mac_dtMeasuresUf[server]:
-            server_mac_dtMeasuresUf[server][mac].sort()
-
-            with open("{}/{}/{}.csv".format(out_dir_path, server, mac), "w") \
-                    as f:
-                f.write("dt,uf,loss,traceroute\n")
-                for t in server_mac_dtMeasuresUf[server][mac]:
-                    f.write("{},{},{},{}\n".format(*t))
+    macs = []
+    servers = []
+    for mac in mac_servers:
+        if len(mac_servers[mac]) == 1:
+            macs.append(mac)
+            servers.append(mac_servers[mac].pop())
+    return macs, servers
