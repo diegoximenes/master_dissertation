@@ -1,29 +1,32 @@
-from pymongo import MongoClient
+import os
 import sys
+from pymongo import MongoClient
 from datetime import datetime
 
-sys.path.append("../import_scripts/")
-import datetime_procedures
-import database
+base_dir = os.path.join(os.path.dirname(__file__), ".")
+sys.path.append(base_dir)
+
+import utils.dt_procedures as dt_procedures
+import utils.db_procedures as db_procedures
 
 client = MongoClient("cabul", 27017)
-db = client["NET"]
-collection = db["measures"]
-
-dt_start_sp = datetime(2016, 3, 1, 0, 0, 0)
-dt_end_sp = datetime(2016, 4, 1, 0, 0, 0)
-target_year, target_month = 2016, 3
-
-date_dir = "{}_{}".format(target_year, str(target_month).zfill(2))
+collection = client["NET"]["measures"]
 
 
-def process():
-    dt_start = datetime_procedures.from_sp_to_utc(dt_start_sp)
-    dt_end = datetime_procedures.from_sp_to_utc(dt_end_sp)
+def get_data():
+    dt_start_sp = datetime(2016, 6, 1, 0, 0, 0)
+    dt_end_sp = datetime(2016, 7, 1, 0, 0, 0)
+    target_year, target_month = 2016, 6
 
-    cursor = collection.find({"$and": [{"_id.date": {"$gte": dt_start}},
-                                       {"_id.date": {"$lt": dt_end}}]})
+    date_dir = "{}_{}".format(target_year, str(target_month).zfill(2))
+    dt_start = dt_procedures.from_sp_to_utc(dt_start_sp)
+    dt_end = dt_procedures.from_sp_to_utc(dt_end_sp)
 
-    database.get_data_to_file(cursor, "./input/" + date_dir + "/")
+    cursor = collection.find({"_id.date": {"$gte": dt_start, "$lt": dt_end}})
 
-process()
+    db_procedures.get_data_to_file(cursor, "{}/input/{}/".format(base_dir,
+                                                                 date_dir))
+
+
+if __name__ == "__main__":
+    get_data()
