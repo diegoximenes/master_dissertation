@@ -19,9 +19,9 @@ def create_dirs(date_dir, server):
 
 
 def get_data():
-    dt_start_sp = datetime(2016, 7, 1, 0, 0, 0)
-    dt_end_sp = datetime(2016, 8, 1, 0, 0, 0)
-    target_year, target_month = 2016, 7
+    dt_start_sp = datetime(2016, 8, 1, 0, 0, 0)
+    dt_end_sp = datetime(2016, 9, 1, 0, 0, 0)
+    target_year, target_month = 2016, 8
 
     client = MongoClient("cabul", 27017)
     collection = client["NET"]["measures"]
@@ -64,7 +64,7 @@ def get_data():
                 else:
                     traceroute = None
 
-                f.write("{},{},{},{}\n".format(dt, uf, loss, traceroute))
+                f.write("{},{},{},\"{}\"\n".format(dt, uf, loss, traceroute))
 
 if __name__ == "__main__":
     get_data()
