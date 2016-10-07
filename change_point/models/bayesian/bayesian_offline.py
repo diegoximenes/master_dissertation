@@ -15,6 +15,8 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class BayesianOffline(change_point_alg.ChangePointAlg):
+    has_training = False
+
     def __init__(self, preprocess_args, prior, p, k, thresh, min_peak_dist):
         self.prior = prior
         self.p = p

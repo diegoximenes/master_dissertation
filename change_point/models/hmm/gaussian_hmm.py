@@ -11,6 +11,8 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class GaussianHMM(hmm.HMM):
+    has_training = False
+
     def __init__(self, preprocess_args, graph_structure_type, A, B, pi,
                  win_len, thresh, min_peak_dist):
         """

@@ -38,14 +38,6 @@ class RandomSearch():
                                                                    dataset)
         self.df = pd.read_csv(train_path)
 
-        # Every time cv is iterated can generate different results.
-        # test_size cannot be equal to 1, but setting near to 1 the same result
-        # is achieved.
-        self.cv = ShuffleSplit(len(self.df), n_iter=1,
-                               test_size=1.0 - np.finfo(float).eps)
-        # for train_index, test_index in self.cv:
-        #    print("%s %s" % (train_index, test_index))
-
         # create mongo indexes
         for i in xrange(len(self.f_metrics)):
             collection.create_index([("metrics.{}"
@@ -58,6 +50,18 @@ class RandomSearch():
         collection.create_index([("model_class", pymongo.ASCENDING)])
 
     def run(self, model_class, n_iter):
+        # Every time cv is iterated can generate different results.
+        # test_size cannot be equal to 1, but setting near to 1 the same result
+        # is achieved.
+        if model_class.has_training:
+            validation_size = 0.3
+        else:
+            validation_size = 1.0 - np.finfo(float).eps
+        self.cv = ShuffleSplit(len(self.df), n_iter=1,
+                               test_size=validation_size)
+        # for train_index, test_index in self.cv:
+        #    print("%s %s" % (train_index, test_index))
+
         for run in xrange(n_iter):
             param = param_sampler.sample_param(model_class)
             preprocess_args = param_sampler.sample_preprocess()

@@ -13,6 +13,8 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
+    has_training = False
+
     def __init__(self, preprocess_args, const_pen, f_pen, seg_model,
                  min_seg_len, max_cps):
         """

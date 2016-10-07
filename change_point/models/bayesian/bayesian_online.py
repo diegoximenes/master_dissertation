@@ -17,6 +17,8 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class BayesianOnline(change_point_alg.ChangePointAlg):
+    has_training = False
+
     def __init__(self, preprocess_args, hazard_lambda, future_win_len, thresh,
                  min_peak_dist):
         """

@@ -15,6 +15,8 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class SlidingWindowsOnline(change_point_alg.ChangePointAlg):
+    has_training = False
+
     def __init__(self, preprocess_args, win_len, thresh, f_dist,
                  bin_size_f_dist, min_bin_f_dist, max_bin_f_dist):
         """
