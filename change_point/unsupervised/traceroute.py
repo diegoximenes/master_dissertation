@@ -30,12 +30,31 @@ def get_name(name, ip_name):
     if not valid_ip(name):
         return name
     else:
-        return ip_name[name]
+        if name in ip_name:
+            return ip_name[name]
+        else:
+            return None
 
 
 def from_str_to_traceroute(str_traceroute):
     str_traceroute = str_traceroute.replace("nan", "None")
     return ast.literal_eval(str_traceroute)
+
+
+def get_ip_name(traceroute):
+    """
+    get the ip->name mapping:
+    the dns resolution can fail, and the ip can be
+    displayed at the "names" field
+    """
+
+    ip_name = {}
+    for hop in traceroute:
+        for ip, name in zip(hop["ips"], hop["names"]):
+            if ((name != u"##") and ((ip not in ip_name) or
+                                     (not valid_ip(name)))):
+                ip_name[ip] = name
+    return ip_name
 
 
 def get_traceroute(df):
@@ -60,15 +79,7 @@ def get_traceroute(df):
         #         return
 
         if traceroute is not None:
-            # get the ip->name mapping:
-            # the dns resolution can fail, and the ip can be
-            # displayed at the "names" field
-            ip_name = {}
-            for hop in traceroute:
-                for ip, name in zip(hop["ips"], hop["names"]):
-                    if ((name != u"##") and ((ip not in ip_name) or
-                                             (not valid_ip(name)))):
-                        ip_name[ip] = name
+            ip_name = get_ip_name(traceroute)
 
             hops = []
             for hop in traceroute:
@@ -122,20 +133,21 @@ def iter_mac(date_dir):
             print "mac={}, server={}".format(mac, server)
 
             df = pd.read_csv("{}/{}/{}".format(in_dir, server, file_name))
-            yield mac, df
+            yield server, mac, df
 
 
-def print_traceroute(date_dir):
-    out_path = "{}/prints/{}/traceroute.txt".format(script_dir, date_dir)
+def print_traceroute_per_mac(date_dir):
+    out_path = "{}/prints/{}/traceroutes.txt".format(script_dir, date_dir)
     with open(out_path, "w") as f:
-        for mac, df in iter_mac(date_dir):
+        for server, mac, df in iter_mac(date_dir):
             unique_traceroute, str_traceroute = get_traceroute(df)
-            f.write("mac={}, {}\n".format(mac, str_traceroute))
+            f.write("server={}, mac={}, {}\n".format(server, mac,
+                                                     str_traceroute))
 
 
 def print_name_ips(date_dir):
     name_ip = {}
-    for mac, df in iter_mac(date_dir):
+    for _, _, df in iter_mac(date_dir):
         for idx, row in df.iterrows():
             traceroute = from_str_to_traceroute(row["traceroute"])
             if traceroute is not None:
@@ -145,12 +157,27 @@ def print_name_ips(date_dir):
                             name_ip[name] = set()
                         name_ip[name].add(ip)
 
-    out_path = "{}/prints/{}/name.txt".format(script_dir, date_dir)
+    out_path = "{}/prints/{}/names_ips.csv".format(script_dir, date_dir)
     with open(out_path, "w") as f:
         f.write("name,ips\n")
         for name in sorted(name_ip.keys()):
-            f.write("{},{}\n".format(name, name_ip[name]))
+            f.write("{},{}\n".format(name, sorted(list(name_ip[name]))))
 
+
+def print_names_per_mac(date_dir):
+    out_path = "{}/prints/{}/names_per_mac.csv".format(script_dir, date_dir)
+    with open(out_path, "w") as f:
+        f.write("server,mac,names\n")
+        for server, mac, df in iter_mac(date_dir):
+            names = set()
+            for idx, row in df.iterrows():
+                traceroute = from_str_to_traceroute(row["traceroute"])
+                if traceroute is not None:
+                    ip_name = get_ip_name(traceroute)
+                    for hop in traceroute:
+                        for name in hop["names"]:
+                            names.add(get_name(name, ip_name))
+            f.write("{},{},\"{}\"\n".format(server, mac, sorted(list(names))))
 
 if __name__ == "__main__":
     # not all dirs have csv's with traceroute
@@ -159,5 +186,6 @@ if __name__ == "__main__":
     for date_dir in date_dirs:
         create_dirs(date_dir)
 
+        print_names_per_mac(date_dir)
         print_name_ips(date_dir)
-        print_traceroute(date_dir)
+        print_traceroute_per_mac(date_dir)
