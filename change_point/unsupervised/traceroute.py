@@ -179,6 +179,28 @@ def print_names_per_mac(date_dir):
                             names.add(get_name(name, ip_name))
             f.write("{},{},\"{}\"\n".format(server, mac, sorted(list(names))))
 
+
+def print_macs_per_name(date_dir):
+    name_macs = {}
+    for server, mac, df in iter_mac(date_dir):
+        for idx, row in df.iterrows():
+            traceroute = from_str_to_traceroute(row["traceroute"])
+            if traceroute is not None:
+                ip_name = get_ip_name(traceroute)
+                for hop in traceroute:
+                    for name in hop["names"]:
+                        name = get_name(name, ip_name)
+                        if name not in name_macs:
+                            name_macs[name] = set()
+                        name_macs[name].add((server, mac))
+
+    out_path = "{}/prints/{}/macs_per_name.csv".format(script_dir, date_dir)
+    with open(out_path, "w") as f:
+        f.write("name,macs\n")
+        for name, macs in name_macs.iteritems():
+            f.write("{},\"{}\"\n".format(name, sorted(list(macs))))
+
+
 if __name__ == "__main__":
     # not all dirs have csv's with traceroute
     date_dirs = ["2016_06"]
@@ -186,6 +208,7 @@ if __name__ == "__main__":
     for date_dir in date_dirs:
         create_dirs(date_dir)
 
-        print_names_per_mac(date_dir)
-        print_name_ips(date_dir)
-        print_traceroute_per_mac(date_dir)
+        print_macs_per_name(date_dir)
+        # print_names_per_mac(date_dir)
+        # print_name_ips(date_dir)
+        # print_traceroute_per_mac(date_dir)
