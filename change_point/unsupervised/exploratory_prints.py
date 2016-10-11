@@ -179,9 +179,9 @@ def print_traceroute_per_mac(date_dir, mac_node):
             last_server = server
             unique_traceroute, str_traceroute, server_ip = get_traceroute(df)
             node = get_node(mac, mac_node)
-            lines.append("{}, {},{},{},\"{}\"\n".format(server, server_ip,
-                                                        node, mac,
-                                                        str_traceroute))
+            lines.append("{},{},{},{},\"{}\"\n".format(server, server_ip,
+                                                       node, mac,
+                                                       str_traceroute))
 
 
 def print_name_ips(date_dir):
