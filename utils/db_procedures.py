@@ -19,26 +19,55 @@ def valid_doc(doc):
     return True
 
 
-def valid_doc_loss(doc):
+def get_server_ip(doc):
+    if "ip" not in doc:
+        return None
+    return doc["ip"]
+
+
+def get_loss(doc):
     # check loss existence
     if (("rtt" not in doc) or ("loss" not in doc["rtt"]) or
             ("lat" not in doc["rtt"])):
-        return False
+        return None
 
     loss = float(doc["rtt"]["loss"])
     # there are some inconsistencies in the database
     if (loss < 0) or (loss > 1):
-        return False
+        return None
     if (loss < 1) and ("s" not in doc["rtt"]["lat"]):
-        return False
+        return None
 
-    return True
+    return loss
 
 
-def valid_doc_traceroute(doc):
+def get_latency(doc):
+    if (("rtt" not in doc) or ("lat" not in doc["rtt"]) or
+            ("m" not in doc["rtt"]["lat"])):
+        return None
+    return doc["rtt"]["lat"]["m"]
+
+
+def get_throughput_down(doc):
+    if (("thr" not in doc) or ("tcp" not in doc["thr"]) or
+            ("down" not in doc["thr"]["tcp"]) or
+            ("v" not in doc["thr"]["tcp"]["down"])):
+        return None, None
+    return doc["thr"]["tcp"]["down"]["v"], doc["thr"]["tcp"]["down"]["n"]
+
+
+def get_throughput_up(doc):
+    if (("thr" not in doc) or ("tcp" not in doc["thr"]) or
+            ("up" not in doc["thr"]["tcp"]) or
+            ("v" not in doc["thr"]["tcp"]["up"])):
+        return None, None
+    return doc["thr"]["tcp"]["up"]["v"], doc["thr"]["tcp"]["up"]["n"]
+
+
+def get_traceroute(doc):
     if (("tcrt" not in doc) or ("hops" not in doc["tcrt"])):
-        return False
-    return True
+        return None
+    return doc["tcrt"]["hops"]
 
 
 def get_macs(cursor):

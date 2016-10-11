@@ -48,30 +48,32 @@ def get_data(dt_start_sp, dt_end_sp):
         out_path = "{}/input/{}/{}/{}.csv".format(base_dir, date_dir, server,
                                                   mac)
         with open(out_path, "w") as f:
-            f.write("dt,uf,server_ip,loss,traceroute\n")
+            f.write("dt,uf,server_ip,loss,latency,throughput_up,"
+                    "throughput_down,nominal_up,nominal_down,traceroute\n")
 
             for doc in cursor:
-                if ((not db_procedures.valid_doc(doc)) or
-                        (not db_procedures.valid_doc_loss(doc))):
+                if (not db_procedures.valid_doc(doc)):
                     continue
 
                 uf = doc["uf"]
                 server = doc["host"]
                 dt = dt_procedures.from_utc_to_sp(doc["_id"]["date"])
-                loss = float(doc["rtt"]["loss"])
+                server_ip = db_procedures.get_server_ip(doc)
 
-                if "ip" in doc:
-                    server_ip = doc["ip"]
-                else:
-                    server_ip = None
+                loss = db_procedures.get_loss(doc)
+                latency = db_procedures.get_latency(doc)
+                throughput_down, nominal_down = \
+                    db_procedures.get_throughput_down(doc)
+                throughput_up, nominal_up = \
+                    db_procedures.get_throughput_up(doc)
+                traceroute = db_procedures.get_traceroute(doc)
 
-                if db_procedures.valid_doc_traceroute(doc):
-                    traceroute = doc["tcrt"]["hops"]
-                else:
-                    traceroute = None
-
-                f.write("{},{},{},{},\"{}\"\n".format(dt, uf, server_ip, loss,
-                                                      traceroute))
+                line_formatter = "{}" + ",{}" * 8 + ",\"{}\"\n"
+                f.write(line_formatter.format(dt, uf, server_ip, loss,
+                                              latency, throughput_up,
+                                              throughput_down,
+                                              nominal_up, nominal_down,
+                                              traceroute))
 
 if __name__ == "__main__":
     # dt_start_sp = datetime(2016, 8, 1, 0, 0, 0)
