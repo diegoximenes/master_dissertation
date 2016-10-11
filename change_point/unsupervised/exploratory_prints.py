@@ -88,8 +88,10 @@ def get_node(mac, mac_node):
 
 def get_traceroute(df):
     hops_default = []
+    server_ip = None
     for idx, row in df.iterrows():
         traceroute = from_str_to_traceroute(row["traceroute"])
+        server_ip = row["server_ip"]
 
         # THIS PIECE OF CODE EXPOSES A TRACEROUTE INCONSISTENCY
         # IN 2016_06
@@ -123,7 +125,8 @@ def get_traceroute(df):
                 for name in hop["names"]:
                     if ((name != u"##") and
                             (hop_name != get_name(name, ip_name))):
-                        return False, "diff_name_same_hop={}".format(hop)
+                        return (False, "diff_name_same_hop={}".format(hop),
+                                server_ip)
 
                 hops.append(hop_name)
 
@@ -141,13 +144,15 @@ def get_traceroute(df):
                           (name_hops_default is not None) and
                           (name_hops != name_hops_default)):
                         # different traceroutes
-                        return False, "hops1={}, hops2={}".format(hops,
-                                                                  hops_default)
+                        return (False,
+                                "hops1={}, hops2={}".format(hops,
+                                                            hops_default),
+                                server_ip)
 
                 if update_hops_default:
                     hops_default = copy.deepcopy(hops)
 
-    return True, "unique={}".format(hops_default)
+    return True, "unique={}".format(hops_default), server_ip
 
 
 def filter_names(names):
@@ -172,10 +177,11 @@ def print_traceroute_per_mac(date_dir, mac_node):
                 print_lines(f, lines)
                 lines = []
             last_server = server
-            unique_traceroute, str_traceroute = get_traceroute(df)
+            unique_traceroute, str_traceroute, server_ip = get_traceroute(df)
             node = get_node(mac, mac_node)
-            lines.append("{},{},{},\"{}\"\n".format(server, node, mac,
-                                                    str_traceroute))
+            lines.append("{}, {},{},{},\"{}\"\n".format(server, server_ip,
+                                                        node, mac,
+                                                        str_traceroute))
 
 
 def print_name_ips(date_dir):
@@ -270,8 +276,8 @@ if __name__ == "__main__":
     for date_dir in date_dirs:
         create_dirs(date_dir)
 
-        print_names_per_mac_filtered(date_dir)
+        # print_names_per_mac_filtered(date_dir)
         # print_macs_per_name(date_dir, mac_node)
         # print_names_per_mac(date_dir, mac_node)
         # print_name_ips(date_dir)
-        # print_traceroute_per_mac(date_dir, mac_node)
+        print_traceroute_per_mac(date_dir, mac_node)
