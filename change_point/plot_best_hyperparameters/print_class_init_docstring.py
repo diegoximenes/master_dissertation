@@ -1,6 +1,7 @@
 import os
 import sys
 
+script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 from change_point.models.seg_neigh.seg_neigh import SegmentNeighbourhood
@@ -12,8 +13,6 @@ from change_point.models.bayesian.bayesian_offline import BayesianOffline
 from change_point.models.bayesian.bayesian_online import BayesianOnline
 from change_point.models.hmm.gaussian_hmm import GaussianHMM
 from change_point.models.hmm.discrete_hmm import DiscreteHMM
-
-script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 def print_class_init_docstring():

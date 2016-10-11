@@ -5,10 +5,9 @@ import copy
 import socket
 import pandas as pd
 
+script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
-
-script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 def create_dirs(date_dir):
@@ -18,22 +17,27 @@ def create_dirs(date_dir):
             os.makedirs(dir)
 
 
+def iter_mac(date_dir):
+    in_dir = "{}/input/{}/".format(base_dir, date_dir)
+    cnt = 0
+    for server in os.listdir(in_dir):
+        for file_name in os.listdir("{}/{}".format(in_dir, server)):
+            cnt += 1
+            print "cnt={}".format(cnt)
+
+            mac = file_name.split(".csv")[0]
+            print "mac={}, server={}".format(mac, server)
+
+            df = pd.read_csv("{}/{}/{}".format(in_dir, server, file_name))
+            yield server, mac, df
+
+
 def valid_ip(str_ip):
     try:
         socket.inet_aton(str_ip)
         return True
     except socket.error:
         return False
-
-
-def get_name(name, ip_name):
-    if not valid_ip(name):
-        return name
-    else:
-        if name in ip_name:
-            return ip_name[name]
-        else:
-            return None
 
 
 def from_str_to_traceroute(str_traceroute):
@@ -55,6 +59,31 @@ def get_ip_name(traceroute):
                                      (not valid_ip(name)))):
                 ip_name[ip] = name
     return ip_name
+
+
+def get_name(name, ip_name):
+    if not valid_ip(name):
+        return name
+    else:
+        # name is an ip
+        if name in ip_name:
+            return ip_name[name]
+        else:
+            return None
+
+
+def get_mac_node():
+    mac_node = {}
+    df = pd.read_csv("{}/input/probes_info.csv".format(base_dir), sep=" ")
+    for idx, row in df.iterrows():
+        mac_node[row["MAC_ADDRESS"]] = row["NODE"]
+    return mac_node
+
+
+def get_node(mac, mac_node):
+    if mac in mac_node:
+        return mac_node[mac]
+    return None
 
 
 def get_traceroute(df):
@@ -121,28 +150,32 @@ def get_traceroute(df):
     return True, "unique={}".format(hops_default)
 
 
-def iter_mac(date_dir):
-    in_dir = "{}/input/{}/".format(base_dir, date_dir)
-    cnt = 0
-    for server in os.listdir(in_dir):
-        for file_name in os.listdir("{}/{}".format(in_dir, server)):
-            cnt += 1
-            print "cnt={}".format(cnt)
-
-            mac = file_name.split(".csv")[0]
-            print "mac={}, server={}".format(mac, server)
-
-            df = pd.read_csv("{}/{}/{}".format(in_dir, server, file_name))
-            yield server, mac, df
+def filter_names(names):
+    names_filtered = []
+    return names_filtered
 
 
-def print_traceroute_per_mac(date_dir):
-    out_path = "{}/prints/{}/traceroutes.txt".format(script_dir, date_dir)
+def print_lines(f, lines):
+        lines.sort()
+        for line in lines:
+            f.write(line)
+
+
+def print_traceroute_per_mac(date_dir, mac_node):
+    out_path = "{}/prints/{}/traceroutes.csv".format(script_dir, date_dir)
     with open(out_path, "w") as f:
+        f.write("server,node,mac,traceroute\n")
+        lines = []
+        last_server = None
         for server, mac, df in iter_mac(date_dir):
+            if (last_server is not None) and (server != last_server):
+                print_lines(f, lines)
+                lines = []
+            last_server = server
             unique_traceroute, str_traceroute = get_traceroute(df)
-            f.write("server={}, mac={}, {}\n".format(server, mac,
-                                                     str_traceroute))
+            node = get_node(mac, mac_node)
+            lines.append("{},{},{},\"{}\"\n".format(server, node, mac,
+                                                    str_traceroute))
 
 
 def print_name_ips(date_dir):
@@ -157,18 +190,25 @@ def print_name_ips(date_dir):
                             name_ip[name] = set()
                         name_ip[name].add(ip)
 
-    out_path = "{}/prints/{}/names_ips.csv".format(script_dir, date_dir)
+    out_path = "{}/prints/{}/name_ips.csv".format(script_dir, date_dir)
     with open(out_path, "w") as f:
         f.write("name,ips\n")
         for name in sorted(name_ip.keys()):
             f.write("{},{}\n".format(name, sorted(list(name_ip[name]))))
 
 
-def print_names_per_mac(date_dir):
+def print_names_per_mac(date_dir, mac_node):
     out_path = "{}/prints/{}/names_per_mac.csv".format(script_dir, date_dir)
     with open(out_path, "w") as f:
-        f.write("server,mac,names\n")
+        f.write("server,node,mac,names\n")
+        lines = []
+        last_server = None
         for server, mac, df in iter_mac(date_dir):
+            if (last_server is not None) and (server != last_server):
+                print_lines(f, lines)
+                lines = []
+            last_server = server
+
             names = set()
             for idx, row in df.iterrows():
                 traceroute = from_str_to_traceroute(row["traceroute"])
@@ -177,10 +217,29 @@ def print_names_per_mac(date_dir):
                     for hop in traceroute:
                         for name in hop["names"]:
                             names.add(get_name(name, ip_name))
-            f.write("{},{},\"{}\"\n".format(server, mac, sorted(list(names))))
+            node = get_node(mac, mac_node)
+            lines.append("{},{},{},\"{}\"\n".format(server, node, mac,
+                                                    sorted(list(names))))
 
 
-def print_macs_per_name(date_dir):
+def print_names_per_mac_filtered(date_dir):
+    out_path = "{}/prints/{}/names_per_mac_filtered.csv".format(script_dir,
+                                                                date_dir)
+    with open(out_path, "w") as f:
+        f.write("server,mac,names\n")
+        in_path = "{}/prints/{}/names_per_mac.csv".format(script_dir, date_dir)
+        df = pd.read_csv(in_path)
+        for idx, row in df.iterrows():
+            names = ast.literal_eval(row["names"])
+            names_filtered = filter_names(names)
+            f.write("{},{},{},\"{}\",\"{}\"\n".format(row["server"],
+                                                      row["node"],
+                                                      row["mac"],
+                                                      row["names"],
+                                                      names_filtered))
+
+
+def print_macs_per_name(date_dir, mac_node):
     name_macs = {}
     for server, mac, df in iter_mac(date_dir):
         for idx, row in df.iterrows():
@@ -192,23 +251,27 @@ def print_macs_per_name(date_dir):
                         name = get_name(name, ip_name)
                         if name not in name_macs:
                             name_macs[name] = set()
-                        name_macs[name].add((server, mac))
+                        name_macs[name].add((server, get_node(mac, mac_node),
+                                             mac))
 
     out_path = "{}/prints/{}/macs_per_name.csv".format(script_dir, date_dir)
     with open(out_path, "w") as f:
         f.write("name,macs\n")
-        for name, macs in name_macs.iteritems():
-            f.write("{},\"{}\"\n".format(name, sorted(list(macs))))
+        names = sorted(name_macs.keys())
+        for name in names:
+            f.write("{},\"{}\"\n".format(name, sorted(list(name_macs[name]))))
 
 
 if __name__ == "__main__":
     # not all dirs have csv's with traceroute
     date_dirs = ["2016_06"]
 
+    mac_node = get_mac_node()
     for date_dir in date_dirs:
         create_dirs(date_dir)
 
-        print_macs_per_name(date_dir)
-        # print_names_per_mac(date_dir)
+        print_names_per_mac_filtered(date_dir)
+        # print_macs_per_name(date_dir, mac_node)
+        # print_names_per_mac(date_dir, mac_node)
         # print_name_ips(date_dir)
-        # print_traceroute_per_mac(date_dir)
+        # print_traceroute_per_mac(date_dir, mac_node)

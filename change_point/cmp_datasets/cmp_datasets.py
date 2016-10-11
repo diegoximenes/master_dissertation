@@ -2,12 +2,11 @@ import os
 import sys
 import pandas as pd
 
+script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import change_point.utils.cmp_class as cmp_class
 import change_point.utils.cp_utils as cp_utils
-
-script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 def cmp_datasets():

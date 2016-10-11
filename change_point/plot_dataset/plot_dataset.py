@@ -3,12 +3,11 @@ import sys
 import pandas as pd
 import numpy as np
 
+script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import change_point.utils.cp_utils as cp_utils
 import utils.plot_procedures as plot_procedures
-
-script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 def create_dir(dir):

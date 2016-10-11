@@ -2,12 +2,11 @@ import os
 import sys
 import ghmm
 
+script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
 import change_point.utils.cmp_win as cmp_win
 import change_point.models.hmm.hmm as hmm
-
-script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class DiscreteHMM(hmm.HMM):

@@ -3,6 +3,7 @@ import sys
 import copy
 import numpy as np
 
+script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
@@ -10,8 +11,6 @@ import utils.time_series as time_series
 import change_point.utils.cp_utils as cp_utils
 import change_point.utils.cmp_win as cmp_win
 import change_point.models.change_point_alg as change_point_alg
-
-script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class SlidingWindowsOnline(change_point_alg.ChangePointAlg):

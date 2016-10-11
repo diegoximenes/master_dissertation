@@ -3,11 +3,10 @@ import sys
 import ghmm
 import numpy as np
 
+script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
 import change_point.models.hmm.hmm as hmm
-
-script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 class GaussianHMM(hmm.HMM):
