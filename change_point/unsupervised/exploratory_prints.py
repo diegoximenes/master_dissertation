@@ -3,6 +3,7 @@ import sys
 import ast
 import copy
 import socket
+from IPy import IP
 import pandas as pd
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -32,12 +33,19 @@ def iter_mac(date_dir):
             yield server, mac, df
 
 
-def valid_ip(str_ip):
+def is_valid_ip(str_ip):
     try:
         socket.inet_aton(str_ip)
         return True
     except socket.error:
         return False
+
+
+def is_private_ip(str_ip):
+    if not is_valid_ip(str_ip):
+        return False
+    ip = IP(str_ip)
+    return (ip.iptype() == "PRIVATE")
 
 
 def from_str_to_traceroute(str_traceroute):
@@ -56,13 +64,13 @@ def get_ip_name(traceroute):
     for hop in traceroute:
         for ip, name in zip(hop["ips"], hop["names"]):
             if ((name != u"##") and ((ip not in ip_name) or
-                                     (not valid_ip(name)))):
+                                     (not is_valid_ip(name)))):
                 ip_name[ip] = name
     return ip_name
 
 
 def get_name(name, ip_name):
-    if not valid_ip(name):
+    if not is_valid_ip(name):
         return name
     else:
         # name is an ip
@@ -87,7 +95,8 @@ def get_node(mac, mac_node):
 
 
 def get_traceroute(df):
-    hops_default = []
+    hops_default_names = []
+    hops_default_ips = []
     server_ip = None
     for idx, row in df.iterrows():
         traceroute = from_str_to_traceroute(row["traceroute"])
@@ -112,13 +121,15 @@ def get_traceroute(df):
         if traceroute is not None:
             ip_name = get_ip_name(traceroute)
 
-            hops = []
+            hops_names = []
+            hops_ips = []
             for hop in traceroute:
                 # get a single name for each hop
-                hop_name = None
-                for name in hop["names"]:
+                hop_name = hop_ip = None
+                for name, ip in zip(hop["names"], hop["ips"]):
                     if (name != u"##"):
                         hop_name = get_name(name, ip_name)
+                        hop_ip = ip
 
                 # check if more than one name appear in the
                 # same hop
@@ -128,13 +139,16 @@ def get_traceroute(df):
                         return (False, "diff_name_same_hop={}".format(hop),
                                 server_ip)
 
-                hops.append(hop_name)
+                hops_names.append(hop_name)
+                hops_ips.append(hop_ip)
 
-            if not hops_default:
-                hops_default = copy.deepcopy(hops)
+            if not hops_default_names:
+                hops_default_names = copy.deepcopy(hops_names)
+                hops_default_ips = copy.deepcopy(hops_ips)
             else:
                 update_hops_default = False
-                for name_hops, name_hops_default in zip(hops, hops_default):
+                for name_hops, name_hops_default in zip(hops_names,
+                                                        hops_default_names):
                     if ((name_hops is not None) and
                             (name_hops_default is None)):
                         # current traceroute have more
@@ -145,19 +159,42 @@ def get_traceroute(df):
                           (name_hops != name_hops_default)):
                         # different traceroutes
                         return (False,
-                                "hops1={}, hops2={}".format(hops,
-                                                            hops_default),
+                                "hops1={},hops2={}".format(hops_names,
+                                                           hops_default_names),
                                 server_ip)
 
                 if update_hops_default:
-                    hops_default = copy.deepcopy(hops)
+                    hops_default_names = copy.deepcopy(hops_names)
+                    hops_default_ips = copy.deepcopy(hops_ips)
 
-    return True, "unique={}".format(hops_default), server_ip
+    hops_default = []
+    for name_hops_default, ip_hops_default in zip(hops_default_names,
+                                                  hops_default_ips):
+        hops_default.append((name_hops_default, ip_hops_default))
+    return True, "{}".format(hops_default), server_ip
 
 
-def filter_names(names):
-    names_filtered = []
-    return names_filtered
+def get_traceroute_filtered(str_traceroute_list):
+    """
+    if the ip is private get the next ip in traceroute that is public
+    """
+
+    traceroute = ast.literal_eval(str_traceroute_list)
+
+    traceroute_filtered = []
+    for i in xrange(len(traceroute) - 1):
+        filtered = ((None, None), (None, None))
+        if traceroute[i] != (None, None):
+            for j in xrange(i, len(traceroute)):
+                if traceroute[j] != (None, None):
+                    if not is_private_ip(traceroute[j][1]):
+                        filtered = (traceroute[i], traceroute[j])
+                        break
+            if filtered == ((None, None), (None, None)):
+                filtered = (traceroute[i], traceroute[i])
+
+        traceroute_filtered.append(filtered)
+    return traceroute_filtered
 
 
 def print_lines(f, lines):
@@ -167,9 +204,10 @@ def print_lines(f, lines):
 
 
 def print_traceroute_per_mac(date_dir, mac_node):
-    out_path = "{}/prints/{}/traceroutes.csv".format(script_dir, date_dir)
+    out_path = "{}/prints/{}/traceroute_per_mac.csv".format(script_dir,
+                                                            date_dir)
     with open(out_path, "w") as f:
-        f.write("server,node,mac,traceroute\n")
+        f.write("server,server_ip,node,mac,unique_traceroute,traceroute\n")
         lines = []
         last_server = None
         for server, mac, df in iter_mac(date_dir):
@@ -179,9 +217,59 @@ def print_traceroute_per_mac(date_dir, mac_node):
             last_server = server
             unique_traceroute, str_traceroute, server_ip = get_traceroute(df)
             node = get_node(mac, mac_node)
-            lines.append("{},{},{},{},\"{}\"\n".format(server, server_ip,
-                                                       node, mac,
-                                                       str_traceroute))
+            lines.append("{},{},{},{},{},\"{}\"\n".format(server, server_ip,
+                                                          node, mac,
+                                                          unique_traceroute,
+                                                          str_traceroute))
+
+
+def print_traceroute_per_mac_filtered(date_dir):
+    out_path = ("{}/prints/{}/traceroute_per_mac_filtered.csv".
+                format(script_dir, date_dir))
+    with open(out_path, "w") as f:
+        f.write("server,node,mac,unique_traceroute,traceroute,"
+                "traceroute_filtered\n")
+        in_path = "{}/prints/{}/traceroute_per_mac.csv".format(script_dir,
+                                                               date_dir)
+        df = pd.read_csv(in_path)
+        for idx, row in df.iterrows():
+            if row["unique_traceroute"] is False:
+                continue
+
+            traceroute_filtered = get_traceroute_filtered(row["traceroute"])
+            l = "{},{},{},{},\"{}\",\"{}\"\n".format(row["server"],
+                                                     row["node"],
+                                                     row["mac"],
+                                                     row["unique_traceroute"],
+                                                     row["traceroute"],
+                                                     traceroute_filtered)
+            f.write(l)
+
+
+def print_macs_per_name_filtered(date_dir, mac_node):
+    in_path = ("{}/prints/{}/traceroute_per_mac_filtered.csv".
+               format(script_dir, date_dir))
+    name_macs = {}
+    df = pd.read_csv(in_path)
+    for idx, row in df.iterrows():
+        traceroute_filtered = ast.literal_eval(row["traceroute_filtered"])
+        for elem in traceroute_filtered:
+            name0 = elem[0][0]
+            name1 = elem[1][0]
+            tp = (name0, name1)
+            if tp not in name_macs:
+                name_macs[tp] = set()
+            name_macs[tp].add((row["server"], get_node(row["mac"], mac_node),
+                               row["mac"]))
+
+    out_path = "{}/prints/{}/macs_per_name_filtered.csv".format(script_dir,
+                                                                date_dir)
+    with open(out_path, "w") as f:
+        f.write("name,macs\n")
+        names = sorted(name_macs.keys())
+        for name in names:
+            f.write("\"{}\",\"{}\"\n".format(name,
+                                             sorted(list(name_macs[name]))))
 
 
 def print_name_ips(date_dir):
@@ -228,23 +316,6 @@ def print_names_per_mac(date_dir, mac_node):
                                                     sorted(list(names))))
 
 
-def print_names_per_mac_filtered(date_dir):
-    out_path = "{}/prints/{}/names_per_mac_filtered.csv".format(script_dir,
-                                                                date_dir)
-    with open(out_path, "w") as f:
-        f.write("server,mac,names\n")
-        in_path = "{}/prints/{}/names_per_mac.csv".format(script_dir, date_dir)
-        df = pd.read_csv(in_path)
-        for idx, row in df.iterrows():
-            names = ast.literal_eval(row["names"])
-            names_filtered = filter_names(names)
-            f.write("{},{},{},\"{}\",\"{}\"\n".format(row["server"],
-                                                      row["node"],
-                                                      row["mac"],
-                                                      row["names"],
-                                                      names_filtered))
-
-
 def print_macs_per_name(date_dir, mac_node):
     name_macs = {}
     for server, mac, df in iter_mac(date_dir):
@@ -276,8 +347,10 @@ if __name__ == "__main__":
     for date_dir in date_dirs:
         create_dirs(date_dir)
 
-        # print_names_per_mac_filtered(date_dir)
         # print_macs_per_name(date_dir, mac_node)
         # print_names_per_mac(date_dir, mac_node)
         # print_name_ips(date_dir)
-        print_traceroute_per_mac(date_dir, mac_node)
+        # print_traceroute_per_mac(date_dir, mac_node)
+
+        print_traceroute_per_mac_filtered(date_dir)
+        print_macs_per_name_filtered(date_dir, mac_node)
