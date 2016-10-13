@@ -2,6 +2,7 @@ import os
 import sys
 import abc
 import pandas as pd
+import numpy as np
 
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
@@ -50,8 +51,8 @@ class ChangePointAlg:
         return conf
 
     def plot_all(self, dataset, out_dir_path, cmp_class_args):
-        train_path = "{}/change_point/input/{}/train.csv".format(base_dir,
-                                                                 dataset)
+        train_path = "{}/change_point/input/{}/dataset.csv".format(base_dir,
+                                                                   dataset)
 
         df = pd.read_csv(train_path)
         cnt = 0
@@ -75,6 +76,17 @@ class ChangePointAlg:
             ts_raw = TimeSeries(in_path, "loss", dt_start, dt_end)
             self.plot(ts_preprocessed, ts_raw, correct, pred, conf, out_path)
 
+            out_path = ("{}/id{}_server{}_mac{}_dtstart{}_dtend{}.csv".
+                        format(out_dir_path, idx, row["server"], row["mac"],
+                               dt_start, dt_end))
+            self.print_cp(ts_raw, pred, out_path)
+
     @abc.abstractmethod
     def plot():
         pass
+
+    def print_cp(self, ts_raw, pred, out_path):
+        with open(out_path, "w") as f:
+            f.write("dt_id,dt\n")
+            for dt_id, dt in zip(pred, np.asarray(ts_raw.x)[pred]):
+                f.write("{},{}\n".format(dt_id, dt))

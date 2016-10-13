@@ -6,12 +6,11 @@ import shutil
 import numpy as np
 import pandas as pd
 
+script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 from utils.time_series import TimeSeries
 import utils.dt_procedures as dt_procedures
-
-script_dir = os.path.join(os.path.dirname(__file__), ".")
 
 
 def split_train_test(target_email):

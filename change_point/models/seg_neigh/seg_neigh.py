@@ -98,6 +98,9 @@ def main():
              "min_seg_len": 15,
              "max_cps": 20}
     dataset = "rosam@land.ufrj.br"
+    dataset = \
+        ("unsupervised/"
+         "unsupervised_dtstart2016-06-01 00:00:00_dtend2016-06-10 00:00:00")
 
     model = SegmentNeighbourhood(preprocess_args=preprocess_args, **param)
 
