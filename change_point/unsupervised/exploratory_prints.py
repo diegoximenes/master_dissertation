@@ -9,6 +9,7 @@ import pandas as pd
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
+import utils.read_input as read_input
 
 
 def create_dirs(date_dir):
@@ -78,20 +79,6 @@ def get_name(name, ip_name):
             return ip_name[name]
         else:
             return None
-
-
-def get_mac_node():
-    mac_node = {}
-    df = pd.read_csv("{}/input/probes_info.csv".format(base_dir), sep=" ")
-    for idx, row in df.iterrows():
-        mac_node[row["MAC_ADDRESS"]] = row["NODE"]
-    return mac_node
-
-
-def get_node(mac, mac_node):
-    if mac in mac_node:
-        return mac_node[mac]
-    return None
 
 
 def get_traceroute(df):
@@ -216,7 +203,7 @@ def print_traceroute_per_mac(date_dir, mac_node):
                 lines = []
             last_server = server
             unique_traceroute, str_traceroute, server_ip = get_traceroute(df)
-            node = get_node(mac, mac_node)
+            node = mac_node.get(mac)
             lines.append("{},{},{},{},{},\"{}\"\n".format(server, server_ip,
                                                           node, mac,
                                                           unique_traceroute,
@@ -259,7 +246,8 @@ def print_macs_per_name_filtered(date_dir, mac_node):
             tp = (name0, name1)
             if tp not in name_macs:
                 name_macs[tp] = set()
-            name_macs[tp].add((row["server"], get_node(row["mac"], mac_node),
+            name_macs[tp].add((row["server"],
+                               mac_node.get(row["mac"]),
                                row["mac"]))
 
     out_path = "{}/prints/{}/macs_per_name_filtered.csv".format(script_dir,
@@ -311,7 +299,7 @@ def print_names_per_mac(date_dir, mac_node):
                     for hop in traceroute:
                         for name in hop["names"]:
                             names.add(get_name(name, ip_name))
-            node = get_node(mac, mac_node)
+            node = mac_node.get(mac)
             lines.append("{},{},{},\"{}\"\n".format(server, node, mac,
                                                     sorted(list(names))))
 
@@ -328,7 +316,8 @@ def print_macs_per_name(date_dir, mac_node):
                         name = get_name(name, ip_name)
                         if name not in name_macs:
                             name_macs[name] = set()
-                        name_macs[name].add((server, get_node(mac, mac_node),
+                        name_macs[name].add((server,
+                                             mac_node.get(mac),
                                              mac))
 
     out_path = "{}/prints/{}/macs_per_name.csv".format(script_dir, date_dir)
@@ -343,7 +332,7 @@ if __name__ == "__main__":
     # not all dirs have csv's with traceroute
     date_dirs = ["2016_06"]
 
-    mac_node = get_mac_node()
+    mac_node = read_input.get_mac_node()
     for date_dir in date_dirs:
         create_dirs(date_dir)
 

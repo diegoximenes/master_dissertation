@@ -1,6 +1,6 @@
 import os
 import sys
-from datetime import datetime
+import datetime
 import pandas as pd
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -34,8 +34,12 @@ def include_in_dataset(ts, mac, date_dir, dt_start, dt_end,
 
 def create_dataset_unsupervised(dt_start, dt_end):
     """
-    all [dt_start, dt_end) must be in the same month
+    all [dt_start, dt_end) must be in the same month.
+    datetimes must represent days
     """
+
+    # adjust to time interval be defined by [dt_start, dt_end]
+    dt_end = dt_end - datetime.timedelta(days=1)
 
     dataset = "unsupervised_dtstart{}_dtend{}".format(dt_start, dt_end)
     create_dirs(dataset)
@@ -73,6 +77,6 @@ def create_dataset_unsupervised(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime(2016, 6, 1)
-    dt_end = datetime(2016, 6, 10)
+    dt_start = datetime.datetime(2016, 6, 1)
+    dt_end = datetime.datetime(2016, 7, 1)
     create_dataset_unsupervised(dt_start, dt_end)

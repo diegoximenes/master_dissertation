@@ -88,7 +88,8 @@ def main():
              "bin_size_f_dist": 0.05,
              "min_bin_f_dist": 0.0,
              "max_bin_f_dist": 1.0}
-    dataset = "rosam@land.ufrj.br"
+    # dataset = "rosam@land.ufrj.br"
+    dataset = "unsupervised/unsupervised_dtstart2016-06-01 00:00:00_dtend2016-06-30 00:00:00"
 
     model = SlidingWindowsOffline(preprocess_args=preprocess_args, **param)
 

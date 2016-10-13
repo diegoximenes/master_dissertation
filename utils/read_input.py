@@ -1,6 +1,11 @@
+import os
+import sys
 import pandas as pd
-
 import dt_procedures
+
+script_dir = os.path.join(os.path.dirname(__file__), ".")
+base_dir = os.path.join(os.path.dirname(__file__), "..")
+sys.path.append(base_dir)
 
 
 def get_raw(in_path, metric, dt_start, dt_end):
@@ -25,3 +30,11 @@ def get_raw(in_path, metric, dt_start, dt_end):
         y.append(p[1])
 
     return x, y
+
+
+def get_mac_node():
+    mac_node = {}
+    df = pd.read_csv("{}/input/probes_info.csv".format(base_dir), sep=" ")
+    for idx, row in df.iterrows():
+        mac_node[row["MAC_ADDRESS"]] = row["NODE"]
+    return mac_node
