@@ -75,10 +75,7 @@ def get_name(name, ip_name):
         return name
     else:
         # name is an ip
-        if name in ip_name:
-            return ip_name[name]
-        else:
-            return None
+        return ip_name.get(name)
 
 
 def get_traceroute(df):
@@ -184,6 +181,26 @@ def get_traceroute_filtered(str_traceroute_list):
     return traceroute_filtered
 
 
+def compress_traceroute(traceroute, traceroute_type):
+    """
+    remove lasts ((None, None), (None, None)) hops from traceroute_filtered or
+    (None, None) from traceroute
+    """
+
+    if traceroute_type == "filtered":
+        target_hop = ((None, None), (None, None))
+    elif traceroute_type == "raw":
+        target_hop = (None, None)
+
+    compressed = []
+    for hop in reversed(traceroute):
+        if (not compressed) and (hop == target_hop):
+            continue
+        compressed.append(hop)
+    compressed.reverse()
+    return compressed
+
+
 def print_lines(f, lines):
         lines.sort()
         for line in lines:
@@ -223,12 +240,16 @@ def print_traceroute_per_mac_filtered(date_dir):
             if row["unique_traceroute"] is False:
                 continue
 
-            traceroute_filtered = get_traceroute_filtered(row["traceroute"])
+            traceroute_filtered = compress_traceroute(
+                get_traceroute_filtered(row["traceroute"]), "filtered")
+            traceroute = ast.literal_eval(row["traceroute"])
+            traceroute = compress_traceroute(traceroute, "raw")
+
             l = "{},{},{},{},\"{}\",\"{}\"\n".format(row["server"],
                                                      row["node"],
                                                      row["mac"],
                                                      row["unique_traceroute"],
-                                                     row["traceroute"],
+                                                     traceroute,
                                                      traceroute_filtered)
             f.write(l)
 
