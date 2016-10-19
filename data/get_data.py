@@ -1,0 +1,217 @@
+import os
+import sys
+from pymongo import MongoClient
+from datetime import datetime
+
+script_dir = os.path.join(os.path.dirname(__file__), ".")
+base_dir = os.path.join(os.path.dirname(__file__), "..")
+sys.path.append(base_dir)
+import utils.dt_procedures as dt_procedures
+
+
+def create_dirs_csv(date_dir, server):
+    for dir in ["{}/csv/".format(script_dir),
+                "{}/csv/{}".format(script_dir, date_dir),
+                "{}/csv/{}/{}/".format(script_dir, date_dir, server)]:
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+
+
+def create_dirs_json():
+    for dir in ["{}/json/".format(script_dir)]:
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+
+
+def valid_doc(doc):
+    # check mac, date existence
+    if (("_id" not in doc) or ("mac" not in doc["_id"]) or
+            ("date" not in doc["_id"])):
+        return False
+
+    # check server(host), carrier(ISP), uf(client uf), huf(server uf) existence
+    if (("host" not in doc) or ("carrier" not in doc) or
+            ("uf" not in doc) or ("huf" not in doc)):
+        return False
+
+    if doc["carrier"] != "NET":
+        return False
+
+    # client and server must have the same uf
+    if doc["uf"] != doc["huf"]:
+        return False
+
+    return True
+
+
+def get_server_ip(doc):
+    if "ip" not in doc:
+        return None
+    return doc["ip"]
+
+
+def get_loss(doc):
+    # check loss existence
+    if (("rtt" not in doc) or ("loss" not in doc["rtt"]) or
+            ("lat" not in doc["rtt"])):
+        return None
+
+    loss = float(doc["rtt"]["loss"])
+    # there are some inconsistencies in the database
+    if (loss < 0) or (loss > 1):
+        return None
+    if (loss < 1) and ("s" not in doc["rtt"]["lat"]):
+        return None
+
+    return loss
+
+
+def get_latency(doc):
+    if (("rtt" not in doc) or ("lat" not in doc["rtt"]) or
+            ("m" not in doc["rtt"]["lat"])):
+        return None
+    return doc["rtt"]["lat"]["m"]
+
+
+def get_throughput_down(doc):
+    if (("thr" not in doc) or ("tcp" not in doc["thr"]) or
+            ("down" not in doc["thr"]["tcp"]) or
+            ("v" not in doc["thr"]["tcp"]["down"])):
+        return None, None
+    return doc["thr"]["tcp"]["down"]["v"], doc["thr"]["tcp"]["down"]["n"]
+
+
+def get_throughput_up(doc):
+    if (("thr" not in doc) or ("tcp" not in doc["thr"]) or
+            ("up" not in doc["thr"]["tcp"]) or
+            ("v" not in doc["thr"]["tcp"]["up"])):
+        return None, None
+    return doc["thr"]["tcp"]["up"]["v"], doc["thr"]["tcp"]["up"]["n"]
+
+
+def get_traceroute(doc):
+    if (("tcrt" not in doc) or ("hops" not in doc["tcrt"])):
+        return None
+    return doc["tcrt"]["hops"]
+
+
+def get_macs(cursor):
+    """
+    only consider clients that measured against a single server in the cursor
+    documents. Returns a list with the macs and another one with the associated
+    servers
+    """
+
+    mac_servers = {}
+    cnt = 0
+    for doc in cursor:
+        cnt += 1
+        print "get_macs, cnt={}".format(cnt)
+
+        if not valid_doc(doc):
+            continue
+
+        mac = doc["_id"]["mac"]
+        server = doc["host"]
+
+        if mac not in mac_servers:
+            mac_servers[mac] = set()
+        mac_servers[mac].add(server)
+
+    macs = []
+    servers = []
+    for mac in mac_servers:
+        if len(mac_servers[mac]) == 1:
+            macs.append(mac)
+            servers.append(mac_servers[mac].pop())
+    return macs, servers
+
+
+def write_csvs(date_dir, dt_start, dt_end, cursor, collection):
+    macs, servers = get_macs(cursor)
+
+    cnt = 0
+    for mac, server in zip(macs, servers):
+        cnt += 1
+        print "mac={}, cnt={}".format(mac, cnt)
+
+        create_dirs_csv(date_dir, server)
+
+        cursor = collection.find({"$and": [{"_id.date": {"$gte": dt_start,
+                                                         "$lt": dt_end}},
+                                           {"_id.mac": mac}]})
+        out_path = "{}/csv/{}/{}/{}.csv".format(script_dir, date_dir, server,
+                                                mac)
+        with open(out_path, "w") as f:
+            f.write("dt,uf,server_ip,loss,latency,throughput_up,"
+                    "throughput_down,nominal_up,nominal_down,traceroute\n")
+
+            for doc in cursor:
+                if (not valid_doc(doc)):
+                    continue
+
+                uf = doc["uf"]
+                server = doc["host"]
+                dt = dt_procedures.from_utc_to_sp(doc["_id"]["date"])
+                server_ip = get_server_ip(doc)
+
+                loss = get_loss(doc)
+                latency = get_latency(doc)
+                throughput_down, nominal_down = \
+                    get_throughput_down(doc)
+                throughput_up, nominal_up = \
+                    get_throughput_up(doc)
+                traceroute = get_traceroute(doc)
+
+                line_formatter = "{}" + ",{}" * 8 + ",\"{}\"\n"
+                f.write(line_formatter.format(dt, uf, server_ip, loss,
+                                              latency, throughput_up,
+                                              throughput_down,
+                                              nominal_up, nominal_down,
+                                              traceroute))
+
+
+def write_jsons(date_dir, cursor):
+    create_dirs_json()
+    out_path = "{}/json/{}.txt".format(script_dir, date_dir)
+    with open(out_path, "w") as f:
+        cnt = 0
+        for doc in cursor:
+            cnt += 1
+            print "cnt={}".format(cnt)
+
+            if ("_id" in doc) and ("date" in doc["_id"]):
+                doc["_id"]["date"] = str(doc["_id"]["date"])
+            f.write("{}\n".format(doc))
+
+
+def get_data(dt_start_sp, dt_end_sp, to_csv):
+    """
+    dt_start_sp and dt_end_sp must define a month in sao paulo time
+    """
+
+    date_dir = "dtstart{}_dtend{}".format(dt_start_sp, dt_end_sp)
+
+    client = MongoClient("cabul", 27017)
+    collection = client["NET"]["measures"]
+
+    dt_start = dt_procedures.from_sp_to_utc(dt_start_sp)
+    dt_end = dt_procedures.from_sp_to_utc(dt_end_sp)
+
+    cursor = collection.find({"_id.date": {"$gte": dt_start, "$lt": dt_end}})
+
+    if to_csv:
+        write_csvs(date_dir, dt_start, dt_end, cursor, collection)
+    else:
+        write_jsons(date_dir, cursor)
+
+
+if __name__ == "__main__":
+    # dt_start_sp = datetime(2016, 8, 1, 0, 0, 0)
+    # dt_end_sp = datetime(2016, 9, 1, 0, 0, 0)
+    # get_data(dt_start_sp, dt_end_sp)
+
+    for month in range(6, 10):
+        dt_start_sp = datetime(2016, month, 1, 0, 0, 0)
+        dt_end_sp = datetime(2016, month + 1, 1, 0, 0, 0)
+        get_data(dt_start_sp, dt_end_sp, to_csv=False)
