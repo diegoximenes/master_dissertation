@@ -351,16 +351,16 @@ def print_macs_per_name(date_dir, mac_node):
 
 if __name__ == "__main__":
     # not all dirs have csv's with traceroute
-    date_dirs = ["2016_06"]
+    date_dirs = ["2016_07", "2016_08", "2016_09"]
 
     mac_node = read_input.get_mac_node()
     for date_dir in date_dirs:
         create_dirs(date_dir)
 
-        # print_macs_per_name(date_dir, mac_node)
-        # print_names_per_mac(date_dir, mac_node)
-        # print_name_ips(date_dir)
-        # print_traceroute_per_mac(date_dir, mac_node)
+        print_macs_per_name(date_dir, mac_node)
+        print_names_per_mac(date_dir, mac_node)
+        print_name_ips(date_dir)
+        print_traceroute_per_mac(date_dir, mac_node)
 
         print_traceroute_per_mac_filtered(date_dir)
         print_macs_per_name_filtered(date_dir, mac_node)
