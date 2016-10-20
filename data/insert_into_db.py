@@ -91,7 +91,7 @@ def insert_into_db_json(dt_start_sp, dt_end_sp):
 
 
 if __name__ == "__main__":
-    dt_start_sp = datetime.datetime(2016, 5, 1)
-    dt_end_sp = datetime.datetime(2016, 6, 1)
+    dt_start_sp = datetime.datetime(2016, 6, 1)
+    dt_end_sp = datetime.datetime(2016, 7, 1)
     # insert_into_db_csv(dt_start, dt_end)
     insert_into_db_json(dt_start_sp, dt_end_sp)

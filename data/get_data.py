@@ -211,7 +211,7 @@ if __name__ == "__main__":
     # dt_end_sp = datetime(2016, 9, 1, 0, 0, 0)
     # get_data(dt_start_sp, dt_end_sp)
 
-    for month in range(6, 10):
+    for month in range(9, 10):
         dt_start_sp = datetime(2016, month, 1, 0, 0, 0)
         dt_end_sp = datetime(2016, month + 1, 1, 0, 0, 0)
         get_data(dt_start_sp, dt_end_sp, to_csv=False)
