@@ -41,35 +41,6 @@ class TimeSeries:
                 if compressed:
                     self.compress()
 
-    def constr(self, mac=None, metric=None, dt_start=None, dt_end=None,
-               ts_type="raw", compressed=False):
-        self.x = []
-        self.y = []
-        self.dt_start = dt_start
-        self.dt_end = dt_end
-        self.ts_type = ts_type
-        self.compressed = compressed
-
-        if ((mac is not None) and (metric is not None) and
-                (dt_start is not None) and (dt_end is not None)):
-
-            self.read_db(mac, metric)
-            if compressed:
-                self.compress()
-
-    def read_db(self, mac, metric):
-        dt_start_utc = dt_procedures.from_sp_to_utc(self.dt_start)
-        dt_end_utc = dt_procedures.from_sp_to_utc(self.dt_end)
-        raw_x, raw_y, self.server = read_input.get_raw_db(mac, metric,
-                                                          dt_start_utc,
-                                                          dt_end_utc)
-
-        if self.ts_type == "raw":
-            self.x = raw_x
-            self.y = raw_y
-        elif self.ts_type == "hourly":
-            self.x, self.y = self.get_hourly(raw_x, raw_y)
-
     def read(self, in_path, metric):
         raw_x, raw_y = read_input.get_raw(in_path, metric, self.dt_start,
                                           self.dt_end)

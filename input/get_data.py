@@ -7,18 +7,12 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(base_dir)
 import utils.dt_procedures as dt_procedures
+import utils.utils as utils
 
 
-def create_dirs_csv(date_dir, server):
-    for dir in ["{}/csv/".format(script_dir),
-                "{}/csv/{}".format(script_dir, date_dir),
-                "{}/csv/{}/{}/".format(script_dir, date_dir, server)]:
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-
-
-def create_dirs_json():
-    for dir in ["{}/json/".format(script_dir)]:
+def create_dirs(date_dir, server):
+    for dir in ["{}/{}".format(script_dir, date_dir),
+                "{}/{}/{}/".format(script_dir, date_dir, server)]:
         if not os.path.exists(dir):
             os.makedirs(dir)
 
@@ -135,13 +129,13 @@ def write_csvs(date_dir, dt_start, dt_end, cursor, collection):
         cnt += 1
         print "mac={}, cnt={}".format(mac, cnt)
 
-        create_dirs_csv(date_dir, server)
+        create_dirs(date_dir, server)
 
         cursor = collection.find({"$and": [{"_id.date": {"$gte": dt_start,
                                                          "$lt": dt_end}},
                                            {"_id.mac": mac}]})
-        out_path = "{}/csv/{}/{}/{}.csv".format(script_dir, date_dir, server,
-                                                mac)
+        out_path = "{}/{}/{}/{}.csv".format(script_dir, date_dir, server,
+                                            mac)
         with open(out_path, "w") as f:
             f.write("dt,uf,server_ip,loss,latency,throughput_up,"
                     "throughput_down,nominal_up,nominal_down,traceroute\n")
@@ -171,26 +165,12 @@ def write_csvs(date_dir, dt_start, dt_end, cursor, collection):
                                               traceroute))
 
 
-def write_jsons(date_dir, cursor):
-    create_dirs_json()
-    out_path = "{}/json/{}.txt".format(script_dir, date_dir)
-    with open(out_path, "w") as f:
-        cnt = 0
-        for doc in cursor:
-            cnt += 1
-            print "cnt={}".format(cnt)
-
-            if ("_id" in doc) and ("date" in doc["_id"]):
-                doc["_id"]["date"] = str(doc["_id"]["date"])
-            f.write("{}\n".format(doc))
-
-
-def get_data(dt_start_sp, dt_end_sp, to_csv):
+def get_data(dt_start_sp, dt_end_sp):
     """
-    dt_start_sp and dt_end_sp must define a month in sao paulo time
+    [dt_start_sp, dt_end_sp) must define a month
     """
 
-    date_dir = "dtstart{}_dtend{}".format(dt_start_sp, dt_end_sp)
+    date_dir = utils.get_date_dir(dt_start_sp, dt_end_sp)
 
     client = MongoClient("cabul", 27017)
     collection = client["NET"]["measures"]
@@ -199,11 +179,7 @@ def get_data(dt_start_sp, dt_end_sp, to_csv):
     dt_end = dt_procedures.from_sp_to_utc(dt_end_sp)
 
     cursor = collection.find({"_id.date": {"$gte": dt_start, "$lt": dt_end}})
-
-    if to_csv:
-        write_csvs(date_dir, dt_start, dt_end, cursor, collection)
-    else:
-        write_jsons(date_dir, cursor)
+    write_csvs(date_dir, dt_start, dt_end, cursor, collection)
 
 
 if __name__ == "__main__":
@@ -212,6 +188,6 @@ if __name__ == "__main__":
     # get_data(dt_start_sp, dt_end_sp)
 
     for month in range(9, 10):
-        dt_start_sp = datetime(2016, month, 1, 0, 0, 0)
-        dt_end_sp = datetime(2016, month + 1, 1, 0, 0, 0)
-        get_data(dt_start_sp, dt_end_sp, to_csv=False)
+        dt_start_sp = datetime(2016, month, 1)
+        dt_end_sp = datetime(2016, month + 1, 1)
+        get_data(dt_start_sp, dt_end_sp)
