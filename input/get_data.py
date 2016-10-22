@@ -10,9 +10,9 @@ import utils.dt_procedures as dt_procedures
 import utils.utils as utils
 
 
-def create_dirs(date_dir, server):
-    for dir in ["{}/{}".format(script_dir, date_dir),
-                "{}/{}/{}/".format(script_dir, date_dir, server)]:
+def create_dirs(dt_dir, server):
+    for dir in ["{}/{}".format(script_dir, dt_dir),
+                "{}/{}/{}/".format(script_dir, dt_dir, server)]:
         if not os.path.exists(dir):
             os.makedirs(dir)
 
@@ -121,7 +121,7 @@ def get_macs(cursor):
     return macs, servers
 
 
-def write_csvs(date_dir, dt_start, dt_end, cursor, collection):
+def write_csvs(dt_dir, dt_start, dt_end, cursor, collection):
     macs, servers = get_macs(cursor)
 
     cnt = 0
@@ -129,12 +129,12 @@ def write_csvs(date_dir, dt_start, dt_end, cursor, collection):
         cnt += 1
         print "mac={}, cnt={}".format(mac, cnt)
 
-        create_dirs(date_dir, server)
+        create_dirs(dt_dir, server)
 
         cursor = collection.find({"$and": [{"_id.date": {"$gte": dt_start,
                                                          "$lt": dt_end}},
                                            {"_id.mac": mac}]})
-        out_path = "{}/{}/{}/{}.csv".format(script_dir, date_dir, server,
+        out_path = "{}/{}/{}/{}.csv".format(script_dir, dt_dir, server,
                                             mac)
         with open(out_path, "w") as f:
             f.write("dt,uf,server_ip,loss,latency,throughput_up,"
@@ -170,7 +170,7 @@ def get_data(dt_start_sp, dt_end_sp):
     [dt_start_sp, dt_end_sp) must define a month
     """
 
-    date_dir = utils.get_date_dir(dt_start_sp, dt_end_sp)
+    dt_dir = utils.get_dt_dir(dt_start_sp, dt_end_sp)
 
     client = MongoClient("cabul", 27017)
     collection = client["NET"]["measures"]
@@ -179,7 +179,7 @@ def get_data(dt_start_sp, dt_end_sp):
     dt_end = dt_procedures.from_sp_to_utc(dt_end_sp)
 
     cursor = collection.find({"_id.date": {"$gte": dt_start, "$lt": dt_end}})
-    write_csvs(date_dir, dt_start, dt_end, cursor, collection)
+    write_csvs(dt_dir, dt_start, dt_end, cursor, collection)
 
 
 if __name__ == "__main__":
