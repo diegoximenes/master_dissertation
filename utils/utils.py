@@ -30,6 +30,13 @@ def get_out_file_name(server, mac, dt_start, dt_end):
                                       get_str_dt(dt_start, dt_end))
 
 
+def get_in_path(server, mac, dt_start, dt_end):
+    return "{}/input/{}/{}/{}.csv".format(base_dir,
+                                          get_dt_dir(dt_start, dt_end),
+                                          server,
+                                          mac)
+
+
 def iter_server_mac(dt_dir, print_iter=False):
     cnt = 0
     for server in os.listdir("{}/input/{}".format(base_dir, dt_dir)):
