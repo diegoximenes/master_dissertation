@@ -39,13 +39,15 @@ class DiscreteHMM(HMM):
 
 if __name__ == "__main__":
     # these variables defines the initial point of the HMM
-    # a == hidden states transitions matrix
+    # a == hidden states transitions matrix. a[i][j] == probability of
+    # transition from state i to j
     a = [[0.8, 0.2, 0.0, 0.0, 0.0],
          [0.1, 0.8, 0.1, 0.0, 0.0],
          [0.0, 0.1, 0.8, 0.1, 0.0],
          [0.0, 0.0, 0.1, 0.8, 0.1],
          [0.0, 0.0, 0.0, 0.2, 0.8]]
-    # pi == hidden states start likelihood
+    # pi == hidden states start likelihood. pi[i] probability of starting
+    # sequence in state i
     pi = [0.2, 0.2, 0.2, 0.2, 0.2]
     # obs_bins defines the symbols: symbol 0 represents observations in
     # [0, obs_bins[0]], symbol 1 represents observations in

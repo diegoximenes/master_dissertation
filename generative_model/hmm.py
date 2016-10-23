@@ -14,6 +14,21 @@ from utils.time_series import TimeSeries
 
 
 class HMM():
+    def get_seq(self, ts):
+        seq = []
+        for y in ts.y:
+            seq.append([y])
+        return seq
+
+    def sample(self, n_samples):
+        ts = TimeSeries()
+        ts.y = self.model.sample(n_samples)[0]
+        ts.x = range(len(ts.y))
+
+        out_path = "{}/plots/{}/sample.png".format(script_dir,
+                                                   self.__class__.__name__)
+        plot_procedures.plot_ts(ts, out_path, compress=True)
+
     def unpack_row(self, row):
         dt_start = datetime.datetime.strptime(row["dt_start"], "%Y-%m-%d")
         dt_end = datetime.datetime.strptime(row["dt_end"], "%Y-%m-%d")
@@ -84,3 +99,4 @@ class HMM():
         self.write_model("{}/plots/{}/model.txt".
                          format(script_dir, self.__class__.__name__))
         self.test()
+        self.sample(500)
