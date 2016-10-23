@@ -3,6 +3,7 @@ import sys
 import math
 import random
 import shutil
+import datetime
 import numpy as np
 import pandas as pd
 
@@ -10,6 +11,7 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 from utils.time_series import TimeSeries
+import utils.utils as utils
 import utils.dt_procedures as dt_procedures
 
 
@@ -69,10 +71,10 @@ def add_cp_ids(target_email):
         cp_ids = []
         for idx, row in df.iterrows():
             dt_start = dt_procedures.from_js_strdate_to_dt(row["date_start"])
-            dt_end = dt_procedures.from_js_strdate_to_dt(row["date_end"])
-            date_dir = "{}_{}".format(dt_start.year,
-                                      str(dt_start.month).zfill(2))
-            in_path = "{}/input/{}/{}/{}.csv".format(base_dir, date_dir,
+            dt_end = dt_procedures.from_js_strdate_to_dt(row["date_end"]) + \
+                datetime.timedelta(days=1)
+            dt_dir = utils.get_dt_dir(dt_start, dt_end)
+            in_path = "{}/input/{}/{}/{}.csv".format(base_dir, dt_dir,
                                                      row["server"], row["mac"])
             if str(row["change_points"]) != "\'\'":
                 l_dt = map(dt_procedures.from_js_strdt_to_dt,
@@ -86,19 +88,10 @@ def add_cp_ids(target_email):
                   index=False)
 
 
-def create_dirs(target_email):
-    for dir in ["{}/change_point/input/{}".format(base_dir, target_email)]:
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-
-
 if __name__ == "__main__":
-    for target_email in ["gabriel.mendonca@tgr.net.br",
-                         "gustavo.santos@tgr.net.br",
-                         "rosam@land.ufrj.br",
-                         "guisenges@land.ufrj.br",
-                         "edmundo@land.ufrj.br"]:
-        create_dirs(target_email)
+    for target_email in ["gabriel.mendonca@tgr.net.br"]:
+        utils.create_dirs(["{}/change_point/input/{}".format(base_dir,
+                                                             target_email)])
         shutil.copyfile("{}/change_point/from_unsupervised_to_supervised/"
                         "classifications.csv".format(base_dir),
                         "{}/change_point/input/{}/data_web_system.csv"

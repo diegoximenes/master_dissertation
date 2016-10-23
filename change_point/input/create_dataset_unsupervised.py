@@ -6,26 +6,19 @@ import pandas as pd
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
+import utils.utils as utils
 from utils.time_series import TimeSeries
 
 
-def create_dirs(dataset):
-    for dir in ["{}/change_point/input/unsupervised/".format(base_dir),
-                "{}/change_point/input/unsupervised/{}".format(base_dir,
-                                                               dataset)]:
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-
-
-def include_in_dataset(ts, mac, date_dir, dt_start, dt_end,
+def include_in_dataset(ts, mac, dt_dir, dt_start, dt_end,
                        min_samples_fraction=0.5):
     df = pd.read_csv("{}/change_point/unsupervised/prints/{}/"
                      "traceroute_per_mac_filtered.csv".format(base_dir,
-                                                              date_dir))
+                                                              dt_dir))
     if mac not in df["mac"].values:
         return False
 
-    delta_days = (dt_end - dt_start).days + 1
+    delta_days = (dt_end - dt_start).days
     if float(len(ts.y)) / (delta_days * 24.0 * 2.0) < min_samples_fraction:
         return False
 
@@ -38,42 +31,32 @@ def create_dataset_unsupervised(dt_start, dt_end):
     datetimes must represent days
     """
 
-    # adjust to time interval be defined by [dt_start, dt_end]
-    dt_end = dt_end - datetime.timedelta(days=1)
-
-    dataset = "unsupervised_dtstart{}_dtend{}".format(dt_start, dt_end)
-    create_dirs(dataset)
+    dt_dir = utils.get_dt_dir(dt_start, dt_end)
+    utils.create_dirs(["{}/change_point/input/unsupervised/".format(base_dir),
+                       "{}/change_point/input/unsupervised/{}".
+                       format(base_dir, dt_dir)])
 
     js_date_start = "{}/{}/{}".format(str(dt_start.month).zfill(2),
                                       str(dt_start.day).zfill(2),
                                       dt_start.year)
-    js_date_end = "{}/{}/{}".format(str(dt_end.month).zfill(2),
-                                    str(dt_end.day).zfill(2),
-                                    dt_end.year)
-    date_dir = "{}_{}".format(dt_start.year, str(dt_start.month).zfill(2))
+    # js dates are kept in interval like [dt_start, dt_end] instead of
+    # [dt_start, dt_end)
+    dt_end_correction = dt_end - datetime.timedelta(days=1)
+    js_date_end = "{}/{}/{}".format(str(dt_end_correction.month).zfill(2),
+                                    str(dt_end_correction.day).zfill(2),
+                                    dt_end_correction.year)
 
-    out_path = "{}/unsupervised/{}/dataset.csv".format(script_dir, dataset)
+    out_path = "{}/unsupervised/{}/dataset.csv".format(script_dir, dt_dir)
     with open(out_path, "w") as f:
         f.write("email,mac,server,date_start,date_end,change_points,"
                 "change_points_ids\n")
-        cnt = 0
-        for server in os.listdir("{}/input/{}/".format(base_dir, date_dir)):
-            for file_name in os.listdir("{}/input/{}/{}/".format(base_dir,
-                                                                 date_dir,
-                                                                 server)):
-                cnt += 1
-                print "cnt={}".format(cnt)
-
-                mac = file_name.split(".csv")[0]
-                in_path = "{}/input/{}/{}/{}".format(base_dir, date_dir,
-                                                     server, file_name)
-                ts = TimeSeries(in_path=in_path, metric="loss",
-                                dt_start=dt_start, dt_end=dt_end)
-                if include_in_dataset(ts, mac, date_dir, dt_start, dt_end):
-                    f.write("{},{},{},{},{},\"\",\"\"\n".format(dataset, mac,
-                                                                server,
-                                                                js_date_start,
-                                                                js_date_end))
+        for server, mac, in_path in utils.iter_server_mac(dt_dir, True):
+            ts = TimeSeries(in_path, "loss", dt_start, dt_end)
+            if include_in_dataset(ts, mac, dt_dir, dt_start, dt_end):
+                f.write("{},{},{},{},{},\"\",\"\"\n".format(dt_dir, mac,
+                                                            server,
+                                                            js_date_start,
+                                                            js_date_end))
 
 
 if __name__ == "__main__":

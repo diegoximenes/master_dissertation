@@ -57,14 +57,19 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
     plot_axvline(ts, dt_axvline, compress, plt)
 
     plt.grid()
+
+    plt.ylabel(ylabel)
+    if ts.metric == "loss":
+        plt.ylim([-0.02, 1.02])
+        plt.yticks(np.arange(0, 1 + 0.05, 0.05))
     if ylim is not None:
         plt.ylim(ylim)
-    plt.ylabel(ylabel)
+
     plt.xlabel(xlabel)
     if not compress:
-        plt.xlim([ts.dt_start, ts.dt_end + datetime.timedelta(days=1)])
+        plt.xlim([ts.dt_start, ts.dt_end])
     plt.xticks(xticks, xticks_labels, rotation=45)
-    plt.yticks(np.arange(0, 1 + 0.05, 0.05))
+
     if compress:
         plt.scatter(range(len(ts.x)), ts.y, s=9)
     else:
@@ -139,14 +144,14 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     ax[0].grid()
     ax[0].set_title(title1)
     ax[0].set_ylabel(ylabel1, fontsize=28)
-    ax[0].set_xticks(xticks)
-    if not compress:
-        ax[0].set_xlim([ts1.dt_start, ts1.dt_end + datetime.timedelta(days=1)])
-    if ylim1 is not None:
-        ax[0].set_ylim(ylim1)
-    else:
+    if ts1.metric == "loss":
         ax[0].set_yticks(np.arange(0, 1 + 0.05, 0.05))
         ax[0].set_ylim([-0.02, 1.02])
+    if ylim1 is not None:
+        ax[0].set_ylim(ylim1)
+    ax[0].set_xticks(xticks)
+    if not compress:
+        ax[0].set_xlim([ts1.dt_start, ts1.dt_end])
     if plot_type1 == "plot":
         ax[0].plot(x1, y1)
     else:
@@ -154,18 +159,21 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
 
     ax[1].grid()
     ax[1].set_title(title2)
-    ax[1].set_xlabel(xlabel, fontsize=28)
     ax[1].set_ylabel(ylabel2, fontsize=28)
-    ax[1].set_xticks(xticks)
-    ax[1].set_xticklabels(xticks_labels, rotation=45)
-    if not compress:
-        ax[1].set_xlim([ts1.dt_start, ts1.dt_end + datetime.timedelta(days=1)])
+    if ts2.metric == "loss":
+        ax[1].set_yticks(np.arange(0, 1 + 0.05, 0.05))
+        ax[1].set_ylim([-0.02, 1.02])
     if ylim2 is not None:
         ax[1].set_ylim(ylim2)
     if yticks2 is not None:
         ax[1].set_yticks(yticks2)
     if ytick_labels2 is not None:
         ax[1].set_yticklabels(ytick_labels2)
+    ax[1].set_xlabel(xlabel, fontsize=28)
+    ax[1].set_xticks(xticks)
+    ax[1].set_xticklabels(xticks_labels, rotation=45)
+    if not compress:
+        ax[1].set_xlim([ts1.dt_start, ts1.dt_end])
     if plot_type2 == "plot":
         ax[1].plot(x2, y2)
     else:

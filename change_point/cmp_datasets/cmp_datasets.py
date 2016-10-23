@@ -32,7 +32,8 @@ def cmp_datasets():
 
         for dataset1 in datasets:
             for dataset2 in datasets:
-                if dataset1 != dataset2:
+                if ((dataset1 != dataset2) and (dataset1 != "unsupervised") and
+                        (dataset2 != "unsupervised")):
                     print "dataset1={}, dataset2={}".format(dataset1, dataset2)
 
                     df1 = pd.read_csv("{}/{}/dataset.csv".format(in_dir,

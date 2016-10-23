@@ -6,6 +6,7 @@ import numpy as np
 
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
+import utils.utils as utils
 import change_point.utils.cmp_class as cmp_class
 import change_point.utils.cp_utils as cp_utils
 from utils.time_series import TimeSeries
@@ -70,15 +71,15 @@ class ChangePointAlg:
             print "conf={}".format(conf)
 
             in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
-            out_path = ("{}/id{}_server{}_mac{}_dtstart{}_dtend{}.png".
-                        format(out_dir_path, idx, row["server"], row["mac"],
-                               dt_start, dt_end))
+            out_file_name = utils.get_out_file_name(row["server"], row["mac"],
+                                                    dt_start, dt_end)
+            out_path = "{}/id{}_{}.png".format(out_dir_path, idx,
+                                               out_file_name)
             ts_raw = TimeSeries(in_path, "loss", dt_start, dt_end)
             self.plot(ts_preprocessed, ts_raw, correct, pred, conf, out_path)
 
-            out_path = ("{}/id{}_server{}_mac{}_dtstart{}_dtend{}.csv".
-                        format(out_dir_path, idx, row["server"], row["mac"],
-                               dt_start, dt_end))
+            out_path = "{}/id{}_{}.csv".format(out_dir_path, idx,
+                                               out_file_name)
             self.print_cp(ts_raw, pred, out_path)
 
     @abc.abstractmethod

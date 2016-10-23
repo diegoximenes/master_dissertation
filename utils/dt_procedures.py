@@ -32,7 +32,10 @@ def from_dt_to_epoch(dt):
 
 
 def in_dt_range(dt, dt_start, dt_end):
-    return ((dt >= dt_start) and (dt <= dt_end + timedelta(days=1)))
+    """
+    check if dt is in [dt_start, dt_end)
+    """
+    return ((dt >= dt_start) and (dt < dt_end))
 
 
 def from_strdtUtc_to_dtSp(strdt):

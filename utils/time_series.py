@@ -13,20 +13,19 @@ class TimeSeries:
     Attributes:
         x: sorted dt list
         y: mean values associated with x. Values can be None.
+        metric:
         dt_start: sao paulo datetime of the first day
         dt_end: sao paulo datetime of the last day
         ts_type: "raw", "hourly", "dist"
         compressed: boolean. If ts_type is "raw" then this parameter is
             irrelevant
-        server: server that the client measured against, considering that
-            during [dt_start, dt_end) the client measured against only
-            one server
     """
 
     def __init__(self, in_path=None, metric=None, dt_start=None, dt_end=None,
                  ts_type="raw", compressed=False):
         self.x = []
         self.y = []
+        self.metric = metric
         self.dt_start = dt_start
         self.dt_end = dt_end
         self.ts_type = ts_type

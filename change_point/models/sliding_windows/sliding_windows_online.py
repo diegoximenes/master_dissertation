@@ -6,6 +6,7 @@ import numpy as np
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
+import utils.utils as utils
 import utils.plot_procedures as plot_procedures
 import utils.time_series as time_series
 import change_point.utils.cp_utils as cp_utils
@@ -72,14 +73,6 @@ class SlidingWindowsOnline(change_point_alg.ChangePointAlg):
                                         format(conf))
 
 
-def create_dirs(dataset):
-    for dir in ["{}/plots/".format(script_dir),
-                "{}/plots/{}/".format(script_dir, dataset),
-                "{}/plots/{}/online/".format(script_dir, dataset)]:
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-
-
 def main():
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "none"}
@@ -93,7 +86,9 @@ def main():
 
     model = SlidingWindowsOnline(preprocess_args=preprocess_args, **param)
 
-    create_dirs(dataset)
+    utils.create_dirs(["{}/plots/".format(script_dir),
+                       "{}/plots/{}/".format(script_dir, dataset),
+                       "{}/plots/{}/online/".format(script_dir, dataset)])
     out_dir_path = "{}/plots/{}/online/".format(script_dir, dataset)
     model.plot_all(dataset, out_dir_path, cmp_class_args)
 

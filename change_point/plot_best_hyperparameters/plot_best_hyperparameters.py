@@ -7,6 +7,7 @@ from bson import json_util
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
+import utils.utils as utils
 from change_point.models.seg_neigh.seg_neigh import SegmentNeighbourhood
 from change_point.models.sliding_windows.sliding_windows_online import \
     SlidingWindowsOnline
@@ -20,15 +21,6 @@ import change_point.utils.cmp_class as cmp_class
 import change_point.utils.cmp_win as cmp_win
 
 
-def create_dirs(dataset, model_class_name):
-    for dir in ["{}/plots/".format(script_dir),
-                "{}/plots/{}/".format(script_dir, dataset),
-                "{}/plots/{}/{}/".format(script_dir, dataset,
-                                         model_class_name)]:
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-
-
 def get_params(model_class_name, params):
     params_ret = copy.deepcopy(params)
     if ((model_class_name == SlidingWindowsOffline.__name__) or
@@ -40,13 +32,12 @@ def get_params(model_class_name, params):
 
 def plot_best_hyperparameters():
     client = pymongo.MongoClient()
-
     collection = client["change_point"]["random_search"]
     model_classes = [SegmentNeighbourhood, SlidingWindowsOffline,
                      SlidingWindowsOnline, BayesianOffline, BayesianOnline,
                      GaussianHMM, DiscreteHMM]
     metric = cmp_class.f_1_score
-    datasets = ["rosam@land.ufrj.br", "edmundo@land.ufrj.br"]
+    datasets = ["rosam@land.ufrj.br"]
 
     metric = metric.__name__
     for dataset in datasets:
@@ -61,7 +52,11 @@ def plot_best_hyperparameters():
                 preprocess_args = doc["preprocess_args"]
                 params = get_params(doc["model_class"], doc["params"])
 
-                create_dirs(dataset, model_class.__name__)
+                utils.create_dirs(["{}/plots/".format(script_dir),
+                                   "{}/plots/{}/".format(script_dir, dataset),
+                                   "{}/plots/{}/{}/".
+                                   format(script_dir, dataset,
+                                          model_class.__name__)])
                 out_dir_path = "{}/plots/{}/{}/".format(script_dir, dataset,
                                                         model_class.__name__)
 

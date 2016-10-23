@@ -5,6 +5,7 @@ import ghmm
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
+import utils.utils as utils
 import change_point.utils.cmp_win as cmp_win
 import change_point.models.hmm.hmm as hmm
 
@@ -81,14 +82,6 @@ class DiscreteHMM(hmm.HMM):
                            conf, out_path)
 
 
-def create_dirs(dataset):
-    for dir in ["{}/plots/".format(script_dir),
-                "{}/plots/{}/".format(script_dir, dataset),
-                "{}/plots/{}/discrete/".format(script_dir, dataset)]:
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-
-
 def main():
     n = 4
     A = []
@@ -115,7 +108,9 @@ def main():
 
     model = DiscreteHMM(preprocess_args=preprocess_args, **param)
 
-    create_dirs(dataset)
+    utils.create_dirs(["{}/plots/".format(script_dir),
+                       "{}/plots/{}/".format(script_dir, dataset),
+                       "{}/plots/{}/discrete/".format(script_dir, dataset)])
     out_dir_path = "{}/plots/{}/discrete/".format(script_dir, dataset)
     model.plot_all(dataset, out_dir_path, cmp_class_args)
 

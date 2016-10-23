@@ -1,11 +1,13 @@
 import os
 import sys
 import functools
+import datetime
 import pandas as pd
 import numpy as np
 
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
+import utils.utils as utils
 import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
 
@@ -36,9 +38,12 @@ def from_str_to_int_list(str_l):
 
 def unpack_pandas_row(row):
     dt_start = dt_procedures.from_js_strdate_to_dt(row["date_start"])
-    dt_end = dt_procedures.from_js_strdate_to_dt(row["date_end"])
-    date_dir = "{}_{}".format(dt_start.year, str(dt_start.month).zfill(2))
-    in_path = "{}/input/{}/{}/{}.csv".format(base_dir, date_dir, row["server"],
+    # js dates are stored in intervals like [dt_start, dt_end] instead of
+    # [dt_start, dt_end)
+    dt_end = dt_procedures.from_js_strdate_to_dt(row["date_end"]) + \
+        datetime.timedelta(days=1)
+    dt_dir = utils.get_dt_dir(dt_start, dt_end)
+    in_path = "{}/input/{}/{}/{}.csv".format(base_dir, dt_dir, row["server"],
                                              row["mac"])
     return in_path, dt_start, dt_end
 

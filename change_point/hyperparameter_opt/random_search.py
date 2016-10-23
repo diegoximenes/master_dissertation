@@ -24,8 +24,7 @@ import change_point.utils.cp_utils as cp_utils
 import change_point.hyperparameter_opt.param_sampler as param_sampler
 
 client = pymongo.MongoClient()
-db = client["change_point"]
-collection = db["random_search"]
+collection = client["change_point"]["random_search"]
 
 
 class RandomSearch():
@@ -137,7 +136,7 @@ class RandomSearch():
             collection.insert(dic)
 
 
-def main():
+if __name__ == "__main__":
     dataset = "rosam@land.ufrj.br"
     cmp_class_args = {"win_len": 15}
     f_metrics = [cmp_class.f_half_score, cmp_class.f_1_score,
@@ -153,7 +152,3 @@ def main():
     random_search.run(DiscreteHMM, 50)
     random_search.run(BayesianOnline, 50)
     # random_search.run(BayesianOffline, 1)
-
-
-if __name__ == "__main__":
-    main()
