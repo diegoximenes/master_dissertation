@@ -82,8 +82,6 @@ class BayesianOnline(change_point_alg.ChangePointAlg):
                                         compress=True, title1="correct",
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
-                                        ylim2=[-0.02, 1.02],
-                                        yticks2=np.arange(0, 1.05, 0.05),
                                         title2="predicted. conf={}".
                                         format(conf))
 
@@ -95,15 +93,18 @@ def main():
              "future_win_len": 10,
              "thresh": 0.2372000234333883,
              "min_peak_dist": 11}
+    metric = "loss"
     dataset = "rosam@land.ufrj.br"
 
     model = BayesianOnline(preprocess_args=preprocess_args, **param)
 
     utils.create_dirs(["{}/plots/".format(script_dir),
                        "{}/plots/{}/".format(script_dir, dataset),
-                       "{}/plots/{}/online/".format(script_dir, dataset)])
-    out_dir_path = "{}/plots/{}/online/".format(script_dir, dataset)
-    model.plot_all(dataset, out_dir_path, cmp_class_args)
+                       "{}/plots/{}/online/".format(script_dir, dataset),
+                       "{}/plots/{}/online/{}".format(script_dir, dataset,
+                                                      metric)])
+    out_dir_path = "{}/plots/{}/online/{}".format(script_dir, dataset, metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args, metric)
 
 
 if __name__ == "__main__":

@@ -75,8 +75,6 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
                                         title1="correct",
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
-                                        ylim2=[-0.02, 1.02],
-                                        yticks2=np.arange(0, 1.05, 0.05),
                                         title2="predicted. conf={}".
                                         format(conf),
                                         plot_type2="scatter")
@@ -91,14 +89,16 @@ def main():
              "seg_model": "Exponential",
              "min_seg_len": 15,
              "max_cps": 20}
+    metric = "loss"
     dataset = "rosam@land.ufrj.br"
 
     model = SegmentNeighbourhood(preprocess_args=preprocess_args, **param)
 
     utils.create_dirs(["{}/plots/".format(script_dir),
-                       "{}/plots/{}/".format(script_dir, dataset)])
-    out_dir_path = "{}/plots/{}/".format(script_dir, dataset)
-    model.plot_all(dataset, out_dir_path, cmp_class_args)
+                       "{}/plots/{}/".format(script_dir, dataset),
+                       "{}/plots/{}/{}".format(script_dir, dataset, metric)])
+    out_dir_path = "{}/plots/{}/{}".format(script_dir, dataset, metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args, metric)
 
 
 if __name__ == "__main__":

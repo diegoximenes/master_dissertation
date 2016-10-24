@@ -51,7 +51,7 @@ class ChangePointAlg:
 
         return conf
 
-    def plot_all(self, dataset, out_dir_path, cmp_class_args):
+    def plot_all(self, dataset, out_dir_path, cmp_class_args, metric):
         train_path = "{}/change_point/input/{}/dataset.csv".format(base_dir,
                                                                    dataset)
 
@@ -75,7 +75,7 @@ class ChangePointAlg:
                                                     dt_start, dt_end)
             out_path = "{}/id{}_{}.png".format(out_dir_path, idx,
                                                out_file_name)
-            ts_raw = TimeSeries(in_path, "loss", dt_start, dt_end)
+            ts_raw = TimeSeries(in_path, metric, dt_start, dt_end)
             self.plot(ts_preprocessed, ts_raw, correct, pred, conf, out_path)
 
             out_path = "{}/id{}_{}.csv".format(out_dir_path, idx,
