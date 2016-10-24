@@ -1,4 +1,3 @@
-import scipy.signal
 import numpy as np
 from datetime import datetime
 
@@ -19,6 +18,7 @@ class TimeSeries:
         ts_type: "raw", "hourly", "dist"
         compressed: boolean. If ts_type is "raw" then this parameter is
             irrelevant
+        filters: list with filter application order
     """
 
     def __init__(self, in_path=None, metric=None, dt_start=None, dt_end=None,
@@ -30,6 +30,7 @@ class TimeSeries:
         self.dt_end = dt_end
         self.ts_type = ts_type
         self.compressed = compressed
+        self.filters = []
 
         if (dt_start is not None) and (dt_end is not None):
             self.dt_start, self.dt_end = dt_start, dt_end
@@ -87,44 +88,55 @@ class TimeSeries:
                 ret_y.append(self.y[i])
         self.x, self.y = ret_x, ret_y
 
-    def ma_smoothing(self, win_len=11):
+    def ma_smoothing(self, win_len):
         """
-        If y[t] == None this position is ignored on the computation
+        centered window filter
+
+        Arguments:
+            win_len: must be odd integer
         """
 
+        ret_x = []
         ret_y = []
-        for i in xrange(len(self.y)):
+        for i in xrange(win_len / 2, len(self.y) - win_len / 2):
             ysum, ycnt = 0, 0
-            for j in xrange(max(0, i - win_len / 2),
-                            min(len(self.y) - 1, i + win_len / 2) + 1):
+            for j in xrange(i - win_len / 2, i + win_len / 2 + 1):
                 if self.y[j] is not None:
                     ysum += self.y[j]
                     ycnt += 1
-
             if ycnt > 0:
                 val = float(ysum) / ycnt
             else:
                 val = None
+            ret_x.append(self.x[i])
             ret_y.append(val)
+        self.x = ret_x
         self.y = ret_y
+        self.filters.append("ma_winlen{}".format(win_len))
 
     def percentile_filter(self, win_len, p):
-        k = int((p - np.finfo(float).eps) * len(self.y))
+        """
+        centered window filter
 
+        Arguments:
+            win_len: must be odd integer
+            p: must belong in [0.0, 1.0]
+        """
+
+        ret_x = []
         ret_y = []
-        for i in xrange(len(self.y)):
+        for i in xrange(win_len / 2, len(self.y) - win_len / 2):
             l = []
-            for j in xrange(max(0, i - win_len / 2),
-                            min(len(self.y) - 1, i + win_len / 2) + 1):
+            for j in xrange(i - win_len / 2, i + win_len / 2 + 1):
                 if self.y[j] is not None:
                     l.append(self.y[j])
-            k = min(k, len(l) - 1)
+            k = int(p * len(l))
             l = np.partition(l, k)
+            ret_x.append(self.x[i])
             ret_y.append(l[k])
+        self.x = ret_x
         self.y = ret_y
-
-    def savgol(self, win_len, poly_order):
-        self.y = scipy.signal.savgol_filter(self.y, win_len, poly_order)
+        self.filters.append("percentile_winlen{}_p{}".format(win_len, p))
 
     def get_mean(self):
         """
