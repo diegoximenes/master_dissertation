@@ -7,6 +7,7 @@ base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
 import utils.utils as utils
 import change_point.utils.cmp_win as cmp_win
+import change_point.utils.cp_utils as cp_utils
 import change_point.models.hmm.hmm as hmm
 
 
@@ -108,19 +109,21 @@ def main():
              "thresh": 0.5001054151917693,
              "min_peak_dist": 7}
     metric = "loss"
-    dataset = "rosam@land.ufrj.br"
+    # datasets = ["rosam@land.ufrj.br"]
+    datasets = list(cp_utils.iter_unsupervised_datasets())
 
     model = DiscreteHMM(preprocess_args=preprocess_args, metric=metric,
                         **param)
 
-    utils.create_dirs(["{}/plots/".format(script_dir),
-                       "{}/plots/{}/".format(script_dir, dataset),
-                       "{}/plots/{}/discrete/".format(script_dir, dataset),
-                       "{}/plots/{}/discrete/{}".format(script_dir, dataset,
-                                                        metric)])
-    out_dir_path = "{}/plots/{}/discrete/{}".format(script_dir, dataset,
-                                                    metric)
-    model.plot_all(dataset, out_dir_path, cmp_class_args)
+    for dataset in datasets:
+        utils.create_dirs(["{}/plots/".format(script_dir),
+                           "{}/plots/{}/".format(script_dir, dataset),
+                           "{}/plots/{}/discrete/".format(script_dir, dataset),
+                           "{}/plots/{}/discrete/{}".format(script_dir,
+                                                            dataset, metric)])
+        out_dir_path = "{}/plots/{}/discrete/{}".format(script_dir, dataset,
+                                                        metric)
+        model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

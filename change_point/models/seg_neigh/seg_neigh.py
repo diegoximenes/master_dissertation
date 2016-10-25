@@ -10,6 +10,7 @@ sys.path.append(base_dir)
 import utils.utils as utils
 import utils.plot_procedures as plot_procedures
 import change_point.models.change_point_alg as change_point_alg
+import change_point.utils.cp_utils as cp_utils
 
 
 class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
@@ -85,24 +86,28 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
 
 def main():
     cmp_class_args = {"win_len": 15}
-    preprocess_args = {"filter_type": "ma_smoothing",
-                       "win_len": 9}
-    param = {"const_pen": 57.120860475387616,
-             "f_pen": "n_cps",
-             "seg_model": "Exponential",
-             "min_seg_len": 15,
+    preprocess_args = {"filter_type": "percentile_filter",
+                       "win_len": 13,
+                       "p": 0.5}
+    param = {"const_pen": 50,
+             "f_pen": "n_cps ^ 2",
+             "seg_model": "Normal",
+             "min_seg_len": 5,
              "max_cps": 20}
-    metric = "loss"
-    dataset = "rosam@land.ufrj.br"
+    metric = "latency"
+    # datasets = ["/unsupervised/dtstart2016-06-11_dtend2016-06-21"]
+    datasets = list(cp_utils.iter_unsupervised_datasets())
 
     model = SegmentNeighbourhood(preprocess_args=preprocess_args,
                                  metric=metric, **param)
 
-    utils.create_dirs(["{}/plots/".format(script_dir),
-                       "{}/plots/{}/".format(script_dir, dataset),
-                       "{}/plots/{}/{}".format(script_dir, dataset, metric)])
-    out_dir_path = "{}/plots/{}/{}".format(script_dir, dataset, metric)
-    model.plot_all(dataset, out_dir_path, cmp_class_args)
+    for dataset in datasets:
+        utils.create_dirs(["{}/plots/".format(script_dir),
+                           "{}/plots/{}/".format(script_dir, dataset),
+                           "{}/plots/{}/{}".format(script_dir, dataset,
+                                                   metric)])
+        out_dir_path = "{}/plots/{}/{}".format(script_dir, dataset, metric)
+        model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

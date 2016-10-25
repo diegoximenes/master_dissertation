@@ -84,18 +84,21 @@ def main():
              "min_bin_f_dist": 0.0,
              "max_bin_f_dist": 1.0}
     metric = "loss"
-    dataset = "rosam@land.ufrj.br"
+    datasets = ["rosam@land.ufrj.br"]
+    datasets = list(cp_utils.iter_unsupervised_datasets())
 
     model = SlidingWindowsOnline(preprocess_args=preprocess_args,
                                  metric=metric, **param)
 
-    utils.create_dirs(["{}/plots/".format(script_dir),
-                       "{}/plots/{}/".format(script_dir, dataset),
-                       "{}/plots/{}/online/".format(script_dir, dataset),
-                       "{}/plots/{}/online/{}".format(script_dir, dataset,
-                                                      metric)])
-    out_dir_path = "{}/plots/{}/online/{}".format(script_dir, dataset, metric)
-    model.plot_all(dataset, out_dir_path, cmp_class_args)
+    for dataset in datasets:
+        utils.create_dirs(["{}/plots/".format(script_dir),
+                           "{}/plots/{}/".format(script_dir, dataset),
+                           "{}/plots/{}/online/".format(script_dir, dataset),
+                           "{}/plots/{}/online/{}".format(script_dir, dataset,
+                                                          metric)])
+        out_dir_path = "{}/plots/{}/online/{}".format(script_dir, dataset,
+                                                      metric)
+        model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

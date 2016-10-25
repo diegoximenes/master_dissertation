@@ -3,6 +3,7 @@ import sys
 import ghmm
 import numpy as np
 import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pylab as plt
 
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")

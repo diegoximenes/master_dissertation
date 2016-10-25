@@ -1,5 +1,7 @@
+import statsmodels.api as sm
 import scipy.signal
 import numpy as np
+import pandas as pd
 from datetime import datetime
 
 import read_input
@@ -146,6 +148,17 @@ class TimeSeries:
                                 format(win_len, poly_order))
         except:
             pass
+
+    def decompose(self):
+        """
+        decompose ts in trend, seasonal, residual components
+        """
+        df = pd.DataFrame({"metric": self.y})
+        df = df.set_index(pd.date_range("1/1/2016", periods=len(self.x),
+                                        freq="W"))
+        decomp = sm.tsa.seasonal_decompose(df["metric"])
+        # decomp.plot()
+        return decomp.resid, decomp.seasonal, decomp.trend
 
     def get_mean(self):
         """

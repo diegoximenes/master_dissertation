@@ -79,18 +79,21 @@ def main():
              "thresh": 0.1,
              "min_peak_dist": 10}
     metric = "loss"
-    dataset = "rosam@land.ufrj.br"
+    # datasets = ["rosam@land.ufrj.br"]
+    datasets = list(cp_utils.iter_unsupervised_datasets())
 
     model = BayesianOffline(preprocess_args=preprocess_args, metric=metric,
                             **param)
 
-    utils.create_dirs(["{}/plots/".format(script_dir),
-                       "{}/plots/{}/".format(script_dir, dataset),
-                       "{}/plots/{}/offline/".format(script_dir, dataset),
-                       "{}/plots/{}/offline/{}".format(script_dir, dataset,
-                                                       metric)])
-    out_dir_path = "{}/plots/{}/offline/{}".format(script_dir, dataset, metric)
-    model.plot_all(dataset, out_dir_path, cmp_class_args)
+    for dataset in datasets:
+        utils.create_dirs(["{}/plots/".format(script_dir),
+                           "{}/plots/{}/".format(script_dir, dataset),
+                           "{}/plots/{}/offline/".format(script_dir, dataset),
+                           "{}/plots/{}/offline/{}".format(script_dir, dataset,
+                                                           metric)])
+        out_dir_path = "{}/plots/{}/offline/{}".format(script_dir, dataset,
+                                                       metric)
+        model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

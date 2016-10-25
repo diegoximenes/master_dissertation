@@ -7,6 +7,7 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
 import utils.utils as utils
+import change_point.utils.cp_utils as cp_utils
 import change_point.models.hmm.hmm as hmm
 
 
@@ -93,19 +94,21 @@ def main():
              "thresh": 0.32266574449686963,
              "min_peak_dist": 17}
     metric = "loss"
-    dataset = "rosam@land.ufrj.br"
+    # datasets = ["rosam@land.ufrj.br"]
+    datasets = list(cp_utils.iter_unsupervised_datasets())
 
     model = GaussianHMM(preprocess_args=preprocess_args, metric=metric,
                         **param)
 
-    utils.create_dirs(["{}/plots/".format(script_dir),
-                       "{}/plots/{}/".format(script_dir, dataset),
-                       "{}/plots/{}/gaussian/".format(script_dir, dataset),
-                       "{}/plots/{}/gaussian/{}".format(script_dir, dataset,
-                                                        metric)])
-    out_dir_path = "{}/plots/{}/gaussian/{}".format(script_dir, dataset,
-                                                    metric)
-    model.plot_all(dataset, out_dir_path, cmp_class_args)
+    for dataset in datasets:
+        utils.create_dirs(["{}/plots/".format(script_dir),
+                           "{}/plots/{}/".format(script_dir, dataset),
+                           "{}/plots/{}/gaussian/".format(script_dir, dataset),
+                           "{}/plots/{}/gaussian/{}".format(script_dir,
+                                                            dataset, metric)])
+        out_dir_path = "{}/plots/{}/gaussian/{}".format(script_dir, dataset,
+                                                        metric)
+        model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

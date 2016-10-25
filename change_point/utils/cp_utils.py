@@ -11,6 +11,12 @@ import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
 
 
+def iter_unsupervised_datasets():
+    for dt_dir in os.listdir("{}/change_point/input/unsupervised/".
+                             format(base_dir)):
+        yield "unsupervised/{}".format(dt_dir)
+
+
 def param_pp(dic):
     """
     pretty print: swap function elements by their name

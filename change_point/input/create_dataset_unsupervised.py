@@ -51,6 +51,8 @@ def create_dataset_unsupervised(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 6, 1)
-    dt_end = datetime.datetime(2016, 6, 11)
-    create_dataset_unsupervised(dt_start, dt_end)
+    for month in xrange(7, 10):
+        for day_start in (1, 11, 21):
+            dt_start = datetime.datetime(2016, month, day_start)
+            dt_end = dt_start + datetime.timedelta(days=10)
+            create_dataset_unsupervised(dt_start, dt_end)
