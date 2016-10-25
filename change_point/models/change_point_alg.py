@@ -37,7 +37,7 @@ class ChangePointAlg:
         for idx, row in df.iterrows():
             cnt += 1
 
-            ts = cp_utils.get_ts(row, self.preprocess_args)
+            ts = cp_utils.get_ts(row, self.preprocess_args, self.metric)
             pred = self.predict(ts)
             correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
 
@@ -51,7 +51,7 @@ class ChangePointAlg:
 
         return conf
 
-    def plot_all(self, dataset, out_dir_path, cmp_class_args, metric):
+    def plot_all(self, dataset, out_dir_path, cmp_class_args):
         train_path = "{}/change_point/input/{}/dataset.csv".format(base_dir,
                                                                    dataset)
 
@@ -61,7 +61,8 @@ class ChangePointAlg:
             cnt += 1
             print "cnt={}".format(cnt)
 
-            ts_preprocessed = cp_utils.get_ts(row, self.preprocess_args)
+            ts_preprocessed = cp_utils.get_ts(row, self.preprocess_args,
+                                              self.metric)
             pred = self.predict(ts_preprocessed)
             correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
             conf = cmp_class.conf_mat(correct, pred, ts_preprocessed,
@@ -75,7 +76,7 @@ class ChangePointAlg:
                                                     dt_start, dt_end)
             out_path = "{}/id{}_{}.png".format(out_dir_path, idx,
                                                out_file_name)
-            ts_raw = TimeSeries(in_path, metric, dt_start, dt_end)
+            ts_raw = TimeSeries(in_path, self.metric, dt_start, dt_end)
             self.plot(ts_preprocessed, ts_raw, correct, pred, conf, out_path)
 
             out_path = "{}/id{}_{}.csv".format(out_dir_path, idx,

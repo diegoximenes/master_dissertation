@@ -19,11 +19,12 @@ import bayesian_changepoint_detection.online_changepoint_detection as oncd
 class BayesianOnline(change_point_alg.ChangePointAlg):
     has_training = False
 
-    def __init__(self, preprocess_args, hazard_lambda, future_win_len, thresh,
-                 min_peak_dist):
+    def __init__(self, preprocess_args, metric, hazard_lambda, future_win_len,
+                 thresh, min_peak_dist):
         """
         Args:
             preprocess_args:
+            metric:
             hazard_lambda: prior on p(current run lenght | last run length)
             future_win_len: to decide if t is a change point, it is considered
                             the [0:t + future_win_len] interval
@@ -34,6 +35,8 @@ class BayesianOnline(change_point_alg.ChangePointAlg):
         """
 
         self.preprocess_args = preprocess_args
+        self.metric = metric
+
         self.hazard_lambda = hazard_lambda
         self.future_win_len = future_win_len
         self.thresh = thresh
@@ -96,7 +99,8 @@ def main():
     metric = "loss"
     dataset = "rosam@land.ufrj.br"
 
-    model = BayesianOnline(preprocess_args=preprocess_args, **param)
+    model = BayesianOnline(preprocess_args=preprocess_args, metric=metric,
+                           **param)
 
     utils.create_dirs(["{}/plots/".format(script_dir),
                        "{}/plots/{}/".format(script_dir, dataset),
@@ -104,7 +108,7 @@ def main():
                        "{}/plots/{}/online/{}".format(script_dir, dataset,
                                                       metric)])
     out_dir_path = "{}/plots/{}/online/{}".format(script_dir, dataset, metric)
-    model.plot_all(dataset, out_dir_path, cmp_class_args, metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

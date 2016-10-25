@@ -28,10 +28,11 @@ collection = client["change_point"]["random_search"]
 
 
 class RandomSearch():
-    def __init__(self, cmp_class_args, f_metrics, dataset):
+    def __init__(self, cmp_class_args, f_metrics, dataset, metric):
         self.cmp_class_args = cmp_class_args
         self.f_metrics = f_metrics
         self.dataset = dataset
+        self.metric = metric
 
         train_path = "{}/change_point/input/{}/dataset.csv".format(base_dir,
                                                                    dataset)
@@ -76,7 +77,8 @@ class RandomSearch():
                 print "invalid"
                 continue
 
-            model = model_class(preprocess_args=preprocess_args, **param)
+            model = model_class(preprocess_args=preprocess_args,
+                                metric=self.metric, **param)
 
             # Iterate through cv iterator accumalating score.
             # In each iteration train model with train set and get score in
@@ -119,6 +121,7 @@ class RandomSearch():
 
             # save results in mongodb
             dic = {}
+            dic["metric"] = self.metric
             dic["model_class"] = model_class.__name__
             dic["dataset"] = self.dataset
             dic["params"] = cp_utils.param_pp(param)
@@ -137,13 +140,14 @@ class RandomSearch():
 
 
 if __name__ == "__main__":
+    metric = "loss"
     dataset = "rosam@land.ufrj.br"
     cmp_class_args = {"win_len": 15}
     f_metrics = [cmp_class.f_half_score, cmp_class.f_1_score,
                  cmp_class.f_2_score, cmp_class.jcc, cmp_class.acc,
                  cmp_class.bacc]
 
-    random_search = RandomSearch(cmp_class_args, f_metrics, dataset)
+    random_search = RandomSearch(cmp_class_args, f_metrics, dataset, metric)
 
     random_search.run(SegmentNeighbourhood, 50)
     random_search.run(SlidingWindowsOffline, 50)

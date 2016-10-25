@@ -17,11 +17,14 @@ import bayesian_changepoint_detection.offline_changepoint_detection as offcd
 class BayesianOffline(change_point_alg.ChangePointAlg):
     has_training = False
 
-    def __init__(self, preprocess_args, prior, p, k, thresh, min_peak_dist):
+    def __init__(self, preprocess_args, metric, prior, p, k, thresh,
+                 min_peak_dist):
+        self.preprocess_args = preprocess_args
+        self.metric = metric
+
         self.prior = prior
         self.p = p
         self.k = k
-        self.preprocess_args = preprocess_args
         self.thresh = thresh
         self.min_peak_dist = min_peak_dist
 
@@ -78,7 +81,8 @@ def main():
     metric = "loss"
     dataset = "rosam@land.ufrj.br"
 
-    model = BayesianOffline(preprocess_args=preprocess_args, **param)
+    model = BayesianOffline(preprocess_args=preprocess_args, metric=metric,
+                            **param)
 
     utils.create_dirs(["{}/plots/".format(script_dir),
                        "{}/plots/{}/".format(script_dir, dataset),
@@ -86,7 +90,7 @@ def main():
                        "{}/plots/{}/offline/{}".format(script_dir, dataset,
                                                        metric)])
     out_dir_path = "{}/plots/{}/offline/{}".format(script_dir, dataset, metric)
-    model.plot_all(dataset, out_dir_path, cmp_class_args, metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+import scipy.signal
 import numpy as np
 from datetime import datetime
 
@@ -137,6 +138,14 @@ class TimeSeries:
         self.x = ret_x
         self.y = ret_y
         self.filters.append("percentile_winlen{}_p{}".format(win_len, p))
+
+    def savgol(self, win_len, poly_order):
+        try:
+            self.y = scipy.signal.savgol_filter(self.y, win_len, poly_order)
+            self.filters.append("savgol_winlen{}_polyorder{}".
+                                format(win_len, poly_order))
+        except:
+            pass
 
     def get_mean(self):
         """

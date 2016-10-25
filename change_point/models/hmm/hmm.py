@@ -134,7 +134,8 @@ class HMM(change_point_alg.ChangePointAlg):
                  "min_bin_f_dist": 0,
                  "max_bin_f_dist": n - 1}
         sliding_windows = \
-            SlidingWindowsOffline(preprocess_args=preprocess_args, **param)
+            SlidingWindowsOffline(preprocess_args=preprocess_args, metric=None,
+                                  **param)
         pred = sliding_windows.predict(ts_hidden_state_path)
         ts_sliding_windows_dist = \
             sliding_windows.get_ts_dist(ts_hidden_state_path)

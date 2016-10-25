@@ -3,7 +3,6 @@ import sys
 import math
 import random
 import shutil
-import datetime
 import numpy as np
 import pandas as pd
 
@@ -66,13 +65,12 @@ def add_cp_ids(target_email):
     """
 
     in_path = "{}/{}/data_web_system.csv".format(script_dir, target_email)
-    df = pd.read_csv(in_path, sep=";")
+    df = pd.read_csv(in_path)
     if "change_points_ids" not in df:
         cp_ids = []
         for idx, row in df.iterrows():
-            dt_start = dt_procedures.from_js_strdate_to_dt(row["date_start"])
-            dt_end = dt_procedures.from_js_strdate_to_dt(row["date_end"]) + \
-                datetime.timedelta(days=1)
+            dt_start = dt_procedures.from_strdt_to_dt(row["dt_start"])
+            dt_end = dt_procedures.from_strdt_to_dt(row["dt_end"])
             dt_dir = utils.get_dt_dir(dt_start, dt_end)
             in_path = "{}/input/{}/{}/{}.csv".format(base_dir, dt_dir,
                                                      row["server"], row["mac"])
@@ -89,7 +87,11 @@ def add_cp_ids(target_email):
 
 
 if __name__ == "__main__":
-    for target_email in ["gabriel.mendonca@tgr.net.br"]:
+    for target_email in ["gabriel.mendonca@tgr.net.br", "edmundo@land.ufrj.br",
+                         "gustavo.santos@tgr.net.br", "rosam@land.ufrj.br",
+                         "guisenges@land.ufrj.br"]:
+        print "target_email={}".format(target_email)
+
         utils.create_dirs(["{}/change_point/input/{}".format(base_dir,
                                                              target_email)])
         shutil.copyfile("{}/change_point/from_unsupervised_to_supervised/"

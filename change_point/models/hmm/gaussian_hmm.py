@@ -13,11 +13,12 @@ import change_point.models.hmm.hmm as hmm
 class GaussianHMM(hmm.HMM):
     has_training = False
 
-    def __init__(self, preprocess_args, graph_structure_type, A, B, pi,
+    def __init__(self, preprocess_args, metric, graph_structure_type, A, B, pi,
                  win_len, thresh, min_peak_dist):
         """
         Args:
             preprocess_args:
+            metric:
             graph_structure_type: "predefined", "fully", "left_to_right"
             A: initial hidden states graph
             B: initial hidden states distribution
@@ -31,6 +32,8 @@ class GaussianHMM(hmm.HMM):
         """
 
         self.preprocess_args = preprocess_args
+        self.metric = metric
+
         self.graph_structure_type = graph_structure_type
         self.A = A
         self.B = B
@@ -92,7 +95,8 @@ def main():
     metric = "loss"
     dataset = "rosam@land.ufrj.br"
 
-    model = GaussianHMM(preprocess_args=preprocess_args, **param)
+    model = GaussianHMM(preprocess_args=preprocess_args, metric=metric,
+                        **param)
 
     utils.create_dirs(["{}/plots/".format(script_dir),
                        "{}/plots/{}/".format(script_dir, dataset),
@@ -101,7 +105,7 @@ def main():
                                                         metric)])
     out_dir_path = "{}/plots/{}/gaussian/{}".format(script_dir, dataset,
                                                     metric)
-    model.plot_all(dataset, out_dir_path, cmp_class_args, metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

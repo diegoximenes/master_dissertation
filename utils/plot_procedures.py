@@ -6,6 +6,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
+def update_title(title, ts):
+    if ts.metric:
+        title += " metric={}".format(ts.metric)
+    if ts.filters:
+        title += " filters={}".format(ts.filters)
+    return title
+
+
 def get_xticks(dt_start, dt_end):
     """
     daily xticks of [dt_start, dt_end]
@@ -56,7 +64,10 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
 
     plot_axvline(ts, dt_axvline, compress, plt)
 
+    title = update_title("", ts)
+
     plt.grid()
+    plt.title(title)
 
     plt.ylabel(ylabel)
     if ts.metric == "loss":
@@ -140,6 +151,9 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
 
     plot_axvline(ts1, dt_axvline1, compress, ax[0])
     plot_axvline(ts1, dt_axvline2, compress, ax[1])
+
+    title1 = update_title(title1, ts1)
+    title2 = update_title(title2, ts2)
 
     ax[0].grid()
     ax[0].set_title(title1)

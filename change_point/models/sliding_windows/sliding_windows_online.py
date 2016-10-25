@@ -17,17 +17,20 @@ import change_point.models.change_point_alg as change_point_alg
 class SlidingWindowsOnline(change_point_alg.ChangePointAlg):
     has_training = False
 
-    def __init__(self, preprocess_args, win_len, thresh, f_dist,
+    def __init__(self, preprocess_args, metric, win_len, thresh, f_dist,
                  bin_size_f_dist, min_bin_f_dist, max_bin_f_dist):
         """
         Args:
             preprocess_args:
+            metric:
             win_len: windows lengths of the sliding window offline
             thresh: threshold used to detect change points
             f_dist = distance function between the windows
         """
 
         self.preprocess_args = preprocess_args
+        self.metric = metric
+
         self.win_len = win_len
         self.thresh = thresh
         self.f_dist = cp_utils.get_f_dist(f_dist, bin_size_f_dist,
@@ -83,7 +86,8 @@ def main():
     metric = "loss"
     dataset = "rosam@land.ufrj.br"
 
-    model = SlidingWindowsOnline(preprocess_args=preprocess_args, **param)
+    model = SlidingWindowsOnline(preprocess_args=preprocess_args,
+                                 metric=metric, **param)
 
     utils.create_dirs(["{}/plots/".format(script_dir),
                        "{}/plots/{}/".format(script_dir, dataset),
@@ -91,7 +95,7 @@ def main():
                        "{}/plots/{}/online/{}".format(script_dir, dataset,
                                                       metric)])
     out_dir_path = "{}/plots/{}/online/{}".format(script_dir, dataset, metric)
-    model.plot_all(dataset, out_dir_path, cmp_class_args, metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
 import os
 import sys
 import functools
-import datetime
 import pandas as pd
 import numpy as np
 
@@ -37,11 +36,8 @@ def from_str_to_int_list(str_l):
 
 
 def unpack_pandas_row(row):
-    dt_start = dt_procedures.from_js_strdate_to_dt(row["date_start"])
-    # js dates are stored in intervals like [dt_start, dt_end] instead of
-    # [dt_start, dt_end)
-    dt_end = dt_procedures.from_js_strdate_to_dt(row["date_end"]) + \
-        datetime.timedelta(days=1)
+    dt_start = dt_procedures.from_strdt_to_dt(row["dt_start"])
+    dt_end = dt_procedures.from_strdt_to_dt(row["dt_end"])
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     in_path = "{}/input/{}/{}/{}.csv".format(base_dir, dt_dir, row["server"],
                                              row["mac"])
@@ -51,8 +47,6 @@ def unpack_pandas_row(row):
 def preprocess(ts, preprocess_args):
     if preprocess_args["filter_type"] == "ma_smoothing":
         ts.ma_smoothing(preprocess_args["win_len"])
-    elif preprocess_args["filter_type"] == "median_filter":
-        ts.median_filter(preprocess_args["win_len"])
     elif preprocess_args["filter_type"] == "savgol":
         ts.savgol(preprocess_args["win_len"], preprocess_args["poly_order"])
     elif preprocess_args["filter_type"] == "percentile_filter":
@@ -60,9 +54,9 @@ def preprocess(ts, preprocess_args):
                              preprocess_args["p"])
 
 
-def get_ts(row, preprocess_args):
+def get_ts(row, preprocess_args, metric):
     in_path, dt_start, dt_end = unpack_pandas_row(row)
-    ts = TimeSeries(in_path, "loss", dt_start, dt_end)
+    ts = TimeSeries(in_path, metric, dt_start, dt_end)
     preprocess(ts, preprocess_args)
     return ts
 

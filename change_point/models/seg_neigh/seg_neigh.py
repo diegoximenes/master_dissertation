@@ -15,11 +15,12 @@ import change_point.models.change_point_alg as change_point_alg
 class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
     has_training = False
 
-    def __init__(self, preprocess_args, const_pen, f_pen, seg_model,
+    def __init__(self, preprocess_args, metric, const_pen, f_pen, seg_model,
                  min_seg_len, max_cps):
         """
         Args:
             preprocess_args:
+            metric:
             const_pen: penalization constant to be used in f_pen
             f_pen: penalization function wrt to (c_cps) number of change points
             seg_model: cost function to be used to asess segment homogeneity:
@@ -29,6 +30,8 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
         """
 
         self.preprocess_args = preprocess_args
+        self.metric = metric
+
         self.const_pen = const_pen
         self.f_pen = f_pen
         self.seg_model = seg_model
@@ -92,13 +95,14 @@ def main():
     metric = "loss"
     dataset = "rosam@land.ufrj.br"
 
-    model = SegmentNeighbourhood(preprocess_args=preprocess_args, **param)
+    model = SegmentNeighbourhood(preprocess_args=preprocess_args,
+                                 metric=metric, **param)
 
     utils.create_dirs(["{}/plots/".format(script_dir),
                        "{}/plots/{}/".format(script_dir, dataset),
                        "{}/plots/{}/{}".format(script_dir, dataset, metric)])
     out_dir_path = "{}/plots/{}/{}".format(script_dir, dataset, metric)
-    model.plot_all(dataset, out_dir_path, cmp_class_args, metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
 if __name__ == "__main__":
