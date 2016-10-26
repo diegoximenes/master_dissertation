@@ -43,3 +43,12 @@ def get_mac_node():
     for idx, row in df.iterrows():
         mac_node[row["MAC_ADDRESS"]] = row["NODE"]
     return mac_node
+
+
+def get_valid_nodes():
+    df = pd.read_csv("{}/change_point/unsupervised/prints/valid_nodes.csv".
+                     format(base_dir))
+    valid_nodes = set()
+    for idx, row in df.iterrows():
+        valid_nodes.add(row["node"])
+    return valid_nodes

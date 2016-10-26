@@ -38,6 +38,19 @@ def get_in_path(server, mac, dt_start, dt_end):
                                           mac)
 
 
+def iter_dt_range():
+    year = 2016
+    months = range(6, 10)
+    day_starts = (1, 11, 21)
+    delta_days = 10
+
+    for month in months:
+        for day_start in day_starts:
+            dt_start = datetime.datetime(year, month, day_start)
+            dt_end = dt_start + datetime.timedelta(days=delta_days)
+            yield dt_start, dt_end
+
+
 def iter_server_mac(dt_dir, print_iter=False):
     cnt = 0
     for server in os.listdir("{}/input/{}".format(base_dir, dt_dir)):
@@ -60,7 +73,9 @@ def create_dirs(dirs):
             os.makedirs(dir)
 
 
-def sort_csv_file(path, fields):
+def sort_csv_file(path, fields, ascending=None):
+    if ascending is None:
+        ascending = [True] * len(fields)
     df = pd.read_csv(path)
-    df_sorted = df.sort(fields, ascending=[True] * len(fields))
+    df_sorted = df.sort_values(by=fields, ascending=ascending)
     df_sorted.to_csv(path, index=False)

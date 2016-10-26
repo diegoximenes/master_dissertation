@@ -58,7 +58,11 @@ def get_name(name, ip_name):
 def get_traceroute(ts_traceroute, ts_server_ip):
     hops_default_names = []
     hops_default_ips = []
-    for traceroute, server_ip in izip(ts_traceroute.y, ts_server_ip):
+    server_ip = None
+    for i in xrange(len(ts_traceroute.y)):
+        traceroute = ts_traceroute.y[i]
+        server_ip = ts_server_ip.y[i]
+
         # THIS PIECE OF CODE EXPOSES A TRACEROUTE INCONSISTENCY
         # IN 2016_06
         # if traceroute:
@@ -326,11 +330,14 @@ def print_macs_per_name(dt_start, dt_end, mac_node):
 
 
 if __name__ == "__main__":
-    mac_node = read_input.get_mac_node()
+    year = 2016
+    months = range(6, 7)
+    day_starts = [1]
 
-    for month in xrange(7, 10):
-        for day_start in (1, 11, 21):
-            dt_start = datetime.datetime(2016, month, day_start)
+    mac_node = read_input.get_mac_node()
+    for month in months:
+        for day_start in day_starts:
+            dt_start = datetime.datetime(year, month, day_start)
             dt_end = dt_start + datetime.timedelta(days=10)
 
             str_dt = utils.get_str_dt(dt_start, dt_end)
@@ -344,5 +351,3 @@ if __name__ == "__main__":
 
             print_traceroute_per_mac_filtered(dt_start, dt_end)
             print_macs_per_name_filtered(dt_start, dt_end, mac_node)
-            break
-        break

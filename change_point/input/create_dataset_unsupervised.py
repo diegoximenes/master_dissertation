@@ -1,6 +1,5 @@
 import os
 import sys
-import datetime
 import pandas as pd
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -51,8 +50,5 @@ def create_dataset_unsupervised(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    for month in xrange(7, 10):
-        for day_start in (1, 11, 21):
-            dt_start = datetime.datetime(2016, month, day_start)
-            dt_end = dt_start + datetime.timedelta(days=10)
-            create_dataset_unsupervised(dt_start, dt_end)
+    for dt_start, dt_end in utils.iter_dt_range():
+        create_dataset_unsupervised(dt_start, dt_end)
