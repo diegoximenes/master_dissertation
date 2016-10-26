@@ -1,6 +1,7 @@
 import os
 import sys
 import datetime
+import pandas as pd
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "..")
@@ -57,3 +58,9 @@ def create_dirs(dirs):
     for dir in dirs:
         if not os.path.exists(dir):
             os.makedirs(dir)
+
+
+def sort_csv_file(path, fields):
+    df = pd.read_csv(path)
+    df_sorted = df.sort(fields, ascending=[True] * len(fields))
+    df_sorted.to_csv(path, index=False)

@@ -1,5 +1,6 @@
 import os
 import sys
+import ast
 import pandas as pd
 import dt_procedures
 
@@ -21,7 +22,11 @@ def get_raw(in_path, metric, dt_start, dt_end):
         if row[metric] != "None":
             dt = dt_procedures.from_strdt_to_dt(row["dt"])
             if dt_procedures.in_dt_range(dt, dt_start, dt_end):
-                l.append([dt, float(row[metric])])
+                yi = row[metric]
+                if metric == "traceroute":
+                    yi = yi.replace("nan", "None")
+                    yi = ast.literal_eval(yi)
+                l.append([dt, yi])
 
     x, y = [], []
     l.sort()
