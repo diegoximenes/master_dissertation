@@ -329,25 +329,26 @@ def print_macs_per_name(dt_start, dt_end, mac_node):
             f.write("{},\"{}\"\n".format(name, sorted(list(name_macs[name]))))
 
 
+def print_all(dt_start, dt_end):
+    str_dt = utils.get_str_dt(dt_start, dt_end)
+    utils.create_dirs(["{}/prints".format(script_dir),
+                       "{}/prints/{}".format(script_dir, str_dt)])
+
+    print_macs_per_name(dt_start, dt_end, mac_node)
+    print_names_per_mac(dt_start, dt_end, mac_node)
+    print_name_ips(dt_start, dt_end)
+    print_traceroute_per_mac(dt_start, dt_end, mac_node)
+
+    print_traceroute_per_mac_filtered(dt_start, dt_end)
+    print_macs_per_name_filtered(dt_start, dt_end, mac_node)
+
+
 if __name__ == "__main__":
-    year = 2016
-    months = range(6, 7)
-    day_starts = [1]
-
     mac_node = read_input.get_mac_node()
-    for month in months:
-        for day_start in day_starts:
-            dt_start = datetime.datetime(year, month, day_start)
-            dt_end = dt_start + datetime.timedelta(days=10)
 
-            str_dt = utils.get_str_dt(dt_start, dt_end)
-            utils.create_dirs(["{}/prints".format(script_dir),
-                               "{}/prints/{}".format(script_dir, str_dt)])
+    dt_start = datetime.datetime(2016, 6, 1)
+    dt_end = datetime.datetime(2016, 6, 11)
+    print_all(dt_start, dt_end, mac_node)
 
-            print_macs_per_name(dt_start, dt_end, mac_node)
-            print_names_per_mac(dt_start, dt_end, mac_node)
-            print_name_ips(dt_start, dt_end)
-            print_traceroute_per_mac(dt_start, dt_end, mac_node)
-
-            print_traceroute_per_mac_filtered(dt_start, dt_end)
-            print_macs_per_name_filtered(dt_start, dt_end, mac_node)
+    # for dt_start, dt_end in utils.iter_dt_range():
+    #     print_all(dt_start, dt_end, mac_node)

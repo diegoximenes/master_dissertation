@@ -11,6 +11,12 @@ import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
 
 
+def dt_close(dt1, dt2, hours_tol=3):
+    if dt2 > dt1:
+        dt1, dt2 = dt2, dt1
+    return ((dt1 - dt2).total_seconds() / 60.0 / 60.0 <= hours_tol)
+
+
 def iter_unsupervised_datasets():
     for dt_dir in os.listdir("{}/change_point/input/unsupervised/".
                              format(base_dir)):

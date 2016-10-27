@@ -10,6 +10,7 @@ sys.path.append(base_dir)
 import utils.utils as utils
 import utils.plot_procedures as plot_procedures
 import utils.dt_procedures as dt_procedures
+import change_point.utils.cp_utils as cp_utils
 from utils.time_series import TimeSeries
 
 
@@ -64,12 +65,6 @@ def print_empty_segs(dt_start, dt_end, metric, min_seg_len=24, plot=False):
                 plot_procedures.plot_ts(ts, out_path, dt_axvline=axvline_dts)
 
 
-def dt_close(dt1, dt2, hours_tol=3):
-    if dt2 > dt1:
-        dt1, dt2 = dt2, dt1
-    return ((dt1 - dt2).total_seconds() / 60.0 / 60.0 <= hours_tol)
-
-
 def match_empty_segs(dt_start, dt_end):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -99,8 +94,8 @@ def match_empty_segs(dt_start, dt_end):
                             seg1_dt1 = dt_procedures.from_strdt_to_dt(seg1[1])
                             seg2_dt0 = dt_procedures.from_strdt_to_dt(seg2[0])
                             seg2_dt1 = dt_procedures.from_strdt_to_dt(seg2[1])
-                            if (dt_close(seg1_dt0, seg2_dt0) and
-                                    dt_close(seg1_dt1, seg2_dt1)):
+                            if (cp_utils.dt_close(seg1_dt0, seg2_dt0) and
+                                    cp_utils.dt_close(seg1_dt1, seg2_dt1)):
                                 matches.append((seg1, seg2))
                                 cnt_matches += 1
                                 break
@@ -115,8 +110,13 @@ def match_empty_segs(dt_start, dt_end):
 
 
 if __name__ == "__main__":
+    metric = "latency"
+
     dt_start = datetime.datetime(2016, 6, 1)
     dt_end = datetime.datetime(2016, 6, 11)
-
-    # print_empty_segs(dt_start, dt_end, "loss", plot=False)
+    print_empty_segs(dt_start, dt_end, metric, plot=False)
     match_empty_segs(dt_start, dt_end)
+
+    # for dt_start, dt_end in utils.iter_dt_range():
+    #     print_empty_segs(dt_start, dt_end, metric, plot=False)
+    #     match_empty_segs(dt_start, dt_end)
