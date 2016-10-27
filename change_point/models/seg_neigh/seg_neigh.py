@@ -75,7 +75,7 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
         return sorted(df["id"].values)
 
     def plot(self, ts, ts_raw, correct, pred, conf, out_path):
-        plot_procedures.plot_ts_share_x(ts_raw, ts, out_path, compress=True,
+        plot_procedures.plot_ts_share_x(ts_raw, ts, out_path, compress=False,
                                         title1="correct",
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
@@ -95,8 +95,8 @@ def main():
              "min_seg_len": 5,
              "max_cps": 20}
     metric = "latency"
-    # datasets = ["/unsupervised/dtstart2016-06-11_dtend2016-06-21"]
-    datasets = list(cp_utils.iter_unsupervised_datasets())
+    datasets = ["/unsupervised/dtstart2016-06-01_dtend2016-06-11"]
+    # datasets = list(cp_utils.iter_unsupervised_datasets())
 
     model = SegmentNeighbourhood(preprocess_args=preprocess_args,
                                  metric=metric, **param)

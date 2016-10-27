@@ -76,27 +76,29 @@ class SlidingWindowsOnline(change_point_alg.ChangePointAlg):
 
 def main():
     cmp_class_args = {"win_len": 15}
-    preprocess_args = {"filter_type": "none"}
-    param = {"win_len": 30,
-             "thresh": 0.3381211781368245,
-             "f_dist": cmp_win.hellinger_dist,
+    preprocess_args = {"filter_type": "percentile_filter",
+                       "win_len": 13,
+                       "p": 0.5}
+    param = {"win_len": 24,
+             "thresh": 2,
+             "f_dist": cmp_win.mean_dist,
              "bin_size_f_dist": 0.05,
              "min_bin_f_dist": 0.0,
              "max_bin_f_dist": 1.0}
-    metric = "loss"
-    datasets = ["rosam@land.ufrj.br"]
-    datasets = list(cp_utils.iter_unsupervised_datasets())
+    metric = "latency"
+    datasets = ["unsupervised/dtstart2016-06-01_dtend2016-06-11"]
+    # datasets = list(cp_utils.iter_unsupervised_datasets())
 
     model = SlidingWindowsOnline(preprocess_args=preprocess_args,
                                  metric=metric, **param)
 
     for dataset in datasets:
-        utils.create_dirs(["{}/plots/".format(script_dir),
-                           "{}/plots/{}/".format(script_dir, dataset),
-                           "{}/plots/{}/online/".format(script_dir, dataset),
-                           "{}/plots/{}/online/{}".format(script_dir, dataset,
+        utils.create_dirs(["{}/online/".format(script_dir),
+                           "{}/online/plots/".format(script_dir),
+                           "{}/online/plots/{}".format(script_dir, dataset),
+                           "{}/online/plots/{}/{}".format(script_dir, dataset,
                                                           metric)])
-        out_dir_path = "{}/plots/{}/online/{}".format(script_dir, dataset,
+        out_dir_path = "{}/online/plots/{}/{}".format(script_dir, dataset,
                                                       metric)
         model.plot_all(dataset, out_dir_path, cmp_class_args)
 

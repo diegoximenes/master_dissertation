@@ -56,7 +56,7 @@ def match_cps(dt_start, dt_end, hours_tol=4):
     utils.sort_csv_file(out_path, ["tp"], ascending=[False])
 
 
-def print_cps_per_mac(dt_start, dt_end, str_model, metric):
+def print_cps_per_mac(dt_start, dt_end, dir_model, metric):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     utils.create_dirs(["{}/prints/".format(script_dir),
@@ -66,7 +66,7 @@ def print_cps_per_mac(dt_start, dt_end, str_model, metric):
     with open(out_path, "w") as f:
         f.write("server,mac,cp_dt\n")
         in_path_dir = ("{}/change_point/models/{}/plots/unsupervised/{}/{}".
-                       format(base_dir, str_model, str_dt, metric))
+                       format(base_dir, dir_model, str_dt, metric))
         cnt = 0
         for file_name in os.listdir(in_path_dir):
             if ".csv" in file_name:
@@ -85,8 +85,9 @@ def print_cps_per_mac(dt_start, dt_end, str_model, metric):
 
 if __name__ == "__main__":
     metric = "latency"
+    dir_model = "seg_neigh"
 
     dt_start = datetime.datetime(2016, 6, 1)
     dt_end = datetime.datetime(2016, 6, 11)
-    print_cps_per_mac(dt_start, dt_end, "seg_neigh", metric)
+    print_cps_per_mac(dt_start, dt_end, dir_model, metric)
     match_cps(dt_start, dt_end)

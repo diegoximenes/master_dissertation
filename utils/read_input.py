@@ -26,6 +26,8 @@ def get_raw(in_path, metric, dt_start, dt_end):
                 if metric == "traceroute":
                     yi = yi.replace("nan", "None")
                     yi = ast.literal_eval(yi)
+                else:
+                    yi = float(yi)
                 l.append([dt, yi])
 
     x, y = [], []

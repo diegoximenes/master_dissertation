@@ -25,7 +25,7 @@ def plot(dt_start, dt_end, metric):
         ts_filter.percentile_filter(win_len=13, p=0.5)
 
         plot_procedures.plot_ts_share_x(ts, ts_filter, out_path,
-                                        compress=True,
+                                        compress=False,
                                         plot_type2="scatter")
 
 

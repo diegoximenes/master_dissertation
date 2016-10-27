@@ -17,27 +17,34 @@ def plot_per_node(dt_start, dt_end, metric):
 
     utils.create_dirs(["{}/plots/".format(script_dir),
                        "{}/plots/nodes".format(script_dir),
-                       "{}/plots/nodes/{}".format(script_dir, str_dt)])
+                       "{}/plots/nodes/{}".format(script_dir, str_dt),
+                       "{}/plots/nodes/{}/{}".format(script_dir, str_dt,
+                                                     metric)])
 
     valid_nodes = read_input.get_valid_nodes()
     mac_node = read_input.get_mac_node()
 
     for server, mac, in_path in utils.iter_server_mac(dt_dir, True):
         if mac_node[mac] in valid_nodes:
-            utils.create_dirs(["{}/plots/nodes/{}/{}".format(script_dir,
-                                                             str_dt,
-                                                             mac_node[mac])])
+            utils.create_dirs(["{}/plots/nodes/{}/{}/{}".
+                               format(script_dir, str_dt, metric,
+                                      mac_node[mac])])
             out_file_name = utils.get_out_file_name(server, mac, dt_start,
                                                     dt_end)
-            out_path = "{}/plots/nodes/{}/{}/{}.png".format(script_dir,
-                                                            str_dt,
-                                                            mac_node[mac],
-                                                            out_file_name)
+            out_path = ("{}/plots/nodes/{}/{}/{}/{}.png".
+                        format(script_dir, str_dt, metric, mac_node[mac],
+                               out_file_name))
+
             ts = TimeSeries(in_path, metric, dt_start, dt_end)
-            plot_procedures.plot_ts(ts, out_path)
+            ts_filter = TimeSeries(in_path, metric, dt_start, dt_end)
+            ts_filter.percentile_filter(win_len=13, p=0.5)
+            plot_procedures.plot_ts_share_x(ts, ts_filter, out_path,
+                                            compress=False,
+                                            plot_type2="scatter")
 
 
 if __name__ == "__main__":
+    metric = "latency"
     dt_start = datetime.datetime(2016, 6, 1)
     dt_end = datetime.datetime(2016, 6, 11)
-    plot_per_node(dt_start, dt_end, "loss")
+    plot_per_node(dt_start, dt_end, metric)

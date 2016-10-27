@@ -18,7 +18,9 @@ def plot_per_name(dt_start, dt_end, metric):
 
     utils.create_dirs(["{}/plots/".format(script_dir),
                        "{}/plots/names".format(script_dir),
-                       "{}/plots/names/{}".format(script_dir, dt_dir)])
+                       "{}/plots/names/{}".format(script_dir, str_dt),
+                       "{}/plots/names/{}/{}".format(script_dir, str_dt,
+                                                     metric)])
 
     df = pd.read_csv("{}/prints/{}/traceroute_per_mac_filtered.csv".
                      format(script_dir, str_dt))
@@ -34,22 +36,30 @@ def plot_per_name(dt_start, dt_end, metric):
             if splitted[0] == "192" and splitted[1] == "168":
                 continue
 
-            utils.create_dirs(["{}/plots/names/{}/{}".format(script_dir,
-                                                             dt_dir, name)])
+            utils.create_dirs(["{}/plots/names/{}/{}/{}".format(script_dir,
+                                                                str_dt, metric,
+                                                                name)])
 
             in_path = "{}/input/{}/{}/{}.csv".format(base_dir, dt_dir,
                                                      row["server"], row["mac"])
             out_file_name = utils.get_out_file_name(row["server"], row["mac"],
                                                     dt_start, dt_end)
-            out_path = "{}/plots/names/{}/{}/{}.png".format(script_dir,
-                                                            dt_dir,
-                                                            name,
-                                                            out_file_name)
+            out_path = "{}/plots/names/{}/{}/{}/{}.png".format(script_dir,
+                                                               str_dt,
+                                                               metric,
+                                                               name,
+                                                               out_file_name)
+
             ts = TimeSeries(in_path, metric, dt_start, dt_end)
-            plot_procedures.plot_ts(ts, out_path)
+            ts_filter = TimeSeries(in_path, metric, dt_start, dt_end)
+            ts_filter.percentile_filter(win_len=13, p=0.5)
+            plot_procedures.plot_ts_share_x(ts, ts_filter, out_path,
+                                            compress=False,
+                                            plot_type2="scatter")
 
 
 if __name__ == "__main__":
+    metric = "latency"
     dt_start = datetime.datetime(2016, 6, 1)
     dt_end = datetime.datetime(2016, 6, 11)
-    plot_per_name(dt_start, dt_end, "loss")
+    plot_per_name(dt_start, dt_end, metric)

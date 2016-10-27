@@ -94,19 +94,19 @@ def main():
              "thresh": 0.32266574449686963,
              "min_peak_dist": 17}
     metric = "loss"
-    # datasets = ["rosam@land.ufrj.br"]
-    datasets = list(cp_utils.iter_unsupervised_datasets())
+    datasets = ["rosam@land.ufrj.br"]
+    # datasets = list(cp_utils.iter_unsupervised_datasets())
 
     model = GaussianHMM(preprocess_args=preprocess_args, metric=metric,
                         **param)
 
     for dataset in datasets:
-        utils.create_dirs(["{}/plots/".format(script_dir),
-                           "{}/plots/{}/".format(script_dir, dataset),
-                           "{}/plots/{}/gaussian/".format(script_dir, dataset),
-                           "{}/plots/{}/gaussian/{}".format(script_dir,
+        utils.create_dirs(["{}/gaussian/".format(script_dir),
+                           "{}/gaussian/plots/".format(script_dir),
+                           "{}/gaussian/plots/{}".format(script_dir, dataset),
+                           "{}/gaussian/plots/{}/{}".format(script_dir,
                                                             dataset, metric)])
-        out_dir_path = "{}/plots/{}/gaussian/{}".format(script_dir, dataset,
+        out_dir_path = "{}/gaussian/plots/{}/{}".format(script_dir, dataset,
                                                         metric)
         model.plot_all(dataset, out_dir_path, cmp_class_args)
 

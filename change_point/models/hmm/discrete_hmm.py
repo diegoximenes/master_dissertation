@@ -109,19 +109,19 @@ def main():
              "thresh": 0.5001054151917693,
              "min_peak_dist": 7}
     metric = "loss"
-    # datasets = ["rosam@land.ufrj.br"]
-    datasets = list(cp_utils.iter_unsupervised_datasets())
+    datasets = ["rosam@land.ufrj.br"]
+    # datasets = list(cp_utils.iter_unsupervised_datasets())
 
     model = DiscreteHMM(preprocess_args=preprocess_args, metric=metric,
                         **param)
 
     for dataset in datasets:
-        utils.create_dirs(["{}/plots/".format(script_dir),
-                           "{}/plots/{}/".format(script_dir, dataset),
-                           "{}/plots/{}/discrete/".format(script_dir, dataset),
-                           "{}/plots/{}/discrete/{}".format(script_dir,
+        utils.create_dirs(["{}/discrete/".format(script_dir),
+                           "{}/discrete/plots/".format(script_dir),
+                           "{}/discrete/plots/{}".format(script_dir, dataset),
+                           "{}/discrete/plots/{}/{}".format(script_dir,
                                                             dataset, metric)])
-        out_dir_path = "{}/plots/{}/discrete/{}".format(script_dir, dataset,
+        out_dir_path = "{}/discrete/plots/{}/{}".format(script_dir, dataset,
                                                         metric)
         model.plot_all(dataset, out_dir_path, cmp_class_args)
 
