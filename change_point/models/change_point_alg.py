@@ -45,7 +45,8 @@ class ChangePointAlg:
             # print "pred={}".format(pred)
             # print "correct={}".format(correct)
 
-            lconf = cmp_class.conf_mat(correct, pred, ts, **cmp_class_args)
+            lconf = cmp_class.conf_mat(correct, pred, ts, cmp_class.match_id,
+                                       **cmp_class_args)
             for key in lconf.keys():
                 conf[key] += lconf[key]
 
@@ -66,7 +67,7 @@ class ChangePointAlg:
             pred = self.predict(ts_preprocessed)
             correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
             conf = cmp_class.conf_mat(correct, pred, ts_preprocessed,
-                                      **cmp_class_args)
+                                      cmp_class.match_id, **cmp_class_args)
             print "pred={}".format(pred)
             print "correct={}".format(correct)
             print "conf={}".format(conf)

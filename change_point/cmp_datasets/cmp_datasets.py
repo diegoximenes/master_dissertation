@@ -47,21 +47,23 @@ def cmp_datasets():
                     for idx, row in df1.iterrows():
                         query = ((df2["mac"] == row["mac"]) &
                                  (df2["server"] == row["server"]) &
-                                 (df2["date_start"] == row["date_start"]) &
-                                 (df2["date_end"] == row["date_end"]))
+                                 (df2["dt_start"] == row["dt_start"]) &
+                                 (df2["dt_end"] == row["dt_end"]))
                         df_intersec = df2[query]
 
                         # df_intersec must have 0 or 1 row
                         if df_intersec.shape[0] == 1:
                             cnt_compared_ts += 1
 
-                            ts = cp_utils.get_ts(row, {"filter_type": "none"})
+                            ts = cp_utils.get_ts(row, {"filter_type": "none"},
+                                                 "loss")
                             correct = cp_utils.from_str_to_int_list(
                                 row["change_points_ids"])
                             pred = cp_utils.from_str_to_int_list(
                                 df_intersec.iloc[0]["change_points_ids"])
 
                             lconf = cmp_class.conf_mat(correct, pred, ts,
+                                                       cmp_class.match_id,
                                                        **cmp_class_args)
                             for key in lconf.keys():
                                 conf[key] += lconf[key]

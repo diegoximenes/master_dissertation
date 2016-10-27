@@ -1,8 +1,26 @@
+import os
+import sys
 import numpy as np
 from hopcroftkarp import HopcroftKarp
+from itertools import izip
+
+base_dir = os.path.join(os.path.dirname(__file__), "../..")
+sys.path.append(base_dir)
+import utils.dt_procedures as dt_procedures
 
 
-def conf_mat(correct_class, pred_class, ts, win_len):
+def match_id(id1, id2, win_len):
+    return abs(id1 - id2) <= win_len
+
+
+def match_seg(seg1, seg2, hours_tol):
+    for dt1, dt2 in izip(seg1, seg2):
+        if not dt_procedures.dt_is_close(dt1, dt2, hours_tol):
+            return False
+    return True
+
+
+def conf_mat(correct_class, pred_class, ts, match_func, win_len):
     """
     - description: return confusion matrix as dictionary. Match pred_class to
     correct_class maximizing number of true positives. One change point can be
@@ -27,7 +45,7 @@ def conf_mat(correct_class, pred_class, ts, win_len):
     for l in xrange(len(correct_class)):
         neigh = set()
         for r in xrange(len(pred_class)):
-            if abs(correct_class[l] - pred_class[r]) <= win_len:
+            if match_func(correct_class[l], pred_class[r], win_len):
                 neigh.add("r{}".format(r))
         graph["l{}".format(l)] = neigh
     max_match = HopcroftKarp(graph).maximum_matching()

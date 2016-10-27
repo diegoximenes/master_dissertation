@@ -33,18 +33,23 @@ def match_cps(dt_start, dt_end, metric, hours_tol=4):
     out_path = "{}/prints/{}/{}/match_cps.csv".format(script_dir, str_dt,
                                                       metric)
     with open(out_path, "w") as f:
-        f.write("server1,server2,mac1,mac2,tp,fp,cp_dt1,cp_dt2\n")
+        f.write("server1,server2,mac1,mac2,tp,fp,fn,cp_dt1,cp_dt2\n")
+
+        cnt = 0
         for mac1 in mac_cps:
+            cnt += 1
+            print "cnt={}".format(cnt)
+
             for mac2 in mac_cps:
                 if mac1 != mac2:
                     str_cps1 = map(str, mac_cps[mac1])
                     str_cps2 = map(str, mac_cps[mac2])
 
-                    # only tp, fp are correct with this parameters
-                    win_tol = datetime.timedelta(hours=hours_tol)
+                    # only tp, fp, fn are correct with this parameters
                     ts = TimeSeries()
                     conf = cmp_class.conf_mat(mac_cps[mac1], mac_cps[mac2], ts,
-                                              win_tol)
+                                              dt_procedures.dt_is_close,
+                                              hours_tol)
                     formatter = "{}" + ",{}" * 5 + ",\"{}\"" * 2 + "\n"
                     f.write(formatter.format(mac_server[mac1],
                                              mac_server[mac2],
@@ -52,10 +57,12 @@ def match_cps(dt_start, dt_end, metric, hours_tol=4):
                                              mac2,
                                              conf["tp"],
                                              conf["fp"],
+                                             conf["fn"],
                                              str_cps1,
                                              str_cps2))
 
-    utils.sort_csv_file(out_path, ["tp"], ascending=[False])
+    utils.sort_csv_file(out_path, ["tp", "fp", "fn"],
+                        ascending=[False, True, True])
 
 
 def print_cps_per_mac(dt_start, dt_end, dir_model, metric):

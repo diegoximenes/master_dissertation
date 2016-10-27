@@ -2,6 +2,12 @@ import pytz
 from datetime import datetime, timedelta
 
 
+def dt_is_close(dt1, dt2, hours_tol=3):
+    if dt2 > dt1:
+        dt1, dt2 = dt2, dt1
+    return ((dt1 - dt2).total_seconds() / 60.0 / 60.0 <= hours_tol)
+
+
 def generate_dt_list(dt_start, dt_end):
     """
     generate hourly dt list of [dt_start, dt_end]
