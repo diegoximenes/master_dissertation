@@ -13,10 +13,11 @@ import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
 
 
-def match_cps(dt_start, dt_end, hours_tol=4):
+def match_cps(dt_start, dt_end, metric, hours_tol=4):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
-    in_path = "{}/prints/{}/cps_per_mac.csv".format(script_dir, str_dt)
+    in_path = "{}/prints/{}/{}/cps_per_mac.csv".format(script_dir, str_dt,
+                                                       metric)
 
     mac_cps = {}
     mac_server = {}
@@ -29,7 +30,8 @@ def match_cps(dt_start, dt_end, hours_tol=4):
         mac_cps[row["mac"]] = dts
         mac_server[row["mac"]] = row["server"]
 
-    out_path = "{}/prints/{}/match_cps.csv".format(script_dir, str_dt)
+    out_path = "{}/prints/{}/{}/match_cps.csv".format(script_dir, str_dt,
+                                                      metric)
     with open(out_path, "w") as f:
         f.write("server1,server2,mac1,mac2,tp,fp,cp_dt1,cp_dt2\n")
         for mac1 in mac_cps:
@@ -60,9 +62,11 @@ def print_cps_per_mac(dt_start, dt_end, dir_model, metric):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     utils.create_dirs(["{}/prints/".format(script_dir),
-                       "{}/prints/{}".format(script_dir, str_dt)])
+                       "{}/prints/{}".format(script_dir, str_dt),
+                       "{}/prints/{}/{}".format(script_dir, str_dt, metric)])
 
-    out_path = "{}/prints/{}/cps_per_mac.csv".format(script_dir, str_dt)
+    out_path = "{}/prints/{}/{}/cps_per_mac.csv".format(script_dir, str_dt,
+                                                        metric)
     with open(out_path, "w") as f:
         f.write("server,mac,cp_dt\n")
         in_path_dir = ("{}/change_point/models/{}/plots/unsupervised/{}/{}".
@@ -90,4 +94,4 @@ if __name__ == "__main__":
     dt_start = datetime.datetime(2016, 6, 1)
     dt_end = datetime.datetime(2016, 6, 11)
     print_cps_per_mac(dt_start, dt_end, dir_model, metric)
-    match_cps(dt_start, dt_end)
+    match_cps(dt_start, dt_end, metric)
