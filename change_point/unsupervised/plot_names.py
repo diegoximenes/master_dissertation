@@ -22,7 +22,7 @@ def plot_per_name(dt_start, dt_end, metric):
                        "{}/plots/names/{}/{}".format(script_dir, str_dt,
                                                      metric)])
 
-    df = pd.read_csv("{}/prints/{}/traceroute_per_mac_filtered.csv".
+    df = pd.read_csv("{}/prints/{}/filtered/traceroute_per_mac.csv".
                      format(script_dir, str_dt))
     cnt = 0
     for idx, row in df.iterrows():

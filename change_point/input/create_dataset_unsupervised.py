@@ -10,10 +10,10 @@ from utils.time_series import TimeSeries
 
 
 def include_in_dataset(ts, mac, dt_dir, dt_start, dt_end,
-                       min_samples_fraction=0.5):
-    df = pd.read_csv("{}/change_point/unsupervised/prints/{}/"
-                     "traceroute_per_mac_filtered.csv".format(base_dir,
-                                                              dt_dir))
+                       min_samples_fraction=0.5, filtered="filtered"):
+    df = pd.read_csv("{}/change_point/unsupervised/prints/{}/{}"
+                     "traceroute_per_mac.csv".format(base_dir, dt_dir,
+                                                     filtered))
     if mac not in df["mac"].values:
         return False
 

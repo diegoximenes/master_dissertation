@@ -7,6 +7,7 @@ import dt_procedures
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(base_dir)
+import utils
 
 
 def get_raw(in_path, metric, dt_start, dt_end):
@@ -26,6 +27,8 @@ def get_raw(in_path, metric, dt_start, dt_end):
                 if metric == "traceroute":
                     yi = yi.replace("nan", "None")
                     yi = ast.literal_eval(yi)
+                elif metric == "server_ip":
+                    pass
                 else:
                     yi = float(yi)
                 l.append([dt, yi])
@@ -54,3 +57,18 @@ def get_valid_nodes():
     for idx, row in df.iterrows():
         valid_nodes.add(row["node"])
     return valid_nodes
+
+
+def get_macs_traceroute_filter(dt_start, dt_end, filtered):
+    """
+    returns macs that have an unique traceroute in [dt_start, dt_end) in a set
+    """
+
+    str_dt = utils.get_str_dt(dt_start, dt_end)
+    in_path = ("{}/change_point/unsupervised/prints/{}/{}/"
+               "traceroute_per_mac.csv".format(base_dir, str_dt, filtered))
+    macs = set()
+    df = pd.read_csv(in_path)
+    for idx, row in df.iterrows():
+        macs.add(row["mac"])
+    return macs

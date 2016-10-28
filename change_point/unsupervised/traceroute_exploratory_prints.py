@@ -182,7 +182,8 @@ def print_traceroute_per_mac(dt_start, dt_end, mac_node):
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
-    out_path = "{}/prints/{}/traceroute_per_mac.csv".format(script_dir, str_dt)
+    out_path = ("{}/prints/{}/not_filtered/traceroute_per_mac.csv".
+                format(script_dir, str_dt))
     with open(out_path, "w") as f:
         f.write("server,server_ip,node,mac,is_unique_traceroute,traceroute\n")
         for server, mac, in_path in utils.iter_server_mac(dt_dir, True):
@@ -203,13 +204,13 @@ def print_traceroute_per_mac(dt_start, dt_end, mac_node):
 def print_traceroute_per_mac_filtered(dt_start, dt_end):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
-    out_path = ("{}/prints/{}/traceroute_per_mac_filtered.csv".
+    out_path = ("{}/prints/{}/filtered/traceroute_per_mac.csv".
                 format(script_dir, str_dt))
     with open(out_path, "w") as f:
         f.write("server,node,mac,is_unique_traceroute,traceroute,"
                 "traceroute_filtered\n")
-        in_path = "{}/prints/{}/traceroute_per_mac.csv".format(script_dir,
-                                                               str_dt)
+        in_path = ("{}/prints/{}/not_filtered/traceroute_per_mac.csv".
+                   format(script_dir, str_dt))
         df = pd.read_csv(in_path)
         for idx, row in df.iterrows():
             if row["is_unique_traceroute"] is False:
@@ -230,8 +231,8 @@ def print_traceroute_per_mac_filtered(dt_start, dt_end):
 def print_macs_per_name_filtered(dt_start, dt_end, mac_node):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
-    in_path = "{}/prints/{}/traceroute_per_mac_filtered.csv".format(script_dir,
-                                                                    str_dt)
+    in_path = ("{}/prints/{}/filtered/traceroute_per_mac.csv".
+               format(script_dir, str_dt))
     name_macs = {}
     df = pd.read_csv(in_path)
     for idx, row in df.iterrows():
@@ -246,8 +247,8 @@ def print_macs_per_name_filtered(dt_start, dt_end, mac_node):
                                mac_node.get(row["mac"]),
                                row["mac"]))
 
-    out_path = "{}/prints/{}/macs_per_name_filtered.csv".format(script_dir,
-                                                                str_dt)
+    out_path = ("{}/prints/{}/filtered/macs_per_name.csv".
+                format(script_dir, str_dt))
     with open(out_path, "w") as f:
         f.write("name,macs\n")
         names = sorted(name_macs.keys())
@@ -272,7 +273,8 @@ def print_name_ips(dt_start, dt_end):
                             name_ip[name] = set()
                         name_ip[name].add(ip)
 
-    out_path = "{}/prints/{}/name_ips.csv".format(script_dir, str_dt)
+    out_path = "{}/prints/{}/not_filtered/name_ips.csv".format(script_dir,
+                                                               str_dt)
     with open(out_path, "w") as f:
         f.write("name,ips\n")
         for name in sorted(name_ip.keys()):
@@ -283,7 +285,8 @@ def print_names_per_mac(dt_start, dt_end, mac_node):
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
-    out_path = "{}/prints/{}/names_per_mac.csv".format(script_dir, str_dt)
+    out_path = ("{}/prints/{}/not_filtered/names_per_mac.csv".
+                format(script_dir, str_dt))
     with open(out_path, "w") as f:
         f.write("server,node,mac,names\n")
         for server, mac, in_path in utils.iter_server_mac(dt_dir, True):
@@ -321,7 +324,8 @@ def print_macs_per_name(dt_start, dt_end, mac_node):
                             name_macs[name] = set()
                         name_macs[name].add((server, mac_node.get(mac), mac))
 
-    out_path = "{}/prints/{}/macs_per_name.csv".format(script_dir, str_dt)
+    out_path = ("{}/prints/{}/not_filtered/macs_per_name.csv".
+                format(script_dir, str_dt))
     with open(out_path, "w") as f:
         f.write("name,macs\n")
         names = sorted(name_macs.keys())
@@ -329,10 +333,12 @@ def print_macs_per_name(dt_start, dt_end, mac_node):
             f.write("{},\"{}\"\n".format(name, sorted(list(name_macs[name]))))
 
 
-def print_all(dt_start, dt_end):
+def print_all(dt_start, dt_end, mac_node):
     str_dt = utils.get_str_dt(dt_start, dt_end)
     utils.create_dirs(["{}/prints".format(script_dir),
-                       "{}/prints/{}".format(script_dir, str_dt)])
+                       "{}/prints/{}".format(script_dir, str_dt),
+                       "{}/prints/{}/filtered".format(script_dir, str_dt),
+                       "{}/prints/{}/not_filtered".format(script_dir, str_dt)])
 
     print_macs_per_name(dt_start, dt_end, mac_node)
     print_names_per_mac(dt_start, dt_end, mac_node)
