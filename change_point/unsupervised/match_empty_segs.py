@@ -26,11 +26,13 @@ def print_empty_segs(dt_start, dt_end, metric, min_seg_len=24, plot=False):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     utils.create_dirs(["{}/prints/".format(script_dir),
-                       "{}/prints/{}".format(script_dir, str_dt)])
+                       "{}/prints/{}".format(script_dir, str_dt),
+                       "{}/prints/{}/{}".format(script_dir, str_dt, metric)])
 
-    out_path = "{}/prints/{}/empty_segs_per_mac.csv".format(script_dir, str_dt)
+    out_path = "{}/prints/{}/{}/empty_segs_per_mac.csv".format(script_dir,
+                                                               str_dt, metric)
     with open(out_path, "w") as f:
-        f.write("mac,empty_segs\n")
+        f.write("server,mac,empty_segs\n")
         for server, mac, in_path in utils.iter_server_mac(dt_dir, True):
             ts = TimeSeries(in_path=in_path, metric=metric, dt_start=dt_start,
                             dt_end=dt_end)
@@ -50,58 +52,66 @@ def print_empty_segs(dt_start, dt_end, metric, min_seg_len=24, plot=False):
                     axvline_dts.append(ts.x[i - 1])
                     empty_segs.append([str(ts.x[-1]), str(dt_end)])
 
-            f.write("{},\"{}\"\n".format(mac, empty_segs))
+            f.write("{},{},\"{}\"\n".format(server, mac, empty_segs))
 
             if plot:
                 utils.create_dirs(["{}/plots/".format(script_dir),
                                    "{}/plots/empty_segs".format(script_dir),
                                    "{}/plots/empty_segs/{}".format(script_dir,
-                                                                   str_dt)])
+                                                                   str_dt),
+                                   "{}/plots/empty_segs/{}/{}".
+                                   format(script_dir, str_dt, metric)])
 
                 out_file_name = utils.get_out_file_name(server, mac, dt_start,
                                                         dt_end)
-                out_path = ("{}/plots/empty_segs/{}/{}.png".
-                            format(script_dir, str_dt, out_file_name))
+                out_path = ("{}/plots/empty_segs/{}/{}/{}.png".
+                            format(script_dir, str_dt, metric, out_file_name))
                 plot_procedures.plot_ts(ts, out_path, dt_axvline=axvline_dts)
 
 
-def match_empty_segs(dt_start, dt_end, hours_tol=4):
+def match_empty_segs(dt_start, dt_end, metric, hours_tol=4):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
-    in_path = "{}/prints/{}/empty_segs_per_mac.csv".format(script_dir, str_dt)
+    in_path = "{}/prints/{}/{}/empty_segs_per_mac.csv".format(script_dir,
+                                                              str_dt, metric)
 
-    mac_emptySegs = {}
+    macServer_emptySegs = {}
     df = pd.read_csv(in_path)
     for idx, row in df.iterrows():
-        mac_emptySegs[row["mac"]] = ast.literal_eval(row["empty_segs"])
+        macServer_emptySegs[(row["mac"], row["server"])] = \
+            ast.literal_eval(row["empty_segs"])
 
-    for mac in mac_emptySegs:
-        for i in xrange(len(mac_emptySegs[mac])):
-            for j in xrange(len(mac_emptySegs[mac][i])):
-                mac_emptySegs[mac][i][j] = \
-                    dt_procedures.from_strdt_to_dt(mac_emptySegs[mac][i][j])
+    for tp in macServer_emptySegs:
+        for i in xrange(len(macServer_emptySegs[tp])):
+            for j in xrange(len(macServer_emptySegs[tp][i])):
+                macServer_emptySegs[tp][i][j] = \
+                    dt_procedures.from_strdt_to_dt(
+                        macServer_emptySegs[tp][i][j])
 
-    out_path = "{}/prints/{}/match_empty_segs.csv".format(script_dir, str_dt)
+    out_path = "{}/prints/{}/{}/match_empty_segs.csv".format(script_dir,
+                                                             str_dt, metric)
     with open(out_path, "w") as f:
-        f.write("tp,fp,fn,mac1,mac2,empty_segs1,empty_segs2,matches\n")
+        f.write("tp,fp,fn,server1,server2,mac1,mac2,empty_segs1,empty_segs2\n")
 
         cnt = 0
-        for mac1 in mac_emptySegs:
+        for mac1, server1 in macServer_emptySegs:
             cnt += 1
             print "cnt={}".format(cnt)
 
-            for mac2 in mac_emptySegs:
+            for mac2, server2 in macServer_emptySegs:
                 if mac1 != mac2:
                     # only tp, fp, fn are correct with these parameters
                     ts = TimeSeries()
-                    conf = cmp_class.conf_mat(mac_emptySegs[mac1],
-                                              mac_emptySegs[mac2], ts,
-                                              cmp_class.match_seg, hours_tol)
+                    conf = cmp_class.conf_mat(
+                        macServer_emptySegs[(mac1, server1)],
+                        macServer_emptySegs[(mac2, server2)], ts,
+                        cmp_class.match_seg, hours_tol)
 
-                    f.write("{},{},{},\"{}\",\"{}\",\"{}\",\"{}\"\n".
-                            format(conf["tp"], conf["fp"], conf["fn"], mac1,
-                                   mac2, mac_emptySegs[mac1],
-                                   mac_emptySegs[mac2]))
+                    f.write("{},{},{},{},{},{},{},\"{}\",\"{}\"\n".
+                            format(conf["tp"], conf["fp"], conf["fn"], server1,
+                                   server2, mac1, mac2,
+                                   macServer_emptySegs[(mac1, server1)],
+                                   macServer_emptySegs[(mac2, server2)]))
     utils.sort_csv_file(out_path, ["tp", "fp", "fn"],
                         [False, True, True])
 
@@ -112,8 +122,8 @@ if __name__ == "__main__":
     dt_start = datetime.datetime(2016, 6, 1)
     dt_end = datetime.datetime(2016, 6, 11)
     print_empty_segs(dt_start, dt_end, metric, plot=False)
-    match_empty_segs(dt_start, dt_end)
+    match_empty_segs(dt_start, dt_end, metric)
 
     # for dt_start, dt_end in utils.iter_dt_range():
     #     print_empty_segs(dt_start, dt_end, metric, plot=False)
-    #     match_empty_segs(dt_start, dt_end)
+    #     match_empty_segs(dt_start, dt_end, metric)
