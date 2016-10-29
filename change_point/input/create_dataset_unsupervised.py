@@ -1,5 +1,6 @@
 import os
 import sys
+import datetime
 import pandas as pd
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -9,10 +10,10 @@ import utils.utils as utils
 from utils.time_series import TimeSeries
 
 
-def include_in_dataset(ts, mac, dt_dir, dt_start, dt_end,
+def include_in_dataset(ts, mac, dt_dir, str_dt, dt_start, dt_end,
                        min_samples_fraction=0.5, filtered="filtered"):
-    df = pd.read_csv("{}/change_point/unsupervised/prints/{}/{}"
-                     "traceroute_per_mac.csv".format(base_dir, dt_dir,
+    df = pd.read_csv("{}/change_point/unsupervised/prints/{}/{}/"
+                     "traceroute_per_mac.csv".format(base_dir, str_dt,
                                                      filtered))
     if mac not in df["mac"].values:
         return False
@@ -42,7 +43,7 @@ def create_dataset_unsupervised(dt_start, dt_end):
                 "change_points_ids\n")
         for server, mac, in_path in utils.iter_server_mac(dt_dir, True):
             ts = TimeSeries(in_path, "loss", dt_start, dt_end)
-            if include_in_dataset(ts, mac, dt_dir, dt_start, dt_end):
+            if include_in_dataset(ts, mac, dt_dir, str_dt, dt_start, dt_end):
                 f.write("{},{},{},{},{},\"\",\"\"\n".format(str_dt, mac,
                                                             server,
                                                             dt_start,
@@ -50,5 +51,9 @@ def create_dataset_unsupervised(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    for dt_start, dt_end in utils.iter_dt_range():
-        create_dataset_unsupervised(dt_start, dt_end)
+    dt_start = datetime.datetime(2016, 6, 1)
+    dt_end = datetime.datetime(2016, 6, 11)
+    create_dataset_unsupervised(dt_start, dt_end)
+
+    # for dt_start, dt_end in utils.iter_dt_range():
+    #     create_dataset_unsupervised(dt_start, dt_end)

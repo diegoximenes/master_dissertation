@@ -53,9 +53,9 @@ def print_empty_segs(dt_start, dt_end, metric, min_seg_len, filtered,
             ts = TimeSeries(in_path=in_path, metric=metric, dt_start=dt_start,
                             dt_end=dt_end)
 
+            axvline_dts = []
+            empty_segs = []
             if len(ts.x) >= 2:
-                axvline_dts = []
-                empty_segs = []
                 if is_empty_seg(dt_start, ts.x[0], min_seg_len):
                     axvline_dts.append(ts.x[0])
                     empty_segs.append([str(dt_start), str(ts.x[0])])
