@@ -20,6 +20,14 @@ def get_dts_empty_segs(str_empty_segs):
     return dts
 
 
+def match(match_type, row):
+    if (row["tp"] == 0) or (row["fp"] > 0) or (row["fn"] > 0):
+        return False
+    if match_type == "cps":
+        return row["type_cps1"] == row["type_cps2"]
+    return True
+
+
 def plot_matches(dt_start, dt_end, metric, match_type):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -41,8 +49,7 @@ def plot_matches(dt_start, dt_end, metric, match_type):
         print "cnt={}".format(idx)
 
         mac_tp = (min(row["mac1"], row["mac2"]), max(row["mac1"], row["mac2"]))
-        if ((mac_tp not in mac1_mac2) and (row["tp"] > 0) and
-                (row["fp"] == 0) and (row["fn"] == 0)):
+        if (mac_tp not in mac1_mac2) and match(match_type, row):
 
             mac1_mac2.add(mac_tp)
 
