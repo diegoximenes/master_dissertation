@@ -1,7 +1,9 @@
 import os
 import sys
+import socket
 import datetime
 import pandas as pd
+from IPy import IP
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "..")
@@ -79,3 +81,18 @@ def sort_csv_file(path, fields, ascending=None):
     df = pd.read_csv(path)
     df_sorted = df.sort_values(by=fields, ascending=ascending)
     df_sorted.to_csv(path, index=False)
+
+
+def is_valid_ip(str_ip):
+    try:
+        socket.inet_aton(str_ip)
+        return True
+    except socket.error:
+        return False
+
+
+def is_private_ip(str_ip):
+    if not is_valid_ip(str_ip):
+        return False
+    ip = IP(str_ip)
+    return (ip.iptype() == "PRIVATE")

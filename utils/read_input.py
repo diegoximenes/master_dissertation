@@ -10,7 +10,23 @@ sys.path.append(base_dir)
 import utils
 
 
-def get_raw(in_path, metric, dt_start, dt_end):
+def valid_row(metric, row, cross_traffic_thresh):
+    if (metric == "traceroute") or (metric == "server_ip"):
+        return row[metric] != "None"
+
+    if ((row[metric] == "None") or
+            (row[metric + "_cross_traffic_up"] == "None") or
+            (row[metric + "_cross_traffic_down"] == "None")):
+        return False
+
+    if ((float(row[metric + "_cross_traffic_up"]) > cross_traffic_thresh) or
+            (float(row[metric + "_cross_traffic_down"]) >
+             cross_traffic_thresh)):
+        return False
+    return True
+
+
+def get_raw(in_path, metric, dt_start, dt_end, cross_traffic_thresh):
     """
     Returns:
         x: sorted datetimes
@@ -20,16 +36,14 @@ def get_raw(in_path, metric, dt_start, dt_end):
     l = []
     df = pd.read_csv(in_path)
     for idx, row in df.iterrows():
-        if row[metric] != "None":
+        if valid_row(metric, row, cross_traffic_thresh):
             dt = dt_procedures.from_strdt_to_dt(row["dt"])
             if dt_procedures.in_dt_range(dt, dt_start, dt_end):
                 yi = row[metric]
                 if metric == "traceroute":
                     yi = yi.replace("nan", "None")
                     yi = ast.literal_eval(yi)
-                elif metric == "server_ip":
-                    pass
-                else:
+                elif metric != "server_ip":
                     yi = float(yi)
                 l.append([dt, yi])
 

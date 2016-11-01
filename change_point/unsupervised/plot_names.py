@@ -12,7 +12,15 @@ import utils.plot_procedures as plot_procedures
 from utils.time_series import TimeSeries
 
 
-def plot_per_name(dt_start, dt_end, metric):
+def is_cmts(name):
+    ip1 = name[0][1]
+    ip2 = name[1][1]
+    if utils.is_private_ip(ip1) and (not utils.is_private_ip(ip2)):
+        return True
+    return False
+
+
+def plot_per_name(dt_start, dt_end, metric, only_cmts):
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -34,6 +42,9 @@ def plot_per_name(dt_start, dt_end, metric):
                 continue
             splitted = name[0][0].split(".")
             if splitted[0] == "192" and splitted[1] == "168":
+                continue
+
+            if only_cmts and (not is_cmts(name)):
                 continue
 
             utils.create_dirs(["{}/plots/names/{}/{}/{}".format(script_dir,
@@ -62,4 +73,4 @@ if __name__ == "__main__":
     metric = "latency"
     dt_start = datetime.datetime(2016, 6, 1)
     dt_end = datetime.datetime(2016, 6, 11)
-    plot_per_name(dt_start, dt_end, metric)
+    plot_per_name(dt_start, dt_end, metric, True)

@@ -2,9 +2,7 @@ import os
 import sys
 import ast
 import copy
-import socket
 import datetime
-from IPy import IP
 import pandas as pd
 from itertools import izip
 
@@ -14,21 +12,6 @@ sys.path.append(base_dir)
 import utils.read_input as read_input
 import utils.utils as utils
 from utils.time_series import TimeSeries
-
-
-def is_valid_ip(str_ip):
-    try:
-        socket.inet_aton(str_ip)
-        return True
-    except socket.error:
-        return False
-
-
-def is_private_ip(str_ip):
-    if not is_valid_ip(str_ip):
-        return False
-    ip = IP(str_ip)
-    return (ip.iptype() == "PRIVATE")
 
 
 def get_ip_name(traceroute):
@@ -42,13 +25,13 @@ def get_ip_name(traceroute):
     for hop in traceroute:
         for ip, name in izip(hop["ips"], hop["names"]):
             if ((name != u"##") and ((ip not in ip_name) or
-                                     (not is_valid_ip(name)))):
+                                     (not utils.is_valid_ip(name)))):
                 ip_name[ip] = name
     return ip_name
 
 
 def get_name(name, ip_name):
-    if not is_valid_ip(name):
+    if not utils.is_valid_ip(name):
         return name
     else:
         # name is an ip
@@ -148,7 +131,7 @@ def get_traceroute_filtered(str_traceroute_list):
         if traceroute[i] != (None, None):
             for j in xrange(i, len(traceroute)):
                 if traceroute[j] != (None, None):
-                    if not is_private_ip(traceroute[j][1]):
+                    if not utils.is_private_ip(traceroute[j][1]):
                         filtered = (traceroute[i], traceroute[j])
                         break
             if filtered == ((None, None), (None, None)):
@@ -352,9 +335,9 @@ def print_all(dt_start, dt_end, mac_node):
 if __name__ == "__main__":
     mac_node = read_input.get_mac_node()
 
-    dt_start = datetime.datetime(2016, 6, 1)
-    dt_end = datetime.datetime(2016, 6, 11)
-    print_all(dt_start, dt_end, mac_node)
+    # dt_start = datetime.datetime(2016, 6, 1)
+    # dt_end = datetime.datetime(2016, 6, 11)
+    # print_all(dt_start, dt_end, mac_node)
 
-    # for dt_start, dt_end in utils.iter_dt_range():
-    #     print_all(dt_start, dt_end, mac_node)
+    for dt_start, dt_end in utils.iter_dt_range():
+        print_all(dt_start, dt_end, mac_node)

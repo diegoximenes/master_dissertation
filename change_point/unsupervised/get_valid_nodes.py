@@ -5,6 +5,7 @@ import pandas as pd
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
+import utils.utils as utils
 
 
 def is_valid_node(node, cnt_node):
@@ -29,6 +30,7 @@ def print_valid_nodes():
             l.append((cnt_node, node))
     l.sort(reverse=True)
 
+    utils.create_dirs(["{}/prints".format(script_dir)])
     with open("{}/prints/valid_nodes.csv".format(script_dir), "w") as f:
         f.write("node,cnt\n")
         for tp in l:

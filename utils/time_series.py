@@ -22,10 +22,12 @@ class TimeSeries:
         compressed: boolean. If ts_type is "raw" then this parameter is
             irrelevant
         filters: list with filter application order
+        cross_traffic_thresh: only measurements with cross traffics lower than
+            cross_traffic_thresh are considered
     """
 
     def __init__(self, in_path=None, metric=None, dt_start=None, dt_end=None,
-                 ts_type="raw", compressed=False):
+                 ts_type="raw", compressed=False, cross_traffic_thresh=np.inf):
         self.x = []
         self.y = []
         self.metric = metric
@@ -33,20 +35,20 @@ class TimeSeries:
         self.dt_end = dt_end
         self.ts_type = ts_type
         self.compressed = compressed
-        self.filters = []
+        self.filters = ["cross_traffic_thresh{}".format(cross_traffic_thresh)]
 
         if (dt_start is not None) and (dt_end is not None):
             self.dt_start, self.dt_end = dt_start, dt_end
 
             if in_path is not None:
-                self.read(in_path, metric)
+                self.read(in_path, metric, cross_traffic_thresh)
 
                 if compressed:
                     self.compress()
 
-    def read(self, in_path, metric):
+    def read(self, in_path, metric, cross_traffic_thresh):
         raw_x, raw_y = read_input.get_raw(in_path, metric, self.dt_start,
-                                          self.dt_end)
+                                          self.dt_end, cross_traffic_thresh)
 
         if self.ts_type == "raw":
             self.x = raw_x

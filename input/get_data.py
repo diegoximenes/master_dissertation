@@ -47,40 +47,55 @@ def get_server_ip(doc):
 def get_loss(doc):
     # check loss existence
     if (("rtt" not in doc) or ("loss" not in doc["rtt"]) or
-            ("lat" not in doc["rtt"])):
-        return None
+            ("lat" not in doc["rtt"]) or ("xtrf" not in doc["rtt"]) or
+            ("u" not in doc["rtt"]["xtrf"]) or
+            ("d" not in doc["rtt"]["xtrf"])):
+        return None, None, None
 
     loss = float(doc["rtt"]["loss"])
     # there are some inconsistencies in the database
     if (loss < 0) or (loss > 1):
-        return None
+        return None, None, None
     if (loss < 1) and ("s" not in doc["rtt"]["lat"]):
-        return None
+        return None, None, None
 
-    return loss
+    return loss, doc["rtt"]["xtrf"]["u"], doc["rtt"]["xtrf"]["d"]
 
 
 def get_latency(doc):
     if (("rtt" not in doc) or ("lat" not in doc["rtt"]) or
-            ("m" not in doc["rtt"]["lat"])):
-        return None
-    return doc["rtt"]["lat"]["m"]
+            ("m" not in doc["rtt"]["lat"]) or ("xtrf" not in doc["rtt"]) or
+            ("u" not in doc["rtt"]["xtrf"]) or
+            ("d" not in doc["rtt"]["xtrf"])):
+        return None, None, None
+    return (doc["rtt"]["lat"]["m"], doc["rtt"]["xtrf"]["u"],
+            doc["rtt"]["xtrf"]["d"])
 
 
 def get_throughput_down(doc):
     if (("thr" not in doc) or ("tcp" not in doc["thr"]) or
             ("down" not in doc["thr"]["tcp"]) or
-            ("v" not in doc["thr"]["tcp"]["down"])):
-        return None, None
-    return doc["thr"]["tcp"]["down"]["v"], doc["thr"]["tcp"]["down"]["n"]
+            ("v" not in doc["thr"]["tcp"]["down"]) or
+            ("xtrf" not in doc["thr"]["tcp"]["down"]) or
+            ("u" not in doc["thr"]["tcp"]["down"]["xtrf"]) or
+            ("d" not in doc["thr"]["tcp"]["down"]["xtrf"])):
+        return None, None, None, None
+    return (doc["thr"]["tcp"]["down"]["v"], doc["thr"]["tcp"]["down"]["n"],
+            doc["thr"]["tcp"]["down"]["xtrf"]["u"],
+            doc["thr"]["tcp"]["down"]["xtrf"]["d"])
 
 
 def get_throughput_up(doc):
     if (("thr" not in doc) or ("tcp" not in doc["thr"]) or
             ("up" not in doc["thr"]["tcp"]) or
-            ("v" not in doc["thr"]["tcp"]["up"])):
-        return None, None
-    return doc["thr"]["tcp"]["up"]["v"], doc["thr"]["tcp"]["up"]["n"]
+            ("v" not in doc["thr"]["tcp"]["up"]) or
+            ("xtrf" not in doc["thr"]["tcp"]["up"]) or
+            ("u" not in doc["thr"]["tcp"]["up"]["xtrf"]) or
+            ("d" not in doc["thr"]["tcp"]["up"]["xtrf"])):
+        return None, None, None, None
+    return (doc["thr"]["tcp"]["up"]["v"], doc["thr"]["tcp"]["up"]["n"],
+            doc["thr"]["tcp"]["up"]["xtrf"]["u"],
+            doc["thr"]["tcp"]["up"]["xtrf"]["d"])
 
 
 def get_traceroute(doc):
@@ -138,7 +153,14 @@ def write_csvs(dt_dir, dt_start, dt_end, cursor, collection):
                                             mac)
         with open(out_path, "w") as f:
             f.write("dt,uf,server_ip,loss,latency,throughput_up,"
-                    "throughput_down,nominal_up,nominal_down,traceroute\n")
+                    "throughput_down,nominal_up,nominal_down,"
+                    "loss_cross_traffic_up,loss_cross_traffic_down,"
+                    "latency_cross_traffic_up,latency_cross_traffic_down,"
+                    "throughput_up_cross_traffic_up,"
+                    "throughput_up_cross_traffic_down,"
+                    "throughput_down_cross_traffic_up,"
+                    "throughput_down_cross_traffic_down,"
+                    "traceroute\n")
 
             for doc in cursor:
                 if (not valid_doc(doc)):
@@ -149,20 +171,41 @@ def write_csvs(dt_dir, dt_start, dt_end, cursor, collection):
                 dt = dt_procedures.from_utc_to_sp(doc["_id"]["date"])
                 server_ip = get_server_ip(doc)
 
-                loss = get_loss(doc)
-                latency = get_latency(doc)
-                throughput_down, nominal_down = \
-                    get_throughput_down(doc)
-                throughput_up, nominal_up = \
-                    get_throughput_up(doc)
+                (loss, loss_cross_traffic_up, loss_cross_traffic_down) = \
+                    get_loss(doc)
+
+                (latency, latency_cross_traffic_up,
+                 latency_cross_traffic_down) = get_latency(doc)
+
+                (throughput_up, nominal_up,
+                 throughput_up_cross_traffic_up,
+                 throughput_up_cross_traffic_down) = get_throughput_up(doc)
+
+                (throughput_down, nominal_down,
+                 throughput_down_cross_traffic_up,
+                 throughput_down_cross_traffic_down) = get_throughput_down(doc)
+
                 traceroute = get_traceroute(doc)
 
-                line_formatter = "{}" + ",{}" * 8 + ",\"{}\"\n"
-                f.write(line_formatter.format(dt, uf, server_ip, loss,
-                                              latency, throughput_up,
-                                              throughput_down,
-                                              nominal_up, nominal_down,
-                                              traceroute))
+                l = "{}" + ",{}" * 16 + ",\"{}\"\n"
+                f.write(l.format(dt,
+                                 uf,
+                                 server_ip,
+                                 loss,
+                                 latency,
+                                 throughput_up,
+                                 throughput_down,
+                                 nominal_up,
+                                 nominal_down,
+                                 loss_cross_traffic_up,
+                                 loss_cross_traffic_down,
+                                 latency_cross_traffic_up,
+                                 latency_cross_traffic_down,
+                                 throughput_up_cross_traffic_up,
+                                 throughput_up_cross_traffic_down,
+                                 throughput_down_cross_traffic_up,
+                                 throughput_down_cross_traffic_down,
+                                 traceroute))
 
 
 def get_data(dt_start_sp, dt_end_sp):
@@ -183,11 +226,11 @@ def get_data(dt_start_sp, dt_end_sp):
 
 
 if __name__ == "__main__":
-    dt_start_sp = datetime(2016, 5, 1, 0, 0, 0)
-    dt_end_sp = datetime(2016, 6, 1, 0, 0, 0)
-    get_data(dt_start_sp, dt_end_sp)
+    # dt_start_sp = datetime(2016, 10, 1, 0, 0, 0)
+    # dt_end_sp = datetime(2016, 11, 1, 0, 0, 0)
+    # get_data(dt_start_sp, dt_end_sp)
 
-    # for month in range(9, 10):
-    #     dt_start_sp = datetime(2016, month, 1)
-    #     dt_end_sp = datetime(2016, month + 1, 1)
-    #     get_data(dt_start_sp, dt_end_sp)
+    for month in range(7, 10):
+        dt_start_sp = datetime(2016, month, 1)
+        dt_end_sp = datetime(2016, month + 1, 1)
+        get_data(dt_start_sp, dt_end_sp)
