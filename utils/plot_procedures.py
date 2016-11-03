@@ -161,6 +161,9 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     if ts1.metric == "loss":
         ax[0].set_yticks(np.arange(0, 1 + 0.05, 0.05))
         ax[0].set_ylim([-0.02, 1.02])
+    elif (ts1.metric == "throughput_down") or (ts1.metric == "throughput_up"):
+        ax[0].set_yscale('log')
+
     if ylim1 is not None:
         ax[0].set_ylim(ylim1)
     ax[0].set_xticks(xticks)
@@ -177,6 +180,9 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     if ts2.metric == "loss":
         ax[1].set_yticks(np.arange(0, 1 + 0.05, 0.05))
         ax[1].set_ylim([-0.02, 1.02])
+    elif (ts2.metric == "throughput_down") or (ts2.metric == "throughput_up"):
+        ax[1].set_yscale('log')
+
     if ylim2 is not None:
         ax[1].set_ylim(ylim2)
     if yticks2 is not None:
