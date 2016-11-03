@@ -335,9 +335,9 @@ def print_all(dt_start, dt_end, mac_node):
 if __name__ == "__main__":
     mac_node = read_input.get_mac_node()
 
-    # dt_start = datetime.datetime(2016, 6, 1)
-    # dt_end = datetime.datetime(2016, 6, 11)
-    # print_all(dt_start, dt_end, mac_node)
+    dt_start = datetime.datetime(2016, 6, 1)
+    dt_end = datetime.datetime(2016, 6, 11)
+    print_all(dt_start, dt_end, mac_node)
 
-    for dt_start, dt_end in utils.iter_dt_range():
-        print_all(dt_start, dt_end, mac_node)
+    # for dt_start, dt_end in utils.iter_dt_range():
+    #     print_all(dt_start, dt_end, mac_node)
