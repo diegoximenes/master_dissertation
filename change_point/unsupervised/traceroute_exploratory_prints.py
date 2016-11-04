@@ -74,6 +74,9 @@ def get_traceroute(ts_traceroute, ts_server_ip):
                     if (name != u"##"):
                         hop_name = get_name(name, ip_name)
                         hop_ip = ip
+                    if "embratel" in name:
+                        return (False, "hop_with_embratel={}".format(hop),
+                                server_ip)
 
                 # check if more than one name appear in the
                 # same hop
@@ -143,8 +146,8 @@ def get_traceroute_filtered(str_traceroute_list):
 
 def compress_traceroute(traceroute, traceroute_type):
     """
-    remove lasts ((None, None), (None, None)) hops from traceroute_filtered or
-    (None, None) from traceroute
+    remove left/right ((None, None), (None, None)) hops from
+    traceroute_filtered or (None, None) from traceroute
     """
 
     if traceroute_type == "filtered":
@@ -152,12 +155,17 @@ def compress_traceroute(traceroute, traceroute_type):
     elif traceroute_type == "raw":
         target_hop = (None, None)
 
-    compressed = []
-    for hop in reversed(traceroute):
-        if (not compressed) and (hop == target_hop):
-            continue
-        compressed.append(hop)
-    compressed.reverse()
+    i = 0
+    j = len(traceroute) - 1
+    while (i < len(traceroute)) and (traceroute[i] == target_hop):
+        i += 1
+    while (j >= 0) and (traceroute[j] == target_hop):
+        j -= 1
+
+    if j >= i:
+        compressed = copy.deepcopy(traceroute[i:j + 1])
+    else:
+        compressed = []
     return compressed
 
 
@@ -203,6 +211,20 @@ def print_traceroute_per_mac_filtered(dt_start, dt_end):
                 get_traceroute_filtered(row["traceroute"]), "filtered")
             traceroute = ast.literal_eval(row["traceroute"])
             traceroute = compress_traceroute(traceroute, "raw")
+
+            if traceroute_filtered == []:
+                continue
+            target_traceroute = True
+            for hop in traceroute_filtered:
+                if hop[0][0] is None:
+                    target_traceroute = False
+                    break
+                if (utils.is_private_ip(hop[0][1]) and
+                        utils.is_private_ip(hop[1][1])):
+                    target_traceroute = False
+                    break
+            if not target_traceroute:
+                continue
 
             l = ("{},{},{},{},\"{}\",\"{}\"\n".
                  format(row["server"], row["node"], row["mac"],
@@ -323,13 +345,13 @@ def print_all(dt_start, dt_end, mac_node):
                        "{}/prints/{}/filtered".format(script_dir, str_dt),
                        "{}/prints/{}/not_filtered".format(script_dir, str_dt)])
 
-    print_macs_per_name(dt_start, dt_end, mac_node)
-    print_names_per_mac(dt_start, dt_end, mac_node)
-    print_name_ips(dt_start, dt_end)
-    print_traceroute_per_mac(dt_start, dt_end, mac_node)
+    # print_macs_per_name(dt_start, dt_end, mac_node)
+    # print_names_per_mac(dt_start, dt_end, mac_node)
+    # print_name_ips(dt_start, dt_end)
+    # print_traceroute_per_mac(dt_start, dt_end, mac_node)
 
     print_traceroute_per_mac_filtered(dt_start, dt_end)
-    print_macs_per_name_filtered(dt_start, dt_end, mac_node)
+    # print_macs_per_name_filtered(dt_start, dt_end, mac_node)
 
 
 if __name__ == "__main__":

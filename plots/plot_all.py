@@ -39,6 +39,6 @@ def plot(dt_start, dt_end, metric):
 
 if __name__ == "__main__":
     metric = "latency"
-    dt_start = datetime.datetime(2016, 5, 1)
-    dt_end = datetime.datetime(2016, 5, 11)
+    dt_start = datetime.datetime(2016, 6, 1)
+    dt_end = datetime.datetime(2016, 6, 11)
     plot(dt_start, dt_end, metric)

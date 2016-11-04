@@ -61,11 +61,11 @@ def plot_per_path(dt_start, dt_end, metric):
 
 
 if __name__ == "__main__":
-    # metric = "latency"
-    # dt_start = datetime.datetime(2016, 7, 1)
-    # dt_end = datetime.datetime(2016, 7, 11)
-    # plot_per_path(dt_start, dt_end, metric)
+    metric = "latency"
+    dt_start = datetime.datetime(2016, 6, 1)
+    dt_end = datetime.datetime(2016, 6, 11)
+    plot_per_path(dt_start, dt_end, metric)
 
-    for metric in ["loss", "latency", "throughput_down", "throughput_up"]:
-        for dt_start, dt_end in utils.iter_dt_range():
-            plot_per_path(dt_start, dt_end, metric)
+    # for metric in ["loss", "latency", "throughput_down", "throughput_up"]:
+    #     for dt_start, dt_end in utils.iter_dt_range():
+    #         plot_per_path(dt_start, dt_end, metric)

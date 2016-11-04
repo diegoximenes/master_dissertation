@@ -76,6 +76,6 @@ if __name__ == "__main__":
 
     # plot_per_name(dt_start, dt_end, metric, True)
 
-    for metric in ["loss", "latency", "throughput_down", "throughput_up"]:
+    for metric in ["throughput_down", "throughput_up"]:
         for dt_start, dt_end in utils.iter_dt_range():
             plot_per_name(dt_start, dt_end, metric, True)
