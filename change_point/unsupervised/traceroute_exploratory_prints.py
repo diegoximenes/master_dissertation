@@ -71,20 +71,26 @@ def get_traceroute(ts_traceroute, ts_server_ip):
                 # get a single name for each hop
                 hop_name = hop_ip = None
                 for name, ip in izip(hop["names"], hop["ips"]):
-                    if (name != u"##"):
-                        hop_name = get_name(name, ip_name)
-                        hop_ip = ip
                     if "embratel" in name:
                         return (False, "hop_with_embratel={}".format(hop),
                                 server_ip)
+                for name, ip in izip(hop["names"], hop["ips"]):
+                    if (name != u"##"):
+                        hop_name = get_name(name, ip_name)
+                        hop_ip = ip
+                for name, ip in izip(hop["names"], hop["ips"]):
+                    if name == u"##":
+                        hop_name = hop_ip = None
+                        break
 
                 # check if more than one name appear in the
                 # same hop
-                for name in hop["names"]:
-                    if ((name != u"##") and
-                            (hop_name != get_name(name, ip_name))):
-                        return (False, "diff_name_same_hop={}".format(hop),
-                                server_ip)
+                if hop_name is not None:
+                    for name in hop["names"]:
+                        if ((name != u"##") and
+                                (hop_name != get_name(name, ip_name))):
+                            return (False, "diff_name_same_hop={}".format(hop),
+                                    server_ip)
 
                 hops_names.append(hop_name)
                 hops_ips.append(hop_ip)
@@ -186,6 +192,7 @@ def print_traceroute_per_mac(dt_start, dt_end, mac_node):
             is_unique_traceroute, str_traceroute, server_ip = \
                 get_traceroute(ts_traceroute, ts_server_ip)
             node = mac_node.get(mac)
+
             f.write("{},{},{},{},{},\"{}\"\n".format(server, server_ip, node,
                                                      mac, is_unique_traceroute,
                                                      str_traceroute))
@@ -198,8 +205,8 @@ def print_traceroute_per_mac_filtered(dt_start, dt_end):
     out_path = ("{}/prints/{}/filtered/traceroute_per_mac.csv".
                 format(script_dir, str_dt))
     with open(out_path, "w") as f:
-        f.write("server,node,mac,is_unique_traceroute,traceroute,"
-                "traceroute_filtered\n")
+        f.write("server,node,mac,traceroute_filtered,is_unique_traceroute,"
+                "traceroute\n")
         in_path = ("{}/prints/{}/not_filtered/traceroute_per_mac.csv".
                    format(script_dir, str_dt))
         df = pd.read_csv(in_path)
@@ -226,11 +233,20 @@ def print_traceroute_per_mac_filtered(dt_start, dt_end):
             if not target_traceroute:
                 continue
 
-            l = ("{},{},{},{},\"{}\",\"{}\"\n".
+            aux_traceroute_filtered = copy.deepcopy(traceroute_filtered)
+            traceroute_filtered = []
+            for hop in aux_traceroute_filtered:
+                if ((hop[0][0] is not None) and
+                        (hop[0][1].split(".")[0] == "192")):
+                    continue
+                traceroute_filtered.append(hop)
+
+            l = ("{},{},{},\"{}\",{},\"{}\"\n".
                  format(row["server"], row["node"], row["mac"],
-                        row["is_unique_traceroute"], traceroute,
-                        traceroute_filtered))
+                        traceroute_filtered, row["is_unique_traceroute"],
+                        traceroute))
             f.write(l)
+    utils.sort_csv_file(out_path, ["traceroute_filtered", "server", "mac"])
 
 
 def print_macs_per_name_filtered(dt_start, dt_end, mac_node):
@@ -348,7 +364,7 @@ def print_all(dt_start, dt_end, mac_node):
     # print_macs_per_name(dt_start, dt_end, mac_node)
     # print_names_per_mac(dt_start, dt_end, mac_node)
     # print_name_ips(dt_start, dt_end)
-    # print_traceroute_per_mac(dt_start, dt_end, mac_node)
+    print_traceroute_per_mac(dt_start, dt_end, mac_node)
 
     print_traceroute_per_mac_filtered(dt_start, dt_end)
     # print_macs_per_name_filtered(dt_start, dt_end, mac_node)
@@ -357,8 +373,8 @@ def print_all(dt_start, dt_end, mac_node):
 if __name__ == "__main__":
     mac_node = read_input.get_mac_node()
 
-    dt_start = datetime.datetime(2016, 6, 1)
-    dt_end = datetime.datetime(2016, 6, 11)
+    dt_start = datetime.datetime(2016, 7, 21)
+    dt_end = datetime.datetime(2016, 7, 31)
     print_all(dt_start, dt_end, mac_node)
 
     # for dt_start, dt_end in utils.iter_dt_range():

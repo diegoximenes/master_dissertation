@@ -29,6 +29,10 @@ def plot_per_path(dt_start, dt_end, metric):
         cnt += 1
         print "cnt={}".format(cnt)
 
+        utils.create_dirs(["{}/plots/paths/{}/{}/{}".format(script_dir, str_dt,
+                                                            metric,
+                                                            row["server"])])
+
         traceroute = ast.literal_eval(row["traceroute_filtered"])
 
         in_path = "{}/input/{}/{}/{}.csv".format(base_dir, dt_dir,
@@ -41,7 +45,8 @@ def plot_per_path(dt_start, dt_end, metric):
         ts_filter.percentile_filter(win_len=13, p=0.5)
 
         first_hop = True
-        dir_path = "{}/plots/paths/{}/{}".format(script_dir, str_dt, metric)
+        dir_path = "{}/plots/paths/{}/{}/{}/".format(script_dir, str_dt,
+                                                     metric, row["server"])
         for name in traceroute:
             if (name[0][0] is None) and first_hop:
                 continue
@@ -62,8 +67,8 @@ def plot_per_path(dt_start, dt_end, metric):
 
 if __name__ == "__main__":
     metric = "latency"
-    dt_start = datetime.datetime(2016, 6, 1)
-    dt_end = datetime.datetime(2016, 6, 11)
+    dt_start = datetime.datetime(2016, 7, 21)
+    dt_end = datetime.datetime(2016, 7, 31)
     plot_per_path(dt_start, dt_end, metric)
 
     # for metric in ["loss", "latency", "throughput_down", "throughput_up"]:

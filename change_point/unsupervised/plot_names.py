@@ -70,12 +70,12 @@ def plot_per_name(dt_start, dt_end, metric, only_cmts):
 
 
 if __name__ == "__main__":
-    # metric = "latency"
-    # dt_start = datetime.datetime(2016, 6, 1)
-    # dt_end = datetime.datetime(2016, 6, 11)
+    metric = "latency"
+    dt_start = datetime.datetime(2016, 7, 21)
+    dt_end = datetime.datetime(2016, 7, 31)
 
-    # plot_per_name(dt_start, dt_end, metric, True)
+    plot_per_name(dt_start, dt_end, metric, False)
 
-    for metric in ["throughput_down", "throughput_up"]:
-        for dt_start, dt_end in utils.iter_dt_range():
-            plot_per_name(dt_start, dt_end, metric, True)
+    # for metric in ["throughput_down", "throughput_up"]:
+    #     for dt_start, dt_end in utils.iter_dt_range():
+    #         plot_per_name(dt_start, dt_end, metric, False)
