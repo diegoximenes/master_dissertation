@@ -42,13 +42,70 @@ def write_graph(out_path, name_neigh):
         f.write("}")
 
 
-def print_graph(dt_start, dt_end):
+def check_graph(out_dir, name_neigh):
+    def set_mark(name_neigh):
+        mark = {}
+        for name in name_neigh:
+            mark[name] = 0
+        return mark
+
+    def dfs(name_neigh, mark, name, f=None):
+        mark[name] = 1
+
+        if f:
+            for neigh in name_neigh[name]:
+                f.write("  \"{}\" -> \"{}\"\n".format(name, neigh))
+
+        for neigh in name_neigh[name]:
+            if mark[neigh]:
+                return False
+            else:
+                dfs_ret = dfs(name_neigh, mark, neigh, f)
+                if not dfs_ret:
+                    return dfs_ret
+        return True
+
+    in_deg = {}
+    out_deg = {}
+    for name in name_neigh:
+        in_deg[name] = 0
+        out_deg[name] = 0
+    for name in name_neigh:
+        for neigh in name_neigh[name]:
+            in_deg[neigh] += 1
+            out_deg[name] += 1
+
+    valid_graph = True
+    for name in name_neigh:
+        if in_deg[name] == 0:
+            mark = set_mark(name_neigh)
+            if not dfs(name_neigh, mark, name):
+                valid_graph = False
+                mark = set_mark(name_neigh)
+                out_path = "{}/invalid_subgraph.gv".format(out_dir)
+                f = open(out_path, "w")
+                f.write("digraph {\n")
+                dfs(name_neigh, mark, name, f)
+                f.write("}")
+                f.close()
+                break
+
+    out_path = "{}/graph_stats.txt".format(out_dir)
+    with open(out_path, "w") as f:
+        f.write("valid_graph={}\n".format(valid_graph))
+
+
+def process(dt_start, dt_end):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
-    out_path = "{}/prints/{}/filtered/graph/graph.gv".format(script_dir,
-                                                             str_dt)
+    out_dir = "{}/prints/{}/filtered/graph/".format(script_dir, str_dt)
+    out_path = "{}/graph.gv".format(out_dir)
+
+    utils.create_dirs([out_dir])
+
     name_neigh = get_graph(dt_start, dt_end)
     write_graph(out_path, name_neigh)
+    check_graph(out_dir, name_neigh)
 
     in_path = "{}/prints/{}/filtered/traceroute_per_mac.csv".format(script_dir,
                                                                     str_dt)
@@ -62,13 +119,14 @@ def print_graph(dt_start, dt_end):
                                                                    str_dt,
                                                                    server)])
 
-        out_path = "{}/prints/{}/filtered/graph/{}/graph.gv".format(script_dir,
-                                                                    str_dt,
-                                                                    server)
+        out_dir = "{}/prints/{}/filtered/graph/{}".format(script_dir, str_dt,
+                                                          server)
+        out_path = "{}/graph.gv".format(out_dir)
         write_graph(out_path, name_neigh)
+        check_graph(out_dir, name_neigh)
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 7, 21)
-    dt_end = datetime.datetime(2016, 7, 31)
-    print_graph(dt_start, dt_end)
+    dt_start = datetime.datetime(2016, 6, 21)
+    dt_end = datetime.datetime(2016, 7, 1)
+    process(dt_start, dt_end)
