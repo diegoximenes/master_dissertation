@@ -18,9 +18,9 @@ def include_in_dataset(ts, mac, dt_dir, str_dt, dt_start, dt_end,
     if mac not in df["mac"].values:
         return False
 
-    delta_days = (dt_end - dt_start).days
-    if float(len(ts.y)) / (delta_days * 24.0 * 2.0) < min_samples_fraction:
-        return False
+    # delta_days = (dt_end - dt_start).days
+    # if float(len(ts.y)) / (delta_days * 24.0 * 2.0) < min_samples_fraction:
+    #     return False
 
     return True
 
@@ -51,8 +51,8 @@ def create_dataset_unsupervised(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 6, 1)
-    dt_end = datetime.datetime(2016, 6, 11)
+    dt_start = datetime.datetime(2016, 7, 11)
+    dt_end = datetime.datetime(2016, 7, 21)
     create_dataset_unsupervised(dt_start, dt_end)
 
     # for dt_start, dt_end in utils.iter_dt_range():

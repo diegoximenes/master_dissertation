@@ -89,13 +89,13 @@ def main():
     preprocess_args = {"filter_type": "percentile_filter",
                        "win_len": 13,
                        "p": 0.5}
-    param = {"const_pen": 50,
+    param = {"const_pen": 100,
              "f_pen": "n_cps ^ 2",
              "seg_model": "Normal",
              "min_seg_len": 5,
-             "max_cps": 20}
+             "max_cps": 4}
     metric = "latency"
-    datasets = ["/unsupervised/dtstart2016-06-01_dtend2016-06-11"]
+    datasets = ["/unsupervised/dtstart2016-07-01_dtend2016-07-11"]
     # datasets = list(cp_utils.iter_unsupervised_datasets())
 
     model = SegmentNeighbourhood(preprocess_args=preprocess_args,

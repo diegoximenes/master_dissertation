@@ -52,6 +52,6 @@ def plot_per_node(dt_start, dt_end, metric, only_unique_traceroute):
 
 if __name__ == "__main__":
     metric = "latency"
-    dt_start = datetime.datetime(2016, 6, 1)
-    dt_end = datetime.datetime(2016, 6, 11)
-    plot_per_node(dt_start, dt_end, metric, only_unique_traceroute=False)
+    dt_start = datetime.datetime(2016, 6, 21)
+    dt_end = datetime.datetime(2016, 7, 1)
+    plot_per_node(dt_start, dt_end, metric, only_unique_traceroute=True)

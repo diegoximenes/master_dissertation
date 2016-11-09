@@ -9,10 +9,11 @@ base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
 import utils.plot_procedures as plot_procedures
+import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
 
 
-def plot_per_path(dt_start, dt_end, metric):
+def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -21,6 +22,14 @@ def plot_per_path(dt_start, dt_end, metric):
                        "{}/plots/paths/{}".format(script_dir, str_dt),
                        "{}/plots/paths/{}/{}".format(script_dir, str_dt,
                                                      metric)])
+
+    mac_cps = {}
+    if plot_cps:
+        df = pd.read_csv("{}/prints/{}/filtered/{}/cps_per_mac.csv".
+                         format(script_dir, str_dt, metric))
+        for idx, row in df.iterrows():
+            mac_cps[row["mac"]] = map(dt_procedures.from_strdt_to_dt,
+                                      ast.literal_eval(row["cp_dt"]))
 
     df = pd.read_csv("{}/prints/{}/filtered/traceroute_per_mac.csv".
                      format(script_dir, str_dt))
@@ -54,6 +63,11 @@ def plot_per_path(dt_start, dt_end, metric):
             if splitted[0] == "192":
                 continue
 
+            cp_dts = {}
+            if plot_cps:
+                if row["mac"] in mac_cps:
+                    cp_dts = mac_cps[row["mac"]]
+
             first_hop = False
             dir_path = "{}/{}".format(dir_path, name)
             utils.create_dirs([dir_path])
@@ -62,14 +76,16 @@ def plot_per_path(dt_start, dt_end, metric):
 
             plot_procedures.plot_ts_share_x(ts, ts_filter, out_path,
                                             compress=False,
-                                            plot_type2="scatter")
+                                            plot_type2="scatter",
+                                            dt_axvline1=cp_dts,
+                                            dt_axvline2=cp_dts)
 
 
 if __name__ == "__main__":
     metric = "latency"
-    dt_start = datetime.datetime(2016, 7, 21)
-    dt_end = datetime.datetime(2016, 7, 31)
-    plot_per_path(dt_start, dt_end, metric)
+    dt_start = datetime.datetime(2016, 7, 1)
+    dt_end = datetime.datetime(2016, 7, 11)
+    plot_per_path(dt_start, dt_end, metric, True)
 
     # for metric in ["loss", "latency", "throughput_down", "throughput_up"]:
     #     for dt_start, dt_end in utils.iter_dt_range():
