@@ -2,6 +2,7 @@ import sys
 import os
 import datetime
 import ast
+import functools
 import pandas as pd
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -21,7 +22,7 @@ def is_cmts(name):
     return False
 
 
-def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps=False):
+def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps):
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -33,18 +34,22 @@ def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps=False):
 
     mac_cps = {}
     if plot_cps:
-        df = pd.read_csv("{}/prints/{}/filtered/{}/cps_per_mac.csv".
-                         format(script_dir, str_dt, metric))
-        for idx, row in df.iterrows():
-            mac_cps[row["mac"]] = map(dt_procedures.from_strdt_to_dt,
-                                      ast.literal_eval(row["cp_dt"]))
+        in_path = "{}/prints/{}/filtered/{}/cps_per_mac.csv".format(script_dir,
+                                                                    str_dt,
+                                                                    metric)
+        if os.path.isfile(in_path):
+            df = pd.read_csv(in_path)
+            for idx, row in df.iterrows():
+                mac_cps[row["mac"]] = map(dt_procedures.from_strdt_to_dt,
+                                          ast.literal_eval(row["cp_dt"]))
 
     df = pd.read_csv("{}/prints/{}/filtered/traceroute_per_mac.csv".
                      format(script_dir, str_dt))
     cnt = 0
     for idx, row in df.iterrows():
         cnt += 1
-        print "cnt={}".format(cnt)
+        print "cnt={}, str_dt={}".format(cnt, str_dt)
+
         traceroute = ast.literal_eval(row["traceroute_filtered"])
         for name in traceroute:
             if name[0][0] is None:
@@ -87,10 +92,14 @@ def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps=False):
 
 if __name__ == "__main__":
     metric = "latency"
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
+    # dt_start = datetime.datetime(2016, 6, 21)
+    # dt_end = datetime.datetime(2016, 7, 1)
+    # plot_per_name(dt_start, dt_end, metric, False, True)
 
-    plot_per_name(dt_start, dt_end, metric, False, True)
+    dt_ranges = list(utils.iter_dt_range())
+    f_plot_per_name = functools.partial(plot_per_name, metric=metric,
+                                        only_cmts=False, plot_cps=True)
+    utils.parallel_exec(f_plot_per_name, dt_ranges)
 
     # for metric in ["throughput_down", "throughput_up"]:
     #     for dt_start, dt_end in utils.iter_dt_range():

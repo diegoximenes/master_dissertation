@@ -1,6 +1,7 @@
 import sys
 import os
 import datetime
+import functools
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
@@ -52,6 +53,15 @@ def plot_per_node(dt_start, dt_end, metric, only_unique_traceroute):
 
 if __name__ == "__main__":
     metric = "latency"
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
-    plot_per_node(dt_start, dt_end, metric, only_unique_traceroute=True)
+    # dt_start = datetime.datetime(2016, 6, 21)
+    # dt_end = datetime.datetime(2016, 7, 1)
+    # plot_per_node(dt_start, dt_end, metric, only_unique_traceroute=True)
+
+    dt_ranges = list(utils.iter_dt_range())
+    f_plot_per_node = functools.partial(plot_per_node,
+                                        metric=metric,
+                                        only_unique_traceroute=True)
+    utils.parallel_exec(f_plot_per_node, dt_ranges)
+
+    # for dt_start, dt_end in utils.iter_dt_range():
+    #     plot_per_node(dt_start, dt_end, metric, only_unique_traceroute=True)

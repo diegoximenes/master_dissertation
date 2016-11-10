@@ -51,9 +51,12 @@ def create_dataset_unsupervised(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 7, 11)
-    dt_end = datetime.datetime(2016, 7, 21)
-    create_dataset_unsupervised(dt_start, dt_end)
+    # dt_start = datetime.datetime(2016, 7, 11)
+    # dt_end = datetime.datetime(2016, 7, 21)
+    # create_dataset_unsupervised(dt_start, dt_end)
+
+    dt_ranges = list(utils.iter_dt_range())
+    utils.parallel_exec(create_dataset_unsupervised, dt_ranges)
 
     # for dt_start, dt_end in utils.iter_dt_range():
     #     create_dataset_unsupervised(dt_start, dt_end)

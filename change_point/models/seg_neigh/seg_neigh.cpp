@@ -107,7 +107,7 @@ void calc_prefix_sums(vector<double> &ts)
     for(int i=1; i<=n; ++i)
     {
         prefix_sum[i] = prefix_sum[i - 1] + ts[i - 1];
-        prefix_squared_sum[i] = prefix_squared_sum[i - 1] + 
+        prefix_squared_sum[i] = prefix_squared_sum[i - 1] +
             ts[i - 1] * ts[i - 1];
     }
 }
@@ -130,8 +130,8 @@ void calc_negative_normal_log_lik(vector<double> &ts)
         for(int j=i+1; j<=n; ++j)
         {
             double squared_std = get_mse(i, j);
-            dp_seg_cost[i][j] = -((-0.5 * (j - i + 1) * 
-                                   log(2 * PI * squared_std) - 
+            dp_seg_cost[i][j] = -((-0.5 * (j - i + 1) *
+                                   log(2 * PI * squared_std) -
                                    0.5 * (j - i + 1)));
         }
 }
@@ -177,15 +177,15 @@ void debug(vector<double> &ts)
         for(int j=i; j<=n; ++j)
             cout << "i=" << i << ", j=" << j << ", dp=" << dp[i][j]
                 << endl;
-    
+
     cout << "prefix_sum=" << endl;
     for(int i=1; i<=n; ++i)
         cout << "i=" << i << ", prefix_sum=" << prefix_sum[i] << endl;
-    
+
     cout << "same_left=" << endl;
     for(int i=1; i<=n; ++i)
         cout << "i=" << i << ", same_left=" << same_left[i] << endl;
-     
+
     cout << "dp_seg_cost=" << endl;
     for(int i=1; i<=n; ++i)
         for(int j=i; j<=n; ++j)
@@ -238,7 +238,7 @@ void preprocess(vector<double> &ts)
 void seg_neigh(vector<double> &ts)
 {
     int n = ts.size();
-    
+
     //calculate dp
     for(int i=1; i<=n; ++i)
         dp[0][i] = seg_cost(1, i).first;
@@ -250,12 +250,12 @@ void seg_neigh(vector<double> &ts)
             {
                 pair<double, bool> p = seg_cost(j, i);
                 double cost = p.first;
-                
+
                 dp[n_cps][i] = min(dp[n_cps][i],
                                    dp[n_cps - 1][j - 1] + cost);
             }
         }
-    
+
     //debug(ts);
 
     int best_n_cps = get_best_n_cps(n);
