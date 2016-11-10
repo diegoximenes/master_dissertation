@@ -3,6 +3,7 @@ import sys
 import ast
 import copy
 import datetime
+import functools
 import pandas as pd
 from itertools import izip
 
@@ -38,13 +39,21 @@ def get_name(name, ip_name):
         return ip_name.get(name)
 
 
-def get_traceroute(ts_traceroute, ts_server_ip):
+def get_traceroute(ts_traceroute, ts_server_ip, allow_embratel):
     hops_default_names = []
     hops_default_ips = []
     server_ip = None
     for i in xrange(len(ts_traceroute.y)):
-        traceroute = ts_traceroute.y[i]
+        traceroute = copy.deepcopy(ts_traceroute.y[i])
         server_ip = ts_server_ip.y[i]
+
+        if allow_embratel:
+            # rename embratel equipments to "embratel"
+            for hop in traceroute:
+                for j in range(len(hop["names"])):
+                    if "embratel" in hop["names"][j]:
+                        hop["names"][j] = "embratel"
+                        hop["ips"][j] = "embratel"
 
         # THIS PIECE OF CODE EXPOSES A TRACEROUTE INCONSISTENCY
         # IN 2016_06
@@ -70,10 +79,11 @@ def get_traceroute(ts_traceroute, ts_server_ip):
             for hop in traceroute:
                 # get a single name for each hop
                 hop_name = hop_ip = None
-                for name, ip in izip(hop["names"], hop["ips"]):
-                    if "embratel" in name:
-                        return (False, "hop_with_embratel={}".format(hop),
-                                server_ip)
+                if not allow_embratel:
+                    for name, ip in izip(hop["names"], hop["ips"]):
+                        if "embratel" in name:
+                            return (False, "hop_with_embratel={}".format(hop),
+                                    server_ip)
                 for name, ip in izip(hop["names"], hop["ips"]):
                     if (name != u"##"):
                         hop_name = get_name(name, ip_name)
@@ -94,6 +104,19 @@ def get_traceroute(ts_traceroute, ts_server_ip):
 
                 hops_names.append(hop_name)
                 hops_ips.append(hop_ip)
+
+            if allow_embratel and hops_names:
+                # compress embratel hops
+                hops_names_aux = [hops_names[0]]
+                hops_ips_aux = [hops_ips[0]]
+                for j in xrange(1, len(hops_names)):
+                    if ((hops_names[j] == "embratel") and
+                            (hops_names_aux[-1] == "embratel")):
+                        continue
+                    hops_names_aux.append(hops_names[j])
+                    hops_ips_aux.append(hops_ips[j])
+                hops_names = hops_names_aux
+                hops_ips = hops_ips_aux
 
             if not hops_default_names:
                 hops_default_names = copy.deepcopy(hops_names)
@@ -175,7 +198,7 @@ def compress_traceroute(traceroute, traceroute_type):
     return compressed
 
 
-def print_traceroute_per_mac(dt_start, dt_end, mac_node):
+def print_traceroute_per_mac(dt_start, dt_end, mac_node, allow_embratel):
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -190,7 +213,7 @@ def print_traceroute_per_mac(dt_start, dt_end, mac_node):
                                       dt_start=dt_start, dt_end=dt_end)
 
             is_unique_traceroute, str_traceroute, server_ip = \
-                get_traceroute(ts_traceroute, ts_server_ip)
+                get_traceroute(ts_traceroute, ts_server_ip, allow_embratel)
             node = mac_node.get(mac)
 
             f.write("{},{},{},{},{},\"{}\"\n".format(server, server_ip, node,
@@ -364,7 +387,7 @@ def print_all(dt_start, dt_end, mac_node):
     # print_macs_per_name(dt_start, dt_end, mac_node)
     # print_names_per_mac(dt_start, dt_end, mac_node)
     # print_name_ips(dt_start, dt_end)
-    print_traceroute_per_mac(dt_start, dt_end, mac_node)
+    print_traceroute_per_mac(dt_start, dt_end, mac_node, allow_embratel=True)
 
     print_traceroute_per_mac_filtered(dt_start, dt_end)
     # print_macs_per_name_filtered(dt_start, dt_end, mac_node)
@@ -373,9 +396,9 @@ def print_all(dt_start, dt_end, mac_node):
 if __name__ == "__main__":
     mac_node = read_input.get_mac_node()
 
-    dt_start = datetime.datetime(2016, 7, 21)
-    dt_end = datetime.datetime(2016, 7, 31)
-    print_all(dt_start, dt_end, mac_node)
+    # dt_start = datetime.datetime(2016, 6, 1)
+    # dt_end = datetime.datetime(2016, 6, 11)
+    # print_all(dt_start, dt_end, mac_node)
 
-    # for dt_start, dt_end in utils.iter_dt_range():
-    #     print_all(dt_start, dt_end, mac_node)
+    for dt_start, dt_end in utils.iter_dt_range():
+        print_all(dt_start, dt_end, mac_node)
