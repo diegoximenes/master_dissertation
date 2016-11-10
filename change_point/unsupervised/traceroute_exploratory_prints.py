@@ -400,5 +400,9 @@ if __name__ == "__main__":
     # dt_end = datetime.datetime(2016, 6, 11)
     # print_all(dt_start, dt_end, mac_node)
 
-    for dt_start, dt_end in utils.iter_dt_range():
-        print_all(dt_start, dt_end, mac_node)
+    dt_ranges = list(utils.iter_dt_range())
+    f_print_all = functools.partial(print_all, mac_node=mac_node)
+    utils.parallel_exec(f_print_all, dt_ranges)
+
+    # for dt_start, dt_end in utils.iter_dt_range():
+    #     print_all(dt_start, dt_end, mac_node)

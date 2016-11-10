@@ -1,13 +1,38 @@
 import os
 import sys
 import socket
+import signal
 import datetime
 import pandas as pd
+import numpy as np
 from IPy import IP
+from multiprocessing import Pool
+from functools import partial
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(base_dir)
+
+
+def f_unpack(args, f):
+    return f(*args)
+
+
+def parallel_exec(f, args_l, n_processes=4):
+    # check python bug: http://stackoverflow.com/questions/11312525/catch-ctrlc-sigint-and-exit-multiprocesses-gracefully-in-python
+    f_parallel = partial(f_unpack, f=f)
+
+    original_sigint_handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
+    pool = Pool(processes=n_processes)
+    signal.signal(signal.SIGINT, original_sigint_handler)
+
+    try:
+        pool.map_async(f_parallel, args_l).get(np.inf)
+    except KeyboardInterrupt:
+        pool.terminate()
+    else:
+        pool.close()
+    pool.join()
 
 
 def get_str_dt(dt_start, dt_end):
@@ -64,7 +89,10 @@ def iter_server_mac(dt_dir, print_iter=False):
 
             if print_iter:
                 cnt += 1
-                print "cnt={}, server={}, mac={}".format(cnt, server, mac)
+                print "cnt={}, server={}, mac={}, dt_dir={}".format(cnt,
+                                                                    server,
+                                                                    mac,
+                                                                    dt_dir)
 
             yield server, mac, in_path
 
