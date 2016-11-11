@@ -39,7 +39,8 @@ def get_name(name, ip_name):
         return ip_name.get(name)
 
 
-def get_traceroute(ts_traceroute, ts_server_ip, allow_embratel):
+def get_traceroute(ts_traceroute, ts_server_ip, allow_embratel,
+                   compress_embratel):
     hops_default_names = []
     hops_default_ips = []
     server_ip = None
@@ -47,7 +48,7 @@ def get_traceroute(ts_traceroute, ts_server_ip, allow_embratel):
         traceroute = copy.deepcopy(ts_traceroute.y[i])
         server_ip = ts_server_ip.y[i]
 
-        if allow_embratel:
+        if allow_embratel and compress_embratel:
             # rename embratel equipments to "embratel"
             for hop in traceroute:
                 for j in range(len(hop["names"])):
@@ -105,7 +106,7 @@ def get_traceroute(ts_traceroute, ts_server_ip, allow_embratel):
                 hops_names.append(hop_name)
                 hops_ips.append(hop_ip)
 
-            if allow_embratel and hops_names:
+            if allow_embratel and compress_embratel and hops_names:
                 # compress embratel hops
                 hops_names_aux = [hops_names[0]]
                 hops_ips_aux = [hops_ips[0]]
@@ -205,7 +206,9 @@ def print_traceroute_per_mac(dt_start, dt_end, mac_node, allow_embratel):
     out_path = ("{}/prints/{}/not_filtered/traceroute_per_mac.csv".
                 format(script_dir, str_dt))
     with open(out_path, "w") as f:
-        f.write("server,server_ip,node,mac,is_unique_traceroute,traceroute\n")
+        f.write("server,server_ip,node,mac,is_unique_traceroute,traceroute,"
+                "is_unique_traceroute_not_compress_embratel,"
+                "traceroute_not_compress_embratel\n")
         for server, mac, in_path in utils.iter_server_mac(dt_dir, True):
             ts_traceroute = TimeSeries(in_path=in_path, metric="traceroute",
                                        dt_start=dt_start, dt_end=dt_end)
@@ -213,12 +216,25 @@ def print_traceroute_per_mac(dt_start, dt_end, mac_node, allow_embratel):
                                       dt_start=dt_start, dt_end=dt_end)
 
             is_unique_traceroute, str_traceroute, server_ip = \
-                get_traceroute(ts_traceroute, ts_server_ip, allow_embratel)
+                get_traceroute(ts_traceroute, ts_server_ip, allow_embratel,
+                               True)
+            if allow_embratel:
+                (is_unique_traceroute_not_compress_embratel,
+                 str_traceroute_not_compress_embratel, _) = \
+                    get_traceroute(ts_traceroute, ts_server_ip, allow_embratel,
+                                   False)
+            else:
+                (is_unique_traceroute_not_compress_embratel,
+                 str_traceroute_not_compress_embratel) = (None, None)
+
             node = mac_node.get(mac)
 
-            f.write("{},{},{},{},{},\"{}\"\n".format(server, server_ip, node,
-                                                     mac, is_unique_traceroute,
-                                                     str_traceroute))
+            l_formatter = "{},{},{},{},{},\"{}\",{},\"{}\"\n"
+            l = l_formatter.format(server, server_ip, node, mac,
+                                   is_unique_traceroute, str_traceroute,
+                                   is_unique_traceroute_not_compress_embratel,
+                                   str_traceroute_not_compress_embratel)
+            f.write(l)
     utils.sort_csv_file(out_path, ["server", "node"])
 
 
@@ -387,7 +403,7 @@ def print_all(dt_start, dt_end, mac_node):
     # print_macs_per_name(dt_start, dt_end, mac_node)
     # print_names_per_mac(dt_start, dt_end, mac_node)
     # print_name_ips(dt_start, dt_end)
-    print_traceroute_per_mac(dt_start, dt_end, mac_node, allow_embratel=True)
+    print_traceroute_per_mac(dt_start, dt_end, mac_node, True)
 
     print_traceroute_per_mac_filtered(dt_start, dt_end)
     # print_macs_per_name_filtered(dt_start, dt_end, mac_node)
@@ -396,13 +412,13 @@ def print_all(dt_start, dt_end, mac_node):
 if __name__ == "__main__":
     mac_node = read_input.get_mac_node()
 
-    # dt_start = datetime.datetime(2016, 6, 1)
-    # dt_end = datetime.datetime(2016, 6, 11)
-    # print_all(dt_start, dt_end, mac_node)
+    dt_start = datetime.datetime(2016, 6, 1)
+    dt_end = datetime.datetime(2016, 6, 11)
+    print_all(dt_start, dt_end, mac_node)
 
-    dt_ranges = list(utils.iter_dt_range())
-    f_print_all = functools.partial(print_all, mac_node=mac_node)
-    utils.parallel_exec(f_print_all, dt_ranges)
+    # dt_ranges = list(utils.iter_dt_range())
+    # f_print_all = functools.partial(print_all, mac_node=mac_node)
+    # utils.parallel_exec(f_print_all, dt_ranges)
 
     # for dt_start, dt_end in utils.iter_dt_range():
     #     print_all(dt_start, dt_end, mac_node)
