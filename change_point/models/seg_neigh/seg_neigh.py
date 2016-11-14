@@ -1,7 +1,6 @@
 import os
 import sys
 import subprocess
-import pandas as pd
 import numpy as np
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -43,36 +42,24 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
         pass
 
     def predict(self, ts):
-        # write ts to file to be consumed
-        with open("{}/tmp_ts".format(script_dir), "w") as f:
-            for i in xrange(len(ts.y)):
-                f.write("{}\n".format(ts.y[i]))
+        popen = subprocess.Popen(["{}/seg_neigh".format(script_dir),
+                                  str(self.const_pen),
+                                  self.f_pen,
+                                  self.seg_model,
+                                  str(self.min_seg_len),
+                                  str(self.max_cps)],
+                                 stdin=subprocess.PIPE,
+                                 stdout=subprocess.PIPE)
+        str_ts = "{}".format(len(ts.y))
+        for v in ts.y:
+            str_ts += "\n{}".format(v)
+        str_cps, _ = popen.communicate(str_ts)
 
-        # c++ executable call
-        subprocess.call(["{}/seg_neigh".format(script_dir),
-                         "{}/tmp_ts".format(script_dir),
-                         "{}/tmp_pred".format(script_dir),
-                         str(self.const_pen), self.f_pen, self.seg_model,
-                         str(self.min_seg_len), str(self.max_cps)],
-                        stdout=open(os.devnull, "w"),
-                        stderr=subprocess.STDOUT)
+        cps = []
+        for cp in str_cps.split("\n")[:-1]:
+            cps.append(int(cp))
 
-        # R script call
-        # subprocess.call(["/usr/bin/Rscript",
-        #                  "{}/changepoint.R".format(script_dir),
-        #                  "{}/tmp_ts".format(script_dir),
-        #                  "{}/tmp_pred".format(script_dir),
-        #                  str(self.const_pen), self.seg_model,
-        #                  str(self.min_seg_len), str(self.max_cps)],
-        #                 stdout=open(os.devnull, "w"),
-        #                 stderr=subprocess.STDOUT)
-
-        df = pd.read_csv("{}/tmp_pred".format(script_dir))
-
-        os.remove("{}/tmp_pred".format(script_dir))
-        os.remove("{}/tmp_ts".format(script_dir))
-
-        return sorted(df["id"].values)
+        return cps
 
     def plot(self, ts, ts_raw, correct, pred, conf, out_path):
         plot_procedures.plot_ts_share_x(ts_raw, ts, out_path, compress=False,

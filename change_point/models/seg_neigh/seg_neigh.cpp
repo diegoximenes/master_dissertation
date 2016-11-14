@@ -149,23 +149,18 @@ void calc_negative_exponential_log_lik(vector<double> &ts)
         }
 }
 
-vector<double> read_ts(string in_path)
+vector<double> read_ts()
 {
     vector<double> ts;
-    ifstream f(in_path.c_str());
-    string line;
-    while(getline(f, line))
-        ts.push_back(atof(line.c_str()));
+    int n;
+    cin >> n;
+    for(int i=0; i<n; ++i)
+    {
+        double x;
+        cin >> x;
+        ts.push_back(x);
+    }
     return ts;
-}
-
-void write_cps(vector<int> &cps)
-{
-    ofstream f(out_path.c_str());
-    f << "id" << endl;
-    for(int i=0; i<(int)cps.size(); ++i)
-        f << cps[i] << endl;
-    f.close();
 }
 
 void debug(vector<double> &ts)
@@ -260,30 +255,27 @@ void seg_neigh(vector<double> &ts)
 
     int best_n_cps = get_best_n_cps(n);
     vector<int> cps = get_cps(n, best_n_cps);
-    write_cps(cps);
+    for(int i=0; i<(int)cps.size(); ++i)
+        cout << cps[i] << endl;
 }
 
 int main(int argc, char *argv[])
 {
-    in_path = argv[1];
-    out_path = argv[2];
-    const_pen = atof(argv[3]);
-    f_pen = argv[4];
-    seg_model = argv[5];
-    min_seg_len = atoi(argv[6]);
-    max_cps = atoi(argv[7]);
+    const_pen = atof(argv[1]);
+    f_pen = argv[2];
+    seg_model = argv[3];
+    min_seg_len = atoi(argv[4]);
+    max_cps = atoi(argv[5]);
 
-    cout << "argc=" << argc << endl;
-    cout << "in_path=" << in_path << endl;
-    cout << "out_path=" << out_path << endl;
-    cout << "const_pen=" << const_pen << endl;
-    cout << "f_pen=" << f_pen << endl;
-    cout << "seg_model=" << seg_model << endl;
-    cout << "min_seg_len=" << min_seg_len << endl;
-    cout << "max_cps=" << max_cps << endl;
+    // cout << "argc=" << argc << endl;
+    // cout << "const_pen=" << const_pen << endl;
+    // cout << "f_pen=" << f_pen << endl;
+    // cout << "seg_model=" << seg_model << endl;
+    // cout << "min_seg_len=" << min_seg_len << endl;
+    // cout << "max_cps=" << max_cps << endl;
 
     set_math_expr();
-    vector<double> ts = read_ts(in_path);
+    vector<double> ts = read_ts();
     preprocess(ts);
     seg_neigh(ts);
 
