@@ -70,7 +70,21 @@ class BayesianOffline(change_point_alg.ChangePointAlg):
                                         format(conf))
 
 
-def main():
+def run(dataset, cmp_class_args, preprocess_args, param, metric):
+    model = BayesianOffline(preprocess_args=preprocess_args, metric=metric,
+                            **param)
+
+    utils.create_dirs(["{}/plots/".format(script_dir),
+                       "{}/plots/{}/".format(script_dir, dataset),
+                       "{}/plots/{}/offline/".format(script_dir, dataset),
+                       "{}/plots/{}/offline/{}".format(script_dir, dataset,
+                                                       metric)])
+    out_dir_path = "{}/plots/{}/offline/{}".format(script_dir, dataset,
+                                                   metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
+
+
+if __name__ == "__main__":
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "none"}
     param = {"prior": offcd.geometric_prior,
@@ -79,22 +93,11 @@ def main():
              "thresh": 0.1,
              "min_peak_dist": 10}
     metric = "loss"
+
     # datasets = ["rosam@land.ufrj.br"]
     datasets = list(cp_utils.iter_unsupervised_datasets())
 
-    model = BayesianOffline(preprocess_args=preprocess_args, metric=metric,
-                            **param)
-
-    for dataset in datasets:
-        utils.create_dirs(["{}/plots/".format(script_dir),
-                           "{}/plots/{}/".format(script_dir, dataset),
-                           "{}/plots/{}/offline/".format(script_dir, dataset),
-                           "{}/plots/{}/offline/{}".format(script_dir, dataset,
-                                                           metric)])
-        out_dir_path = "{}/plots/{}/offline/{}".format(script_dir, dataset,
-                                                       metric)
-        model.plot_all(dataset, out_dir_path, cmp_class_args)
-
-
-if __name__ == "__main__":
-    main()
+    # cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
+    #                         param, metric)
+    cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
+                          param, metric)

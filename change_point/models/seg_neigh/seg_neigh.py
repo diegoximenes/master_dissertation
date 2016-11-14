@@ -55,9 +55,7 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
             str_ts += "\n{}".format(v)
         str_cps, _ = popen.communicate(str_ts)
 
-        cps = []
-        for cp in str_cps.split("\n")[:-1]:
-            cps.append(int(cp))
+        cps = map(int, str_cps.split("\n")[:-1])
 
         return cps
 
@@ -71,7 +69,19 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
                                         plot_type2="scatter")
 
 
-def main():
+def run(dataset, cmp_class_args, preprocess_args, param, metric):
+    model = SegmentNeighbourhood(preprocess_args=preprocess_args,
+                                 metric=metric, **param)
+
+    utils.create_dirs(["{}/plots/".format(script_dir),
+                       "{}/plots/{}/".format(script_dir, dataset),
+                       "{}/plots/{}/{}".format(script_dir, dataset,
+                                               metric)])
+    out_dir_path = "{}/plots/{}/{}".format(script_dir, dataset, metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
+
+
+if __name__ == "__main__":
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "percentile_filter",
                        "win_len": 13,
@@ -82,20 +92,11 @@ def main():
              "min_seg_len": 5,
              "max_cps": 4}
     metric = "latency"
-    datasets = ["/unsupervised/dtstart2016-07-01_dtend2016-07-11"]
-    # datasets = list(cp_utils.iter_unsupervised_datasets())
 
-    model = SegmentNeighbourhood(preprocess_args=preprocess_args,
-                                 metric=metric, **param)
+    # datasets = ["/unsupervised/dtstart2016-07-01_dtend2016-07-11"]
+    datasets = list(cp_utils.iter_unsupervised_datasets())
 
-    for dataset in datasets:
-        utils.create_dirs(["{}/plots/".format(script_dir),
-                           "{}/plots/{}/".format(script_dir, dataset),
-                           "{}/plots/{}/{}".format(script_dir, dataset,
-                                                   metric)])
-        out_dir_path = "{}/plots/{}/{}".format(script_dir, dataset, metric)
-        model.plot_all(dataset, out_dir_path, cmp_class_args)
-
-
-if __name__ == "__main__":
-    main()
+    cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
+                            param, metric)
+    # cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
+    #                       param, metric)

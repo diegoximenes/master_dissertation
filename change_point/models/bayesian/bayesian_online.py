@@ -89,7 +89,21 @@ class BayesianOnline(change_point_alg.ChangePointAlg):
                                         format(conf))
 
 
-def main():
+def run(dataset, cmp_class_args, preprocess_args, param, metric):
+    model = BayesianOnline(preprocess_args=preprocess_args, metric=metric,
+                           **param)
+
+    utils.create_dirs(["{}/plots/".format(script_dir),
+                       "{}/plots/{}/".format(script_dir, dataset),
+                       "{}/plots/{}/online/".format(script_dir, dataset),
+                       "{}/plots/{}/online/{}".format(script_dir, dataset,
+                                                      metric)])
+    out_dir_path = "{}/plots/{}/online/{}".format(script_dir, dataset,
+                                                  metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
+
+
+if __name__ == "__main__":
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"win_len": 3, "filter_type": "ma_smoothing"}
     param = {"hazard_lambda": 24.60864360138786,
@@ -97,22 +111,11 @@ def main():
              "thresh": 0.2372000234333883,
              "min_peak_dist": 11}
     metric = "loss"
+
     # datasets = ["rosam@land.ufrj.br"]
     datasets = list(cp_utils.iter_unsupervised_datasets())
 
-    model = BayesianOnline(preprocess_args=preprocess_args, metric=metric,
-                           **param)
-
-    for dataset in datasets:
-        utils.create_dirs(["{}/plots/".format(script_dir),
-                           "{}/plots/{}/".format(script_dir, dataset),
-                           "{}/plots/{}/online/".format(script_dir, dataset),
-                           "{}/plots/{}/online/{}".format(script_dir, dataset,
-                                                          metric)])
-        out_dir_path = "{}/plots/{}/online/{}".format(script_dir, dataset,
-                                                      metric)
-        model.plot_all(dataset, out_dir_path, cmp_class_args)
-
-
-if __name__ == "__main__":
-    main()
+    # cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
+    #                         param, metric)
+    cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
+                          param, metric)

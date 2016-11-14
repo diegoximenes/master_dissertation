@@ -11,6 +11,20 @@ import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
 
 
+def run_sequential(datasets, f, cmp_class_args, preprocess_args, param,
+                   metric):
+    for dataset in datasets:
+        f(dataset, cmp_class_args, preprocess_args, param, metric)
+
+
+def run_parallel(datasets, f, cmp_class_args, preprocess_args, param, metric):
+    f_run = functools.partial(f, cmp_class_args=cmp_class_args,
+                              preprocess_args=preprocess_args,
+                              param=param, metric=metric)
+    datasets = map(lambda x: [x], datasets)
+    utils.parallel_exec(f_run, datasets)
+
+
 def iter_unsupervised_datasets():
     for dt_dir in os.listdir("{}/change_point/input/unsupervised/".
                              format(base_dir)):

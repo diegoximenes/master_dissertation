@@ -76,7 +76,21 @@ class GaussianHMM(hmm.HMM):
                            "(mean, variance)", correct, pred, conf, out_path)
 
 
-def main():
+def run(dataset, cmp_class_args, preprocess_args, param, metric):
+    model = GaussianHMM(preprocess_args=preprocess_args, metric=metric,
+                        **param)
+
+    utils.create_dirs(["{}/gaussian/".format(script_dir),
+                       "{}/gaussian/plots/".format(script_dir),
+                       "{}/gaussian/plots/{}".format(script_dir, dataset),
+                       "{}/gaussian/plots/{}/{}".format(script_dir,
+                                                        dataset, metric)])
+    out_dir_path = "{}/gaussian/plots/{}/{}".format(script_dir, dataset,
+                                                    metric)
+    model.plot_all(dataset, out_dir_path, cmp_class_args)
+
+
+if __name__ == "__main__":
     n = 4
     A = []
     for _ in xrange(n):
@@ -94,22 +108,11 @@ def main():
              "thresh": 0.32266574449686963,
              "min_peak_dist": 17}
     metric = "loss"
-    datasets = ["rosam@land.ufrj.br"]
-    # datasets = list(cp_utils.iter_unsupervised_datasets())
 
-    model = GaussianHMM(preprocess_args=preprocess_args, metric=metric,
-                        **param)
+    # datasets = ["rosam@land.ufrj.br"]
+    datasets = list(cp_utils.iter_unsupervised_datasets())
 
-    for dataset in datasets:
-        utils.create_dirs(["{}/gaussian/".format(script_dir),
-                           "{}/gaussian/plots/".format(script_dir),
-                           "{}/gaussian/plots/{}".format(script_dir, dataset),
-                           "{}/gaussian/plots/{}/{}".format(script_dir,
-                                                            dataset, metric)])
-        out_dir_path = "{}/gaussian/plots/{}/{}".format(script_dir, dataset,
-                                                        metric)
-        model.plot_all(dataset, out_dir_path, cmp_class_args)
-
-
-if __name__ == "__main__":
-    main()
+    # cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
+    #                         param, metric)
+    cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
+                          param, metric)
