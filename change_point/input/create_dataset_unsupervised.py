@@ -60,13 +60,14 @@ def run_sequential():
         create_dataset_unsupervised(dt_start, dt_end)
 
 
-def run_single():
-    dt_start = datetime.datetime(2016, 6, 11)
-    dt_end = datetime.datetime(2016, 6, 21)
+def run_single(dt_start, dt_end):
     create_dataset_unsupervised(dt_start, dt_end)
 
 
 if __name__ == "__main__":
-    run_single()
+    dt_start = datetime.datetime(2016, 6, 11)
+    dt_end = datetime.datetime(2016, 6, 21)
+
+    run_single(dt_start, dt_end)
     # run_sequential()
     # run_parallel()
