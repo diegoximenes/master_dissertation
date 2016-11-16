@@ -151,7 +151,7 @@ if __name__ == "__main__":
     hours_tol = 4
     filtered = "filtered"
 
-    dt_start = datetime.datetime(2016, 7, 1)
-    dt_end = datetime.datetime(2016, 7, 11)
+    dt_start = datetime.datetime(2016, 6, 11)
+    dt_end = datetime.datetime(2016, 6, 21)
     print_cps_per_mac(dt_start, dt_end, dir_model, metric, filtered)
     match_cps(dt_start, dt_end, metric, hours_tol, filtered)

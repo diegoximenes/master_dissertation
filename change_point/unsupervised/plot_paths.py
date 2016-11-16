@@ -30,7 +30,7 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
                                                                     str_dt,
                                                                     metric)
         if os.path.isfile(in_path):
-            df = pd.read_csv()
+            df = pd.read_csv(in_path)
             for idx, row in df.iterrows():
                 mac_cps[row["mac"]] = map(dt_procedures.from_strdt_to_dt,
                                           ast.literal_eval(row["cp_dt"]))
@@ -87,13 +87,13 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
 
 if __name__ == "__main__":
     metric = "latency"
-    # dt_start = datetime.datetime(2016, 7, 1)
-    # dt_end = datetime.datetime(2016, 7, 11)
-    # plot_per_path(dt_start, dt_end, metric, True)
+    dt_start = datetime.datetime(2016, 6, 11)
+    dt_end = datetime.datetime(2016, 6, 21)
+    plot_per_path(dt_start, dt_end, metric, True)
 
-    dt_ranges = list(utils.iter_dt_range())
-    f_plot_per_path = functools.partial(plot_per_path, metric=metric)
-    utils.parallel_exec(f_plot_per_path, dt_ranges)
+    # dt_ranges = list(utils.iter_dt_range())
+    # f_plot_per_path = functools.partial(plot_per_path, metric=metric)
+    # utils.parallel_exec(f_plot_per_path, dt_ranges)
 
     # for dt_start, dt_end in utils.iter_dt_range():
     #     plot_per_path(dt_start, dt_end, metric)
