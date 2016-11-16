@@ -85,15 +85,26 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
                                             dt_axvline2=cp_dts)
 
 
+def run_parallel(metric):
+    dt_ranges = list(utils.iter_dt_range())
+    f_plot_per_path = functools.partial(plot_per_path, metric=metric)
+    utils.parallel_exec(f_plot_per_path, dt_ranges)
+
+
+def run_sequential(metric):
+    for dt_start, dt_end in utils.iter_dt_range():
+        plot_per_path(dt_start, dt_end, metric)
+
+
+def run_single(metric, dt_start, dt_end):
+    plot_per_path(dt_start, dt_end, metric, True)
+
+
 if __name__ == "__main__":
     metric = "latency"
     dt_start = datetime.datetime(2016, 6, 11)
     dt_end = datetime.datetime(2016, 6, 21)
-    plot_per_path(dt_start, dt_end, metric, True)
 
-    # dt_ranges = list(utils.iter_dt_range())
-    # f_plot_per_path = functools.partial(plot_per_path, metric=metric)
-    # utils.parallel_exec(f_plot_per_path, dt_ranges)
-
-    # for dt_start, dt_end in utils.iter_dt_range():
-    #     plot_per_path(dt_start, dt_end, metric)
+    run_single(metric, dt_start, dt_end)
+    # run_parallel(metric)
+    # run_sequential(metric)

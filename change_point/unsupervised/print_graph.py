@@ -95,7 +95,7 @@ def check_graph(out_dir, name_neigh):
         f.write("valid_graph={}\n".format(valid_graph))
 
 
-def process(dt_start, dt_end):
+def process_graphs(dt_start, dt_end):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     out_dir = "{}/prints/{}/filtered/graph/".format(script_dir, str_dt)
@@ -126,7 +126,24 @@ def process(dt_start, dt_end):
         check_graph(out_dir, name_neigh)
 
 
+def run_parallel():
+    dt_ranges = list(utils.iter_dt_range())
+    utils.parallel_exec(process_graphs, dt_ranges)
+
+
+def run_sequential():
+    for dt_start, dt_end in utils.iter_dt_range():
+        process_graphs(dt_start, dt_end)
+
+
+def run_single(dt_start, dt_end):
+    process_graphs(dt_start, dt_end)
+
+
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
-    process(dt_start, dt_end)
+    dt_start = datetime.datetime(2016, 6, 11)
+    dt_end = datetime.datetime(2016, 6, 21)
+
+    run_single(dt_start, dt_end)
+    # run_parallel()
+    # run_sequential()

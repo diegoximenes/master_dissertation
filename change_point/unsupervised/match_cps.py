@@ -2,6 +2,7 @@ import os
 import sys
 import ast
 import datetime
+import functools
 import pandas as pd
 import numpy as np
 
@@ -145,6 +146,31 @@ def print_cps_per_mac(dt_start, dt_end, dir_model, metric, filtered):
                                                               seg_means))
 
 
+def run_parallel(dir_model, metric, filtered, hours_tol):
+    dt_ranges = list(utils.iter_dt_range())
+    fp_print_cps_per_mac = functools.partial(print_cps_per_mac,
+                                             dir_model=dir_model,
+                                             metric=metric,
+                                             filtered=filtered)
+    utils.parallel_exec(fp_print_cps_per_mac, dt_ranges)
+    fp_match_cps = functools.partial(match_cps,
+                                     metric=metric,
+                                     hours_tol=hours_tol,
+                                     filtered=filtered)
+    utils.parallel_exec(fp_match_cps, dt_ranges)
+
+
+def run_sequential(dir_model, metric, filtered, hours_tol):
+    for dt_start, dt_end in utils.iter_dt_range():
+        print_cps_per_mac(dt_start, dt_end, dir_model, metric, filtered)
+        match_cps(dt_start, dt_end, metric, hours_tol, filtered)
+
+
+def run_single(dir_model, metric, filtered, hours_tol, dt_start, dt_end):
+    print_cps_per_mac(dt_start, dt_end, dir_model, metric, filtered)
+    match_cps(dt_start, dt_end, metric, hours_tol, filtered)
+
+
 if __name__ == "__main__":
     metric = "latency"
     dir_model = "seg_neigh"
@@ -153,5 +179,7 @@ if __name__ == "__main__":
 
     dt_start = datetime.datetime(2016, 6, 11)
     dt_end = datetime.datetime(2016, 6, 21)
-    print_cps_per_mac(dt_start, dt_end, dir_model, metric, filtered)
-    match_cps(dt_start, dt_end, metric, hours_tol, filtered)
+
+    run_single(dir_model, metric, filtered, hours_tol, dt_start, dt_end)
+    # run_parallel(dir_model, metric, filtered, hours_tol)
+    # run_sequential(dir_model, metric, filtered, hours_tol)

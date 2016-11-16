@@ -2,6 +2,7 @@ import os
 import sys
 import ast
 import datetime
+import functools
 import pandas as pd
 from itertools import izip
 
@@ -73,8 +74,25 @@ def match_cps_per_path(dt_start, dt_end, metric):
             write_dir.add(dir_path)
 
 
+def run_sequential(metric):
+    for dt_start, dt_end in utils.iter_dt_range():
+        match_cps_per_path(dt_start, dt_end, metric)
+
+
+def run_parallel(metric):
+    dt_ranges = list(utils.iter_dt_range())
+    f_match_cps_per_path = functools.partial(match_cps_per_path, metric=metric)
+    utils.parallel_exec(f_match_cps_per_path, dt_ranges)
+
+
+def run_single(metric, dt_start, dt_end):
+    match_cps_per_path(dt_start, dt_end, metric)
+
 if __name__ == "__main__":
     metric = "latency"
     dt_start = datetime.datetime(2016, 6, 11)
     dt_end = datetime.datetime(2016, 6, 21)
-    match_cps_per_path(dt_start, dt_end, metric)
+
+    run_single(metric, dt_start, dt_end)
+    # run_parallel(metric)
+    # run_sequential(metric)

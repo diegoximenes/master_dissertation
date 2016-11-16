@@ -2,6 +2,7 @@ import sys
 import os
 import datetime
 import ast
+import functools
 import pandas as pd
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -86,10 +87,29 @@ def plot_matches(dt_start, dt_end, metric, match_type):
                                             plot_type2="scatter")
 
 
+def run_parallel():
+    dt_ranges = list(utils.iter_dt_range())
+    fp_plot_matches = functools.partial(plot_matches, match_type="empty_segs")
+    utils.parallel_exec(fp_plot_matches, dt_ranges)
+    fp_plot_matches = functools.partial(plot_matches, match_type="cps")
+    utils.parallel_exec(fp_plot_matches, dt_ranges)
+
+
+def run_sequential():
+    for dt_start, dt_end in utils.iter_dt_range():
+        plot_matches(dt_start, dt_end, metric, "empty_segs")
+        plot_matches(dt_start, dt_end, metric, "cps")
+
+
+def run_single(metric, dt_start, dt_end):
+    # plot_matches(dt_start, dt_end, metric, "empty_segs")
+    plot_matches(dt_start, dt_end, metric, "cps")
+
 if __name__ == "__main__":
     metric = "latency"
-    dt_start = datetime.datetime(2016, 6, 1)
-    dt_end = datetime.datetime(2016, 6, 11)
+    dt_start = datetime.datetime(2016, 6, 11)
+    dt_end = datetime.datetime(2016, 6, 21)
 
-    plot_matches(dt_start, dt_end, metric, "empty_segs")
-    # plot_matches(dt_start, dt_end, metric, "cps")
+    run_single(metric, dt_start, dt_end)
+    # run_parallel(metric)
+    # run_sequential(metric)

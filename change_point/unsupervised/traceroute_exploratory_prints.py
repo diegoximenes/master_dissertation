@@ -409,16 +409,27 @@ def print_all(dt_start, dt_end, mac_node):
     # print_macs_per_name_filtered(dt_start, dt_end, mac_node)
 
 
-if __name__ == "__main__":
-    mac_node = read_input.get_mac_node()
+def run_sequential(mac_node):
+    for dt_start, dt_end in utils.iter_dt_range():
+        print_all(dt_start, dt_end, mac_node)
 
-    dt_start = datetime.datetime(2016, 6, 11)
-    dt_end = datetime.datetime(2016, 6, 21)
+
+def run_parallel(mac_node):
+    dt_ranges = list(utils.iter_dt_range())
+    f_print_all = functools.partial(print_all, mac_node=mac_node)
+    utils.parallel_exec(f_print_all, dt_ranges)
+
+
+def run_single(mac_node, dt_start, dt_end):
     print_all(dt_start, dt_end, mac_node)
 
-    # dt_ranges = list(utils.iter_dt_range())
-    # f_print_all = functools.partial(print_all, mac_node=mac_node)
-    # utils.parallel_exec(f_print_all, dt_ranges)
 
-    # for dt_start, dt_end in utils.iter_dt_range():
-    #     print_all(dt_start, dt_end, mac_node)
+if __name__ == "__main__":
+    dt_start = datetime.datetime(2016, 6, 11)
+    dt_end = datetime.datetime(2016, 6, 21)
+
+    mac_node = read_input.get_mac_node()
+
+    run_single(mac_node, dt_start, dt_end)
+    # run_parallel(mac_node)
+    # run_sequential(mac_node)

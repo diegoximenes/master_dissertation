@@ -51,17 +51,28 @@ def plot_per_node(dt_start, dt_end, metric, only_unique_traceroute):
                                             plot_type2="scatter")
 
 
+def run_sequential(metric):
+    for dt_start, dt_end in utils.iter_dt_range():
+        plot_per_node(dt_start, dt_end, metric, only_unique_traceroute=True)
+
+
+def run_parallel(metric):
+    dt_ranges = list(utils.iter_dt_range())
+    f_plot_per_node = functools.partial(plot_per_node,
+                                        metric=metric,
+                                        only_unique_traceroute=True)
+    utils.parallel_exec(f_plot_per_node, dt_ranges)
+
+
+def run_single(metric, dt_start, dt_end):
+    plot_per_node(dt_start, dt_end, metric, only_unique_traceroute=True)
+
+
 if __name__ == "__main__":
     metric = "latency"
     dt_start = datetime.datetime(2016, 6, 11)
     dt_end = datetime.datetime(2016, 6, 21)
-    plot_per_node(dt_start, dt_end, metric, only_unique_traceroute=True)
 
-    # dt_ranges = list(utils.iter_dt_range())
-    # f_plot_per_node = functools.partial(plot_per_node,
-    #                                     metric=metric,
-    #                                     only_unique_traceroute=True)
-    # utils.parallel_exec(f_plot_per_node, dt_ranges)
-
-    # for dt_start, dt_end in utils.iter_dt_range():
-    #     plot_per_node(dt_start, dt_end, metric, only_unique_traceroute=True)
+    run_single(metric, dt_start, dt_end)
+    # run_parallel(metric)
+    # run_sequential(metric)

@@ -2,6 +2,7 @@ import os
 import sys
 import datetime
 import ast
+import functools
 import pandas as pd
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -138,18 +139,43 @@ def match_empty_segs(dt_start, dt_end, metric, hours_tol, filtered):
                         [False, True, True])
 
 
+def run_parallel(metric, min_seg_len, filtered):
+    dt_ranges = list(utils.iter_dt_range())
+    fp_print_empty_segs = functools.partial(print_empty_segs,
+                                            metric=metric,
+                                            min_seg_len=min_seg_len,
+                                            filtered=filtered,
+                                            plot=False)
+    utils.parallel_exec(fp_print_empty_segs, dt_ranges)
+    fp_match_empty_segs = functools.partial(match_empty_segs,
+                                            metric=metric,
+                                            hours_tol=hours_tol,
+                                            filtered=filtered)
+    utils.parallel_exec(fp_match_empty_segs, dt_ranges)
+
+
+def run_sequential(metric, min_seg_len, filtered, hours_tol):
+    for dt_start, dt_end in utils.iter_dt_range():
+        print_empty_segs(dt_start, dt_end, metric, min_seg_len, filtered,
+                         plot=False)
+        match_empty_segs(dt_start, dt_end, metric, hours_tol, filtered)
+
+
+def run_single(metric, min_seg_len, filtered, hours_tol, dt_start, dt_end):
+    print_empty_segs(dt_start, dt_end, metric, min_seg_len, filtered,
+                     plot=False)
+    match_empty_segs(dt_start, dt_end, metric, hours_tol, filtered)
+
+
 if __name__ == "__main__":
     metric = "latency"
     min_seg_len = 24
     hours_tol = 4
     filtered = "filtered"
 
-    dt_start = datetime.datetime(2016, 6, 1)
-    dt_end = datetime.datetime(2016, 6, 11)
-    print_empty_segs(dt_start, dt_end, metric, min_seg_len, filtered,
-                     plot=False)
-    match_empty_segs(dt_start, dt_end, metric, hours_tol, filtered)
+    dt_start = datetime.datetime(2016, 6, 11)
+    dt_end = datetime.datetime(2016, 6, 21)
 
-    # for dt_start, dt_end in utils.iter_dt_range():
-    #     print_empty_segs(dt_start, dt_end, metric, min_seg_len, plot=False)
-    #     match_empty_segs(dt_start, dt_end, metric, hours_tol, filtered)
+    run_single(metric, min_seg_len, filtered, hours_tol, dt_start, dt_end)
+    # run_parallel(metric, min_seg_len, filtered, hours_tol)
+    # run_sequential(metric, min_seg_len, filtered, hours_tol)

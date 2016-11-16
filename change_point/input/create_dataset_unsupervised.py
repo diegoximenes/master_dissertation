@@ -50,13 +50,23 @@ def create_dataset_unsupervised(dt_start, dt_end):
                                                             dt_end))
 
 
-if __name__ == "__main__":
+def run_parallel():
+    dt_ranges = list(utils.iter_dt_range())
+    utils.parallel_exec(create_dataset_unsupervised, dt_ranges)
+
+
+def run_sequential():
+    for dt_start, dt_end in utils.iter_dt_range():
+        create_dataset_unsupervised(dt_start, dt_end)
+
+
+def run_single():
     dt_start = datetime.datetime(2016, 6, 11)
     dt_end = datetime.datetime(2016, 6, 21)
     create_dataset_unsupervised(dt_start, dt_end)
 
-    # dt_ranges = list(utils.iter_dt_range())
-    # utils.parallel_exec(create_dataset_unsupervised, dt_ranges)
 
-    # for dt_start, dt_end in utils.iter_dt_range():
-    #     create_dataset_unsupervised(dt_start, dt_end)
+if __name__ == "__main__":
+    run_single()
+    # run_sequential()
+    # run_parallel()
