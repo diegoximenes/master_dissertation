@@ -53,7 +53,7 @@ def match_cps_per_path(dt_start, dt_end, metric):
             first_hop = False
             dir_path = "{}/{}".format(dir_path, name1)
             utils.create_dirs([dir_path])
-            out_path = "{}/matches_cps.csv".format(dir_path)
+            out_path = "{}/match_cps.csv".format(dir_path)
 
             if dir_path not in write_dir:
                 with open(out_path, "w") as f:

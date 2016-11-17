@@ -38,7 +38,7 @@ def match_cps_per_name(metric, dt_start, dt_end):
         for name in names_intersection:
             dir_path = "{}/plots/names/{}/{}/{}".format(script_dir, str_dt,
                                                         metric, name)
-            out_path = ("{}/matches_cps.csv".format(dir_path))
+            out_path = ("{}/match_cps.csv".format(dir_path))
             utils.create_dirs([dir_path])
 
             if name not in name_dir:
