@@ -43,35 +43,34 @@ def match_cps(dt_start, dt_end, metric, hours_tol, filtered):
         f.write("server1,server2,mac1,mac2,tp,fp,fn,cp_dt1,cp_dt2,type_cps1,"
                 "type_cps2,seg_means1,seg_means2\n")
 
-        cnt = 0
-        for mac1 in mac_cps:
-            cnt += 1
-            print "cnt={}".format(cnt)
+        macs = mac_cps.keys()
+        for i in xrange(len(macs)):
+            for j in xrange(i + 1, len(macs)):
+                mac1 = macs[i]
+                mac2 = macs[j]
 
-            for mac2 in mac_cps:
-                if mac1 != mac2:
-                    str_cps1 = map(str, mac_cps[mac1])
-                    str_cps2 = map(str, mac_cps[mac2])
+                str_cps1 = map(str, mac_cps[mac1])
+                str_cps2 = map(str, mac_cps[mac2])
 
-                    # only tp, fp, fn are correct with this parameters
-                    ts = TimeSeries()
-                    conf = cmp_class.conf_mat(mac_cps[mac1], mac_cps[mac2], ts,
-                                              dt_procedures.dt_is_close,
-                                              hours_tol)
-                    formatter = "{}" + ",{}" * 6 + ",\"{}\"" * 6 + "\n"
-                    f.write(formatter.format(mac_server[mac1],
-                                             mac_server[mac2],
-                                             mac1,
-                                             mac2,
-                                             conf["tp"],
-                                             conf["fp"],
-                                             conf["fn"],
-                                             str_cps1,
-                                             str_cps2,
-                                             mac_typeCps[mac1],
-                                             mac_typeCps[mac2],
-                                             mac_segMeans[mac1],
-                                             mac_segMeans[mac2]))
+                # only tp, fp, fn are correct with this parameters
+                ts = TimeSeries()
+                conf = cmp_class.conf_mat(mac_cps[mac1], mac_cps[mac2], ts,
+                                          dt_procedures.dt_is_close,
+                                          hours_tol)
+                formatter = "{}" + ",{}" * 6 + ",\"{}\"" * 6 + "\n"
+                f.write(formatter.format(mac_server[mac1],
+                                         mac_server[mac2],
+                                         mac1,
+                                         mac2,
+                                         conf["tp"],
+                                         conf["fp"],
+                                         conf["fn"],
+                                         str_cps1,
+                                         str_cps2,
+                                         mac_typeCps[mac1],
+                                         mac_typeCps[mac2],
+                                         mac_segMeans[mac1],
+                                         mac_segMeans[mac2]))
 
     utils.sort_csv_file(out_path, ["tp", "fp", "fn"],
                         ascending=[False, True, True])
