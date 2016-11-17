@@ -1,6 +1,5 @@
 import os
 import sys
-import ast
 import datetime
 import functools
 import pandas as pd
@@ -10,19 +9,13 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
+import change_point.utils.cp_utils as cp_utils
 
 
 def match_cps_per_path(dt_start, dt_end, metric):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
-    in_path = ("{}/prints/{}/filtered/traceroute_per_mac.csv".
-               format(script_dir, str_dt))
-    df = pd.read_csv(in_path)
-    mac_traceroute = {}
-    for idx, row in df.iterrows():
-        if row["is_unique_traceroute"]:
-            mac_traceroute[row["mac"]] = \
-                ast.literal_eval(row["traceroute_filtered"])
+    mac_traceroute = cp_utils.get_mac_traceroute_filtered(dt_start, dt_end)
 
     write_dir = set()
 

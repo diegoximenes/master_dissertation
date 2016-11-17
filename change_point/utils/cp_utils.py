@@ -1,14 +1,51 @@
 import os
 import sys
+import ast
 import functools
 import pandas as pd
 import numpy as np
 
+script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
 import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
+
+
+def get_mac_traceroute_filtered(dt_start, dt_end):
+    str_dt = utils.get_str_dt(dt_start, dt_end)
+
+    in_path = ("{}/change_point/unsupervised/prints/{}/filtered/"
+               "traceroute_per_mac.csv".format(base_dir, str_dt))
+    df = pd.read_csv(in_path)
+    mac_traceroute = {}
+    for idx, row in df.iterrows():
+        if row["is_unique_traceroute"]:
+            mac_traceroute[row["mac"]] = \
+                ast.literal_eval(row["traceroute_filtered"])
+    return mac_traceroute
+
+
+def iter_names_traceroute_filtered(traceroute, only_cmts=False):
+    def is_cmts(name):
+        ip1 = name[0][1]
+        ip2 = name[1][1]
+        if utils.is_private_ip(ip1) and (not utils.is_private_ip(ip2)):
+            return True
+        return False
+
+    for name in traceroute:
+        if name[0][0] is None:
+            continue
+        splitted = name[0][0].split(".")
+        if splitted[0] == "192" and splitted[1] == "168":
+            continue
+
+        if only_cmts and (not is_cmts(name)):
+            continue
+
+        yield name
 
 
 def run_sequential(datasets, f, cmp_class_args, preprocess_args, param,

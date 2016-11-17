@@ -8,18 +8,11 @@ import pandas as pd
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
+import change_point.utils.cp_utils as cp_utils
 import utils.utils as utils
 import utils.plot_procedures as plot_procedures
 import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
-
-
-def is_cmts(name):
-    ip1 = name[0][1]
-    ip2 = name[1][1]
-    if utils.is_private_ip(ip1) and (not utils.is_private_ip(ip2)):
-        return True
-    return False
 
 
 def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps):
@@ -50,17 +43,8 @@ def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps):
         cnt += 1
         print "cnt={}, str_dt={}".format(cnt, str_dt)
 
-        traceroute = ast.literal_eval(row["traceroute_filtered"])
-        for name in traceroute:
-            if name[0][0] is None:
-                continue
-            splitted = name[0][0].split(".")
-            if splitted[0] == "192" and splitted[1] == "168":
-                continue
-
-            if only_cmts and (not is_cmts(name)):
-                continue
-
+        for name in cp_utils.iter_names_traceroute_filtered(
+                ast.literal_eval(row["traceroute_filtered"])):
             cp_dts = {}
             if plot_cps:
                 if row["mac"] in mac_cps:
