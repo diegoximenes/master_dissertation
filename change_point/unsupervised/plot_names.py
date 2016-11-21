@@ -52,17 +52,18 @@ def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps):
 
             utils.create_dirs(["{}/plots/names/{}/{}/{}".format(script_dir,
                                                                 str_dt, metric,
-                                                                name)])
+                                                                row["server"]),
+                               "{}/plots/names/{}/{}/{}/{}".
+                               format(script_dir, str_dt, metric,
+                                      row["server"], name)])
 
             in_path = "{}/input/{}/{}/{}.csv".format(base_dir, dt_dir,
                                                      row["server"], row["mac"])
             out_file_name = utils.get_out_file_name(row["server"], row["mac"],
                                                     dt_start, dt_end)
-            out_path = "{}/plots/names/{}/{}/{}/{}.png".format(script_dir,
-                                                               str_dt,
-                                                               metric,
-                                                               name,
-                                                               out_file_name)
+            out_path = ("{}/plots/names/{}/{}/{}/{}/{}.png".
+                        format(script_dir, str_dt, metric, row["server"], name,
+                               out_file_name))
 
             ts = TimeSeries(in_path, metric, dt_start, dt_end)
             ts_filter = TimeSeries(in_path, metric, dt_start, dt_end)

@@ -144,6 +144,12 @@ def get_traceroute(ts_traceroute, ts_server_ip, allow_embratel,
                     hops_default_names = copy.deepcopy(hops_names)
                     hops_default_ips = copy.deepcopy(hops_ips)
 
+    for name in hops_default_names:
+        if name and (hops_default_names.count(name) > 1):
+            return (False,
+                    "more_than_one_occurrence={}".format(hops_default_names),
+                    server_ip)
+
     hops_default = []
     for name_hops_default, ip_hops_default in izip(hops_default_names,
                                                    hops_default_ips):

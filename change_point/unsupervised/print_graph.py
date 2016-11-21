@@ -4,6 +4,7 @@ import ast
 import datetime
 import pandas as pd
 import numpy as np
+from collections import defaultdict
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
@@ -17,6 +18,7 @@ def get_graph(dt_start, dt_end, server=None):
     in_path = "{}/prints/{}/filtered/traceroute_per_mac.csv".format(script_dir,
                                                                     str_dt)
 
+    names = set()
     name_neigh = {}
     df = pd.read_csv(in_path)
     if server:
@@ -25,11 +27,28 @@ def get_graph(dt_start, dt_end, server=None):
         traceroute = ast.literal_eval(row["traceroute_filtered"])
         last_name = None
         for name in traceroute:
+            names.add(name)
             if name not in name_neigh:
                 name_neigh[name] = set()
             if last_name:
                 name_neigh[last_name].add(name)
             last_name = name
+
+    for name in names:
+        if name not in name_neigh:
+            name_neigh[name] = set()
+
+    if server:
+        # add_server_to_graph
+        for name in names:
+            if not name_neigh[name]:
+                server_name = "(('{}','{}'),('{}','{}'))".format(server,
+                                                                 server,
+                                                                 server,
+                                                                 server)
+                name_neigh[server_name] = set()
+                name_neigh[name].add(server_name)
+
     return name_neigh
 
 
@@ -43,12 +62,6 @@ def write_graph(out_path, name_neigh):
 
 
 def check_graph(out_dir, name_neigh):
-    def set_mark(name_neigh):
-        mark = {}
-        for name in name_neigh:
-            mark[name] = 0
-        return mark
-
     def dfs(name_neigh, mark, name, f=None):
         mark[name] = 1
 
@@ -65,11 +78,8 @@ def check_graph(out_dir, name_neigh):
                     return dfs_ret
         return True
 
-    in_deg = {}
-    out_deg = {}
-    for name in name_neigh:
-        in_deg[name] = 0
-        out_deg[name] = 0
+    in_deg = defaultdict(int)
+    out_deg = defaultdict(int)
     for name in name_neigh:
         for neigh in name_neigh[name]:
             in_deg[neigh] += 1
@@ -78,10 +88,10 @@ def check_graph(out_dir, name_neigh):
     valid_graph = True
     for name in name_neigh:
         if in_deg[name] == 0:
-            mark = set_mark(name_neigh)
+            mark = defaultdict(int)
             if not dfs(name_neigh, mark, name):
                 valid_graph = False
-                mark = set_mark(name_neigh)
+                mark = defaultdict(int)
                 out_path = "{}/invalid_subgraph.gv".format(out_dir)
                 f = open(out_path, "w")
                 f.write("digraph {\n")
