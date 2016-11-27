@@ -151,8 +151,8 @@ def run_single(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 6, 11)
-    dt_end = datetime.datetime(2016, 6, 21)
+    dt_start = datetime.datetime(2016, 6, 21)
+    dt_end = datetime.datetime(2016, 7, 1)
 
     run_single(dt_start, dt_end)
     # run_parallel()

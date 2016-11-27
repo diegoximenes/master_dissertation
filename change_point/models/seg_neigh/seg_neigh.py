@@ -93,7 +93,7 @@ if __name__ == "__main__":
              "max_cps": 4}
     metric = "latency"
 
-    datasets = ["/unsupervised/dtstart2016-06-11_dtend2016-06-21"]
+    datasets = ["/unsupervised/dtstart2016-06-21_dtend2016-07-01"]
     # datasets = list(cp_utils.iter_unsupervised_datasets())
 
     cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,

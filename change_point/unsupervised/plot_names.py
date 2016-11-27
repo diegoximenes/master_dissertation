@@ -38,9 +38,7 @@ def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps):
 
     df = pd.read_csv("{}/prints/{}/filtered/traceroute_per_mac.csv".
                      format(script_dir, str_dt))
-    cnt = 0
-    for idx, row in df.iterrows():
-        cnt += 1
+    for cnt, (idx, row) in enumerate(df.iterrows()):
         print "cnt={}, str_dt={}".format(cnt, str_dt)
 
         for name in cp_utils.iter_names_traceroute_filtered(
@@ -93,8 +91,8 @@ def run_single(metric, dt_start, dt_end):
 
 if __name__ == "__main__":
     metric = "latency"
-    dt_start = datetime.datetime(2016, 6, 11)
-    dt_end = datetime.datetime(2016, 6, 21)
+    dt_start = datetime.datetime(2016, 6, 21)
+    dt_end = datetime.datetime(2016, 7, 1)
 
     run_single(metric, dt_start, dt_end)
     # run_parallel(metric)
