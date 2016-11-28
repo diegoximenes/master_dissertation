@@ -8,8 +8,8 @@ sys.path.append(base_dir)
 import utils.utils as utils
 import utils.plot_procedures as plot_procedures
 import utils.time_series as time_series
-import change_point.utils.cp_utils as cp_utils
-import change_point.utils.cmp_win as cmp_win
+import change_point.cp_utils.cp_utils as cp_utils
+import change_point.cp_utils.cmp_win as cmp_win
 import change_point.models.change_point_alg as change_point_alg
 
 

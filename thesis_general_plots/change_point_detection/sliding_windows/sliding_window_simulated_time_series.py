@@ -6,7 +6,7 @@ base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
 from utils.time_series import TimeSeries
-import change_point.utils.cmp_win as cmp_win
+import change_point.cp_utils.cmp_win as cmp_win
 
 
 def simulate():

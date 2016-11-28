@@ -16,7 +16,7 @@ from change_point.models.hmm.gaussian_hmm import GaussianHMM
 from change_point.models.hmm.discrete_hmm import DiscreteHMM
 import change_point.models.bayesian.bayesian_changepoint_detection.\
     offline_changepoint_detection as offcd
-import change_point.utils.cmp_win as cmp_win
+import change_point.cp_utils.cmp_win as cmp_win
 
 # uniform: uniform distribution in [loc, loc + scale].
 # randint(a, b): generate random in [a, b).

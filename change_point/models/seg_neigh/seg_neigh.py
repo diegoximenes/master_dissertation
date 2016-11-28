@@ -9,7 +9,7 @@ sys.path.append(base_dir)
 import utils.utils as utils
 import utils.plot_procedures as plot_procedures
 import change_point.models.change_point_alg as change_point_alg
-import change_point.utils.cp_utils as cp_utils
+import change_point.cp_utils.cp_utils as cp_utils
 
 
 class SegmentNeighbourhood(change_point_alg.ChangePointAlg):

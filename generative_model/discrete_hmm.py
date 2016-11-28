@@ -6,7 +6,7 @@ import hmmlearn.hmm
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(base_dir)
-import change_point.utils.cmp_win as cmp_win
+import change_point.cp_utils.cmp_win as cmp_win
 from generative_model.hmm import HMM
 
 

@@ -8,7 +8,7 @@ import matplotlib.pylab as plt
 
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
 sys.path.append(base_dir)
-import change_point.utils.cmp_win as cmp_win
+import change_point.cp_utils.cmp_win as cmp_win
 import change_point.models.change_point_alg as change_point_alg
 from change_point.models.sliding_windows.sliding_windows_offline import \
     SlidingWindowsOffline

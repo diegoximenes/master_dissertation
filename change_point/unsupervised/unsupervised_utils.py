@@ -6,7 +6,7 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
-import change_point.utils.cp_utils as cp_utils
+import change_point.cp_utils.cp_utils as cp_utils
 
 
 def create_csv_with_same_header(out_path, df):

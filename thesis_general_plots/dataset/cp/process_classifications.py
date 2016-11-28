@@ -8,7 +8,7 @@ sys.path.append(base_dir)
 import utils.plot_procedures as plot_procedures
 import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
-from change_point.utils.distribution import hellinger_dist
+from change_point.cp_utils.distribution import hellinger_dist
 
 target_email = "gustavo.santos@tgr.net.br"
 

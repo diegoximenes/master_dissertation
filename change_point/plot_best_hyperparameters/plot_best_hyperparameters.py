@@ -17,8 +17,8 @@ from change_point.models.bayesian.bayesian_offline import BayesianOffline
 from change_point.models.bayesian.bayesian_online import BayesianOnline
 from change_point.models.hmm.gaussian_hmm import GaussianHMM
 from change_point.models.hmm.discrete_hmm import DiscreteHMM
-import change_point.utils.cmp_class as cmp_class
-import change_point.utils.cmp_win as cmp_win
+import change_point.cp_utils.cmp_class as cmp_class
+import change_point.cp_utils.cmp_win as cmp_win
 
 
 def get_params(model_class_name, params):
