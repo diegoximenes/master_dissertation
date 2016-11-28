@@ -436,6 +436,6 @@ if __name__ == "__main__":
 
     mac_node = read_input.get_mac_node()
 
-    run_single(mac_node, dt_start, dt_end)
-    # run_parallel(mac_node)
+    # run_single(mac_node, dt_start, dt_end)
+    run_parallel(mac_node)
     # run_sequential(mac_node)
