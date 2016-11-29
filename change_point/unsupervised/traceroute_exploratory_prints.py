@@ -177,6 +177,9 @@ def get_traceroute_filtered(str_traceroute_list):
                 filtered = (traceroute[i], traceroute[i])
 
         traceroute_filtered.append(filtered)
+    if traceroute:
+        traceroute_filtered.append((traceroute[-1], traceroute[-1]))
+
     return traceroute_filtered
 
 
@@ -262,6 +265,12 @@ def print_traceroute_per_mac_filtered(dt_start, dt_end):
             traceroute_filtered = compress_traceroute(
                 get_traceroute_filtered(row["traceroute"]), "filtered")
             traceroute = ast.literal_eval(row["traceroute"])
+
+            # only consider traceroutes that reached the server in less hops
+            # that the maximum number of hops
+            if (not traceroute) or (traceroute[-1] != (None, None)):
+                continue
+
             traceroute = compress_traceroute(traceroute, "raw")
 
             if traceroute_filtered == []:
@@ -413,7 +422,7 @@ def print_all(dt_start, dt_end, mac_node):
     # print_macs_per_name(dt_start, dt_end, mac_node)
     # print_names_per_mac(dt_start, dt_end, mac_node)
     # print_name_ips(dt_start, dt_end)
-    print_traceroute_per_mac(dt_start, dt_end, mac_node, True)
+    # print_traceroute_per_mac(dt_start, dt_end, mac_node, True)
 
     print_traceroute_per_mac_filtered(dt_start, dt_end)
     # print_macs_per_name_filtered(dt_start, dt_end, mac_node)
@@ -435,8 +444,8 @@ def run_single(mac_node, dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 6, 11)
-    dt_end = datetime.datetime(2016, 6, 21)
+    dt_start = datetime.datetime(2016, 6, 21)
+    dt_end = datetime.datetime(2016, 7, 1)
 
     mac_node = read_input.get_mac_node()
 
