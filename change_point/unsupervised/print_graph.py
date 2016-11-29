@@ -38,17 +38,6 @@ def get_graph(dt_start, dt_end, server=None):
         if name not in name_neigh:
             name_neigh[name] = set()
 
-    if server:
-        # add_server_to_graph
-        for name in names:
-            if not name_neigh[name]:
-                server_name = "(('{}','{}'),('{}','{}'))".format(server,
-                                                                 server,
-                                                                 server,
-                                                                 server)
-                name_neigh[server_name] = set()
-                name_neigh[name].add(server_name)
-
     return name_neigh
 
 

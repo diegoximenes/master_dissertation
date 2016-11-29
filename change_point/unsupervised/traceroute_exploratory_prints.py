@@ -285,6 +285,10 @@ def print_traceroute_per_mac_filtered(dt_start, dt_end):
                         (hop[0][1].split(".")[0] == "192")):
                     continue
                 traceroute_filtered.append(hop)
+            # add server to traceroute
+            server_name = ((row["server"], row["server"]),
+                           (row["server"], row["server"]))
+            traceroute_filtered += [server_name]
 
             l = ("{},{},{},\"{}\",{},\"{}\"\n".
                  format(row["server"], row["node"], row["mac"],
@@ -431,11 +435,11 @@ def run_single(mac_node, dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
+    dt_start = datetime.datetime(2016, 6, 11)
+    dt_end = datetime.datetime(2016, 6, 21)
 
     mac_node = read_input.get_mac_node()
 
-    # run_single(mac_node, dt_start, dt_end)
-    run_parallel(mac_node)
+    run_single(mac_node, dt_start, dt_end)
+    # run_parallel(mac_node)
     # run_sequential(mac_node)

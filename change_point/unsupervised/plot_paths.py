@@ -59,12 +59,7 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
         dir_path = "{}/plots/paths/{}/{}/{}/".format(script_dir, str_dt,
                                                      metric, row["server"])
 
-        server_name = "(('{}','{}'),('{}','{}'))".format(row["server"],
-                                                         row["server"],
-                                                         row["server"],
-                                                         row["server"])
-
-        for name in reversed(traceroute + [server_name]):
+        for name in reversed(traceroute):
             if (name[0][0] is None) and first_hop:
                 continue
             splitted = name[0][0].split(".")
