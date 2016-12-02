@@ -99,11 +99,10 @@ def iter_server_mac(dt_dir, print_iter=False):
 
 def create_dirs(dirs):
     for dir in dirs:
-        if not os.path.exists(dir):
-            try:
-                os.makedirs(dir)
-            except OSError:
-                pass
+        try:
+            os.makedirs(dir)
+        except OSError:
+            pass
 
 
 def sort_csv_file(path, fields, ascending=None):
