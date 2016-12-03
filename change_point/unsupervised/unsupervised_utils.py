@@ -89,12 +89,12 @@ def print_per_name(dt_start, dt_end, metric, file_name):
         utils.create_dirs([dir_path])
 
         for name in cp_utils.iter_names_traceroute_filtered(traceroute):
-            dir_path = "{}/{}".format(dir_path, name)
-            utils.create_dirs([dir_path])
+            name_path = "{}/{}".format(dir_path, name)
+            utils.create_dirs([name_path])
 
-            out_path = "{}/{}".format(dir_path, file_name)
-            if dir_path not in name_dirs:
+            out_path = "{}/{}".format(name_path, file_name)
+            if name_path not in name_dirs:
                 create_csv_with_same_header(out_path, df)
             pd.DataFrame(row).T.to_csv(out_path, mode="a", header=False,
                                        index=False)
-            name_dirs.add(dir_path)
+            name_dirs.add(name_path)

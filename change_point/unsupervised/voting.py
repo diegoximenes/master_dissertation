@@ -28,6 +28,7 @@ def multiple_inexact_voting_totally_ordered(dt_start, dt_end, metric,
         if "cps_per_mac.csv" in file_names:
             l = []
             df = pd.read_csv("{}/cps_per_mac.csv".format(dir_path))
+            cnt_clients = df.shape[0]
             for idx, row in df.iterrows():
                 cp_dts = map(dt_procedures.from_strdt_to_dt,
                              ast.literal_eval(row["cp_dt"]))
@@ -36,7 +37,7 @@ def multiple_inexact_voting_totally_ordered(dt_start, dt_end, metric,
             l.sort(key=itemgetter("dt"))
 
             with open("{}/match_cps.csv".format(dir_path), "w") as f:
-                f.write("cp_dt_start,cp_dt_end,clients\n")
+                f.write("cp_dt_start,cp_dt_end,fraction_of_clients,clients\n")
                 while l:
                     i = j = len_max_maximal_interval = 0
                     max_maximal_interval = []
@@ -59,7 +60,11 @@ def multiple_inexact_voting_totally_ordered(dt_start, dt_end, metric,
                     l_dt = l[max_maximal_interval[0]]["dt"]
                     r_dt = l[max_maximal_interval[1]]["dt"]
 
-                    f.write("{},{},\"{}\"\n".format(l_dt, r_dt, clients))
+                    fraction_of_clients = float(len(clients)) / cnt_clients
+
+                    f.write("{},{},{},\"{}\"\n".format(l_dt, r_dt,
+                                                       fraction_of_clients,
+                                                       clients))
 
                     l_aux = copy.deepcopy(l)
                     l = []
