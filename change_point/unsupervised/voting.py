@@ -2,7 +2,6 @@ import os
 import sys
 import datetime
 import ast
-import copy
 import functools
 import pandas as pd
 from operator import itemgetter
@@ -12,10 +11,10 @@ base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
 import utils.dt_procedures as dt_procedures
+import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 
 
-def multiple_inexact_voting_totally_ordered(dt_start, dt_end, metric,
-                                            in_dir, eps_hours):
+def voting(dt_start, dt_end, metric, in_dir, eps_hours):
     """
     By now I assume that the cps from a single time series are more than
     eps_hours apart
@@ -38,27 +37,14 @@ def multiple_inexact_voting_totally_ordered(dt_start, dt_end, metric,
 
             with open("{}/match_cps.csv".format(dir_path), "w") as f:
                 f.write("cp_dt_start,cp_dt_end,fraction_of_clients,clients\n")
-                while l:
-                    i = j = len_max_maximal_interval = 0
-                    max_maximal_interval = []
-                    while j < len(l):
-                        while ((j < len(l)) and
-                               dt_procedures.dt_is_close(l[i]["dt"],
-                                                         l[j]["dt"],
-                                                         eps_hours)):
-                            j += 1
-                        if j - i > len_max_maximal_interval:
-                            len_max_maximal_interval = j - i
-                            max_maximal_interval = [i, j - 1]
-                        i += 1
-
+                votes = \
+                    unsupervised_utils.multiple_inexact_voting(l, eps_hours)
+                for vote in votes:
                     clients = map(lambda dic: {"mac": dic["mac"],
                                                "server": dic["server"]},
-                                  l[max_maximal_interval[0]:
-                                    max_maximal_interval[1] + 1])
-
-                    l_dt = l[max_maximal_interval[0]]["dt"]
-                    r_dt = l[max_maximal_interval[1]]["dt"]
+                                  vote["interval"])
+                    l_dt = vote["l_dt"]
+                    r_dt = vote["r_dt"]
 
                     fraction_of_clients = float(len(clients)) / cnt_clients
 
@@ -66,40 +52,28 @@ def multiple_inexact_voting_totally_ordered(dt_start, dt_end, metric,
                                                        fraction_of_clients,
                                                        clients))
 
-                    l_aux = copy.deepcopy(l)
-                    l = []
-                    for dic in l_aux:
-                        if (dic["dt"] < l_dt) or (dic["dt"] > r_dt):
-                            l.append(dic)
-
 
 def run_parallel(metric, eps_hours):
     dt_ranges = list(utils.iter_dt_range())
 
-    fp_multiple_inexact_voting_totally_ordered = \
-        functools.partial(multiple_inexact_voting_totally_ordered,
-                          metric=metric, in_dir="paths", eps_hours=eps_hours)
-    utils.parallel_exec(fp_multiple_inexact_voting_totally_ordered, dt_ranges)
+    fp_voting = functools.partial(voting, metric=metric, in_dir="paths",
+                                  eps_hours=eps_hours)
+    utils.parallel_exec(fp_voting, dt_ranges)
 
-    fp_multiple_inexact_voting_totally_ordered = \
-        functools.partial(multiple_inexact_voting_totally_ordered,
-                          metric=metric, in_dir="names", eps_hours=eps_hours)
-    utils.parallel_exec(fp_multiple_inexact_voting_totally_ordered, dt_ranges)
+    fp_voting = functools.partial(voting, metric=metric, in_dir="names",
+                                  eps_hours=eps_hours)
+    utils.parallel_exec(fp_voting, dt_ranges)
 
 
 def run_sequential(metric, eps_hours):
     for dt_start, dt_end in utils.iter_dt_range():
-        multiple_inexact_voting_totally_ordered(dt_start, dt_end, metric,
-                                                "paths", eps_hours)
-        multiple_inexact_voting_totally_ordered(dt_start, dt_end, metric,
-                                                "names", eps_hours)
+        voting(dt_start, dt_end, metric, "paths", eps_hours)
+        voting(dt_start, dt_end, metric, "names", eps_hours)
 
 
 def run_single(dt_start, dt_end, metric, eps_hours):
-    multiple_inexact_voting_totally_ordered(dt_start, dt_end, metric,
-                                            "paths", eps_hours)
-    multiple_inexact_voting_totally_ordered(dt_start, dt_end, metric,
-                                            "names", eps_hours)
+    voting(dt_start, dt_end, metric, "paths", eps_hours)
+    voting(dt_start, dt_end, metric, "names", eps_hours)
 
 
 if __name__ == "__main__":

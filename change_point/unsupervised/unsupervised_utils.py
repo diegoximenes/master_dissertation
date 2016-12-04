@@ -1,12 +1,52 @@
 import os
 import sys
+import copy
 import pandas as pd
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
+import utils.dt_procedures as dt_procedures
 import change_point.cp_utils.cp_utils as cp_utils
+
+
+def multiple_inexact_voting(l, eps_hours):
+    """
+    multiple inexact voting totally ordered
+    """
+
+    ret = []
+    while l:
+        i = j = len_max_maximal_interval = 0
+        max_maximal_interval = []
+        while j < len(l):
+            while ((j < len(l)) and
+                   dt_procedures.dt_is_close(l[i]["dt"],
+                                             l[j]["dt"],
+                                             eps_hours)):
+                j += 1
+            if j - i > len_max_maximal_interval:
+                len_max_maximal_interval = j - i
+                max_maximal_interval = [i, j - 1]
+            i += 1
+
+        l_dt = l[max_maximal_interval[0]]["dt"]
+        r_dt = l[max_maximal_interval[1]]["dt"]
+
+        elem = {}
+        elem["interval"] = copy.deepcopy(
+            l[max_maximal_interval[0]:max_maximal_interval[1] + 1])
+        elem["l_dt"] = l_dt
+        elem["r_dt"] = r_dt
+        ret.append(elem)
+
+        l_aux = copy.deepcopy(l)
+        l = []
+        for dic in l_aux:
+            if (dic["dt"] < l_dt) or (dic["dt"] > r_dt):
+                l.append(dic)
+    return ret
 
 
 def create_csv_with_same_header(out_path, df):

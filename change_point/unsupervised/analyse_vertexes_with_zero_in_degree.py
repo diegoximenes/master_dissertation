@@ -2,6 +2,7 @@ import os
 import sys
 import datetime
 import ast
+import shutil
 import pandas as pd
 import numpy as np
 from collections import defaultdict
@@ -11,6 +12,7 @@ base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
 import utils.dt_procedures as dt_procedures
+import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 
 
 def get_deg_in(g):
@@ -71,8 +73,8 @@ def analyse_path(path, cp_dt_start, cp_dt_end, str_dt, metric,
     for i, name in enumerate(path[1:]):
         if not all_clients_with_same_pattern(name, cp_dt, str_dt, metric,
                                              server):
-            return path[0:i + 1]
-    return path + ["after"]
+                return path[0:i + 1]
+    return path
 
 
 def analyse_zero_in_deg_vertex(g, u, metric, server, dt_start, dt_end):
@@ -101,16 +103,21 @@ def analyse_zero_in_deg_vertex(g, u, metric, server, dt_start, dt_end):
                 problem_location = analyse_path(path, cp_dt_start,
                                                 cp_dt_end, str_dt, metric,
                                                 server)
+                problem_location = map(ast.literal_eval, problem_location)
             else:
                 problem_location = ["before"]
-            f.write("{},{},{},\"{}\",\"{}\"".format(row["cp_dt_start"],
-                                                    row["cp_dt_end"],
-                                                    row["fraction_of_clients"],
-                                                    row["clients"],
-                                                    problem_location))
+            l_format = "{},{},{},\"{}\",\"{}\"\n"
+            f.write(l_format.format(row["cp_dt_start"], row["cp_dt_end"],
+                                    row["fraction_of_clients"],
+                                    row["clients"], problem_location))
+
+    out_path_name = "{}/plots/names/{}/{}/{}/{}".format(script_dir, str_dt,
+                                                        metric, server,
+                                                        path[0])
+    shutil.copy(out_path, out_path_name)
 
 
-def localize_problems(dt_start, dt_end, metric):
+def localize_problems(dt_start, dt_end, metric, eps_hours):
     """
     considers that the graph is a tree
     """
@@ -130,16 +137,59 @@ def localize_problems(dt_start, dt_end, metric):
                     analyse_zero_in_deg_vertex(g, u, metric, server, dt_start,
                                                dt_end)
 
+            for u in g:
+                l = []
+                if mac_degin[u] == 0:
+                    in_path = ("{}/plots/names/{}/{}/{}/{}/"
+                               "problem_location.csv".format(script_dir,
+                                                             str_dt, metric,
+                                                             server, u))
+                    df = pd.read_csv(in_path)
+                    for idx, row in df.iterrows():
+                        cp_dt_start = dt_procedures.from_strdt_to_dt(
+                            row["cp_dt_start"])
+                        cp_dt_end = dt_procedures.from_strdt_to_dt(
+                            row["cp_dt_end"])
+                        cp_dt = cp_dt_start + (cp_dt_end - cp_dt_start) / 2
 
-def run_single(dt_start, dt_end, metric):
-    localize_problems(dt_start, dt_end, metric)
+                        problem_locations = ast.literal_eval(
+                            row["problem_location"])
+
+                        dic = {"dt": cp_dt, "name": ast.literal_eval(u),
+                               "problem_locations": problem_locations}
+                        l.append(dic)
+
+                    votes = unsupervised_utils.multiple_inexact_voting(
+                        l, eps_hours)
+                    out_path = ("{}/plots/paths/{}/{}/{}/"
+                                "problem_correlation.csv".format(script_dir,
+                                                                 str_dt,
+                                                                 metric,
+                                                                 server))
+                    with open(out_path, "w") as f:
+                        f.write("cp_dt_start,cp_dt_end,"
+                                "vertexes_with_zero_in_deg\n")
+                        for vote in votes:
+                            f.write("{},{},\"{}\"".format(vote["l_dt"],
+                                                          vote["r_dt"],
+                                                          vote["interval"]))
+
+                    out_path_name = ("{}/plots/names/{}/{}/{}".
+                                     format(script_dir, str_dt, metric,
+                                                server))
+                    shutil.copy(out_path, out_path_name)
+
+
+def run_single(dt_start, dt_end, metric, eps_hours):
+    localize_problems(dt_start, dt_end, metric, eps_hours)
 
 
 if __name__ == "__main__":
+    eps_hours = 4
     metric = "latency"
     dt_start = datetime.datetime(2016, 6, 21)
     dt_end = datetime.datetime(2016, 7, 1)
 
-    run_single(dt_start, dt_end, metric)
+    run_single(dt_start, dt_end, metric, eps_hours)
     # run_parallel()
     # run_sequential()
