@@ -36,7 +36,8 @@ def voting(dt_start, dt_end, metric, in_dir, eps_hours):
             l.sort(key=itemgetter("dt"))
 
             with open("{}/match_cps.csv".format(dir_path), "w") as f:
-                f.write("cp_dt_start,cp_dt_end,fraction_of_clients,clients\n")
+                f.write("cp_dt_start,cp_dt_end,fraction_of_clients,"
+                        "cnt_clients,clients\n")
                 votes = \
                     unsupervised_utils.multiple_inexact_voting(l, eps_hours)
                 for vote in votes:
@@ -48,9 +49,10 @@ def voting(dt_start, dt_end, metric, in_dir, eps_hours):
 
                     fraction_of_clients = float(len(clients)) / cnt_clients
 
-                    f.write("{},{},{},\"{}\"\n".format(l_dt, r_dt,
-                                                       fraction_of_clients,
-                                                       clients))
+                    f.write("{},{},{},{},\"{}\"\n".format(l_dt, r_dt,
+                                                          fraction_of_clients,
+                                                          len(clients),
+                                                          clients))
 
 
 def run_parallel(metric, eps_hours):

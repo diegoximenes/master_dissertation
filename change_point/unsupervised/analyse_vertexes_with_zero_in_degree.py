@@ -91,8 +91,8 @@ def analyse_zero_in_deg_vertex(g, u, metric, server, dt_start, dt_end):
 
     out_path = "{}/problem_location.csv".format(dir_path)
     with open(out_path, "w") as f:
-        f.write("cp_dt_start,cp_dt_end,fraction_of_clients,clients,"
-                "problem_location\n")
+        f.write("cp_dt_start,cp_dt_end,fraction_of_clients,cnt_clients,"
+                "clients,problem_location\n")
         in_path = "{}/match_cps.csv".format(dir_path)
         df = pd.read_csv(in_path)
         for idx, row in df.iterrows():
@@ -106,15 +106,121 @@ def analyse_zero_in_deg_vertex(g, u, metric, server, dt_start, dt_end):
                 problem_location = map(ast.literal_eval, problem_location)
             else:
                 problem_location = ["before"]
-            l_format = "{},{},{},\"{}\",\"{}\"\n"
+            l_format = "{},{},{},{},\"{}\",\"{}\"\n"
             f.write(l_format.format(row["cp_dt_start"], row["cp_dt_end"],
                                     row["fraction_of_clients"],
+                                    row["cnt_clients"],
                                     row["clients"], problem_location))
 
     out_path_name = "{}/plots/names/{}/{}/{}/{}".format(script_dir, str_dt,
                                                         metric, server,
                                                         path[0])
     shutil.copy(out_path, out_path_name)
+
+
+def suffix_match(ll):
+    suffix = []
+    initial_len_ll = len(ll)
+    while len(ll) == initial_len_ll:
+        last = ll[0][-1]
+        ll_aux = []
+        for l in ll:
+            if last != l[-1]:
+                return suffix
+            if l[:-1]:
+                ll_aux.append(l[:-1])
+        ll = ll_aux
+        suffix.append(last)
+    return suffix
+
+
+def correlation_zero_in_deg_vertexes(g, mac_degin, server, dt_start, dt_end,
+                                     metric, eps_hours):
+    str_dt = utils.get_str_dt(dt_start, dt_end)
+
+    out_path = ("{}/plots/paths/{}/{}/{}/problem_correlation.csv".
+                format(script_dir, str_dt, metric, server))
+    with open(out_path, "w") as f:
+        f.write("cp_dt_start,cp_dt_end,"
+                "cnt_vertexes_with_zero_in_deg,suffix_match,"
+                "vertexes_with_zero_in_deg\n")
+        for u in g:
+            l = []
+            if mac_degin[u] == 0:
+                in_path = ("{}/plots/names/{}/{}/{}/{}/"
+                           "problem_location.csv".format(script_dir,
+                                                         str_dt,
+                                                         metric,
+                                                         server, u))
+                df = pd.read_csv(in_path)
+                for idx, row in df.iterrows():
+                    cp_dt_start = dt_procedures.from_strdt_to_dt(
+                        row["cp_dt_start"])
+                    cp_dt_end = dt_procedures.from_strdt_to_dt(
+                        row["cp_dt_end"])
+                    cp_dt = cp_dt_start + (cp_dt_end - cp_dt_start) / 2
+
+                    problem_locations = ast.literal_eval(
+                        row["problem_location"])
+
+                    dic = {"dt": cp_dt, "name": ast.literal_eval(u),
+                           "problem_locations": problem_locations}
+
+                    if problem_locations == ["before"]:
+                        f.write("{},{},{},\"{}\",\"{}\"\n".
+                                format(row["cp_dt_start"],
+                                       row["cp_dt_end"],
+                                       1,
+                                       problem_locations,
+                                       [dic]))
+                    else:
+                        l.append(dic)
+
+                votes = unsupervised_utils.multiple_inexact_voting(l,
+                                                                   eps_hours)
+                for vote in votes:
+                    suffix_matches = suffix_match(
+                        map(lambda dic: dic["problem_locations"],
+                            vote["interval"]))
+                    if suffix_matches == []:
+                        suffix_matches = ["empty"]
+
+                    f.write("{},{},{},\"{}\",\"{}\"\n".
+                            format(vote["l_dt"], vote["r_dt"],
+                                   len(vote["interval"]),
+                                   suffix_matches,
+                                   vote["interval"]))
+
+    out_path_name = ("{}/plots/names/{}/{}/{}".
+                     format(script_dir, str_dt, metric,
+                            server))
+    shutil.copy(out_path, out_path_name)
+
+
+def aggregate_server_correlations(dt_start, dt_end, metric, servers):
+    str_dt = utils.get_str_dt(dt_start, dt_end)
+
+    out_path = ("{}/prints/{}/filtered/{}/problem_correlation.csv".
+                format(script_dir, str_dt, metric))
+    with open(out_path, "w") as f:
+        f.write("server,cp_dt_start,cp_dt_end,cnt_vertexes_with_zero_in_deg,"
+                "suffix_match,vertexes_with_zero_in_deg\n")
+        for server in servers:
+            if not valid_graph(dt_start, dt_end, server):
+                continue
+            in_path = ("{}/plots/names/{}/{}/{}/problem_correlation.csv".
+                       format(script_dir, str_dt, metric, server))
+            df = pd.read_csv(in_path)
+            for idx, row in df.iterrows():
+                f.write("{},{},{},{},\"{}\",\"{}\"\n".
+                        format(server,
+                               row["cp_dt_start"],
+                               row["cp_dt_end"],
+                               row["cnt_vertexes_with_zero_in_deg"],
+                               row["suffix_match"],
+                               row["vertexes_with_zero_in_deg"]))
+    utils.sort_csv_file(out_path, ["cnt_vertexes_with_zero_in_deg"],
+                        ascending=False)
 
 
 def localize_problems(dt_start, dt_end, metric, eps_hours):
@@ -137,47 +243,10 @@ def localize_problems(dt_start, dt_end, metric, eps_hours):
                     analyse_zero_in_deg_vertex(g, u, metric, server, dt_start,
                                                dt_end)
 
-            for u in g:
-                l = []
-                if mac_degin[u] == 0:
-                    in_path = ("{}/plots/names/{}/{}/{}/{}/"
-                               "problem_location.csv".format(script_dir,
-                                                             str_dt, metric,
-                                                             server, u))
-                    df = pd.read_csv(in_path)
-                    for idx, row in df.iterrows():
-                        cp_dt_start = dt_procedures.from_strdt_to_dt(
-                            row["cp_dt_start"])
-                        cp_dt_end = dt_procedures.from_strdt_to_dt(
-                            row["cp_dt_end"])
-                        cp_dt = cp_dt_start + (cp_dt_end - cp_dt_start) / 2
+            correlation_zero_in_deg_vertexes(g, mac_degin, server, dt_start,
+                                             dt_end, metric, eps_hours)
 
-                        problem_locations = ast.literal_eval(
-                            row["problem_location"])
-
-                        dic = {"dt": cp_dt, "name": ast.literal_eval(u),
-                               "problem_locations": problem_locations}
-                        l.append(dic)
-
-                    votes = unsupervised_utils.multiple_inexact_voting(
-                        l, eps_hours)
-                    out_path = ("{}/plots/paths/{}/{}/{}/"
-                                "problem_correlation.csv".format(script_dir,
-                                                                 str_dt,
-                                                                 metric,
-                                                                 server))
-                    with open(out_path, "w") as f:
-                        f.write("cp_dt_start,cp_dt_end,"
-                                "vertexes_with_zero_in_deg\n")
-                        for vote in votes:
-                            f.write("{},{},\"{}\"".format(vote["l_dt"],
-                                                          vote["r_dt"],
-                                                          vote["interval"]))
-
-                    out_path_name = ("{}/plots/names/{}/{}/{}".
-                                     format(script_dir, str_dt, metric,
-                                                server))
-                    shutil.copy(out_path, out_path_name)
+    aggregate_server_correlations(dt_start, dt_end, metric, servers)
 
 
 def run_single(dt_start, dt_end, metric, eps_hours):
