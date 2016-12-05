@@ -69,9 +69,10 @@ if __name__ == "__main__":
     dt_start = datetime.datetime(2016, 6, 21)
     dt_end = datetime.datetime(2016, 7, 1)
 
-    single_args = {"dt_start": dt_start, "dt_end": dt_end}
     parallel_args = {}
-    sequential_args = {}
+    sequential_args = parallel_args
+    single_args = {"dt_start": dt_start, "dt_end": dt_end}
+    single_args.update(parallel_args)
     cp_utils.parse_args(run_single, single_args,
                         run_parallel, parallel_args,
                         run_sequential, sequential_args)
