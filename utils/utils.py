@@ -67,7 +67,7 @@ def get_in_path(server, mac, dt_start, dt_end):
 
 def iter_dt_range():
     year = 2016
-    months = range(6, 8)
+    months = range(5, 12)
     day_starts = (1, 11, 21)
     delta_days = 10
 

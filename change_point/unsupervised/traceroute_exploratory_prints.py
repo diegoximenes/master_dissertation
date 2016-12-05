@@ -13,6 +13,7 @@ sys.path.append(base_dir)
 import utils.read_input as read_input
 import utils.utils as utils
 from utils.time_series import TimeSeries
+import change_point.cp_utils.cp_utils as cp_utils
 
 
 def get_ip_name(traceroute):
@@ -428,18 +429,21 @@ def print_all(dt_start, dt_end, mac_node):
     # print_macs_per_name_filtered(dt_start, dt_end, mac_node)
 
 
-def run_sequential(mac_node):
+def run_sequential():
+    mac_node = read_input.get_mac_node()
     for dt_start, dt_end in utils.iter_dt_range():
         print_all(dt_start, dt_end, mac_node)
 
 
-def run_parallel(mac_node):
+def run_parallel():
+    mac_node = read_input.get_mac_node()
     dt_ranges = list(utils.iter_dt_range())
     f_print_all = functools.partial(print_all, mac_node=mac_node)
     utils.parallel_exec(f_print_all, dt_ranges)
 
 
-def run_single(mac_node, dt_start, dt_end):
+def run_single(dt_start, dt_end):
+    mac_node = read_input.get_mac_node()
     print_all(dt_start, dt_end, mac_node)
 
 
@@ -447,8 +451,10 @@ if __name__ == "__main__":
     dt_start = datetime.datetime(2016, 6, 21)
     dt_end = datetime.datetime(2016, 7, 1)
 
-    mac_node = read_input.get_mac_node()
-
-    run_single(mac_node, dt_start, dt_end)
-    # run_parallel(mac_node)
-    # run_sequential(mac_node)
+    parallel_args = {}
+    sequential_args = parallel_args
+    single_args = {"dt_start": dt_start, "dt_end": dt_end}
+    single_args.update(parallel_args)
+    cp_utils.parse_args(run_single, single_args,
+                        run_parallel, parallel_args,
+                        run_sequential, sequential_args)

@@ -1,6 +1,7 @@
 import os
 import sys
 import ast
+import argparse
 import functools
 import pandas as pd
 import numpy as np
@@ -11,6 +12,19 @@ sys.path.append(base_dir)
 import utils.utils as utils
 import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
+
+
+def parse_args(run_single, single_args, run_parallel, parallel_args,
+               run_sequential, sequential_args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-r", "--run_mode")
+    args = parser.parse_args()
+    if args.run_mode == "parallel":
+        run_parallel(**parallel_args)
+    elif args.run_mode == "sequential":
+        run_parallel(**parallel_args)
+    else:
+        run_single(**single_args)
 
 
 def get_mac_traceroute_filtered(dt_start, dt_end):

@@ -12,6 +12,7 @@ import utils.utils as utils
 import utils.read_input as read_input
 from utils.time_series import TimeSeries
 import change_point.unsupervised.unsupervised_utils as unsupervised_utils
+import change_point.cp_utils.cp_utils as cp_utils
 
 
 def update_type_cps(type_cps, mean1, mean2):
@@ -121,13 +122,17 @@ def run_single(dir_model, metric, filtered, hours_tol, dt_start, dt_end):
 
 if __name__ == "__main__":
     metric = "latency"
-    dir_model = "seg_neigh"
+    dir_model = "sliding_windows/offline"
     hours_tol = 4
     filtered = "filtered"
-
     dt_start = datetime.datetime(2016, 6, 21)
     dt_end = datetime.datetime(2016, 7, 1)
 
-    run_single(dir_model, metric, filtered, hours_tol, dt_start, dt_end)
-    # run_parallel(dir_model, metric, filtered, hours_tol)
-    # run_sequential(dir_model, metric, filtered, hours_tol)
+    parallel_args = {"dir_model": dir_model, "metric": metric,
+                     "filtered": filtered, "hours_tol": hours_tol}
+    sequential_args = parallel_args
+    single_args = {"dt_start": dt_start, "dt_end": dt_end}
+    single_args.update(parallel_args)
+    cp_utils.parse_args(run_single, single_args,
+                        run_parallel, parallel_args,
+                        run_sequential, sequential_args)

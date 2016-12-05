@@ -3,6 +3,7 @@ import sys
 import datetime
 import ast
 import shutil
+import functools
 import pandas as pd
 import numpy as np
 from collections import defaultdict
@@ -12,6 +13,7 @@ base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
 import utils.dt_procedures as dt_procedures
+import change_point.cp_utils.cp_utils as cp_utils
 import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 
 
@@ -249,6 +251,18 @@ def localize_problems(dt_start, dt_end, metric, eps_hours):
     aggregate_server_correlations(dt_start, dt_end, metric, servers)
 
 
+def run_sequential(metric, eps_hours):
+    for dt_start, dt_end in utils.iter_dt_range():
+        localize_problems(dt_start, dt_end, metric, eps_hours)
+
+
+def run_parallel(metric, eps_hours):
+    dt_ranges = list(utils.iter_dt_range())
+    f_localize_problems = functools.partial(localize_problems, metric=metric,
+                                            eps_hours=eps_hours)
+    utils.parallel_exec(f_localize_problems, dt_ranges)
+
+
 def run_single(dt_start, dt_end, metric, eps_hours):
     localize_problems(dt_start, dt_end, metric, eps_hours)
 
@@ -259,6 +273,11 @@ if __name__ == "__main__":
     dt_start = datetime.datetime(2016, 6, 21)
     dt_end = datetime.datetime(2016, 7, 1)
 
-    run_single(dt_start, dt_end, metric, eps_hours)
-    # run_parallel()
-    # run_sequential()
+    parallel_args = {"eps_hours": eps_hours, "metric": metric}
+    sequential_args = parallel_args
+    single_args = {"dt_start": dt_start,
+                   "dt_end": dt_end}
+    single_args.update(parallel_args)
+    cp_utils.parse_args(run_single, single_args,
+                        run_parallel, parallel_args,
+                        run_sequential, sequential_args)

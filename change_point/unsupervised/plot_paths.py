@@ -12,6 +12,7 @@ import utils.utils as utils
 import utils.plot_procedures as plot_procedures
 import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
+import change_point.cp_utils.cp_utils as cp_utils
 
 
 def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
@@ -104,6 +105,10 @@ if __name__ == "__main__":
     dt_start = datetime.datetime(2016, 6, 21)
     dt_end = datetime.datetime(2016, 7, 1)
 
-    run_single(metric, dt_start, dt_end)
-    # run_parallel(metric)
-    # run_sequential(metric)
+    parallel_args = {"metric": metric}
+    sequential_args = parallel_args
+    single_args = {"dt_start": dt_start, "dt_end": dt_end}
+    single_args.update(parallel_args)
+    cp_utils.parse_args(run_single, single_args,
+                        run_parallel, parallel_args,
+                        run_sequential, sequential_args)

@@ -8,6 +8,7 @@ base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
 from utils.time_series import TimeSeries
+import change_point.cp_utils.cp_utils as cp_utils
 
 
 def include_in_dataset(ts, mac, dt_dir, str_dt, dt_start, dt_end,
@@ -68,6 +69,9 @@ if __name__ == "__main__":
     dt_start = datetime.datetime(2016, 6, 21)
     dt_end = datetime.datetime(2016, 7, 1)
 
-    run_single(dt_start, dt_end)
-    # run_sequential()
-    # run_parallel()
+    single_args = {"dt_start": dt_start, "dt_end": dt_end}
+    parallel_args = {}
+    sequential_args = {}
+    cp_utils.parse_args(run_single, single_args,
+                        run_parallel, parallel_args,
+                        run_sequential, sequential_args)
