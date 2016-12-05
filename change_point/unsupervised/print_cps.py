@@ -84,7 +84,7 @@ def print_cps(dt_start, dt_end, dir_model, metric, filtered):
                                                               seg_means))
 
 
-def run_parallel(dir_model, metric, filtered, hours_tol):
+def run_parallel(dir_model, metric, filtered):
     dt_ranges = list(utils.iter_dt_range())
     fp_print_cps = functools.partial(print_cps,
                                      dir_model=dir_model,
@@ -103,7 +103,7 @@ def run_parallel(dir_model, metric, filtered, hours_tol):
     utils.parallel_exec(fp_print_per_path, dt_ranges)
 
 
-def run_sequential(dir_model, metric, filtered, hours_tol):
+def run_sequential(dir_model, metric, filtered):
     for dt_start, dt_end in utils.iter_dt_range():
         print_cps(dt_start, dt_end, dir_model, metric, filtered)
         unsupervised_utils.print_cps_per_name(dt_start, dt_end, metric,
@@ -112,7 +112,7 @@ def run_sequential(dir_model, metric, filtered, hours_tol):
                                               "cps_per_mac.csv")
 
 
-def run_single(dir_model, metric, filtered, hours_tol, dt_start, dt_end):
+def run_single(dir_model, metric, filtered, dt_start, dt_end):
     print_cps(dt_start, dt_end, dir_model, metric, filtered)
     unsupervised_utils.print_per_name(dt_start, dt_end, metric,
                                       "cps_per_mac.csv")
@@ -123,13 +123,12 @@ def run_single(dir_model, metric, filtered, hours_tol, dt_start, dt_end):
 if __name__ == "__main__":
     metric = "latency"
     dir_model = "sliding_windows/offline"
-    hours_tol = 4
     filtered = "filtered"
     dt_start = datetime.datetime(2016, 6, 21)
     dt_end = datetime.datetime(2016, 7, 1)
 
     parallel_args = {"dir_model": dir_model, "metric": metric,
-                     "filtered": filtered, "hours_tol": hours_tol}
+                     "filtered": filtered}
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
     single_args.update(parallel_args)

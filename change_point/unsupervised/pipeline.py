@@ -68,7 +68,7 @@ if __name__ == "__main__":
                                          param, metric)
 
     myprint("print_cps")
-    print_cps.run_parallel(dir_model, metric, filtered, hours_tol)
+    print_cps.run_parallel(dir_model, metric, filtered)
 
     myprint("voting")
     voting.run_parallel(metric, hours_tol)
