@@ -14,6 +14,11 @@ import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
 
 
+def iter_cp_types():
+    for cp_type in ["same", "increase", "decrease"]:
+        yield cp_type
+
+
 def parse_args(run_single, single_args, run_parallel, parallel_args,
                run_sequential, sequential_args):
     parser = argparse.ArgumentParser()

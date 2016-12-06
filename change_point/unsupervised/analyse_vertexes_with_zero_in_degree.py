@@ -93,8 +93,8 @@ def analyse_zero_in_deg_vertex(g, u, metric, server, dt_start, dt_end):
 
     out_path = "{}/problem_location.csv".format(dir_path)
     with open(out_path, "w") as f:
-        f.write("cp_dt_start,cp_dt_end,fraction_of_clients,cnt_clients,"
-                "clients,problem_location\n")
+        f.write("cp_dt_start,cp_dt_end,cp_type,fraction_of_clients,"
+                "cnt_clients,clients,problem_location\n")
         in_path = "{}/match_cps.csv".format(dir_path)
         df = pd.read_csv(in_path)
         for idx, row in df.iterrows():
@@ -108,8 +108,9 @@ def analyse_zero_in_deg_vertex(g, u, metric, server, dt_start, dt_end):
                 problem_location = map(ast.literal_eval, problem_location)
             else:
                 problem_location = ["before"]
-            l_format = "{},{},{},{},\"{}\",\"{}\"\n"
+            l_format = "{},{},{},{},{},\"{}\",\"{}\"\n"
             f.write(l_format.format(row["cp_dt_start"], row["cp_dt_end"],
+                                    row["cp_type"],
                                     row["fraction_of_clients"],
                                     row["cnt_clients"],
                                     row["clients"], problem_location))
@@ -143,7 +144,7 @@ def correlation_zero_in_deg_vertexes(g, mac_degin, server, dt_start, dt_end,
     out_path = ("{}/plots/paths/{}/{}/{}/problem_correlation.csv".
                 format(script_dir, str_dt, metric, server))
     with open(out_path, "w") as f:
-        f.write("cp_dt_start,cp_dt_end,"
+        f.write("cp_dt_start,cp_dt_end,cp_type,"
                 "cnt_vertexes_with_zero_in_deg,suffix_match,"
                 "vertexes_with_zero_in_deg\n")
         for u in g:
@@ -155,43 +156,55 @@ def correlation_zero_in_deg_vertexes(g, mac_degin, server, dt_start, dt_end,
                                                          metric,
                                                          server, u))
                 df = pd.read_csv(in_path)
-                for idx, row in df.iterrows():
-                    cp_dt_start = dt_procedures.from_strdt_to_dt(
-                        row["cp_dt_start"])
-                    cp_dt_end = dt_procedures.from_strdt_to_dt(
-                        row["cp_dt_end"])
-                    cp_dt = cp_dt_start + (cp_dt_end - cp_dt_start) / 2
 
-                    problem_locations = ast.literal_eval(
-                        row["problem_location"])
+                for cp_type in cp_utils.iter_cp_types():
+                    for idx, row in df[df["cp_type"] == cp_type].iterrows():
+                        cp_dt_start = dt_procedures.from_strdt_to_dt(
+                            row["cp_dt_start"])
+                        cp_dt_end = dt_procedures.from_strdt_to_dt(
+                            row["cp_dt_end"])
+                        cp_dt = cp_dt_start + (cp_dt_end - cp_dt_start) / 2
 
-                    dic = {"dt": cp_dt, "name": ast.literal_eval(u),
-                           "problem_locations": problem_locations}
+                        problem_locations = ast.literal_eval(
+                            row["problem_location"])
 
-                    if problem_locations == ["before"]:
-                        f.write("{},{},{},\"{}\",\"{}\"\n".
-                                format(row["cp_dt_start"],
-                                       row["cp_dt_end"],
-                                       1,
-                                       problem_locations,
-                                       [dic]))
-                    else:
-                        l.append(dic)
+                        dic = {"dt": cp_dt, "name": ast.literal_eval(u),
+                               "problem_locations": problem_locations,
+                               "fraction_of_clients":
+                               row["fraction_of_clients"],
+                               "cnt_clients": row["cnt_clients"]}
 
-                votes = unsupervised_utils.multiple_inexact_voting(l,
+                        if problem_locations == ["before"]:
+                            dic["dt"] = str(dic["dt"])
+                            f.write("{},{},{},\"{}\",\"{}\"\n".
+                                    format(row["cp_dt_start"],
+                                           row["cp_dt_end"],
+                                           cp_type,
+                                           1,
+                                           problem_locations,
+                                           [dic]))
+                        else:
+                            l.append(dic)
+
+                    votes = \
+                        unsupervised_utils.multiple_inexact_voting(l,
                                                                    eps_hours)
-                for vote in votes:
-                    suffix_matches = suffix_match(
-                        map(lambda dic: dic["problem_locations"],
-                            vote["interval"]))
-                    if suffix_matches == []:
-                        suffix_matches = ["empty"]
+                    for vote in votes:
+                        suffix_matches = suffix_match(
+                            map(lambda dic: dic["problem_locations"],
+                                vote["interval"]))
+                        if suffix_matches == []:
+                            suffix_matches = ["empty"]
 
-                    f.write("{},{},{},\"{}\",\"{}\"\n".
-                            format(vote["l_dt"], vote["r_dt"],
-                                   len(vote["interval"]),
-                                   suffix_matches,
-                                   vote["interval"]))
+                        for dic in vote["interval"]:
+                            dic["dt"] = str(dic["dt"])
+                        f.write("{},{},{},{},\"{}\",\"{}\"\n".
+                                format(vote["l_dt"],
+                                       vote["r_dt"],
+                                       cp_type,
+                                       len(vote["interval"]),
+                                       suffix_matches,
+                                       vote["interval"]))
 
     out_path_name = ("{}/plots/names/{}/{}/{}".
                      format(script_dir, str_dt, metric,
@@ -205,8 +218,9 @@ def aggregate_server_correlations(dt_start, dt_end, metric, servers):
     out_path = ("{}/prints/{}/filtered/{}/problem_correlation.csv".
                 format(script_dir, str_dt, metric))
     with open(out_path, "w") as f:
-        f.write("server,cp_dt_start,cp_dt_end,cnt_vertexes_with_zero_in_deg,"
-                "suffix_match,vertexes_with_zero_in_deg\n")
+        f.write("server,cp_dt_start,cp_dt_end,cp_type,"
+                "cnt_vertexes_with_zero_in_deg,suffix_match,"
+                "vertexes_with_zero_in_deg\n")
         for server in servers:
             if not valid_graph(dt_start, dt_end, server):
                 continue
