@@ -1,15 +1,10 @@
-\begin{thebibliography}{15}
+\begin{thebibliography}{3}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 \newcommand{\enquote}[1]{``#1''}
-
-\bibitem[\MakeUppercase{Wikipedia}(2016)Wikipedia]{hellinger_distance}
-\MakeUppercase{Wikipedia}.
-\newblock \enquote{{Hellinger distance}}. 2016.
-\newblock \url{https://en.wikipedia.org/wiki/Hellinger_distance/}.
 
 \bibitem[\MakeUppercase{Kifer}\emph{ et~al.}(2004)Kifer, Ben-David, e
   Gehrke]{detecting_change_in_data_streams}
@@ -21,80 +16,6 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://dl.acm.org/citation.cfm?id=1316689.1316707}\textgreater
   .
-
-\bibitem[\MakeUppercase{Maidstone}\emph{ et~al.}(2016)Maidstone, Hocking,
-  Rigaill, e
-  Fearnhead]{on_optimal_multiple_changepoint_algorithms_for_large_data}
-\MakeUppercase{Maidstone, R., Hocking, T., Rigaill, G., \MakeLowercase{et~al.}}
-\newblock \enquote{On optimal multiple changepoint algorithms for large data},
-  \emph{Statistics and Computing}, pp. 1--15, 2016.
-
-\bibitem[\MakeUppercase{Killick}\emph{ et~al.}(2012)Killick, Fearnhead, e
-  Eckley]{optimal_detection_of_changepoints_with_a_linear_computational_cost}
-\MakeUppercase{Killick, R., Fearnhead, P., Eckley, I.}
-\newblock \enquote{Optimal detection of changepoints with a linear
-  computational cost}, \emph{Journal of the American Statistical Association},
-  v.~107, n. 500, \penalty0 pp.~1590--1598, 2012.
-
-\bibitem[\MakeUppercase{Haynes}\emph{ et~al.}(0)Haynes, Eckley, e
-  Fearnhead]{computationally_efficient_changepoint_detection_for_a_range_of_penalties}
-\MakeUppercase{Haynes, K., Eckley, I.~A., Fearnhead, P.}
-\newblock \enquote{Computationally Efficient Changepoint Detection for a Range
-  of Penalties}, \emph{Journal of Computational and Graphical Statistics},
-  v.~0, n.~ja, \penalty0 pp.~1--28, 0.
-\newblock \doi{10.1080/10618600.2015.1116445}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dx.doi.org/10.1080/10618600.2015.1116445}\textgreater .
-
-\bibitem[\MakeUppercase{Kehagias}(2004)Kehagias]{a_hidden_markov_model_segmentation_procedure_for_hydrological_and_environmental_time_series}
-\MakeUppercase{Kehagias, A.}
-\newblock \enquote{A hidden Markov model segmentation procedure for
-  hydrological and environmental time series}, \emph{Stochastic Environmental
-  Research and Risk Assessment}, v.~18, n.~2, \penalty0 pp.~117--130, 2004.
-\newblock ISSN: 1436-3259.
-\newblock \doi{10.1007/s00477-003-0145-5}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dx.doi.org/10.1007/s00477-003-0145-5}\textgreater .
-
-\bibitem[\MakeUppercase{Luong}\emph{ et~al.}(2013)Luong, Rozenholc, e
-  Nuel]{fast_estimation_of_posterior_probabilities_in_change-point_analysis_through_a_constrained_hidden_markov_model}
-\MakeUppercase{Luong, T.~M., Rozenholc, Y., Nuel, G.}
-\newblock \enquote{Fast estimation of posterior probabilities in change-point
-  analysis through a constrained hidden Markov model}, \emph{Computational
-  Statistics and Data Analysis}, v.~68, \penalty0 pp.~129 -- 140, 2013.
-\newblock ISSN: 0167-9473.
-\newblock \doi{http://dx.doi.org/10.1016/j.csda.2013.06.020}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://www.sciencedirect.com/science/article/pii/S0167947313002326}\textgreater
-  .
-
-\bibitem[\MakeUppercase{Monta\~{n}ez}\emph{ et~al.}(2015)Monta\~{n}ez,
-  Amizadeh, e
-  Laptev]{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series}
-\MakeUppercase{Monta\~{n}ez, G.~D., Amizadeh, S., Laptev, N.}
-\newblock \enquote{Inertial Hidden Markov Models: Modeling Change in
-  Multivariate Time Series}. In: \emph{Proceedings of the Twenty-Ninth AAAI
-  Conference on Artificial Intelligence}, AAAI'15, pp. 1819--1825. AAAI Press,
-  2015.
-\newblock ISBN: 0-262-51129-0.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dl.acm.org/citation.cfm?id=2886521.2886573}\textgreater
-  .
-
-\bibitem[\MakeUppercase{Fearnhead}(2006)Fearnhead]{exact_and_efficient_bayesian_inference_for_multiple_changepoint_problems}
-\MakeUppercase{Fearnhead, P.}
-\newblock \enquote{Exact and efficient Bayesian inference for multiple
-  changepoint problems}, \emph{Statistics and Computing}, v.~16, n.~2,
-  \penalty0 pp.~203--213, 2006.
-\newblock \doi{10.1007/s11222-006-8450-8}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dx.doi.org/10.1007/s11222-006-8450-8}\textgreater .
-
-\bibitem[\MakeUppercase{Adams} e \MakeUppercase{MacKay}(2007)Adams e
-  MacKay]{bayesian_online_changepoint_detection}
-\MakeUppercase{Adams, R.~P., MacKay, D.~J.}
-\newblock \enquote{Bayesian online changepoint detection}, \emph{arXiv preprint
-  arXiv:0710.3742}, 2007.
 
 \bibitem[\MakeUppercase{Mendes}\emph{ et~al.}(2016)Mendes, Senges, Santos,
   Mendon\c{c}a, Le\~{a}o, e
@@ -110,47 +31,13 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://doi.acm.org/2940116.2940135}\textgreater .
 
-\bibitem[\MakeUppercase{Liu}\emph{ et~al.}(2013)Liu, Yamada, Collier, e
-  Sugiyama]{change_point_detection_in_time_series_data_by_relative_density_ratio_estimation}
-\MakeUppercase{Liu, S., Yamada, M., Collier, N., \MakeLowercase{et~al.}}
-\newblock \enquote{Change-point detection in time-series data by relative
-  density-ratio estimation}, \emph{Neural Networks}, v.~43, \penalty0 pp.~72 --
-  83, 2013.
-\newblock ISSN: 0893-6080.
-\newblock \doi{http://dx.doi.org/10.1016/j.neunet.2013.01.012}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://www.sciencedirect.com/science/article/pii/S0893608013000270}\textgreater
-  .
-
-\bibitem[\MakeUppercase{Hocking}\emph{ et~al.}(2013)Hocking, Rigaill, philippe
-  Vert, e
-  Bach]{learning_sparse_penalties_for_change_point_detection_using_max_margin_interval_regression}
-\MakeUppercase{Hocking, T., Rigaill, G., philippe Vert, J.,
-  \MakeLowercase{et~al.}}
-\newblock \enquote{Learning Sparse Penalties for Change-point Detection using
-  Max Margin Interval Regression}. In: Dasgupta, S., Mcallester, D. (Eds.),
-  \emph{Proceedings of the 30th International Conference on Machine Learning
-  (ICML-13)}, v.~28, pp. 172--180. JMLR Workshop and Conference Proceedings,
-  maio 2013.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://jmlr.org/proceedings/papers/v28/hocking13.pdf}\textgreater
-  .
-
-\bibitem[\MakeUppercase{James}\emph{ et~al.}(2014)James, Kejariwal, e
-  Matteson]{leveraging_cloud_data_to_mitigate_user_experience_from_breaking_bad}
-\MakeUppercase{James, N.~A., Kejariwal, A., Matteson, D.~S.}
-\newblock \enquote{Leveraging Cloud Data to Mitigate User Experience from"
-  Breaking Bad"}, \emph{arXiv preprint arXiv:1411.7955}, 2014.
-
-\bibitem[\MakeUppercase{Auger} e \MakeUppercase{Lawrence}(1989)Auger e
-  Lawrence]{algorithms_for_the_optimal_identification_of_segment_neighborhoods}
-\MakeUppercase{Auger, I.~E., Lawrence, C.~E.}
-\newblock \enquote{Algorithms for the optimal identification of segment
-  neighborhoods}, \emph{Bulletin of Mathematical Biology}, v.~51, n.~1,
-  \penalty0 pp.~39--54, 1989.
-\newblock ISSN: 1522-9602.
-\newblock \doi{10.1007/BF02458835}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dx.doi.org/10.1007/BF02458835}\textgreater .
+\bibitem[\MakeUppercase{Yan}\emph{ et~al.}(2012)Yan, Flavel, Ge, Gerber,
+  Massey, Papadopoulos, Shah, e
+  Yates]{argus_end_to_end_service_anomaly_detection_and_localization_from_an_isps_point_of_view}
+\MakeUppercase{Yan, H., Flavel, A., Ge, Z., \MakeLowercase{et~al.}}
+\newblock \enquote{Argus: End-to-end service anomaly detection and localization
+  from an ISP's point of view}. In: \emph{2012 Proceedings IEEE INFOCOM}, pp.
+  2756--2760, March 2012.
+\newblock \doi{10.1109/INFCOM.2012.6195694}.
 
 \end{thebibliography}

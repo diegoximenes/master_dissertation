@@ -1,46 +1,46 @@
-This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: thesis.aux
 The style file: coppe-unsrt.bst
 Database file #1: ./src/bibliography.bib
-You've used 15 entries,
+You've used 3 entries,
             2630 wiz_defined-function locations,
-            669 strings with 8610 characters,
-and the built_in function-call counts, 7194 in all, are:
-= -- 666
-> -- 263
-< -- 16
-+ -- 116
-- -- 86
-* -- 661
-:= -- 1058
-add.period$ -- 74
-call.type$ -- 15
-change.case$ -- 15
-chr.to.int$ -- 15
-cite$ -- 15
-duplicate$ -- 408
-empty$ -- 688
-format.name$ -- 105
-if$ -- 1570
+            576 strings with 5158 characters,
+and the built_in function-call counts, 1943 in all, are:
+= -- 180
+> -- 84
+< -- 3
++ -- 34
+- -- 28
+* -- 167
+:= -- 282
+add.period$ -- 17
+call.type$ -- 3
+change.case$ -- 3
+chr.to.int$ -- 3
+cite$ -- 3
+duplicate$ -- 108
+empty$ -- 170
+format.name$ -- 31
+if$ -- 436
 int.to.chr$ -- 1
-int.to.str$ -- 16
-missing$ -- 14
-newline$ -- 94
-num.names$ -- 47
-pop$ -- 112
+int.to.str$ -- 4
+missing$ -- 3
+newline$ -- 27
+num.names$ -- 9
+pop$ -- 27
 preamble$ -- 1
-purify$ -- 15
+purify$ -- 3
 quote$ -- 0
-skip$ -- 215
+skip$ -- 68
 stack$ -- 0
-substring$ -- 348
-swap$ -- 145
-text.length$ -- 11
+substring$ -- 101
+swap$ -- 48
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 105
+type$ -- 21
 warning$ -- 0
-while$ -- 56
+while$ -- 14
 width$ -- 0
-write$ -- 243
+write$ -- 61

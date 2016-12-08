@@ -3,19 +3,8 @@
 \BOOKMARK [0][-]{chapter.1}{Introduction}{}% 3
 \BOOKMARK [1][-]{section.1.1}{Contributions}{chapter.1}% 4
 \BOOKMARK [1][-]{section.1.2}{Dissertation Outline}{chapter.1}% 5
-\BOOKMARK [0][-]{chapter.2}{Change Point Detection}{}% 6
-\BOOKMARK [1][-]{section.2.1}{Problem Definition}{chapter.2}% 7
-\BOOKMARK [1][-]{section.2.2}{Notation}{chapter.2}% 8
-\BOOKMARK [1][-]{section.2.3}{Sliding Windows}{chapter.2}% 9
-\BOOKMARK [1][-]{section.2.4}{Optimization Model}{chapter.2}% 10
-\BOOKMARK [1][-]{section.2.5}{HMM \(Hidden Markov Model\)}{chapter.2}% 11
-\BOOKMARK [1][-]{section.2.6}{Bayesian Inference}{chapter.2}% 12
-\BOOKMARK [0][-]{chapter.3}{Dataset}{}% 13
-\BOOKMARK [1][-]{section.3.1}{End-to-End Packet Loss Fraction Time Series Dataset}{chapter.3}% 14
-\BOOKMARK [2][-]{subsection.3.1.1}{Methodology}{section.3.1}% 15
-\BOOKMARK [2][-]{subsection.3.1.2}{Descriptive Analysis}{section.3.1}% 16
-\BOOKMARK [1][-]{section.3.2}{Change Points Dataset}{chapter.3}% 17
-\BOOKMARK [2][-]{subsection.3.2.1}{Methodology}{section.3.2}% 18
-\BOOKMARK [2][-]{subsection.3.2.2}{Descriptive Analysis}{section.3.2}% 19
-\BOOKMARK [0][-]{chapter.4}{Conclusions}{}% 20
-\BOOKMARK [0][-]{chapter*.14}{Bibliography}{}% 21
+\BOOKMARK [0][-]{chapter.2}{Literature Review}{}% 6
+\BOOKMARK [0][-]{chapter.3}{Methodology}{}% 7
+\BOOKMARK [0][-]{chapter.4}{Results}{}% 8
+\BOOKMARK [0][-]{chapter.5}{Conclusions}{}% 9
+\BOOKMARK [0][-]{chapter*.4}{Bibliography}{}% 10
