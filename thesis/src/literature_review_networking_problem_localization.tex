@@ -1,190 +1,215 @@
-\chapter{Literature Review - Networking Problem Localization Using End-to-End
-Measurements}
+\chapter{Literature Review of Fault Localization in Computer Networks Using
+End-to-End Measurements}
 
-Argus:
-Detect and localize end-to-end service quality issues ISP's networks using
-traffic data passively monitored at the ISP side, the ISP network topology,
-routing tables, and geographic information. "Argus" has been successfully
-deployed in a tier-1 ISP to monitor millions of users of its CDN service and
-assist operators to detect and localize end-to-end service quality issues.
+This chapter briefly describes three projects (Argus, NetNorad and CEM)
+that deploy end-to-end measurements to localize faults in computer networks.
 
-Active probing: periodically probe the service from agents at different network
-locations to detect end-to-end performance issues.
+\section{Argus}
 
-Disadvantages of active probing:
-- without active probes from a vast number of network locations throughout the
-Internet, the monitoring coverage is limited and some end-to-end service
-quality issues may not be detected.
-- probe packets also place additional overhead on the network and may be
-treated differently than normal packets.
+In
+~\cite{argus_end_to_end_service_anomaly_detection_and_localization_from_an_isps_point_of_view}
+is presented Argus, a system to
+detect and localize QoS issues in ISP's networks. To achieve this goal, it uses
+end-to-end data and network global information, such as
+traffic passively monitored at end-users, the ISP network topology,
+routing tables, and geographic information. Argus's infrastructure is defined by
+the pipeline presented in figure ~/ref{fig:argus_pipeline}.
 
-Passive monitoring: each end-user detects the end-to-end service quality issues
-individually based on performance metrics extracted from passively monitored
-traffic and service quality issues detected by individual end-users are
-correlated spatially and temporally to determine the scope of the problem.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{./figures/literature_review/argus_pipeline.jpg}
+    \caption{Argus pipeline.}
+    \label{fig:argus_pipeline}
+\end{figure}%
 
-Disadvantages of passive monitoring:
-- effictiveness of these systems is limited by the sparcity of passive
-end-to-end performance measurements for individual end-users, which further
-depends how frequently they access the services. For example, if an end-user
-only accesses the service a few times in a day, systems based on passive
-monitoring at end-user side may not have sufficient samples to detect service
-events.
+The system operation starts with the spatial aggregation procedure, in which
+end-users are clustered into user-groups. This step avoids keeping
+track of the end-to-end performance metrics associated with millions of
+individual end-users, which improves the system's scalability.
+Each user-group is characterized by a set of end-users that share some common
+attributes, such as BGP prefix or AS. The used attributes imposes the possible
+fault locations to be infered.
+An example of an agreggation is presented in figure
+~/ref{fig:argus_spatial_aggregation}.
 
-Argus architecture:
-Spatial aggregation -> temporal aggregation -> event detection -> event
-localization -> event priorization
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{./figures/literature_review/argus_spatial_aggregation.jpg}
+    \caption{Argus spatial aggregation.}
+    \label{fig:argus_spatial_aggregation}
+\end{figure}%
 
-Spatial aggregation:
-- Spatially aggregates end-users into user-groups, in order to avoid keeping
-track of the end-to-end service quality associated with millions of individual
-end-users. Each user-group is a set of end-users that share some common
-attributes, such as BGP prefix or users in the same AS. These attributes can be
-collected from different data sources such as network topology and routing
-information. The type of spatial aggregation will influence the type of
-location that is expected to localize problems.
+The temporal aggregation phase determine how the performance metrics collected
+from different end-users in a end-group are aggregated. In this procedure
+details about individual end-users are lost, but the goal is to detect events
+that impact the user-groups. Instead of analysing the raw individual end-to-end
+metrics, Argus focus in summary statistics, such as, percentiles, min, max, of
+the distribution, and this can reduce the noisy from raw data, since a
+end-group have data from different end-users. For each user-group the
+measurements of all end-users are aggregated by time-bins, and for each
+time-bin a summary statistics is selected, forming then a summary time series.
+Different statistics provides different advantages to track cerain type of
+issues, for exaple the min statistics applied to RTT can capture the physical
+propagation delay while the average can capture network congestion. Argus uses
+median as the default summary statistics, since it was found that empirically,
+is effective in tracking service or network issues while being robust to
+variability to individual end-users due to their local architecture.
 
-Temporal aggregation:
-- How to detect service anomaly events for each user-group? end-to-end
-performace metrics from each user group can be quite noisy since they are
-collected from different end-users. The Argus solution focus on the summary
-statistics (e.g., 50th percentile, 95th percentile, min, max, etc) of the
-distribution instead of based on individual end-to-end performance
-measuremets. In this procedures some details about individual end-users are lost
-but the goal is to detect service events that impact the user-groups.
-For each user-group the measurements of all end-users of this group is
-aggregated in time-bins, and then, for each time-bin, a summary statistics is
-selected, forming then a summary time series. Different statistics may provide
-an advatage for tracking certain type of issues. For example, the min may
-capture the baseline RTT due to propagation delay while average can capture
-network congestion. Argus uses median since they find median effective in
-tracking service or network side issues while being robust to variablity in
-performance of individual end-users due to their local processing or local
-queuing delays.
+The event detection procedure applies algorithms to detect anomalies in the
+summary time series. Argus uses a Holt-Winters variation which is an online
+procedure with low runtime and memory complexities, which is essential to the
+scale of the system.
 
-Event detection:
-Apply time series analysis techinques to extract service anomaly detection
-algorithms. Due to scale of the system, it is desirable to have online
-anomaly detection with minimal runtime complexity and memory requirements.
-Argus applies additive Holt-Winters to do this detection. Argus also applies
-some other techniques to improve robustness, for example, when there is a level
-shift in the time series.
+Through spatial and anomaly event time correlations Argus is able to localize
+fault locations in the network in the event localization procedure, however the
+detailed procedure of how this
+process is defines was not published.
 
-Event localization:
-The localization algorithm is not presented in the paper.
+After the problem localizations the events are sorted according with their
+significance, which is defined by a metric obtained through the event detection
+algorithm, and considering the number of end-users affected by the event.
 
-Event prioritization:
-The event prioritization occurs based on the significance of the anomaly
-detected, measured through a score resulted from the holt winters, and also
-considers the number of end-users impacted by the anomaly.
-
-Results:
 Argus was applied to RTT measurements in a CDN hosted in a tier-1 ISP. During a
-one month period using time-bins of 1 hour. In this perior Argus detected 2909
+one month period using time-bins of 1 hour, Argus detected 2909
 anomaly events, and in general, lower level user-groups were more responsible
 for these anomalies than the higher level groups. For each type of user-group,
-only a small fraction are responsible for the anomaly events. Majority of the
-anomalies are very short in duration.
+only a small fraction of the end-users are responsible for the anomaly events
+and the majority of the
+anomalies are very short in duration, in which 90\% of the anomilies last for
+ar most 1 hour, which was the used time-bin granularity.
 
-NetNorad:
-Goal: detect network interruptions and automatically mitigate them within
-seconds. A human-driven investigation may take multiple minutes, if not hours.
-Some of these issues can be detected using traditional network monitoring,
-usually by querying the device counters via SNMP or retrieving information via
-device CLI. Often, this takes time on the order of minutes to produce a robust
-signal and inform the operator or trigger an automated remediation response. In
-their practice they often encounter cases known as gray failures, where either
-the problem is not detectable by traditional metrics, or the device cannot
-properly report its own malfunctioning.
+The following inferences are not presented in the paper. The fact that only a
+small number of end-users are responsible by the anomaly in the summary time
+series indicates that fault isolation could achieve higher precision using the
+spatial aggregation with finer granularity. It is not clear G-RCA accuracy,
+then I don't know if was made a Argus evaluation accuracy. Since the fault
+localization  procedure is not presented, it is not possible to check which
+topologies types can be used.
 
-Measuring loss ratio and latency: Facebook's servers ping each other, in which
-the pinger sends UDP packets to responders, and the latter receive, timestamp
+\section{NetNorad}
+
+NetNorad ~\cite{netnorad} consists of a Facebook's internal project to
+automate the detecion and mitigation of network faults in the Facebook's
+network. It is claimed that a human-driven investigation may take minutes or
+hours. Also more traditional used network monitoring techiques such as querying
+device information through SNMP or via command line interface can not encounter
+cases known as gray failures, in which the devices can not properly report its
+own malfunctioning. "Or the problem can be associated with the network
+structure"
+
+NetNorad is mainly based in end-to-end measurements.
+Facebook's servers ping each other, in which
+a pinger sends UDP packets to responders, and the latter receive, timestamp
 and send the packet back. The process happens in turns, in which each pinger
 sends packets to all of its targets, collects the responses, and then repeats
 the procedure.
 
-Deploying the system: Facebook's network is structured hierarchically. At the
-lowest level there are servers mounted in hacks, which are organized in
-clusters. A collection of clusters housed in the same building and serviced by
-a common network from a data center. The data centers in turn are aggregated
+Facebook's network is structured hierarchically. At the
+lowest level there are servers in hacks, which are organized in
+clusters. A collection of clusters in the same building and serviced by
+a common network form a data center. The data centers are aggregated
 via a network that interconnects them within the same region and attaches to th
 e Facebook global backbone network. This infrastructre spreads across multiple
-regions around the world.
-A small number of pingers is deployed in each cluster, but reponders are run on
-all machines. All pingers share a single global target list, which consits of
-at least two machines in every rack.
-The hierachical structure allows the simplification of data-aggregation
-techniques. When a pinger receives the responses in a given round, it
-aggregates results for machines that belong to the same cluster and tags them
-based on its proximity to the target cluster, for example, different tags if
-the target cluster is in the same data center of the pinger, or the outside the
-data center but within the same region, or if it is outside the pinger region.
+regions around the world. Figure ~/ref{} presents an example of this
+architecture.
 
 ADD IMAGE WITH THE TOPOLOGY
 
-Data processing: Each cluster will have three time series reflecting different
+A small number of pingers is deployed in each cluster, but reponders are placed
+on
+all machines. All pingers share a single global target list, which consists of
+at least two machines in every rack.
+As with Argus, the system applies aggregation techiques, however, the imposed
+hierarchical structure of Facebook can simplify the procedure
+. When a pinger receives the responses in a given round, it
+aggregates results for machines that belong to the same cluster and tags them
+based on their location. Tags are based in the following rules:
+"DC" if the target cluster is in the same data center of the pinger,
+"Region" if the target cluster is outside the
+data center but within the same region, "Global" if it is outside the pinger's
+region.
+
+Each cluster have three time series reflecting different
 viewpoints, one for the same data center, other for the same region, and other
-global. For each time series the system tracks percentiles over 10-minute
+for the global network. For each time series the system tracks percentiles
+over 10-minute
 intervals. Tracking multiple percentiles allows the identification of the
 nature of the events in the network. For example, a packet loss spike at the
-50th percentile means there is likely a falure affecting the majority of
-traffic into or out of a cluster, while a large packet loss valur at the 90th
+50th percentile means that there is likely a failure affecting the majority of
+traffic into or out of a cluster, while a peak at the 90th and not at 50th
 percentile would indicate that there is a high level of loss affecting a small
 number of targets. For each percentile and proximity tag is defined two
 thresholds, one for trigger an alarm and other for clear an alarm. This
-infrastructure allows alarms to be raised in 20-30 seconds far from the event.
+infrastructure allows alarms to be raised about 30 seconds far from the event.
 
-Fault Isolation: since metrics are collected from an end-to-end perspective, it
+Metrics are collected from an end-to-end perspective, therefore it
 is necessary to distinguish if the events are caused by an end-host failure or
-is really a genuine network issue. The pinger applies an outlier detection,
-discarding targets that reports too high packet loss relative to the general
-population. The same procedure is also applied to the pingers. The following
-correlation analysis is applied. If loss to cluster is reported at data center,
-region and global tags, then the fault is probably located at the data center.
+a network fault. The pinger applies an outlier detection,
+discarding targets that reports too high packet loss relative to their general
+population. Also the same logic is applied to discard reports from pingers that
+have anomalous pattern according to their population.
+
+To localize the fault the following
+correlation analysis is applied. If loss to a cluster is reported at data center,
+region and global tags, then the fault is probably located at the cluster data center.
 If all clusters within a data center report packet loss, then the issue is
 likely to be a layer above the clusters. These rules doens't determine the
-exact location.
-
-Fbtracert: similar to the UNIX traceroute tool, fbtracert explores multiple
-paths between two endpoints in the network in parallel. It also can analyse the
-packet loss at every hop and correlate the resulting path data to find the
+exact fault location, however a Facebook tool called fbtrcrt, similar to the
+UNIX traceroute tool, improves this analysis. fbtracert explores multiple
+paths between two endpoints, and can analyse the
+packet loss at every hop, correlating the resulting path data to find the
 common failure point. When fbtracrt is unable to find the failure, then there
 is a human involvemnt to find it.
 
-Crowdsourcing Service-Level Network Event Monitoring: Propose a framework an
-online detection (within seconds or minutes) of service-level events through
+The following inferences are not presented in the paper. The work doesn't
+presents an accuracy analysis.
+
+\section{CEM}
+
+In ~/cite{} is proposed a
+framework called Crowdsourcing Event Monitoring (CEM), which aims to realize
+online detection (within seconds or minutes), of service-level events through
 monitoring software that runs inside or alongside applications on the end
-systems where they are used. Each host uses its own passively gathered
-performance information to detect local problems as potential network events,
-and push these events to distributed storage,
-facilitating scalability. Since the time to detect a problem is dependent of th
-e sample frequency of performance information, the passive collection and local
-processing enables the event detection with fine granularity. To isolate the
+systems where they are used.
+
+In the framework, each end-host uses its own passively gathered
+performance information to detect local problems as potential network events
+. The framework doesn't care how these events are detected,
+as long they
+correspond to service-level problems. Concurrent events ocurring in multiple
+performance metrics of a service (e.g., download and upload rates), increases the
+confidence that the problem is independent of the service. After detecting the
+events a end-host pushes them to a distributed storage to further analysis. The
+fact that the events detection procedures are realized at the end-hosts
+increases the scability of the system.
+
+To isolate
 the scope of the network events, multiple locally detected events are
 correlated from the same network region. This correlation is made in a central
-fashion. The event detection is dependent to on the service being monitored,
-and the framework doesn't care how these events are detected, so long they
-correspond to service-level problems. Concurrent events ocurring in multiple
-signals for a service (e.g., download and upload rates), further increases the
-confidence that the event is independent of the service.
-Identify if concurrently events are likely to occur due to the network: there
-are a number of reasons why multiple hosts can detect events concurrently in
-the same network. For example, problems can be isolated to one or more related
-physical networks due to a router malfuncion or congestion. The problem can
-also be caused by the service driving network activity, e.g., performance from
-a web server or from a P2P swarm. Also, simultaneous events can occur simply by
- chance, e.g., multiple users experiencing interference on separate wireless
- routers. The framework provides a statistical model to determine if
- concurrently events are a coincidence or not. This model takes in
- consideration service-specifice dependencies and the rate of observed local
- events ocurring at the same the same time in a network. In this model, the
- confidence in a detected event being due to a network increases with the
- number of hosts detecting the event, and with the increase of independent
- performance metrics indicating the event. To isolate the problem the framework
- uses structure information about the network and their geographic locations.
- However, ther paper doesn't provides any details of how this correlation is
- done.
- The CEM was evaluated in a P2P system. The BitTorrent traces are collected
- from users of the Ono plugin for the Vuze BitTorrent client. The ground truth
- of network events were gathered from public available event reports of ISPs.
+fashion.
+The first problem to tacked is to reason if concurrent events are caused by a
+network fault. There are several reasons to different hosts experiences
+concurrent events. One is the target of the work, which is a network fault.
+Another one is that the service can experience a problem not caused by the
+network, for example, a high volume of requests in a web service. Also it is
+possible that concurrent events occur only by chance, for example, users
+experience interference on separate wireless routers. To solve this problem the
+framework provides a statistical model to determine if
+concurrently events are a coincidence or not. This model takes in
+consideration service-specific dependencies and the rate of observed local
+events ocurring at the same the same time in a network. In this model, the
+confidence in a detected event being due to a network increases with the
+number of hosts detecting the event, and with the increase of independent
+performance metrics indicating the event. To isolate the problem the framework
+uses structure information about the network and the hosts geographic
+locations, however, ther work doesn't provides any details of how this
+correlation is made.
 
+CEM was deployed and evaluated in a P2P system, using BitTorrent traces collected
+from users of the Ono plugin for the Vuze BitTorrent client. The detected
+events by the system was compared to aground truth
+of network events gathered from public available event reports of ISPs.
+
+The following inferences are not presented in the paper.
+CEM provides a high level framework structure, however lack for several details
+in the deployment procedure.
