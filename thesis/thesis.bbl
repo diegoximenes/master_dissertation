@@ -1,4 +1,4 @@
-\begin{thebibliography}{16}
+\begin{thebibliography}{19}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -118,6 +118,37 @@
   from an ISP's point of view}. In: \emph{2012 Proceedings IEEE INFOCOM}, pp.
   2756--2760, March 2012.
 \newblock \doi{10.1109/INFCOM.2012.6195694}.
+
+\bibitem[\MakeUppercase{Adams}\emph{ et~al.}(2016)Adams, Lapukhov, e
+  Zeng]{netnorad}
+\MakeUppercase{Adams, A., Lapukhov, P., Zeng, J.~H.}
+\newblock \enquote{{NetNORAD: Troubleshooting networks via end-to-end
+  probing}}. 2016.
+\newblock
+  \url{https://code.facebook.com/posts/1534350660228025/netnorad-troubleshooting-networks-via-end-to-end-probing/}.
+
+\bibitem[\MakeUppercase{Choffnes}\emph{ et~al.}(2010)Choffnes, Bustamante, e
+  Ge]{crowdsourcing_service_level_network_event_monitoring}
+\MakeUppercase{Choffnes, D.~R., Bustamante, F.~E., Ge, Z.}
+\newblock \enquote{Crowdsourcing Service-level Network Event Monitoring},
+  \emph{SIGCOMM Comput. Commun. Rev.}, v.~40, n.~4, \penalty0 pp.~387--398,
+  ago. 2010.
+\newblock ISSN: 0146-4833.
+\newblock \doi{10.1145/1851275.1851228}.
+\newblock Dispon{\' i}vel em:
+  \textless\url{http://doi.acm.org/10.1145/1851275.1851228}\textgreater .
+
+\bibitem[\MakeUppercase{Mahimkar}\emph{ et~al.}(2008)Mahimkar, Yates, Zhang,
+  Shaikh, Wang, Ge, e
+  Ee]{troubleshooting_chronic_conditions_in_large_ip_networks}
+\MakeUppercase{Mahimkar, A., Yates, J., Zhang, Y., \MakeLowercase{et~al.}}
+\newblock \enquote{Troubleshooting Chronic Conditions in Large IP Networks}.
+  In: \emph{Proceedings of the 2008 ACM CoNEXT Conference}, CoNEXT '08, pp.
+  2:1--2:12, New York, NY, USA, 2008. ACM.
+\newblock ISBN: 978-1-60558-210-8.
+\newblock \doi{10.1145/1544012.1544014}.
+\newblock Dispon{\' i}vel em:
+  \textless\url{http://doi.acm.org/10.1145/1544012.1544014}\textgreater .
 
 \bibitem[\MakeUppercase{Auger} e \MakeUppercase{Lawrence}(1989)Auger e
   Lawrence]{algorithms_for_the_optimal_identification_of_segment_neighborhoods}

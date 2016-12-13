@@ -86,4 +86,105 @@ for these anomalies than the higher level groups. For each type of user-group,
 only a small fraction are responsible for the anomaly events. Majority of the
 anomalies are very short in duration.
 
+NetNorad:
+Goal: detect network interruptions and automatically mitigate them within
+seconds. A human-driven investigation may take multiple minutes, if not hours.
+Some of these issues can be detected using traditional network monitoring,
+usually by querying the device counters via SNMP or retrieving information via
+device CLI. Often, this takes time on the order of minutes to produce a robust
+signal and inform the operator or trigger an automated remediation response. In
+their practice they often encounter cases known as gray failures, where either
+the problem is not detectable by traditional metrics, or the device cannot
+properly report its own malfunctioning.
+
+Measuring loss ratio and latency: Facebook's servers ping each other, in which
+the pinger sends UDP packets to responders, and the latter receive, timestamp
+and send the packet back. The process happens in turns, in which each pinger
+sends packets to all of its targets, collects the responses, and then repeats
+the procedure.
+
+Deploying the system: Facebook's network is structured hierarchically. At the
+lowest level there are servers mounted in hacks, which are organized in
+clusters. A collection of clusters housed in the same building and serviced by
+a common network from a data center. The data centers in turn are aggregated
+via a network that interconnects them within the same region and attaches to th
+e Facebook global backbone network. This infrastructre spreads across multiple
+regions around the world.
+A small number of pingers is deployed in each cluster, but reponders are run on
+all machines. All pingers share a single global target list, which consits of
+at least two machines in every rack.
+The hierachical structure allows the simplification of data-aggregation
+techniques. When a pinger receives the responses in a given round, it
+aggregates results for machines that belong to the same cluster and tags them
+based on its proximity to the target cluster, for example, different tags if
+the target cluster is in the same data center of the pinger, or the outside the
+data center but within the same region, or if it is outside the pinger region.
+
+ADD IMAGE WITH THE TOPOLOGY
+
+Data processing: Each cluster will have three time series reflecting different
+viewpoints, one for the same data center, other for the same region, and other
+global. For each time series the system tracks percentiles over 10-minute
+intervals. Tracking multiple percentiles allows the identification of the
+nature of the events in the network. For example, a packet loss spike at the
+50th percentile means there is likely a falure affecting the majority of
+traffic into or out of a cluster, while a large packet loss valur at the 90th
+percentile would indicate that there is a high level of loss affecting a small
+number of targets. For each percentile and proximity tag is defined two
+thresholds, one for trigger an alarm and other for clear an alarm. This
+infrastructure allows alarms to be raised in 20-30 seconds far from the event.
+
+Fault Isolation: since metrics are collected from an end-to-end perspective, it
+is necessary to distinguish if the events are caused by an end-host failure or
+is really a genuine network issue. The pinger applies an outlier detection,
+discarding targets that reports too high packet loss relative to the general
+population. The same procedure is also applied to the pingers. The following
+correlation analysis is applied. If loss to cluster is reported at data center,
+region and global tags, then the fault is probably located at the data center.
+If all clusters within a data center report packet loss, then the issue is
+likely to be a layer above the clusters. These rules doens't determine the
+exact location.
+
+Fbtracert: similar to the UNIX traceroute tool, fbtracert explores multiple
+paths between two endpoints in the network in parallel. It also can analyse the
+packet loss at every hop and correlate the resulting path data to find the
+common failure point. When fbtracrt is unable to find the failure, then there
+is a human involvemnt to find it.
+
+Crowdsourcing Service-Level Network Event Monitoring: Propose a framework an
+online detection (within seconds or minutes) of service-level events through
+monitoring software that runs inside or alongside applications on the end
+systems where they are used. Each host uses its own passively gathered
+performance information to detect local problems as potential network events,
+and push these events to distributed storage,
+facilitating scalability. Since the time to detect a problem is dependent of th
+e sample frequency of performance information, the passive collection and local
+processing enables the event detection with fine granularity. To isolate the
+the scope of the network events, multiple locally detected events are
+correlated from the same network region. This correlation is made in a central
+fashion. The event detection is dependent to on the service being monitored,
+and the framework doesn't care how these events are detected, so long they
+correspond to service-level problems. Concurrent events ocurring in multiple
+signals for a service (e.g., download and upload rates), further increases the
+confidence that the event is independent of the service.
+Identify if concurrently events are likely to occur due to the network: there
+are a number of reasons why multiple hosts can detect events concurrently in
+the same network. For example, problems can be isolated to one or more related
+physical networks due to a router malfuncion or congestion. The problem can
+also be caused by the service driving network activity, e.g., performance from
+a web server or from a P2P swarm. Also, simultaneous events can occur simply by
+ chance, e.g., multiple users experiencing interference on separate wireless
+ routers. The framework provides a statistical model to determine if
+ concurrently events are a coincidence or not. This model takes in
+ consideration service-specifice dependencies and the rate of observed local
+ events ocurring at the same the same time in a network. In this model, the
+ confidence in a detected event being due to a network increases with the
+ number of hosts detecting the event, and with the increase of independent
+ performance metrics indicating the event. To isolate the problem the framework
+ uses structure information about the network and their geographic locations.
+ However, ther paper doesn't provides any details of how this correlation is
+ done.
+ The CEM was evaluated in a P2P system. The BitTorrent traces are collected
+ from users of the Ono plugin for the Vuze BitTorrent client. The ground truth
+ of network events were gathered from public available event reports of ISPs.
 
