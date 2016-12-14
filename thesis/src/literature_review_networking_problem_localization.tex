@@ -24,12 +24,12 @@ the pipeline presented in figure ~\ref{fig:argus_pipeline}.
 
 The system operation starts with the spatial aggregation procedure, in which
 end-users are clustered into user-groups. This step avoids keeping
-track of the end-to-end performance metrics associated with millions of
+track of the end-to-end performance metrics associated with lots of
 individual end-users, which improves the system's scalability.
 Each user-group is characterized by a set of end-users that share some common
 attributes, such as BGP prefix or AS. The used attributes imposes the possible
 fault locations to be infered.
-An example of an agreggation is presented in figure
+An example of a spatial agreggation is presented in figure
 ~\ref{fig:argus_spatial_aggregation}.
 
 \begin{figure}[H]
@@ -39,105 +39,107 @@ An example of an agreggation is presented in figure
     \label{fig:argus_spatial_aggregation}
 \end{figure}%
 
-The temporal aggregation phase determine how the performance metrics collected
-from different end-users in a end-group are aggregated. In this procedure
-details about individual end-users are lost, but the goal is to detect events
-that impact the user-groups. Instead of analysing the raw individual end-to-end
-metrics, Argus focus in summary statistics, such as, percentiles, min, max, of
-the distribution, and this can reduce the noisy from raw data, since a
-end-group have data from different end-users. For each user-group the
-measurements of all end-users are aggregated by time-bins, and for each
-time-bin a summary statistics is selected, forming then a summary time series.
-Different statistics provides different advantages to track cerain type of
-issues, for exaple the min statistics applied to RTT can capture the physical
-propagation delay while the average can capture network congestion. Argus uses
-median as the default summary statistics, since it was found that empirically,
-is effective in tracking service or network issues while being robust to
-variability to individual end-users due to their local architecture.
+The temporal aggregation phase determines how the performance metrics
+from different end-users of an end-group are combined.
+For each user-group the
+measurements of all end-users are grouped by time-bins, and for each
+time-bin a summary statistic, such as median or mean, is selected.
+Each type of fault can be better tracked by a specific statistic.
+As an example, the
+minimum of the RTT's measurements can capture the physical propagation delay,
+while the average can be associated with network congestion. Argus uses median
+as the default transformation, since it was empirically identified as
+effective to track network problems, and also robust to individual
+end-users variability caused by their local infrastructure.
 
 The event detection procedure applies algorithms to detect anomalies in the
-summary time series. Argus uses a Holt-Winters variation which is an online
-procedure with low runtime and memory complexities, which is essential to the
-scale of the system.
+summary time series. Argus uses a Holt-Winters variation,  which consists of
+an online
+method with low runtime and memory complexities, essential qualities to a
+scalable system.
 
-Through spatial and anomaly event time correlations Argus is able to localize
-fault locations in the network in the event localization procedure, however the
-detailed procedure of how this
-process is defines was not published.
+The responsability of the event localization step is to infer fault locations
+using spatial and events times correlations.
+However, the detailed description of how this
+process is implemented was not published.
 
-After the problem localizations the events are sorted according with their
-significance, which is defined by a metric obtained through the event detection
-algorithm, and considering the number of end-users affected by the event.
+Finally, after the problem localization, the events are sorted according with
+their
+significance. During the ranking, the method considers metrics obtained
+through the event detection
+algorithm, and also the number of end-users affected by the events.
 
-Argus was applied to RTT measurements in a CDN hosted in a tier-1 ISP. During a
-one month period using time-bins of 1 hour, Argus detected 2909
-anomaly events, and in general, lower level user-groups were more responsible
-for these anomalies than the higher level groups. For each type of user-group,
-only a small fraction of the end-users are responsible for the anomaly events
-and the majority of the
-anomalies are very short in duration, in which 90\% of the anomilies last for
-ar most 1 hour, which was the used time-bin granularity.
+Argus was evaluated using RTT measurements of a CDN hosted in a tier-1 ISP.
+During an
+one month period with time-bins of 1 hour, Argus detected 2909
+anomaly events. In general, lower level user-groups were more responsible
+for those events than the higher level groups,
+and only a small fraction of the end-users affected the end-group anomaly.
+Also, 90\% of the events lasted for
+at most 1 hour, which was the used time-bin granularity.
 
-The following inferences are not presented in the paper. The fact that only a
-small number of end-users are responsible by the anomaly in the summary time
-series indicates that fault isolation could achieve higher precision using the
-spatial aggregation with finer granularity. It is not clear G-RCA accuracy,
-then I don't know if was made a Argus evaluation accuracy. Since the fault
-localization  procedure is not presented, it is not possible to check which
-topologies types can be used.
+Although not analysed through the Argus paper, the fact that only a small number
+of end-users are responsible for the end-groups events, is an indication that
+fault localization can achieve higher precision if spatial aggregation is
+applied with finer granularity.
+
+TALK ABOUT GRCA
 
 \section{NetNorad}
 
 NetNorad ~\cite{netnorad} consists of a Facebook's internal project to
-automate the detecion and mitigation of network faults in the Facebook's
-network. It is claimed that a human-driven investigation may take minutes or
-hours. Also more traditional used network monitoring techiques such as querying
-device information through SNMP or via command line interface can not encounter
-cases known as gray failures, in which the devices can not properly report its
-own malfunctioning. "Or the problem can be associated with the network
-structure"
+automate the analysis of faults in the Facebook's
+network. Previous techniques face several disadvantages, for instance,
+human-driven investigation may take hours. Also, cases known as gray failures
+cannot be detected only collecting devices information through SNMP or command
+line
+interface. For example, some devices cannot report it's own malfunctioning, or
+some issues can be related with the global network stucture.
 
-NetNorad is mainly based in end-to-end measurements.
+NetNorad is mainly based on end-to-end measurements.
 Facebook's servers ping each other, in which
-a pinger sends UDP packets to responders, and the latter receive, timestamp
-and send the packet back. The process happens in turns, in which each pinger
-sends packets to all of its targets, collects the responses, and then repeats
+a pinger sends UDP packets to responders, and the latter
+send the packets back. The process happens in turns, in which each pinger
+sends packets to all targets, collects the responses, and then repeats
 the procedure.
 
 Facebook's network is structured hierarchically. At the
 lowest level there are servers in hacks, which are organized in
-clusters. A collection of clusters in the same building and serviced by
-a common network form a data center. The data centers are aggregated
-via a network that interconnects them within the same region and attaches to th
-e Facebook global backbone network. This infrastructre spreads across multiple
-regions around the world. Figure ~/ref{} presents an example of this
+clusters. A set of clusters in the same building and attached to
+the same network characterize a data center. Data centers are grouped
+through a network that interconnects them within the same region, and appends
+to the Facebook global backbone. Figure
+~\ref{fig:netnorad_network_architecture} presents an example of this
 architecture.
 
-ADD IMAGE WITH THE TOPOLOGY
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{./figures/literature_review/netnorad_network_architecture.jpg}
+    \caption{Facebook's network architecture.}
+    \label{fig:netnorad_network_architecture.jpg}
+\end{figure}%
 
-A small number of pingers is deployed in each cluster, but reponders are placed
-on
-all machines. All pingers share a single global target list, which consists of
-at least two machines in every rack.
-As with Argus, the system applies aggregation techiques, however, the imposed
-hierarchical structure of Facebook can simplify the procedure
-. When a pinger receives the responses in a given round, it
-aggregates results for machines that belong to the same cluster and tags them
-based on their location. Tags are based in the following rules:
-"DC" if the target cluster is in the same data center of the pinger,
+A small number of pingers are placed in each cluster, and the responders are
+deployed on all machines. All pingers share a target list, which includes
+at least two machines of every rack.
+As with Argus, NetNorad applies spatial aggregation techniques.
+The pingers group the responses of machines that belong to the same cluster
+during a round, and tags them according with their location.
+Tags are defined by the following patterns:
+"DC" if the target cluster is in the same data center of the pinger;
 "Region" if the target cluster is outside the
-data center but within the same region, "Global" if it is outside the pinger's
+data center but within the same region;
+"Global" if the target cluster is outside the pinger's
 region.
 
-Each cluster have three time series reflecting different
-viewpoints, one for the same data center, other for the same region, and other
-for the global network. For each time series the system tracks percentiles
-over 10-minute
-intervals. Tracking multiple percentiles allows the identification of the
-nature of the events in the network. For example, a packet loss spike at the
-50th percentile means that there is likely a failure affecting the majority of
-traffic into or out of a cluster, while a peak at the 90th and not at 50th
-percentile would indicate that there is a high level of loss affecting a small
+With the tagging process, each cluster have three time series reflecting
+different spatial viewpoints. With these time series, the system tracks
+different percentiles over 10-minute
+intervals, which enables the isolation of the
+nature of the network events. For instance, a packet loss spike at the
+50th percentile means that probably there is a failure affecting the majority of
+machines, while a peak at the 90th and not at 50th
+percentile can indicate  affecting a small
 number of targets. For each percentile and proximity tag is defined two
 thresholds, one for trigger an alarm and other for clear an alarm. This
 infrastructure allows alarms to be raised about 30 seconds far from the event.
