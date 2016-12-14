@@ -1,5 +1,7 @@
 #ignore everything
 *
+/change_point/unsupervised/plots
+/change_point/unsupervised/prints
 
 #except these files
 !/thesis/**
