@@ -1,0 +1,23 @@
+\select@language {english}
+\select@language {english}
+\select@language {english}
+\contentsline {chapter}{List of Figures}{vii}{chapter*.2}
+\contentsline {chapter}{List of Tables}{viii}{chapter*.3}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Contributions}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}Dissertation Outline}{1}{section.1.2}
+\contentsline {chapter}{\numberline {2}Literature Review of Fault Localization in Computer Networks Using End-to-End Measurements}{2}{chapter.2}
+\contentsline {section}{\numberline {2.1}Argus}{2}{section.2.1}
+\contentsline {section}{\numberline {2.2}NetNorad}{4}{section.2.2}
+\contentsline {section}{\numberline {2.3}CEM}{6}{section.2.3}
+\contentsline {chapter}{\numberline {3}Change Point Detection}{8}{chapter.3}
+\contentsline {section}{\numberline {3.1}Problem Definition}{8}{section.3.1}
+\contentsline {section}{\numberline {3.2}Notation}{9}{section.3.2}
+\contentsline {section}{\numberline {3.3}Sliding Windows}{10}{section.3.3}
+\contentsline {section}{\numberline {3.4}Optimization Model}{11}{section.3.4}
+\contentsline {section}{\numberline {3.5}HMM (Hidden Markov Model)}{12}{section.3.5}
+\contentsline {section}{\numberline {3.6}Bayesian Inference}{13}{section.3.6}
+\contentsline {chapter}{\numberline {4}Methodology}{14}{chapter.4}
+\contentsline {chapter}{\numberline {5}Results}{15}{chapter.5}
+\contentsline {chapter}{\numberline {6}Conclusions}{16}{chapter.6}
+\contentsline {chapter}{Bibliography}{17}{chapter*.7}
