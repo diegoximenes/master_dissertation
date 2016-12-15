@@ -96,13 +96,6 @@ line
 interface. For example, some devices cannot report it's own malfunctioning, or
 some issues can be related with the global network stucture.
 
-NetNorad is mainly based on end-to-end measurements.
-Facebook's servers ping each other, in which
-a pinger sends UDP packets to responders, and the latter
-send the packets back. The process happens in turns, in which each pinger
-sends packets to all targets, collects the responses, and then repeats
-the procedure.
-
 Facebook's network is structured hierarchically. At the
 lowest level there are servers in hacks, which are organized in
 clusters. A set of clusters in the same building and attached to
@@ -116,8 +109,15 @@ architecture.
     \centering
     \includegraphics[width=1.0\textwidth]{./figures/literature_review/netnorad_network_architecture.jpg}
     \caption{Facebook's network architecture.}
-    \label{fig:netnorad_network_architecture.jpg}
+    \label{fig:netnorad_network_architecture}
 \end{figure}%
+
+NetNorad is mainly based on loss and RTT end-to-end measurements.
+Facebook's servers ping each other, in which
+a pinger sends UDP packets to responders, and the latter
+send the packets back. The process happens in turns, in which each pinger
+sends packets to all targets, collects the responses, and then repeats
+the procedure.
 
 A small number of pingers are placed in each cluster, and the responders are
 deployed on all machines. All pingers share a target list, which includes
@@ -133,63 +133,60 @@ data center but within the same region;
 region.
 
 With the tagging process, each cluster have three time series reflecting
-different spatial viewpoints. With these time series, the system tracks
-different percentiles over 10-minute
-intervals, which enables the isolation of the
-nature of the network events. For instance, a packet loss spike at the
+different spatial viewpoints. Then, the system tracks
+distinct percentiles over 10-minute
+intervals, which enables the isolation of
+network events. For instance, a packet loss spike at the
 50th percentile means that probably there is a failure affecting the majority of
 machines, while a peak at the 90th and not at 50th
-percentile can indicate  affecting a small
-number of targets. For each percentile and proximity tag is defined two
-thresholds, one for trigger an alarm and other for clear an alarm. This
-infrastructure allows alarms to be raised about 30 seconds far from the event.
+percentile can indicate a small fraction of anomalous servers.
+For each combination of proximity tag and percentile is defined two
+thresholds, one for trigger and another for clear an alarm.
 
-Metrics are collected from an end-to-end perspective, therefore it
-is necessary to distinguish if the events are caused by an end-host failure or
-a network fault. The pinger applies an outlier detection,
-discarding targets that reports too high packet loss relative to their general
-population. Also the same logic is applied to discard reports from pingers that
-have anomalous pattern according to their population.
+Considering the three tags, if a high loss is detected in a cluster,
+then the fault is probably located at the cluster's data center.
+Also, if all clusters in a data center identify a QoS degradation,
+then the fault is likely to be a layer above the clusters.
+Although these simple reasonings can reduce the set of possible fault locations,
+they are unable to exacly isolate them.
+However, a Facebook tool called fbtracert,
+can improve this analysis, exploring multiple
+paths between two endpoints, and checking the
+packet loss levels at every hop.
 
-To localize the fault the following
-correlation analysis is applied. If loss to a cluster is reported at data center,
-region and global tags, then the fault is probably located at the cluster data center.
-If all clusters within a data center report packet loss, then the issue is
-likely to be a layer above the clusters. These rules doens't determine the
-exact fault location, however a Facebook tool called fbtrcrt, similar to the
-UNIX traceroute tool, improves this analysis. fbtracert explores multiple
-paths between two endpoints, and can analyse the
-packet loss at every hop, correlating the resulting path data to find the
-common failure point. When fbtracrt is unable to find the failure, then there
-is a human involvemnt to find it.
-
-The following inferences are not presented in the paper. The work doesn't
-presents an accuracy analysis.
+When automatic investigation is unable to find the failure, then there
+is a human involvement to find it. A detailed accuracy analysis is not
+presented, however, the infrastrucure allows alarms to be raised about 30
+seconds far from the network events.
 
 \section{CEM}
 
-In ~/cite{} is proposed a
-framework called Crowdsourcing Event Monitoring (CEM), which aims to realize
-online detection (within seconds or minutes), of service-level events through
-monitoring software that runs inside or alongside applications on the end
-systems where they are used.
+In ~\cite{crowdsourcing_service_level_network_event_monitoring} is proposed a
+framework called Crowdsourcing Event Monitoring (CEM), in which a
+monitoring software that runs inside or alongside applications is placed at the
+end-hosts, enabling the detection of service-level events within seconds or
+minutes.
 
-In the framework, each end-host uses its own passively gathered
-performance information to detect local problems as potential network events
-. The framework doesn't care how these events are detected,
-as long they
-correspond to service-level problems. Concurrent events ocurring in multiple
+In CEM, each end-host passively collects performance metrics related with a
+specific service, such as a VOD application.
+Through these data the end-host identifies local issues as
+potential network events, and pushes them to a distributed storage to further
+analysis.
+The framework doesn't specifies how events should be detected,
+however, they need to be associated with service-level problems.
+
+Concurrent events ocurring in multiple
 performance metrics of a service (e.g., download and upload rates), increases the
-confidence that the problem is independent of the service. After detecting the
-events a end-host pushes them to a distributed storage to further analysis. The
+confidence that the problem is independent of the service.
+
+The
 fact that the events detection procedures are realized at the end-hosts
 increases the scability of the system.
 
-To isolate
-the scope of the network events, multiple locally detected events are
-correlated from the same network region. This correlation is made in a central
-fashion.
-The first problem to tacked is to reason if concurrent events are caused by a
+To spatially isolate network faults, multiple locally detected events are
+centrally correlated.
+The first considered subproblem in this step is to check if concurrent events
+are caused by a
 network fault. There are several reasons to different hosts experiences
 concurrent events. One is the target of the work, which is a network fault.
 Another one is that the service can experience a problem not caused by the
