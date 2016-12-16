@@ -66,11 +66,14 @@ class SlidingWindowsOffline(change_point_alg.ChangePointAlg):
         ts_dist = self.get_ts_dist(ts)
 
         plot_procedures.plot_ts_share_x(ts, ts_dist, out_path,
-                                        compress=True, title1="correct",
+                                        compress=True,
+                                        title1="median filtered",
+                                        title2="sliding windows distance",
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
-                                        title2="predicted. conf={}".
-                                        format(conf))
+                                        xlabel="$i$",
+                                        ylabel2="$D_{i}$ (ms)",
+                                        ylabel1="latency (ms)")
 
 
 def run(dataset, cmp_class_args, preprocess_args, param, metric):
@@ -109,19 +112,19 @@ def run_single(dt_start, dt_end, cmp_class_args, preprocess_args, param,
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
+    dt_start = datetime.datetime(2016, 7, 1)
+    dt_end = datetime.datetime(2016, 7, 11)
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "percentile_filter",
-                       "win_len": 21,
+                       "win_len": 13,
                        "p": 0.5}
-    param = {"win_len": 48,
-             "thresh": 3,
+    param = {"win_len": 20,
+             "thresh": 100,
              "min_peak_dist": 18,
              "f_dist": cmp_win.mean_dist,
-             "bin_size_f_dist": 0.05,
+             "bin_size_f_dist": 5,
              "min_bin_f_dist": 0.0,
-             "max_bin_f_dist": 1.0}
+             "max_bin_f_dist": 200}
     metric = "latency"
 
     parallel_args = {"cmp_class_args": cmp_class_args,

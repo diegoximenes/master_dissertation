@@ -6,6 +6,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
+def get_default_ylabel(ts):
+    if ts.metric == "loss":
+        return "loss fraction"
+    elif ts.metric == "latency":
+        return "latency (ms)"
+
+
 def update_title(title, ts):
     if ts.metric:
         title += " metric={}".format(ts.metric)
@@ -129,7 +136,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
                     title1="", dt_axvline1=[], plot_type1="scatter",
                     ylabel2="", ylim2=None, title2="", plot_type2="plot",
                     yticks2=None, ytick_labels2=None, dt_axvline2=[],
-                    xlabel=""):
+                    xlabel="", default_ylabel=False):
     """
     use ts1 as base ts (top plot). Only plot ts2[t] if t is present in ts1
     """
@@ -141,7 +148,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     if compress:
         x1, y1, x2, y2 = get_shared_compress(ts1.x, ts1.y, ts2.x, ts2.y)
 
-        xticks = range(0, len(x1), 100)
+        xticks = range(0, len(x1), 50)
         xticks_labels = copy.deepcopy(xticks)
     else:
         x1, y1 = ts1.x, ts1.y
@@ -152,8 +159,18 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     plot_axvline(ts1, dt_axvline1, compress, ax[0])
     plot_axvline(ts1, dt_axvline2, compress, ax[1])
 
-    title1 = update_title(title1, ts1)
-    title2 = update_title(title2, ts2)
+    if not title1:
+        title1 = update_title(title1, ts1)
+    if not title2:
+        title2 = update_title(title2, ts2)
+
+    if default_ylabel:
+        ylabel1 = get_default_ylabel(ts1)
+        ylabel2 = get_default_ylabel(ts2)
+        if ts1.metric == "loss":
+            ylabel1 = "loss fraction"
+        elif ts1.metric == "latency":
+            ylabel1 = "latency (ms)"
 
     ax[0].grid()
     ax[0].set_title(title1)
