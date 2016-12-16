@@ -7,8 +7,8 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
-\makelosymbols
-\makeloabbreviations
+\makelosymbols{}
+\makeloabbreviations{}
 
 \begin{document}
     \title{Fault Localization in Computer Networks Using End-to-End
@@ -26,10 +26,10 @@
     \department{PESC}
     \date{01}{2017}
 
-    \keyword{Change Point Detection}
-    \keyword{Time Series}
-    \keyword{Machine Learning}
     \keyword{Network Measurements}
+    \keyword{Time Series}
+    \keyword{Change Point Detection}
+    \keyword{Machine Learning}
 
     \maketitle
 
@@ -49,19 +49,19 @@
     \tableofcontents
     \listoffigures
     \listoftables
-    \printlosymbols
-    \printloabbreviations
+    \printlosymbols{}
+    \printloabbreviations{}
 
-    \mainmatter
+    \mainmatter{}
 
     \input{./src/introduction}
-    \input{./src/literature_review_networking_problem_localization}
+    \input{./src/literature_review}
     \input{./src/change_point_detection}
     \input{./src/methodology}
     \input{./src/results}
     \input{./src/conclusion}
 
-    \backmatter
+    \backmatter{}
     \nocite{*}
     \bibliographystyle{coppe-unsrt}
     \bibliography{./src/bibliography}

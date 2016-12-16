@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.8.30)  15 DEC 2016 00:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.8.30)  16 DEC 2016 01:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -565,12 +565,7 @@ Underfull \hbox (badness 3386) in paragraph at lines 36--36
 
 [2
 
-]
-Underfull \hbox (badness 3039) in paragraph at lines 36--36
-\OT1/cmr/m/n/12 Federal do Rio de Janeiro, COPPE, Programa de
- []
-
-[3
+] [3
 
 ] (./src/abstract.tex) [4
 
@@ -580,10 +575,10 @@ Underfull \hbox (badness 3039) in paragraph at lines 36--36
 \tf@toc=\write6
 \openout6 = `thesis.toc'.
 
- [6
 
-]
-(./thesis.lof)
+[6
+
+] (./thesis.lof)
 \tf@lof=\write7
 \openout7 = `thesis.lof'.
 
@@ -600,46 +595,46 @@ No file thesis.lab.
 
 ] (./src/introduction.tex
 Chapter 1.
-) (./src/literature_review_networking_problem_localization.tex [1
+) (./src/literature_review.tex [1
 
 
 ]
 Chapter 2.
 
-<./figures/literature_review/argus_pipeline.png, id=168, 850.67813pt x 393.7209
+<./figures/literature_review/argus_pipeline.png, id=176, 850.67813pt x 393.7209
 3pt>
 File: ./figures/literature_review/argus_pipeline.png Graphic file (type png)
  <use ./figures/literature_review/argus_pipeline.png>
 Package pdftex.def Info: ./figures/literature_review/argus_pipeline.png used on
- input line 20.
-(pdftex.def)             Requested size: 426.79135pt x 197.53284pt.
- [2
+ input line 25.
+(pdftex.def)             Requested size: 341.43437pt x 158.02628pt.
 
-]
-<./figures/literature_review/argus_spatial_aggregation.png, id=175, 749.80125pt
+<./figures/literature_review/argus_spatial_aggregation.png, id=180, 749.80125pt
  x 392.96812pt>
 File: ./figures/literature_review/argus_spatial_aggregation.png Graphic file (t
 ype png)
 
 <use ./figures/literature_review/argus_spatial_aggregation.png>
 Package pdftex.def Info: ./figures/literature_review/argus_spatial_aggregation.
-png used on input line 37.
-(pdftex.def)             Requested size: 426.79135pt x 223.68234pt.
- [3 <./figures/literature_review/argus_pipeline.png> <./figures/literature_revi
-ew/argus_spatial_aggregation.png>] [4]
-<./figures/literature_review/netnorad_network_architecture.jpg, id=187, 738.76p
-t x 643.40375pt>
+png used on input line 42.
+(pdftex.def)             Requested size: 341.43437pt x 178.94467pt.
+ [2
+
+ <./figures/literature_review/argus_pipeline.png>] [3 <./figures/literature_rev
+iew/argus_spatial_aggregation.png>]
+<./figures/literature_review/netnorad_network_architecture.jpg, id=195, 554.07p
+t x 430.60875pt>
 File: ./figures/literature_review/netnorad_network_architecture.jpg Graphic fil
 e (type jpg)
 
 <use ./figures/literature_review/netnorad_network_architecture.jpg>
 Package pdftex.def Info: ./figures/literature_review/netnorad_network_architect
-ure.jpg used on input line 110.
-(pdftex.def)             Requested size: 426.79135pt x 371.7018pt.
- [5 <./figures/literature_review/netnorad_network_architecture.jpg>] [6])
-(./src/change_point_detection.tex [7]
+ure.jpg used on input line 113.
+(pdftex.def)             Requested size: 298.75264pt x 232.18358pt.
+ [4 <./figures/literature_review/netnorad_network_architecture.jpg>] [5])
+(./src/change_point_detection.tex [6]
 Chapter 3.
-[8
+[7
 
 ]
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 15.
@@ -648,11 +643,11 @@ File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 15.
- [9]
+ [8]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 39.
 
-<./figures/change_point_detection/sliding_window_toy_example.png, id=222, 1156.
+<./figures/change_point_detection/sliding_window_toy_example.png, id=231, 1156.
 32pt x 867.24pt>
 File: ./figures/change_point_detection/sliding_window_toy_example.png Graphic f
 ile (type png)
@@ -661,19 +656,19 @@ ile (type png)
 Package pdftex.def Info: ./figures/change_point_detection/sliding_window_toy_ex
 ample.png used on input line 58.
 (pdftex.def)             Requested size: 426.79135pt x 320.09303pt.
- [10]
-[11 <./figures/change_point_detection/sliding_window_toy_example.png>] [12])
-(./src/methodology.tex [13]
+ [9]
+[10 <./figures/change_point_detection/sliding_window_toy_example.png>] [11])
+(./src/methodology.tex [12]
 Chapter 4.
-) (./src/results.tex [14
+) (./src/results.tex [13
 
 ]
 Chapter 5.
-) (./src/conclusion.tex [15
+) (./src/conclusion.tex [14
 
 ]
 Chapter 6.
-) [16
+) [15
 
 ] (./thesis.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 20--25
@@ -691,36 +686,36 @@ Underfull \hbox (badness 10000) in paragraph at lines 20--25
 5 /
  []
 
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 39.
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 35.
 (/usr/share/texlive/texmf-dist/tex/latex/base/omlcmr.fd
 File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 39.
- [17
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 35.
+ [16
 
 
-] [18])
+] [17])
 
 AED: lastpage setting LastPage
-[19]
+[18]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 69.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 69.
  (./thesis.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 69.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 69.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 8C8414B326D2B2DDE639E27F72CD9089;1182.
+(rerunfilecheck)             Checksum: 2A658B90BE1C9DE68C79E5A290ECF87A;1109.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 69.
  ) 
 Here is how much of TeX's memory you used:
- 9471 strings out of 494888
- 143979 string characters out of 6179127
- 247326 words of memory out of 5000000
- 12496 multiletter control sequences out of 15000+600000
+ 9474 strings out of 494888
+ 144289 string characters out of 6179127
+ 247596 words of memory out of 5000000
+ 12499 multiletter control sequences out of 15000+600000
  12782 words of font info for 47 fonts, out of 8000000 for 9000
  38 hyphenation exceptions out of 8191
- 36i,11n,39p,1025b,487s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,11n,43p,1025b,487s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texl
@@ -736,10 +731,10 @@ amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on thesis.pdf (27 pages, 683117 bytes).
+Output written on thesis.pdf (26 pages, 645784 bytes).
 PDF statistics:
- 397 PDF objects out of 1000 (max. 8388607)
- 342 compressed objects within 4 object streams
+ 407 PDF objects out of 1000 (max. 8388607)
+ 350 compressed objects within 4 object streams
  75 named destinations out of 1000 (max. 500000)
  186 words of extra memory for PDF output out of 10000 (max. 10000000)
 

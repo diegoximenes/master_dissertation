@@ -1,4 +1,4 @@
-\begin{thebibliography}{19}
+\begin{thebibliography}{20}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -22,6 +22,17 @@
   probing}}. 2016.
 \newblock
   \url{https://code.facebook.com/posts/1534350660228025/netnorad-troubleshooting-networks-via-end-to-end-probing/}.
+
+\bibitem[\MakeUppercase{Choffnes}\emph{ et~al.}(2010)Choffnes, Bustamante, e
+  Ge]{crowdsourcing_service_level_network_event_monitoring}
+\MakeUppercase{Choffnes, D.~R., Bustamante, F.~E., Ge, Z.}
+\newblock \enquote{Crowdsourcing Service-level Network Event Monitoring},
+  \emph{SIGCOMM Comput. Commun. Rev.}, v.~40, n.~4, \penalty0 pp.~387--398,
+  ago. 2010.
+\newblock ISSN: 0146-4833.
+\newblock \doi{10.1145/1851275.1851228}.
+\newblock Dispon{\' i}vel em:
+  \textless\url{http://doi.acm.org/10.1145/1851275.1851228}\textgreater .
 
 \bibitem[\MakeUppercase{Wikipedia}(2016)Wikipedia]{hellinger_distance}
 \MakeUppercase{Wikipedia}.
@@ -127,16 +138,17 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://doi.acm.org/2940116.2940135}\textgreater .
 
-\bibitem[\MakeUppercase{Choffnes}\emph{ et~al.}(2010)Choffnes, Bustamante, e
-  Ge]{crowdsourcing_service_level_network_event_monitoring}
-\MakeUppercase{Choffnes, D.~R., Bustamante, F.~E., Ge, Z.}
-\newblock \enquote{Crowdsourcing Service-level Network Event Monitoring},
-  \emph{SIGCOMM Comput. Commun. Rev.}, v.~40, n.~4, \penalty0 pp.~387--398,
-  ago. 2010.
-\newblock ISSN: 0146-4833.
-\newblock \doi{10.1145/1851275.1851228}.
+\bibitem[\MakeUppercase{Gerber}\emph{ et~al.}(2010)Gerber, Pang, Spatscheck, e
+  Venkataraman]{speed_testing_without_speed_tests_estimating_achievable_download_speed_from_passive_measurements}
+\MakeUppercase{Gerber, A., Pang, J., Spatscheck, O., \MakeLowercase{et~al.}}
+\newblock \enquote{Speed Testing Without Speed Tests: Estimating Achievable
+  Download Speed from Passive Measurements}. In: \emph{Proceedings of the 10th
+  ACM SIGCOMM Conference on Internet Measurement}, IMC '10, pp. 424--430, New
+  York, NY, USA, 2010. ACM.
+\newblock ISBN: 978-1-4503-0483-2.
+\newblock \doi{10.1145/1879141.1879196}.
 \newblock Dispon{\' i}vel em:
-  \textless\url{http://doi.acm.org/10.1145/1851275.1851228}\textgreater .
+  \textless\url{http://doi.acm.org/10.1145/1879141.1879196}\textgreater .
 
 \bibitem[\MakeUppercase{Mahimkar}\emph{ et~al.}(2008)Mahimkar, Yates, Zhang,
   Shaikh, Wang, Ge, e
