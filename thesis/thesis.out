@@ -10,11 +10,20 @@
 \BOOKMARK [0][-]{chapter.3}{Change Point Detection}{}% 10
 \BOOKMARK [1][-]{section.3.1}{Problem Definition}{chapter.3}% 11
 \BOOKMARK [1][-]{section.3.2}{Notation}{chapter.3}% 12
-\BOOKMARK [1][-]{section.3.3}{Sliding Windows}{chapter.3}% 13
-\BOOKMARK [1][-]{section.3.4}{Optimization Model}{chapter.3}% 14
-\BOOKMARK [1][-]{section.3.5}{HMM \(Hidden Markov Model\)}{chapter.3}% 15
-\BOOKMARK [1][-]{section.3.6}{Bayesian Inference}{chapter.3}% 16
-\BOOKMARK [0][-]{chapter.4}{Methodology}{}% 17
-\BOOKMARK [0][-]{chapter.5}{Results}{}% 18
-\BOOKMARK [0][-]{chapter.6}{Conclusions}{}% 19
-\BOOKMARK [0][-]{chapter*.8}{Bibliography}{}% 20
+\BOOKMARK [1][-]{section.3.3}{Preprocessing}{chapter.3}% 13
+\BOOKMARK [1][-]{section.3.4}{Sliding Windows}{chapter.3}% 14
+\BOOKMARK [1][-]{section.3.5}{Optimization Model}{chapter.3}% 15
+\BOOKMARK [1][-]{section.3.6}{HMM \(Hidden Markov Model\)}{chapter.3}% 16
+\BOOKMARK [1][-]{section.3.7}{Bayesian Inference}{chapter.3}% 17
+\BOOKMARK [0][-]{chapter.4}{Methodology}{}% 18
+\BOOKMARK [1][-]{section.4.1}{Measurement Process}{chapter.4}% 19
+\BOOKMARK [1][-]{section.4.2}{Supervised Learning Failure}{chapter.4}% 20
+\BOOKMARK [1][-]{section.4.3}{Proposed Pipeline}{chapter.4}% 21
+\BOOKMARK [1][-]{section.4.4}{Spatial Aggregation}{chapter.4}% 22
+\BOOKMARK [1][-]{section.4.5}{Change Point Detection - Parameters Tuning}{chapter.4}% 23
+\BOOKMARK [1][-]{section.4.6}{Time Aggregation}{chapter.4}% 24
+\BOOKMARK [1][-]{section.4.7}{Spatial/Time Correlation}{chapter.4}% 25
+\BOOKMARK [1][-]{section.4.8}{Differences to Previous Systems}{chapter.4}% 26
+\BOOKMARK [0][-]{chapter.5}{Results}{}% 27
+\BOOKMARK [0][-]{chapter.6}{Conclusions}{}% 28
+\BOOKMARK [0][-]{chapter*.9}{Bibliography}{}% 29

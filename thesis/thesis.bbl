@@ -1,4 +1,4 @@
-\begin{thebibliography}{20}
+\begin{thebibliography}{24}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -34,10 +34,34 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://doi.acm.org/10.1145/1851275.1851228}\textgreater .
 
-\bibitem[\MakeUppercase{Wikipedia}(2016)Wikipedia]{hellinger_distance}
+\bibitem[\MakeUppercase{Gerber}\emph{ et~al.}(2010)Gerber, Pang, Spatscheck, e
+  Venkataraman]{speed_testing_without_speed_tests_estimating_achievable_download_speed_from_passive_measurements}
+\MakeUppercase{Gerber, A., Pang, J., Spatscheck, O., \MakeLowercase{et~al.}}
+\newblock \enquote{Speed Testing Without Speed Tests: Estimating Achievable
+  Download Speed from Passive Measurements}. In: \emph{Proceedings of the 10th
+  ACM SIGCOMM Conference on Internet Measurement}, IMC '10, pp. 424--430, New
+  York, NY, USA, 2010. ACM.
+\newblock ISBN: 978-1-4503-0483-2.
+\newblock \doi{10.1145/1879141.1879196}.
+\newblock Dispon{\' i}vel em:
+  \textless\url{http://doi.acm.org/10.1145/1879141.1879196}\textgreater .
+
+\bibitem[\MakeUppercase{Graps}(1995)Graps]{an_introduction_to_wavelets}
+\MakeUppercase{Graps, A.}
+\newblock \enquote{An introduction to wavelets}, \emph{IEEE computational
+  science and engineering}, v.~2, n.~2, \penalty0 pp.~50--61, 1995.
+
+\bibitem[\MakeUppercase{Wang} e \MakeUppercase{Song}(2011)Wang e
+  Song]{ckmeans_1d_dp_optimal_k_means_clustering_in_one_dimension_by_dynamic_programming}
+\MakeUppercase{Wang, H., Song, M.}
+\newblock \enquote{Ckmeans. 1d. dp: optimal k-means clustering in one dimension
+  by dynamic programming}, \emph{The R Journal}, v.~3, n.~2, \penalty0
+  pp.~29--33, 2011.
+
+\bibitem[\MakeUppercase{Wikipedia}(2016{\natexlab{a}})Wikipedia]{savgol}
 \MakeUppercase{Wikipedia}.
-\newblock \enquote{{Hellinger distance}}. 2016.
-\newblock \url{https://en.wikipedia.org/wiki/Hellinger_distance/}.
+\newblock \enquote{{Savitzky–Golay filter}}. 2016{\natexlab{a}}.
+\newblock \url{https://en.wikipedia.org/wiki/Savitzky-Golay_filter}.
 
 \bibitem[\MakeUppercase{Kifer}\emph{ et~al.}(2004)Kifer, Ben-David, e
   Gehrke]{detecting_change_in_data_streams}
@@ -138,18 +162,6 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://doi.acm.org/2940116.2940135}\textgreater .
 
-\bibitem[\MakeUppercase{Gerber}\emph{ et~al.}(2010)Gerber, Pang, Spatscheck, e
-  Venkataraman]{speed_testing_without_speed_tests_estimating_achievable_download_speed_from_passive_measurements}
-\MakeUppercase{Gerber, A., Pang, J., Spatscheck, O., \MakeLowercase{et~al.}}
-\newblock \enquote{Speed Testing Without Speed Tests: Estimating Achievable
-  Download Speed from Passive Measurements}. In: \emph{Proceedings of the 10th
-  ACM SIGCOMM Conference on Internet Measurement}, IMC '10, pp. 424--430, New
-  York, NY, USA, 2010. ACM.
-\newblock ISBN: 978-1-4503-0483-2.
-\newblock \doi{10.1145/1879141.1879196}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://doi.acm.org/10.1145/1879141.1879196}\textgreater .
-
 \bibitem[\MakeUppercase{Mahimkar}\emph{ et~al.}(2008)Mahimkar, Yates, Zhang,
   Shaikh, Wang, Ge, e
   Ee]{troubleshooting_chronic_conditions_in_large_ip_networks}
@@ -172,6 +184,18 @@
 \newblock \doi{10.1007/BF02458835}.
 \newblock Dispon{\' i}vel em:
   \textless\url{http://dx.doi.org/10.1007/BF02458835}\textgreater .
+
+\bibitem[\MakeUppercase{Wikipedia}(2016{\natexlab{b}})Wikipedia]{hellinger_distance}
+\MakeUppercase{Wikipedia}.
+\newblock \enquote{{Hellinger distance}}. 2016{\natexlab{b}}.
+\newblock \url{https://en.wikipedia.org/wiki/Hellinger_distance/}.
+
+\bibitem[\MakeUppercase{Rubner}\emph{ et~al.}(2000)Rubner, Tomasi, e
+  Guibas]{the_earth_movers_distance_as_a_metric_for_image_retrieval}
+\MakeUppercase{Rubner, Y., Tomasi, C., Guibas, L.~J.}
+\newblock \enquote{The earth mover's distance as a metric for image retrieval},
+  \emph{International journal of computer vision}, v.~40, n.~2, \penalty0
+  pp.~99--121, 2000.
 
 \bibitem[\MakeUppercase{James}\emph{ et~al.}(2014)James, Kejariwal, e
   Matteson]{leveraging_cloud_data_to_mitigate_user_experience_from_breaking_bad}
