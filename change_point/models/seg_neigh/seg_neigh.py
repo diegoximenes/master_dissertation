@@ -1,5 +1,6 @@
 import os
 import sys
+import datetime
 import subprocess
 import numpy as np
 
@@ -81,7 +82,29 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
     model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
+def run_parallel(cmp_class_args, preprocess_args, param, metric):
+    datasets = list(cp_utils.iter_unsupervised_datasets())
+    cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
+                          param, metric)
+
+
+def run_sequential(cmp_class_args, preprocess_args, param, metric):
+    datasets = list(cp_utils.iter_unsupervised_datasets())
+    cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
+                            param, metric)
+
+
+def run_single(dt_start, dt_end, cmp_class_args, preprocess_args, param,
+               metric):
+    str_dt = utils.get_str_dt(dt_start, dt_end)
+    datasets = ["unsupervised/{}".format(str_dt)]
+    cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
+                            param, metric)
+
+
 if __name__ == "__main__":
+    dt_start = datetime.datetime(2016, 7, 1)
+    dt_end = datetime.datetime(2016, 7, 11)
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "percentile_filter",
                        "win_len": 13,
@@ -93,10 +116,12 @@ if __name__ == "__main__":
              "max_cps": 4}
     metric = "latency"
 
-    datasets = ["/unsupervised/dtstart2016-06-21_dtend2016-07-01"]
-    # datasets = list(cp_utils.iter_unsupervised_datasets())
-
-    cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
-                            param, metric)
-    # cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
-    #                       param, metric)
+    parallel_args = {"cmp_class_args": cmp_class_args,
+                     "preprocess_args": preprocess_args, "param": param,
+                     "metric": metric}
+    sequential_args = parallel_args
+    single_args = {"dt_start": dt_start, "dt_end": dt_end}
+    single_args.update(parallel_args)
+    cp_utils.parse_args(run_single, single_args,
+                        run_parallel, parallel_args,
+                        run_sequential, sequential_args)

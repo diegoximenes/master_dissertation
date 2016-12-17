@@ -92,7 +92,6 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
 
 def run_parallel(cmp_class_args, preprocess_args, param, metric):
     datasets = list(cp_utils.iter_unsupervised_datasets())
-    print datasets
     cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
                           param, metric)
 

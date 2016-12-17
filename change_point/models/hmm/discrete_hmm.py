@@ -1,5 +1,6 @@
 import os
 import sys
+import datetime
 import ghmm
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
@@ -100,6 +101,26 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
     model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
+def run_parallel(cmp_class_args, preprocess_args, param, metric):
+    datasets = list(cp_utils.iter_unsupervised_datasets())
+    cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
+                          param, metric)
+
+
+def run_sequential(cmp_class_args, preprocess_args, param, metric):
+    datasets = list(cp_utils.iter_unsupervised_datasets())
+    cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
+                            param, metric)
+
+
+def run_single(dt_start, dt_end, cmp_class_args, preprocess_args, param,
+               metric):
+    str_dt = utils.get_str_dt(dt_start, dt_end)
+    datasets = ["unsupervised/{}".format(str_dt)]
+    cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
+                            param, metric)
+
+
 if __name__ == "__main__":
     n = 4
     A = []
@@ -112,6 +133,8 @@ if __name__ == "__main__":
     pi = [1.0 / n] * n
     obs_bins = [0.01, 0.05, 0.1, 0.3, 1.0]
 
+    dt_start = datetime.datetime(2016, 7, 1)
+    dt_end = datetime.datetime(2016, 7, 11)
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "none"}
     param = {"graph_structure_type": "predefined",
@@ -124,10 +147,12 @@ if __name__ == "__main__":
              "min_peak_dist": 7}
     metric = "loss"
 
-    # datasets = ["rosam@land.ufrj.br"]
-    datasets = list(cp_utils.iter_unsupervised_datasets())
-
-    # cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
-    #                         param, metric)
-    cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
-                          param, metric)
+    parallel_args = {"cmp_class_args": cmp_class_args,
+                     "preprocess_args": preprocess_args, "param": param,
+                     "metric": metric}
+    sequential_args = parallel_args
+    single_args = {"dt_start": dt_start, "dt_end": dt_end}
+    single_args.update(parallel_args)
+    cp_utils.parse_args(run_single, single_args,
+                        run_parallel, parallel_args,
+                        run_sequential, sequential_args)
