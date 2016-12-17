@@ -3,6 +3,7 @@ import sys
 import ghmm
 import datetime
 import numpy as np
+from functools import partial
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../../..")
@@ -10,6 +11,7 @@ sys.path.append(base_dir)
 import utils.utils as utils
 import change_point.cp_utils.cp_utils as cp_utils
 import change_point.models.hmm.hmm as hmm
+import change_point.models.change_point_alg as change_point_alg
 
 
 class GaussianHMM(hmm.HMM):
@@ -91,26 +93,6 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
     model.plot_all(dataset, out_dir_path, cmp_class_args)
 
 
-def run_parallel(cmp_class_args, preprocess_args, param, metric):
-    datasets = list(cp_utils.iter_unsupervised_datasets())
-    cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
-                          param, metric)
-
-
-def run_sequential(cmp_class_args, preprocess_args, param, metric):
-    datasets = list(cp_utils.iter_unsupervised_datasets())
-    cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
-                            param, metric)
-
-
-def run_single(dt_start, dt_end, cmp_class_args, preprocess_args, param,
-               metric):
-    str_dt = utils.get_str_dt(dt_start, dt_end)
-    datasets = ["unsupervised/{}".format(str_dt)]
-    cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
-                            param, metric)
-
-
 if __name__ == "__main__":
     n = 4
     A = []
@@ -140,6 +122,9 @@ if __name__ == "__main__":
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
     single_args.update(parallel_args)
-    cp_utils.parse_args(run_single, single_args,
-                        run_parallel, parallel_args,
-                        run_sequential, sequential_args)
+    cp_utils.parse_args(partial(change_point_alg.run_single, run=run),
+                        single_args,
+                        partial(change_point_alg.run_parallel, run=run),
+                        parallel_args,
+                        partial(change_point_alg.run_sequential, run=run),
+                        sequential_args)

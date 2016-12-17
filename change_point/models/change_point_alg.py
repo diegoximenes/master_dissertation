@@ -93,3 +93,23 @@ class ChangePointAlg:
             f.write("dt_id,dt\n")
             for dt_id, dt in zip(pred, np.asarray(ts_raw.x)[pred]):
                 f.write("{},{}\n".format(dt_id, dt))
+
+
+def run_parallel(cmp_class_args, preprocess_args, param, metric, run):
+    datasets = list(cp_utils.iter_unsupervised_datasets())
+    cp_utils.run_parallel(datasets, run, cmp_class_args, preprocess_args,
+                          param, metric)
+
+
+def run_sequential(cmp_class_args, preprocess_args, param, metric, run):
+    datasets = list(cp_utils.iter_unsupervised_datasets())
+    cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
+                            param, metric)
+
+
+def run_single(dt_start, dt_end, cmp_class_args, preprocess_args, param,
+               metric, run):
+    str_dt = utils.get_str_dt(dt_start, dt_end)
+    datasets = ["unsupervised/{}".format(str_dt)]
+    cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
+                            param, metric)
