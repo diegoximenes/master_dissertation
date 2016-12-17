@@ -222,8 +222,10 @@ computation~\cite{optimal_detection_of_changepoints_with_a_linear_computational_
 in general trying to reduce the $\boldsymbol \tau$ search space but maintaining
 optimality.
 
-It was empirically verified that, in general, the choice of log likelihoods
-as the cost function can turn the method very sensible to outliers.
+When a negative maximum log-likelihood is
+used, the cost of a segment with an outlier can be orders of magnitude greater
+than the cost of a window without anomalies. Therefore,
+in this case, the method is sensible to outliers.
 
 \section{HMM (Hidden Markov Model)}
 
