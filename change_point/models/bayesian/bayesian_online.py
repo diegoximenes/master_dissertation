@@ -48,7 +48,11 @@ class BayesianOnline(change_point_alg.ChangePointAlg):
         prob_length, map_estimates = oncd.online_changepoint_detection(
             np.asarray(ts.y), f_hazard, oncd.StudentT(0.1, .01, 1, 0))
 
-        cp_prob = prob_length[self.future_win_len, self.future_win_len:-1]
+        if ((prob_length.shape[0] >= self.future_win_len) and
+                (prob_length.shape[1] >= self.future_win_len)):
+            cp_prob = prob_length[self.future_win_len, self.future_win_len:-1]
+        else:
+            cp_prob = []
 
         # fig, ax = plt.subplots(figsize=[18, 16])
         # ax = fig.add_subplot(3, 1, 1)
@@ -64,6 +68,8 @@ class BayesianOnline(change_point_alg.ChangePointAlg):
         #                     self.future_win_len:-1])
         # plt.show()
 
+        if len(cp_prob):
+            cp_prob[0] = 0.0
         ts_cp_prob = time_series.dist_ts(ts)
         for i in xrange(len(cp_prob) - 1):
             ts_cp_prob.x.append(ts.x[i])
@@ -82,12 +88,17 @@ class BayesianOnline(change_point_alg.ChangePointAlg):
     def plot(self, ts, ts_raw, correct, pred, conf, out_path):
         ts_cp_prob = self.get_cp_prob(ts)
 
-        plot_procedures.plot_ts_share_x(ts_raw, ts_cp_prob, out_path,
-                                        compress=True, title1="correct",
+        ylabel1 = plot_procedures.get_default_ylabel(ts)
+        plot_procedures.plot_ts_share_x(ts, ts_cp_prob, out_path,
+                                        compress=True,
+                                        title1="median filtered",
+                                        ylim2=[-0.02, 1.02],
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
-                                        title2="predicted. conf={}".
-                                        format(conf))
+                                        title2="probabilities",
+                                        ylabel1=ylabel1,
+                                        ylabel2="p($i$ is change point)",
+                                        xlabel="$i$")
 
 
 def run(dataset, cmp_class_args, preprocess_args, param, metric):
@@ -105,13 +116,20 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
 
 
 if __name__ == "__main__":
+    # only used if RUN_MODE == specific_client
+    server = "POADTCSRV04"
+    mac = "64:66:B3:A6:BB:3A"
+    # only used if RUN_MODE == specific_client or RUN_MODE == single
     dt_start = datetime.datetime(2016, 7, 1)
     dt_end = datetime.datetime(2016, 7, 11)
+    # used in all RUN_MODE
     cmp_class_args = {"win_len": 15}
-    preprocess_args = {"win_len": 3, "filter_type": "ma_smoothing"}
+    preprocess_args = {"win_len": 5,
+                       "filter_type": "percentile_filter",
+                       "p": 0.5}
     param = {"hazard_lambda": 24.60864360138786,
              "future_win_len": 10,
-             "thresh": 0.2372000234333883,
+             "thresh": 0.6,
              "min_peak_dist": 11}
     metric = "loss"
 
@@ -121,9 +139,16 @@ if __name__ == "__main__":
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
     single_args.update(parallel_args)
+    specific_client_args = single_args
+    fp_specific_client = partial(change_point_alg.run_specific_client,
+                                 mac=mac, server=server,
+                                 model_class=BayesianOnline,
+                                 out_path=script_dir)
     cp_utils.parse_args(partial(change_point_alg.run_single, run=run),
                         single_args,
                         partial(change_point_alg.run_parallel, run=run),
                         parallel_args,
                         partial(change_point_alg.run_sequential, run=run),
-                        sequential_args)
+                        sequential_args,
+                        fp_specific_client,
+                        specific_client_args)

@@ -94,27 +94,32 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
 
 
 if __name__ == "__main__":
-    n = 4
+    n = 3
     A = []
     for _ in xrange(n):
         A.append([1.0 / n] * n)
-    B = [[0.0, 0.05], [0.05, 0.02], [0.15, 0.05], [0.5, 0.1]]
+    B = [[0.0, 0.05], [0.05, 0.02], [0.2, 0.05]]
     pi = [1.0 / n] * n
 
+    # only used if RUN_MODE == specific_client
+    server = "POADTCSRV04"
+    mac = "64:66:B3:A6:BB:3A"
+    # only used if RUN_MODE == specific_client or RUN_MODE == single
     dt_start = datetime.datetime(2016, 7, 1)
     dt_end = datetime.datetime(2016, 7, 11)
+    # used in all RUN_MODE
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "percentile_filter",
-                       "win_len": 13,
+                       "win_len": 5,
                        "p": 0.5}
     param = {"graph_structure_type": "predefined",
              "A": A,
              "B": B,
              "pi": pi,
-             "win_len": 20,
-             "thresh": 200,
-             "min_peak_dist": 17}
-    metric = "latency"
+             "win_len": 15,
+             "thresh": 0.6,
+             "min_peak_dist": 10}
+    metric = "loss"
 
     parallel_args = {"cmp_class_args": cmp_class_args,
                      "preprocess_args": preprocess_args, "param": param,
@@ -122,9 +127,16 @@ if __name__ == "__main__":
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
     single_args.update(parallel_args)
+    specific_client_args = single_args
+    fp_specific_client = partial(change_point_alg.run_specific_client,
+                                 mac=mac, server=server,
+                                 model_class=GaussianHMM,
+                                 out_path=script_dir)
     cp_utils.parse_args(partial(change_point_alg.run_single, run=run),
                         single_args,
                         partial(change_point_alg.run_parallel, run=run),
                         parallel_args,
                         partial(change_point_alg.run_sequential, run=run),
-                        sequential_args)
+                        sequential_args,
+                        fp_specific_client,
+                        specific_client_args)

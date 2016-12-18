@@ -41,8 +41,9 @@ class BayesianOffline(change_point_alg.ChangePointAlg):
         l = np.asarray(ts.y)
         prior = self.get_prior(self.prior, self.p, self.k, len(l) + 1)
 
+        # ALERT: the truncate parameter can affect the performance
         q, p, pcp = offcd.offline_changepoint_detection(
-            l, prior, offcd.gaussian_obs_log_likelihood, truncate=-40)
+            l, prior, offcd.gaussian_obs_log_likelihood, truncate=-90)
         cp_prob = np.exp(pcp).sum(0)
 
         ts_cp_prob = time_series.dist_ts(ts)
@@ -63,12 +64,17 @@ class BayesianOffline(change_point_alg.ChangePointAlg):
     def plot(self, ts, ts_raw, correct, pred, conf, out_path):
         ts_cp_prob = self.get_cp_prob(ts)
 
-        plot_procedures.plot_ts_share_x(ts_raw, ts_cp_prob, out_path,
-                                        compress=True, title1="correct",
+        ylabel1 = plot_procedures.get_default_ylabel(ts)
+        plot_procedures.plot_ts_share_x(ts, ts_cp_prob, out_path,
+                                        compress=True,
+                                        title1="median filtered",
+                                        ylim2=[-0.02, 1.02],
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
-                                        title2="predicted. conf={}".
-                                        format(conf))
+                                        title2="probabilities",
+                                        ylabel1=ylabel1,
+                                        ylabel2="p($i$ is change point)",
+                                        xlabel="$i$")
 
 
 def run(dataset, cmp_class_args, preprocess_args, param, metric):
@@ -86,14 +92,22 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
 
 
 if __name__ == "__main__":
+    # only used if RUN_MODE == specific_client
+    server = "POADTCSRV04"
+    mac = "64:66:B3:A6:BB:3A"
+    # only used if RUN_MODE == specific_client or RUN_MODE == single
     dt_start = datetime.datetime(2016, 7, 1)
     dt_end = datetime.datetime(2016, 7, 11)
+    # used in all RUN_MODE
     cmp_class_args = {"win_len": 15}
-    preprocess_args = {"filter_type": "none"}
-    param = {"prior": offcd.geometric_prior,
-             "p": 0.1,
-             "k": 10,
-             "thresh": 0.1,
+    preprocess_args = {"win_len": 5,
+                       "filter_type":
+                       "percentile_filter",
+                       "p": 0.5}
+    param = {"prior": offcd.const_prior,
+             "p": 0.8,
+             "k": 20,
+             "thresh": 0.6,
              "min_peak_dist": 10}
     metric = "loss"
 
@@ -103,9 +117,16 @@ if __name__ == "__main__":
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
     single_args.update(parallel_args)
+    specific_client_args = single_args
+    fp_specific_client = partial(change_point_alg.run_specific_client,
+                                 mac=mac, server=server,
+                                 model_class=BayesianOffline,
+                                 out_path=script_dir)
     cp_utils.parse_args(partial(change_point_alg.run_single, run=run),
                         single_args,
                         partial(change_point_alg.run_parallel, run=run),
                         parallel_args,
                         partial(change_point_alg.run_sequential, run=run),
-                        sequential_args)
+                        sequential_args,
+                        fp_specific_client,
+                        specific_client_args)

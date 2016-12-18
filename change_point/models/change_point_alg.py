@@ -52,6 +52,30 @@ class ChangePointAlg:
 
         return conf
 
+    def plot_single(self, row, cmp_class_args, dataset, out_path):
+        ts_preprocessed = cp_utils.get_ts(row, self.preprocess_args,
+                                          self.metric)
+        pred = self.predict(ts_preprocessed)
+        correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
+        conf = cmp_class.conf_mat(correct, pred, ts_preprocessed,
+                                  cmp_class.match_id, **cmp_class_args)
+        print "pred={}".format(pred)
+        print "correct={}".format(correct)
+        print "conf={}".format(conf)
+
+        # if is an unsupervised problem, plot the predicted cps in the ts
+        if "unsupervised" in dataset:
+            pred, correct = correct, pred
+
+        in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
+
+        out_path = "{}.png".format(out_path)
+        ts_raw = TimeSeries(in_path, self.metric, dt_start, dt_end)
+        self.plot(ts_preprocessed, ts_raw, correct, pred, conf, out_path)
+
+        out_path = "{}.csv".format(out_path)
+        self.print_cp(ts_raw, pred, out_path)
+
     def plot_all(self, dataset, out_dir_path, cmp_class_args):
         train_path = "{}/change_point/input/{}/dataset.csv".format(base_dir,
                                                                    dataset)
@@ -62,27 +86,12 @@ class ChangePointAlg:
             cnt += 1
             print "cnt={}".format(cnt)
 
-            ts_preprocessed = cp_utils.get_ts(row, self.preprocess_args,
-                                              self.metric)
-            pred = self.predict(ts_preprocessed)
-            correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
-            conf = cmp_class.conf_mat(correct, pred, ts_preprocessed,
-                                      cmp_class.match_id, **cmp_class_args)
-            print "pred={}".format(pred)
-            print "correct={}".format(correct)
-            print "conf={}".format(conf)
-
             in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
-            out_file_name = utils.get_out_file_name(row["server"], row["mac"],
+            out_file_name = utils.get_out_file_name(row["server"],
+                                                    row["mac"],
                                                     dt_start, dt_end)
-            out_path = "{}/id{}_{}.png".format(out_dir_path, idx,
-                                               out_file_name)
-            ts_raw = TimeSeries(in_path, self.metric, dt_start, dt_end)
-            self.plot(ts_preprocessed, ts_raw, correct, pred, conf, out_path)
-
-            out_path = "{}/id{}_{}.csv".format(out_dir_path, idx,
-                                               out_file_name)
-            self.print_cp(ts_raw, pred, out_path)
+            out_path = "{}/id{}_{}".format(out_dir_path, idx, out_file_name)
+            self.plot_single(row, cmp_class_args, dataset, out_path)
 
     @abc.abstractmethod
     def plot():
@@ -113,3 +122,14 @@ def run_single(dt_start, dt_end, cmp_class_args, preprocess_args, param,
     datasets = ["unsupervised/{}".format(str_dt)]
     cp_utils.run_sequential(datasets, run, cmp_class_args, preprocess_args,
                             param, metric)
+
+
+def run_specific_client(dt_start, dt_end, cmp_class_args, preprocess_args,
+                        param, metric, mac, server, model_class, out_path):
+    model = model_class(preprocess_args=preprocess_args, metric=metric,
+                        **param)
+    out_file_name = utils.get_out_file_name(server, mac, dt_start, dt_end)
+    out_path = "{}/{}".format(out_path, out_file_name)
+    row = {"mac": mac, "server": server, "dt_start": str(dt_start),
+           "dt_end": str(dt_end), "change_points_ids": None}
+    model.plot_single(row, cmp_class_args, "unsupervised", out_path)

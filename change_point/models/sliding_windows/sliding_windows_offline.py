@@ -58,6 +58,13 @@ class SlidingWindowsOffline(change_point_alg.ChangePointAlg):
         ts_dist = self.get_ts_dist(ts)
         dist_peaks = cp_utils.detect_peaks(ts_dist.y, mph=self.thresh,
                                            mpd=self.min_peak_dist)
+
+        # if necessary add extremes that are not peaks
+        if ts_dist.y and (ts_dist.y[0] >= self.thresh):
+            dist_peaks = [0] + dist_peaks
+        if (len(ts_dist.y) > 1) and (ts_dist.y[-1] >= self.thresh):
+            dist_peaks = dist_peaks + [len(ts_dist.y) - 1]
+
         # dist_peaks have the indexes of the peaks in the ts_dist, however the
         # change points are represented as the indexes of the ts
         cps = np.asarray(dist_peaks) + self.win_len
@@ -69,7 +76,7 @@ class SlidingWindowsOffline(change_point_alg.ChangePointAlg):
         plot_procedures.plot_ts_share_x(ts, ts_dist, out_path,
                                         compress=True,
                                         title1="median filtered",
-                                        title2="sliding windows distance",
+                                        title2="mean distance sliding windows",
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
                                         xlabel="$i$",
@@ -92,14 +99,19 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
 
 
 if __name__ == "__main__":
+    # only used if RUN_MODE == specific_client
+    server = "POADTCSRV04"
+    mac = "64:66:B3:A6:BB:3A"
+    # only used if RUN_MODE == specific_client or RUN_MODE == single
     dt_start = datetime.datetime(2016, 7, 1)
     dt_end = datetime.datetime(2016, 7, 11)
+    # used in all RUN_MODE
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "percentile_filter",
                        "win_len": 13,
                        "p": 0.5}
     param = {"win_len": 20,
-             "thresh": 100,
+             "thresh": 15,
              "min_peak_dist": 18,
              "f_dist": cmp_win.mean_dist,
              "bin_size_f_dist": 5,
@@ -113,9 +125,16 @@ if __name__ == "__main__":
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
     single_args.update(parallel_args)
+    specific_client_args = single_args
+    fp_specific_client = partial(change_point_alg.run_specific_client,
+                                 mac=mac, server=server,
+                                 model_class=SlidingWindowsOffline,
+                                 out_path=script_dir)
     cp_utils.parse_args(partial(change_point_alg.run_single, run=run),
                         single_args,
                         partial(change_point_alg.run_parallel, run=run),
                         parallel_args,
                         partial(change_point_alg.run_sequential, run=run),
-                        sequential_args)
+                        sequential_args,
+                        fp_specific_client,
+                        specific_client_args)

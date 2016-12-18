@@ -23,7 +23,7 @@ def plot(dt_start, dt_end, metric):
         # comparison between not filtered and filtered
         ts = TimeSeries(in_path, metric, dt_start, dt_end)
         ts_filter = TimeSeries(in_path, metric, dt_start, dt_end)
-        ts_filter.percentile_filter(win_len=13, p=0.5)
+        ts_filter.percentile_filter(win_len=5, p=0.5)
 
         # comparison between with cross traffic and without
         # ts = TimeSeries(in_path, metric, dt_start, dt_end)
@@ -42,7 +42,7 @@ def plot(dt_start, dt_end, metric):
 
 
 if __name__ == "__main__":
-    metric = "latency"
+    metric = "loss"
     dt_start = datetime.datetime(2016, 7, 1)
     dt_end = datetime.datetime(2016, 7, 11)
     plot(dt_start, dt_end, metric)

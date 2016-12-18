@@ -62,13 +62,25 @@ class SegmentNeighbourhood(change_point_alg.ChangePointAlg):
         return cps
 
     def plot(self, ts, ts_raw, correct, pred, conf, out_path):
-        plot_procedures.plot_ts_share_x(ts_raw, ts, out_path, compress=False,
-                                        title1="correct",
-                                        dt_axvline1=np.asarray(ts.x)[correct],
-                                        dt_axvline2=np.asarray(ts.x)[pred],
-                                        title2="predicted. conf={}".
-                                        format(conf),
-                                        plot_type2="scatter")
+        if "unsupervised" in out_path:
+            ylabel = plot_procedures.get_default_ylabel(ts)
+            plot_procedures.plot_ts(ts, out_path,
+                                    dt_axvline=np.asarray(ts.x)[correct],
+                                    ylabel=ylabel,
+                                    xlabel="$i$",
+                                    compress=True,
+                                    title="median filtered")
+        else:
+            dt_axvline1 = np.asarray(ts.x)[correct]
+            dt_axvline2 = np.asarray(ts.x)[pred]
+            plot_procedures.plot_ts_share_x(ts_raw, ts, out_path,
+                                            compress=False,
+                                            title1="correct",
+                                            dt_axvline1=dt_axvline1,
+                                            dt_axvline2=dt_axvline2,
+                                            title2="predicted. conf={}".
+                                            format(conf),
+                                            plot_type2="scatter")
 
 
 def run(dataset, cmp_class_args, preprocess_args, param, metric):
@@ -84,18 +96,23 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
 
 
 if __name__ == "__main__":
+    # only used if RUN_MODE == specific_client
+    server = "POADTCSRV04"
+    mac = "64:66:B3:A6:BB:3A"
+    # only used if RUN_MODE == specific_client or RUN_MODE == single
     dt_start = datetime.datetime(2016, 7, 1)
     dt_end = datetime.datetime(2016, 7, 11)
+    # used in all RUN_MODE
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "percentile_filter",
-                       "win_len": 13,
+                       "win_len": 5,
                        "p": 0.5}
-    param = {"const_pen": 100,
-             "f_pen": "n_cps ^ 2",
+    param = {"const_pen": 20,
+             "f_pen": "n_cps",
              "seg_model": "Normal",
              "min_seg_len": 5,
              "max_cps": 4}
-    metric = "latency"
+    metric = "loss"
 
     parallel_args = {"cmp_class_args": cmp_class_args,
                      "preprocess_args": preprocess_args, "param": param,
@@ -103,9 +120,16 @@ if __name__ == "__main__":
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
     single_args.update(parallel_args)
+    specific_client_args = single_args
+    fp_specific_client = partial(change_point_alg.run_specific_client,
+                                 mac=mac, server=server,
+                                 model_class=SegmentNeighbourhood,
+                                 out_path=script_dir)
     cp_utils.parse_args(partial(change_point_alg.run_single, run=run),
                         single_args,
                         partial(change_point_alg.run_parallel, run=run),
                         parallel_args,
                         partial(change_point_alg.run_sequential, run=run),
-                        sequential_args)
+                        sequential_args,
+                        fp_specific_client,
+                        specific_client_args)

@@ -20,7 +20,8 @@ def iter_cp_types():
 
 
 def parse_args(run_single, single_args, run_parallel, parallel_args,
-               run_sequential, sequential_args):
+               run_sequential, sequential_args, run_specific_client,
+               specific_client_args):
     parser = argparse.ArgumentParser()
     parser.add_argument("-r", "--run_mode")
     args = parser.parse_args()
@@ -28,6 +29,8 @@ def parse_args(run_single, single_args, run_parallel, parallel_args,
         run_parallel(**parallel_args)
     elif args.run_mode == "sequential":
         run_parallel(**parallel_args)
+    elif args.run_mode == "specific_client":
+        run_specific_client(**specific_client_args)
     else:
         run_single(**single_args)
 

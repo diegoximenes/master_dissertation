@@ -13,6 +13,7 @@ import change_point.models.change_point_alg as change_point_alg
 from change_point.models.sliding_windows.sliding_windows_offline import \
     SlidingWindowsOffline
 import utils.time_series as time_series
+import utils.plot_procedures as plot_procedures
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 
@@ -159,26 +160,38 @@ class HMM(change_point_alg.ChangePointAlg):
         matplotlib.rcParams.update({'font.size': 21})
         f, ax = plt.subplots(3, 1, figsize=(16, 12), sharex="col")
         ax[0].grid()
-        ax[0].set_title("correct")
+        ax[0].set_title("median filtered")
         ax[0].set_ylim([-0.02, 1.02])
+        ax[0].set_ylabel(plot_procedures.get_default_ylabel(ts))
         ax[0].set_yticks(np.arange(0.0, 1.0 + 0.1, 0.1))
-        ax[0].set_xticks(range(0, len(ts_raw.y), 100))
         for xvline in correct:
             ax[0].axvline(xvline, color="r", linewidth=2.0)
-        ax[0].scatter(range(len(ts_raw.y)), ts_raw.y)
+
+        ax[0].scatter(range(len(ts.y)), ts.y)
         ax[1].grid()
-        ax[1].set_title("hidden state path")
+        ax[1].set_title("best hidden state path")
         ax[1].set_ylabel(hidden_states_y_label)
         ax[1].set_yticks(range(len(self.A)))
         ax[1].set_yticklabels(hidden_states_y_ticks_labels, fontsize=15)
         ax[1].set_ylim([-1, len(self.A)])
         ax[1].scatter(range(len(ts_hidden_state_path.y)),
                       ts_hidden_state_path.y)
+        if "unsupervised" in out_path:
+            for xvline in pred:
+                ax[0].axvline(xvline, color="r", linewidth=2.0)
+
         ax[2].grid()
-        ax[2].set_title("sliding windows offline. conf={}".format(conf))
+        xticks = range(0, len(ts.y), 50)
+        ax[2].set_xticks(xticks)
+        ax[2].set_xticklabels(map(str, xticks), rotation=45)
+        ax[2].set_title("hellinger distance sliding windows")
         ax[2].set_ylim([-0.02, 1.02])
-        for xvline in pred:
-            ax[2].axvline(xvline, color="r", linewidth=2.0)
+        ax[2].set_ylabel("$D_i$")
+        ax[2].set_xlabel("$i$")
+        if "unsupervised" not in out_path:
+            for xvline in pred:
+                ax[2].axvline(xvline, color="r", linewidth=2.0)
         ax[2].plot(np.arange(len(ts_sliding_windows_dist.y)) + self.win_len,
                    ts_sliding_windows_dist.y)
+
         plt.savefig(out_path)

@@ -10,7 +10,7 @@ def get_default_ylabel(ts):
     if ts.metric == "loss":
         return "loss fraction"
     elif ts.metric == "latency":
-        return "latency (ms)"
+        return "RTT (ms)"
 
 
 def update_title(title, ts):
@@ -54,7 +54,7 @@ def plot_axvline(ts, dt_axvline, compress, ax):
 
 
 def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
-            compress=False):
+            compress=False, title=""):
     """
     if compress is true than ts.y must not have None
     """
@@ -64,14 +64,15 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
     plt.gcf().set_size_inches(16, 15)
 
     if compress:
-        xticks = range(0, len(ts.x), 20)
+        xticks = range(0, len(ts.x), 50)
         xticks_labels = copy.deepcopy(xticks)
     else:
         xticks, xticks_labels = get_xticks(ts.dt_start, ts.dt_end)
 
     plot_axvline(ts, dt_axvline, compress, plt)
 
-    title = update_title("", ts)
+    if not title:
+        title = update_title("", ts)
 
     plt.grid()
     plt.title(title)
@@ -167,16 +168,12 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     if default_ylabel:
         ylabel1 = get_default_ylabel(ts1)
         ylabel2 = get_default_ylabel(ts2)
-        if ts1.metric == "loss":
-            ylabel1 = "loss fraction"
-        elif ts1.metric == "latency":
-            ylabel1 = "latency (ms)"
 
     ax[0].grid()
     ax[0].set_title(title1)
     ax[0].set_ylabel(ylabel1, fontsize=28)
     if ts1.metric == "loss":
-        ax[0].set_yticks(np.arange(0, 1 + 0.05, 0.05))
+        ax[0].set_yticks(np.arange(0, 1 + 0.1, 0.1))
         ax[0].set_ylim([-0.02, 1.02])
     elif (ts1.metric == "throughput_down") or (ts1.metric == "throughput_up"):
         ax[0].set_yscale('log')
