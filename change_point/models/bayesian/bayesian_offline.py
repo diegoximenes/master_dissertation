@@ -69,6 +69,7 @@ class BayesianOffline(change_point_alg.ChangePointAlg):
                                         compress=True,
                                         title1="median filtered",
                                         ylim2=[-0.02, 1.02],
+                                        yticks2=np.arange(0.0, 1.0 + 0.1, 0.1),
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
                                         title2="probabilities",

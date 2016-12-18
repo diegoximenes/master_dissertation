@@ -6,6 +6,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
+def get_default_yticks(ts):
+    if ts.metric == "loss":
+        return np.arange(0.0, 1.0 + 0.1, 0.1)
+
+
 def get_default_ylabel(ts):
     if ts.metric == "loss":
         return "loss fraction"
@@ -173,7 +178,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     ax[0].set_title(title1)
     ax[0].set_ylabel(ylabel1, fontsize=28)
     if ts1.metric == "loss":
-        ax[0].set_yticks(np.arange(0, 1 + 0.1, 0.1))
+        ax[0].set_yticks(get_default_yticks(ts1))
         ax[0].set_ylim([-0.02, 1.02])
     elif (ts1.metric == "throughput_down") or (ts1.metric == "throughput_up"):
         ax[0].set_yscale('log')
@@ -192,7 +197,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
     ax[1].set_title(title2)
     ax[1].set_ylabel(ylabel2, fontsize=28)
     if ts2.metric == "loss":
-        ax[1].set_yticks(np.arange(0, 1 + 0.05, 0.05))
+        ax[1].set_yticks(get_default_yticks(ts2))
         ax[1].set_ylim([-0.02, 1.02])
     elif (ts2.metric == "throughput_down") or (ts2.metric == "throughput_up"):
         ax[1].set_yscale('log')
