@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 
 
 def get_default_yticks(ts):
@@ -217,6 +218,73 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
         ax[1].plot(x2, y2)
     else:
         ax[1].scatter(x2, y2, s=9)
+
+    plt.savefig(out_path)
+    plt.close("all")
+
+
+def plot_stl_decomposition(ts, ts_title, out_path):
+    residual, seasonal, trend = ts.stl_decomposition()
+    residual_trend = np.asarray(residual) + np.asarray(trend)
+    x = range(len(ts.x))
+    ylabel = get_default_ylabel(ts)
+    xticks = range(0, len(x), 50)
+
+    l = ts.y + residual + seasonal + trend
+    ylim = [min(l) - 1, max(l) + 1]
+
+    plt.clf()
+    plt.figure(figsize=(24, 14))
+    matplotlib.rcParams.update({'font.size': 21})
+    gs = gridspec.GridSpec(6, 2)
+    gs.update(wspace=0.3, hspace=0.4)
+
+    ax_residual_trend = plt.subplot(gs[3:6, 0])
+    ax_ts = plt.subplot(gs[0:3, 0], sharex=ax_residual_trend)
+    ax_trend = plt.subplot(gs[4:6, 1])
+    ax_seasonal = plt.subplot(gs[2:4, 1], sharex=ax_trend)
+    ax_residual = plt.subplot(gs[0:2, 1], sharex=ax_trend)
+
+    ax_ts.grid()
+    ax_ts.set_ylim(ylim)
+    ax_ts.set_ylabel(ylabel)
+    ax_ts.set_title(ts_title)
+    ax_ts.plot(x, ts.y)
+
+    ax_residual_trend.grid()
+    ax_residual_trend.set_ylim(ylim)
+    ax_residual_trend.set_xlim([0, len(x)])
+    ax_residual_trend.set_ylabel(ylabel)
+    ax_residual_trend.set_xlabel("$i$")
+    ax_residual_trend.set_title("residual + trend")
+    ax_residual_trend.plot(x, residual_trend)
+    ax_residual_trend.set_xticks(xticks)
+    ax_residual_trend.set_xticklabels(map(str, xticks), rotation=45)
+
+    ax_residual.grid()
+    ax_residual.set_ylim(ylim)
+    ax_residual.set_ylabel(ylabel)
+    ax_residual.set_title("residual")
+    ax_residual.plot(x, residual)
+
+    ax_seasonal.grid()
+    ax_seasonal.set_ylim(ylim)
+    ax_seasonal.set_ylabel(ylabel)
+    ax_seasonal.set_title("seasonal")
+    ax_seasonal.plot(x, seasonal)
+
+    ax_trend.grid()
+    ax_trend.set_ylim(ylim)
+    ax_trend.set_xlabel("$i$")
+    ax_trend.set_ylabel(ylabel)
+    ax_trend.set_title("trend")
+    ax_trend.set_xticks(xticks)
+    ax_trend.set_xticklabels(map(str, xticks), rotation=45)
+    ax_trend.plot(x, trend)
+
+    plt.setp(ax_ts.get_xticklabels(), visible=False)
+    plt.setp(ax_residual.get_xticklabels(), visible=False)
+    plt.setp(ax_seasonal.get_xticklabels(), visible=False)
 
     plt.savefig(out_path)
     plt.close("all")

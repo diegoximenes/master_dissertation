@@ -1,7 +1,7 @@
-import statsmodels.api as sm
 import scipy.signal
 import numpy as np
-import pandas as pd
+import rpy2.robjects as robjects
+import rpy2.robjects.numpy2ri
 from datetime import datetime
 
 import read_input
@@ -151,16 +151,21 @@ class TimeSeries:
         except:
             pass
 
-    def decompose(self):
-        """
-        decompose ts in trend, seasonal, residual components
-        """
-        df = pd.DataFrame({"metric": self.y})
-        df = df.set_index(pd.date_range("1/1/2016", periods=len(self.x),
-                                        freq="W"))
-        decomp = sm.tsa.seasonal_decompose(df["metric"])
-        # decomp.plot()
-        return decomp.resid, decomp.seasonal, decomp.trend
+    def stl_decomposition(self):
+        window = "periodic"
+
+        rpy2.robjects.numpy2ri.activate()
+
+        length = len(self.y)
+        ts_r = robjects.r["ts"](robjects.FloatVector(np.asarray(self.y)),
+                                frequency=48)
+        kwargs = {"s.window": window}
+        decomposed = robjects.r["stl"](ts_r, **kwargs).rx2("time.series")
+        decomposed = [row for row in decomposed]
+        seasonal = decomposed[0:length]
+        trend = decomposed[length:2 * length]
+        residual = decomposed[2 * length:3 * length]
+        return residual, seasonal, trend
 
     def get_mean(self):
         """
