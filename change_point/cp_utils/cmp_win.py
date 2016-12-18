@@ -39,6 +39,11 @@ def mean_dist(l1, l2):
     return abs(np.mean(l1) - np.mean(l2))
 
 
+def relative_mean_dist(l1, l2):
+    den = max(1.0, abs(np.mean(l1)), abs(np.mean(l2)))
+    return abs(np.mean(l1) - np.mean(l2)) / den
+
+
 def emd(l1, l2, bins):
     distr1 = get_distr(l1, bins)
     distr2 = get_distr(l2, bins)

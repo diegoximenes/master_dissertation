@@ -68,12 +68,15 @@ class SlidingWindowsOnline(change_point_alg.ChangePointAlg):
 
     def plot(self, ts, ts_raw, correct, pred, conf, out_path):
         _, ts_dist = self.slide(ts)
-        plot_procedures.plot_ts_share_x(ts_raw, ts_dist, out_path,
-                                        compress=True, title1="correct",
+        plot_procedures.plot_ts_share_x(ts, ts_dist, out_path,
+                                        compress=True,
+                                        title1="median filtered",
+                                        title2="mean distance sliding windows",
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
-                                        title2="predicted. conf={}".
-                                        format(conf))
+                                        xlabel="$i$",
+                                        ylabel2="$D_{i}$ (ms)",
+                                        ylabel1="latency (ms)")
 
 
 def run(dataset, cmp_class_args, preprocess_args, param, metric):
@@ -92,8 +95,8 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
 
 if __name__ == "__main__":
     # only used if RUN_MODE == specific_client
-    server = "POADTCSRV04"
-    mac = "64:66:B3:A6:BB:3A"
+    server = "NHODTCSRV04"
+    mac = "64:66:B3:A6:B3:22"
     # only used if RUN_MODE == specific_client or RUN_MODE == single
     dt_start = datetime.datetime(2016, 7, 1)
     dt_end = datetime.datetime(2016, 7, 11)
@@ -102,8 +105,8 @@ if __name__ == "__main__":
     preprocess_args = {"filter_type": "percentile_filter",
                        "win_len": 13,
                        "p": 0.5}
-    param = {"win_len": 24,
-             "thresh": 2,
+    param = {"win_len": 20,
+             "thresh": 15,
              "f_dist": cmp_win.mean_dist,
              "bin_size_f_dist": 0.05,
              "min_bin_f_dist": 0.0,

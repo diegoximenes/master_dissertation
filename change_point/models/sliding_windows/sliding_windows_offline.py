@@ -61,9 +61,9 @@ class SlidingWindowsOffline(change_point_alg.ChangePointAlg):
 
         # if necessary add extremes that are not peaks
         if ts_dist.y and (ts_dist.y[0] >= self.thresh):
-            dist_peaks = [0] + dist_peaks
+            dist_peaks = np.append([0], dist_peaks)
         if (len(ts_dist.y) > 1) and (ts_dist.y[-1] >= self.thresh):
-            dist_peaks = dist_peaks + [len(ts_dist.y) - 1]
+            dist_peaks = np.append(dist_peaks, [len(ts_dist.y) - 1])
 
         # dist_peaks have the indexes of the peaks in the ts_dist, however the
         # change points are represented as the indexes of the ts
