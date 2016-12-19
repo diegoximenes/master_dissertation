@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.8.30)  17 DEC 2016 00:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.8.30)  19 DEC 2016 02:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -410,7 +410,11 @@ Writing index of symbols file thesis.syx
 \openout4 = `thesis.abx'.
 
 Writing index of abbreviations file thesis.abx
-(./thesis.aux)
+(./thesis.aux
+
+LaTeX Warning: Label `chap:literature_review' multiply defined.
+
+)
 \openout1 = `thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
@@ -516,7 +520,7 @@ Package caption Info: End \AtBeginDocument code.
 Package hyperref Info: Option `breaklinks' set `true' on input line 35.
 Package hyperref Info: Option `raiselinks' set `true' on input line 35.
 Package hyperref Info: Option `pageanchor' set `true' on input line 35.
- <coppe-logo.pdf, id=120, 177.463pt x 76.285pt>
+ <coppe-logo.pdf, id=92, 177.463pt x 76.285pt>
 File: coppe-logo.pdf Graphic file (type pdf)
 
 <use coppe-logo.pdf>
@@ -571,18 +575,18 @@ Underfull \hbox (badness 3386) in paragraph at lines 36--36
 
 ] (./src/abstract.tex) [5
 
-] (./thesis.toc
-[6
-
-])
+] (./thesis.toc)
 \tf@toc=\write6
 \openout6 = `thesis.toc'.
 
- [7] (./thesis.lof)
+
+[6
+
+] (./thesis.lof)
 \tf@lof=\write7
 \openout7 = `thesis.lof'.
 
- [8
+ [7
 
 ] (./thesis.lot)
 \tf@lot=\write8
@@ -591,7 +595,7 @@ Underfull \hbox (badness 3386) in paragraph at lines 36--36
 
 No file thesis.los.
 No file thesis.lab.
-[9
+[8
 
 ] (./src/introduction.tex
 Chapter 1.
@@ -601,35 +605,35 @@ Chapter 1.
 ]
 Chapter 2.
 
-<./figures/literature_review/argus_pipeline.png, id=227, 850.67813pt x 393.7209
+<./figures/literature_review/argus_pipeline.png, id=198, 850.67813pt x 393.7209
 3pt>
 File: ./figures/literature_review/argus_pipeline.png Graphic file (type png)
  <use ./figures/literature_review/argus_pipeline.png>
 Package pdftex.def Info: ./figures/literature_review/argus_pipeline.png used on
- input line 25.
+ input line 26.
 (pdftex.def)             Requested size: 341.43437pt x 158.02628pt.
 
-<./figures/literature_review/argus_spatial_aggregation.png, id=231, 749.80125pt
+<./figures/literature_review/argus_spatial_aggregation.png, id=202, 749.80125pt
  x 392.96812pt>
 File: ./figures/literature_review/argus_spatial_aggregation.png Graphic file (t
 ype png)
 
 <use ./figures/literature_review/argus_spatial_aggregation.png>
 Package pdftex.def Info: ./figures/literature_review/argus_spatial_aggregation.
-png used on input line 42.
+png used on input line 43.
 (pdftex.def)             Requested size: 341.43437pt x 178.94467pt.
  [2
 
  <./figures/literature_review/argus_pipeline.png>] [3 <./figures/literature_rev
 iew/argus_spatial_aggregation.png>]
-<./figures/literature_review/netnorad_network_architecture.jpg, id=246, 554.07p
+<./figures/literature_review/netnorad_network_architecture.jpg, id=217, 554.07p
 t x 430.60875pt>
 File: ./figures/literature_review/netnorad_network_architecture.jpg Graphic fil
 e (type jpg)
 
 <use ./figures/literature_review/netnorad_network_architecture.jpg>
 Package pdftex.def Info: ./figures/literature_review/netnorad_network_architect
-ure.jpg used on input line 113.
+ure.jpg used on input line 114.
 (pdftex.def)             Requested size: 298.75264pt x 232.18358pt.
  [4 <./figures/literature_review/netnorad_network_architecture.jpg>] [5])
 (./src/change_point_detection.tex [6]
@@ -637,69 +641,196 @@ Chapter 3.
 [7
 
 ]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 46.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 47.
  (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 46.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 47.
  [8]
-<./figures/change_point_detection/preprocessing/serverAMRDTCPEV01_mac64:66:B3:4
-F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png, id=283, 1156.32pt x 867.24pt>
-File: ./figures/change_point_detection/preprocessing/serverAMRDTCPEV01_mac64:66
-:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type png)
+<./figures/change_point_detection/preprocessing/median_filter_latency/serverAMR
+DTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png, id=256, 11
+56.32pt x 867.24pt>
+File: ./figures/change_point_detection/preprocessing/median_filter_latency/serv
+erAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png Graphi
+c file (type png)
 
-<use ./figures/change_point_detection/preprocessing/serverAMRDTCPEV01_mac64:66:
-B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png>
-Package pdftex.def Info: ./figures/change_point_detection/preprocessing/serverA
-MRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png used on i
-nput line 104.
+<use ./figures/change_point_detection/preprocessing/median_filter_latency/serve
+rAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/preprocessing/median_
+filter_latency/serverAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend20
+16-07-11.png used on input line 116.
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 
-<./figures/change_point_detection/preprocessing/serverAMRDTCPEV01_mac64:66:B3:4
-F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png, id=285, 1156.32pt x 867.24pt>
-File: ./figures/change_point_detection/preprocessing/serverAMRDTCPEV01_mac64:66
-:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type png)
+<./figures/change_point_detection/preprocessing/median_filter_latency/serverAMR
+DTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png, id=258, 11
+56.32pt x 867.24pt>
+File: ./figures/change_point_detection/preprocessing/median_filter_latency/serv
+erAMRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png Graphi
+c file (type png)
 
-<use ./figures/change_point_detection/preprocessing/serverAMRDTCPEV01_mac64:66:
-B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png>
-Package pdftex.def Info: ./figures/change_point_detection/preprocessing/serverA
-MRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png used on i
-nput line 104.
+<use ./figures/change_point_detection/preprocessing/median_filter_latency/serve
+rAMRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/preprocessing/median_
+filter_latency/serverAMRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend20
+16-07-11.png used on input line 116.
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
+
+<./figures/change_point_detection/preprocessing/median_filter_loss/serverAMRDTC
+PEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png, id=259, 1156.
+32pt x 867.24pt>
+File: ./figures/change_point_detection/preprocessing/median_filter_loss/serverA
+MRDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png Graphic f
+ile (type png)
+
+<use ./figures/change_point_detection/preprocessing/median_filter_loss/serverAM
+RDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/preprocessing/median_
+filter_loss/serverAMRDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-
+07-11.png used on input line 132.
+(pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
+
+<./figures/change_point_detection/preprocessing/median_filter_loss/serverAMRDTC
+PEV01_mac64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png, id=260, 1156.
+32pt x 867.24pt>
+File: ./figures/change_point_detection/preprocessing/median_filter_loss/serverA
+MRDTCPEV01_mac64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png Graphic f
+ile (type png)
+
+<use ./figures/change_point_detection/preprocessing/median_filter_loss/serverAM
+RDTCPEV01_mac64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/preprocessing/median_
+filter_loss/serverAMRDTCPEV01_mac64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-
+07-11.png used on input line 132.
+(pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
+ [9 <./figures/change_point_detection/preprocessing/median_filter_latency/serve
+rAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png> <./fig
+ures/change_point_detection/preprocessing/median_filter_latency/serverAMRDTCPEV
+01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png>]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 120.
- [9 <./figures/change_point_detection/preprocessing/serverAMRDTCPEV01_mac64:66:
-B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png> <./figures/change_point_dete
-ction/preprocessing/serverAMRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dt
-end2016-07-11.png>]
-<./figures/change_point_detection/sliding_windows/id100_serverNHODTCSRV04_mac64
-:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png, id=298, 1156.32pt x 867.
+put line 150.
+ [10 <./figures/change_point_detection/preprocessing/median_filter_loss/serverA
+MRDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png> <./figur
+es/change_point_detection/preprocessing/median_filter_loss/serverAMRDTCPEV01_ma
+c64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png>]
+<./figures/change_point_detection/sliding_windows_online/id100_serverNHODTCSRV0
+4_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png, id=285, 1156.32pt
+ x 867.24pt>
+File: ./figures/change_point_detection/sliding_windows_online/id100_serverNHODT
+CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png Graphic file 
+(type png)
+
+<use ./figures/change_point_detection/sliding_windows_online/id100_serverNHODTC
+SRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/sliding_windows_onlin
+e/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-1
+1.png used on input line 184.
+(pdftex.def)             Requested size: 298.75264pt x 224.06116pt.
+
+<./figures/change_point_detection/sliding_windows_offline/id100_serverNHODTCSRV
+04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png, id=287, 1156.32p
+t x 867.24pt>
+File: ./figures/change_point_detection/sliding_windows_offline/id100_serverNHOD
+TCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png Graphic file
+ (type png)
+
+<use ./figures/change_point_detection/sliding_windows_offline/id100_serverNHODT
+CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/sliding_windows_offli
+ne/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-
+11.png used on input line 200.
+(pdftex.def)             Requested size: 298.75264pt x 224.06116pt.
+ [11 <./figures/change_point_detection/sliding_windows_online/id100_serverNHODT
+CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png> <./figures/c
+hange_point_detection/sliding_windows_offline/id100_serverNHODTCSRV04_mac64:66:
+B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>] [12]
+<./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66:B3:A
+6:BB:10_dtstart2016-07-01_dtend2016-07-11.png, id=312, 1156.32pt x 1084.05pt>
+File: ./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66
+:B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type png)
+
+<use ./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66:
+B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/seg_neigh/id7_serverR
+IBDTCSRV03_mac64:66:B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png used on i
+nput line 285.
+(pdftex.def)             Requested size: 213.39568pt x 200.04987pt.
+
+<./figures/change_point_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:66:B3
+:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png, id=313, 1156.32pt x 1084.05pt>
+File: ./figures/change_point_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:
+66:B3:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type png)
+
+<use ./figures/change_point_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:6
+6:B3:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/seg_neigh/id158_serve
+rSOCDTCPEV01_mac64:66:B3:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png used on
+ input line 285.
+(pdftex.def)             Requested size: 213.39568pt x 200.04987pt.
+ [13 <./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66
+:B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png> <./figures/change_point_det
+ection/seg_neigh/id158_serverSOCDTCPEV01_mac64:66:B3:A6:B9:D2_dtstart2016-07-01
+_dtend2016-07-11.png>]
+<./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_mac64:6
+6:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png, id=328, 1156.32pt x 867.24
+pt>
+File: ./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_ma
+c64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png Graphic file (type png
+)
+
+<use ./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_mac
+64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/gaussian_hmm/id115_se
+rverRJODTCLDM031_mac64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png use
+d on input line 341.
+(pdftex.def)             Requested size: 341.43437pt x 256.07178pt.
+ [14 <./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_ma
+c64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png>]
+<./figures/change_point_detection/bayesian_offline/id201_serverPOADTCSRV04_mac6
+4:66:B3:A6:BB:3A_dtstart2016-07-01_dtend2016-07-11.png, id=336, 1156.32pt x 867
+.24pt>
+File: ./figures/change_point_detection/bayesian_offline/id201_serverPOADTCSRV04
+_mac64:66:B3:A6:BB:3A_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type 
+png)
+
+<use ./figures/change_point_detection/bayesian_offline/id201_serverPOADTCSRV04_
+mac64:66:B3:A6:BB:3A_dtstart2016-07-01_dtend2016-07-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/bayesian_offline/id20
+1_serverPOADTCSRV04_mac64:66:B3:A6:BB:3A_dtstart2016-07-01_dtend2016-07-11.png 
+used on input line 384.
+(pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
+
+<./figures/change_point_detection/bayesian_online/id248_serverBREDTCSRV20_mac64
+:66:B3:A6:BC:36_dtstart2016-07-01_dtend2016-07-11.png, id=337, 1156.32pt x 867.
 24pt>
-File: ./figures/change_point_detection/sliding_windows/id100_serverNHODTCSRV04_
-mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type p
+File: ./figures/change_point_detection/bayesian_online/id248_serverBREDTCSRV20_
+mac64:66:B3:A6:BC:36_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type p
 ng)
 
-<use ./figures/change_point_detection/sliding_windows/id100_serverNHODTCSRV04_m
-ac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>
-Package pdftex.def Info: ./figures/change_point_detection/sliding_windows/id100
-_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png u
-sed on input line 145.
-(pdftex.def)             Requested size: 426.79135pt x 320.09303pt.
- [10 <./figures/change_point_detection/sliding_windows/id100_serverNHODTCSRV04_
-mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>] [11] [12]) (./src/
-methodology.tex
-[13]
+<use ./figures/change_point_detection/bayesian_online/id248_serverBREDTCSRV20_m
+ac64:66:B3:A6:BC:36_dtstart2016-07-01_dtend2016-07-11.png>
+Package pdftex.def Info: ./figures/change_point_detection/bayesian_online/id248
+_serverBREDTCSRV20_mac64:66:B3:A6:BC:36_dtstart2016-07-01_dtend2016-07-11.png u
+sed on input line 384.
+(pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
+ [15 <./figures/change_point_detection/bayesian_offline/id201_serverPOADTCSRV04
+_mac64:66:B3:A6:BB:3A_dtstart2016-07-01_dtend2016-07-11.png> <./figures/change_
+point_detection/bayesian_online/id248_serverBREDTCSRV20_mac64:66:B3:A6:BC:36_dt
+start2016-07-01_dtend2016-07-11.png>]
+
+LaTeX Warning: Reference `' on page 16 undefined on input line 399.
+
+) (./src/methodology.tex [16]
 Chapter 4.
-) (./src/results.tex [14
+) (./src/results.tex [17
 
 ]
 Chapter 5.
-) (./src/conclusion.tex [15
+) (./src/conclusion.tex [18
 
 ]
 Chapter 6.
-) [16
+) [19
 
 ] (./thesis.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 20--25
@@ -726,30 +857,37 @@ LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
 Missing character: There is no â in font cmr12!
 Missing character: There is no € in font cmr12!
 Missing character: There is no “ in font cmr12!
- [17
+ [20
 
 
-] [18] [19])
+] [21] [22])
 
 AED: lastpage setting LastPage
-[20]
+[23]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 69.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 69.
  (./thesis.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 69.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 69.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 6F49701679FCE9694DE85EC4D1BA9D03;1740.
+(rerunfilecheck)             Checksum: 69786E1386E29846F221E75FA653F854;1230.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 69.
  ) 
 Here is how much of TeX's memory you used:
- 9529 strings out of 494888
- 147022 string characters out of 6179127
- 247822 words of memory out of 5000000
- 12534 multiletter control sequences out of 15000+600000
- 12782 words of font info for 47 fonts, out of 8000000 for 9000
+ 9583 strings out of 494888
+ 152962 string characters out of 6179127
+ 249385 words of memory out of 5000000
+ 12574 multiletter control sequences out of 15000+600000
+ 13082 words of font info for 48 fonts, out of 8000000 for 9000
  38 hyphenation exceptions out of 8191
- 36i,11n,43p,453b,505s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,11n,44p,453b,507s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texl
@@ -765,10 +903,10 @@ amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on thesis.pdf (29 pages, 841277 bytes).
+Output written on thesis.pdf (31 pages, 1503516 bytes).
 PDF statistics:
- 485 PDF objects out of 1000 (max. 8388607)
- 420 compressed objects within 5 object streams
- 92 named destinations out of 1000 (max. 500000)
- 268 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 492 PDF objects out of 1000 (max. 8388607)
+ 409 compressed objects within 5 object streams
+ 93 named destinations out of 1000 (max. 500000)
+ 252 words of extra memory for PDF output out of 10000 (max. 10000000)
 

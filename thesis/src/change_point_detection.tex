@@ -1,4 +1,5 @@
 \chapter{Change Point Detection}
+\label{chap:change_point_detection}
 
 A change point detection algorithm seeks to identify points in time where the
 statistical properties of a time series changes. This problem has a broad
@@ -17,8 +18,8 @@ area, or because the mechanisms were only analyzed through theoretical
 aspects. Therefore, it were selected a set of techniques with a good level
 of theoretical formalism, and flexibility to adapt, in order to handle
 specifities of the problem domain. Furthermore, this chapter exposes several
-challenges when dealing with real data, and some adopted solutions which are
-not described in the literature.
+challenges when dealing with real network measurements data,
+and some adopted solutions which are not described in the literature.
 
 \section{Problem Definition}
 
@@ -83,27 +84,55 @@ to find both $k$ and $\boldsymbol \tau$.
 To reduce noise and remove outliers, the time series are
 preprocessed before being presented to a change point detection algorithm.
 Several filters were tested, such as moving averages, sliding windows
-percentiles,
+percentiles, z-score,
 wavelet thresholding~\cite{an_introduction_to_wavelets}, optimal 1D
 clustering~\cite{ckmeans_1d_dp_optimal_k_means_clustering_in_one_dimension_by_dynamic_programming},
 and Savitzky-Golay filter~\cite{savgol}.
-This chapter's plots present time series filtered by a centered median
-sliding windows procedure, in which given a parameter $w$, $y_{i}$ is set to be
-the median of the raw samples with indexes in $[i-w, i+w]$. In
-Figure~\ref{fig:median_filter} is presented two examples of this preprocessing.
+
+Since several time series are
+periodic, it was also considered the possibility of only using the
+trend, or the trend + residual transformation,
+resulted from the STL
+decomposition~\cite{stl_a_seasonal_trend_decomposition_procedure_based_on_loess}.
+
+Due to it's simplicity,
+this chapter use time series only filtered by a centered median
+sliding windows, in which given a parameter $w$, $y_{i}$ is set to be
+the median of the raw samples with indexes in $[i-w, i+w]$.
+Figures~\ref{fig:median_filter_rtt} and~\ref{fig:median_filter_loss} show
+some examples of this preprocessing.
 
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
         \begin{subfigure}[b]{0.6\textwidth}
-            \includegraphics[width=\textwidth]{./figures/change_point_detection/preprocessing/serverAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png}
+            \includegraphics[width=\textwidth]{./figures/change_point_detection/preprocessing/median_filter_latency/serverAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png}
+            \caption{}
         \end{subfigure}
         \begin{subfigure}[b]{0.6\textwidth}
-            \includegraphics[width=\textwidth]{./figures/change_point_detection/preprocessing/serverAMRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png}
+            \includegraphics[width=\textwidth]{./figures/change_point_detection/preprocessing/median_filter_latency/serverAMRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png}
+            \caption{}
         \end{subfigure}%
     }
-    \caption{Median filter. $w=13$.}\label{fig:median_filter}
-\end{figure}
+    \caption{Median filter RTT\@. $w=6$.}
+\label{fig:median_filter_rtt}
+\end{figure}%
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.6\textwidth}
+            \includegraphics[width=\textwidth]{./figures/change_point_detection/preprocessing/median_filter_loss/serverAMRDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png}
+            \caption{}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.6\textwidth}
+            \includegraphics[width=\textwidth]{./figures/change_point_detection/preprocessing/median_filter_loss/serverAMRDTCPEV01_mac64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png}
+            \caption{}
+        \end{subfigure}%
+    }
+    \caption{Median filter loss fraction. $w=2$.}
+\label{fig:median_filter_loss}
+\end{figure}%
 
 \section{Sliding Windows}
 
@@ -114,10 +143,11 @@ is to consider a distance metric between two empirical distributions as the base
 to infer the change points. Letting $d(\mathbf{a}, \mathbf{b})$ be the distance
 between two empirical distributions defined by the windows $\mathbf{a}$ and
 $\mathbf{b}$, and considering windows of length $m$, the
-Algorithm~\ref{alg:sliding_windows} presents a simple sliding windows method.
+Algorithm~\ref{alg:sliding_windows} presents a simple online sliding windows
+method.
 
 \begin{algorithm}[H]
-\caption{Sliding Windows}
+\caption{Online Sliding Windows}
 \label{alg:sliding_windows}
     \begin{algorithmic}[1]
         \State{} $i \gets 1$
@@ -132,37 +162,49 @@ Algorithm~\ref{alg:sliding_windows} presents a simple sliding windows method.
     \end{algorithmic}
 \end{algorithm}
 
-In this mechanism, when the distance between the distributions is above some
-threshold $\alpha$ a change point is reported. This is a common approach for an
-online application, however, it is possible to increase the classification
-accuracy in offline cases. As an example, the top plot of
-Figure~\ref{fig:sliding_windows_example} shows the latency over time, and in
+The distance
+function has a direct impact on the classification accuracy.
+Therefore, several
+distance measures where tested, such as mean difference, relative mean
+difference,
+Hellinger~\cite{hellinger_distance}, Kolmogorov-Smirnov, and
+Earth Mover's
+Distance~\cite{the_earth_movers_distance_as_a_metric_for_image_retrieval}.
+
+Figure~\ref{fig:sliding_windows_online} is an example of the online sliding
+windows execution. The top plot
+shows the RTT over time, and in
 the bottom plot, the $(i, D_{i})$ point represents the distance between
-$\mathbf{y}_{i - 20 : i - 1}$ and $\mathbf{y}_{i : i + 19}$.
+$\mathbf{y}_{i - m : i - 1}$ and $\mathbf{y}_{i : i + m - 1}$. The red vertical
+line indicates a detected change point, and the horizontal green line
+illustrates the used threshold.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{./figures/change_point_detection/sliding_windows/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png}
-    \caption{Sliding windows example.}
-\label{fig:sliding_windows_example}
+    \includegraphics[width=0.7\textwidth]{./figures/change_point_detection/sliding_windows_online/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png}
+    \caption{Online Sliding Windows.}
+\label{fig:sliding_windows_online}
 \end{figure}%
 
-It can be observed that there is a distance peak, that reaches around 20 ms,
-in the exact location
-where a mean shift happens in the latency data strean.
-However, using only the threshold method it is
-possible to prematurely infer the position of the change point. Therefore, an
-alternative is to also use a peak detection algorithm.
+It is possible to note that the detected change point is on the left of the
+correct location.
+This occurred since the distance between the windows was still
+increasing when reached the threshold. Therefore, for the offline
+version, it was defined that a peak detection method is applied on
+the sliding windows distance time series.
+An execution example is found in
+Figure~\ref{fig:sliding_windows_offline}.
 
-The distance
-function choice has a direct impact on the classification accuracy. Several
-distance measures where tested, such as mean,
-hellinger~\cite{hellinger_distance}, Kolmogorov-Smirnov, and
-Earth Mover's Distance~\cite{the_earth_movers_distance_as_a_metric_for_image_retrieval}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{./figures/change_point_detection/sliding_windows_offline/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png}
+    \caption{Offline Sliding Windows.}
+\label{fig:sliding_windows_offline}
+\end{figure}%
 
 As stated in~\cite{detecting_change_in_data_streams}, a performance improvement
 can be achieved concurrently executing the same sliding windows algorithm with
-different windows lengths. This change which facilitates the detection of
+different windows lengths. This change facilitates the detection of
 segments with distinct number of points.
 
 \section{Optimization Model}
@@ -227,6 +269,24 @@ used, the cost of a segment with an outlier can be orders of magnitude greater
 than the cost of a window without anomalies. Therefore,
 in this case, the method is sensible to outliers.
 
+Figure~\ref{fig:seg_neigh} presents two output examples.
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[width=\textwidth]{./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66:B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png}
+            \caption{}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[width=\textwidth]{./figures/change_point_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:66:B3:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png}
+            \caption{}
+        \end{subfigure}%
+    }
+    \caption{Optimization model.}
+\label{fig:seg_neigh}
+\end{figure}%
+
 \section{HMM (Hidden Markov Model)}
 
 The idea that each segment is associated with a specific latent configuration
@@ -260,7 +320,28 @@ time series stays in the same hidden state is low, which can not reflect real
 data. To overcome this problem,
 \cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series}
 suggests to increase the time that a time series stands in the same hidden
-state using a dirichlet prior regularization.
+state using a dirichlet prior regularization. However, it was empirically
+verified that it is difficult to choose good parameters for this strategy.
+Instead, to surpass this issue,
+when using the best hidden state path, this dissertation used a HMM only as a
+filter, which acts as a dimensional reduction that takes into consideration
+temporal
+patterns. In this scenario, the best hidden state sequence is the input to
+a sliding windows method with a discrete Hellinger distance.
+
+Figure~\ref{fig:hmm_filter} presents an execution using a fully connected HMM
+with observations following a Normal distribution.
+The top plot is the median filtered time series.
+The middle plot is the best hidden state path, in which the vertical axis
+indicates the distribution of each hidden state.
+The bottom plot is the sliding windows distance.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_mac64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png}
+    \caption{HMM filter.}
+\label{fig:hmm_filter}
+\end{figure}%
 
 \section{Bayesian Inference}
 
@@ -286,3 +367,33 @@ this, the method assumes the probability of current run length given the last
 run length as a prior. Assuming exponential-family likelihoods to model a
 segment, the time complexity to process a point is linear in the number of
 points already observed.
+
+THESE ARE SENSIBLE TO OUTLIERS specially the online
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.6\textwidth}
+            \includegraphics[width=\textwidth]{./figures/change_point_detection/bayesian_offline/id201_serverPOADTCSRV04_mac64:66:B3:A6:BB:3A_dtstart2016-07-01_dtend2016-07-11.png}
+            \caption{Offline.}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.6\textwidth}
+            \includegraphics[width=\textwidth]{./figures/change_point_detection/bayesian_online/id248_serverBREDTCSRV20_mac64:66:B3:A6:BC:36_dtstart2016-07-01_dtend2016-07-11.png}
+            \caption{Online.}
+        \end{subfigure}%
+    }
+    \caption{Bayesian Inference.}
+\label{fig:bayesian_offline}
+\end{figure}%
+
+\section{Final Remarks}
+
+Despite not being explicitly approached, it is possible to observe
+through this chapter
+that network measurements data has different patterns. Therefore,
+the choice of the most appropriate set of algorithms and parameters
+is one of the main difficulties of this project.
+In Chapter~\ref{chap:methodology} this issue is discussed with more details.
+
+The description of the parameters used in this
+chapter can be found in appendix~\ref{}.
