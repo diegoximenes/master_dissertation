@@ -79,9 +79,10 @@ class SlidingWindowsOffline(change_point_alg.ChangePointAlg):
                                         title2="mean distance sliding windows",
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
+                                        y_axhline2=[self.thresh],
                                         xlabel="$i$",
                                         ylabel2="$D_{i}$ (ms)",
-                                        ylabel1="latency (ms)")
+                                        ylabel1="RTT (ms)")
 
 
 def run(dataset, cmp_class_args, preprocess_args, param, metric):
@@ -100,8 +101,8 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
 
 if __name__ == "__main__":
     # only used if RUN_MODE == specific_client
-    server = "POADTCSRV04"
-    mac = "64:66:B3:A6:BB:3A"
+    server = "NHODTCSRV04"
+    mac = "64:66:B3:A6:B3:22"
     # only used if RUN_MODE == specific_client or RUN_MODE == single
     dt_start = datetime.datetime(2016, 7, 1)
     dt_end = datetime.datetime(2016, 7, 11)

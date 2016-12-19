@@ -143,6 +143,7 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
                     title1="", dt_axvline1=[], plot_type1="scatter",
                     ylabel2="", ylim2=None, title2="", plot_type2="plot",
                     yticks2=None, ytick_labels2=None, dt_axvline2=[],
+                    y_axhline2=[],
                     xlabel="", default_ylabel=False):
     """
     use ts1 as base ts (top plot). Only plot ts2[t] if t is present in ts1
@@ -165,6 +166,9 @@ def plot_ts_share_x(ts1, ts2, out_path, compress=False, ylabel1="", ylim1=None,
 
     plot_axvline(ts1, dt_axvline1, compress, ax[0])
     plot_axvline(ts1, dt_axvline2, compress, ax[1])
+
+    for y in y_axhline2:
+        ax[1].axhline(y, color="g", linewidth=2.0)
 
     if not title1:
         title1 = update_title(title1, ts1)

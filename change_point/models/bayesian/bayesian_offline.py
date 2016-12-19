@@ -72,6 +72,7 @@ class BayesianOffline(change_point_alg.ChangePointAlg):
                                         yticks2=np.arange(0.0, 1.0 + 0.1, 0.1),
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
+                                        y_axhline2=[self.thresh],
                                         title2="probabilities",
                                         ylabel1=ylabel1,
                                         ylabel2="p($i$ is change point)",
@@ -94,8 +95,8 @@ def run(dataset, cmp_class_args, preprocess_args, param, metric):
 
 if __name__ == "__main__":
     # only used if RUN_MODE == specific_client
-    server = "POADTCSRV04"
-    mac = "64:66:B3:A6:BB:3A"
+    server = "SNEDTCPROB01"
+    mac = "64:66:B3:A6:BB:80"
     # only used if RUN_MODE == specific_client or RUN_MODE == single
     dt_start = datetime.datetime(2016, 7, 1)
     dt_end = datetime.datetime(2016, 7, 11)

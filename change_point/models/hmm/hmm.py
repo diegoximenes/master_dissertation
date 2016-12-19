@@ -191,6 +191,7 @@ class HMM(change_point_alg.ChangePointAlg):
         if "unsupervised" not in out_path:
             for xvline in pred:
                 ax[2].axvline(xvline, color="r", linewidth=2.0)
+        ax[2].axhline(self.thresh, color="g", linewidth=2.0)
         ax[2].plot(np.arange(len(ts_sliding_windows_dist.y)) + self.win_len,
                    ts_sliding_windows_dist.y)
 

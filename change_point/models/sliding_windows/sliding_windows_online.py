@@ -74,9 +74,10 @@ class SlidingWindowsOnline(change_point_alg.ChangePointAlg):
                                         title2="mean distance sliding windows",
                                         dt_axvline1=np.asarray(ts.x)[correct],
                                         dt_axvline2=np.asarray(ts.x)[pred],
+                                        y_axhline2=[self.thresh],
                                         xlabel="$i$",
                                         ylabel2="$D_{i}$ (ms)",
-                                        ylabel1="latency (ms)")
+                                        ylabel1="RTT (ms)")
 
 
 def run(dataset, cmp_class_args, preprocess_args, param, metric):
