@@ -67,7 +67,7 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
 
     plt.clf()
     matplotlib.rcParams.update({'font.size': 27})
-    plt.gcf().set_size_inches(16, 15)
+    plt.gcf().set_size_inches(16, 11)
 
     if compress:
         xticks = range(0, len(ts.x), 50)

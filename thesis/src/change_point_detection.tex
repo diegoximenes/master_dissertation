@@ -176,7 +176,7 @@ windows execution. The top plot
 shows the RTT over time, and in
 the bottom plot, the $(i, D_{i})$ point represents the distance between
 $\mathbf{y}_{i - m : i - 1}$ and $\mathbf{y}_{i : i + m - 1}$. The red vertical
-line indicates a detected change point, and the horizontal green line
+line indicates a detected change point, and the green horizontal line
 illustrates the used threshold.
 
 \begin{figure}[H]
@@ -355,8 +355,8 @@ distribution of the time of the second change given the first, and so on. To
 achieve this, the mechanism assumes that observations are independents, and that
 each segment is modeled by conjugate priors. Also, the procedure considers
 priors to model the number of changes and the time between two consecutive
-change points. The overall complexity of this method is $O(n^{2})$, considering
-that the likelihood of a segment can be evaluated in $O(1)$.
+change points. Depending of the priors choices, the overall complexity of this
+method can be $O(n^{2})$.
 
 In~\cite{bayesian_online_changepoint_detection} it is also considered that
 parameters of different segments are independents, and that data within a
@@ -368,22 +368,28 @@ run length as a prior. Assuming exponential-family likelihoods to model a
 segment, the time complexity to process a point is linear in the number of
 points already observed.
 
-THESE ARE SENSIBLE TO OUTLIERS specially the online
+As with the previous procedures, in both cases is applied a peak detection
+algorithm in the probability time series. Also,
+these methods can be sensible to outliers, specially the
+online version. Furthermore, it was empirically noticed that, in general, the
+probabilities are only non zero around the probability peaks.
+Figure~\ref{fig:bayesian_inference} illustrates the bayesian inference
+algorithms executions.
 
 \begin{figure}[H]
     \centering
     \makebox[\textwidth][c]{%
         \begin{subfigure}[b]{0.6\textwidth}
-            \includegraphics[width=\textwidth]{./figures/change_point_detection/bayesian_offline/id201_serverPOADTCSRV04_mac64:66:B3:A6:BB:3A_dtstart2016-07-01_dtend2016-07-11.png}
+            \includegraphics[width=\textwidth]{./figures/change_point_detection/bayesian_offline/id305_serverSNEDTCPROB01_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png}
             \caption{Offline.}
         \end{subfigure}
         \begin{subfigure}[b]{0.6\textwidth}
-            \includegraphics[width=\textwidth]{./figures/change_point_detection/bayesian_online/id248_serverBREDTCSRV20_mac64:66:B3:A6:BC:36_dtstart2016-07-01_dtend2016-07-11.png}
+            \includegraphics[width=\textwidth]{./figures/change_point_detection/bayesian_online/id305_serverSNEDTCPROB01_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png}
             \caption{Online.}
         \end{subfigure}%
     }
     \caption{Bayesian Inference.}
-\label{fig:bayesian_offline}
+\label{fig:bayesian_inference}
 \end{figure}%
 
 \section{Final Remarks}
