@@ -23,11 +23,10 @@
 \contentsline {section}{\numberline {4.1}Measurement Process}{17}{section.4.1}
 \contentsline {section}{\numberline {4.2}Supervised Learning Try}{17}{section.4.2}
 \contentsline {section}{\numberline {4.3}Pipeline}{20}{section.4.3}
-\contentsline {section}{\numberline {4.4}Spatial Aggregation}{20}{section.4.4}
-\contentsline {section}{\numberline {4.5}Change Point Detection Parameters Tuning}{20}{section.4.5}
-\contentsline {section}{\numberline {4.6}Time Aggregation}{20}{section.4.6}
-\contentsline {section}{\numberline {4.7}Spatial/Time Correlation}{20}{section.4.7}
-\contentsline {section}{\numberline {4.8}Differences to Previous Systems}{20}{section.4.8}
-\contentsline {chapter}{\numberline {5}Results}{21}{chapter.5}
-\contentsline {chapter}{\numberline {6}Conclusions}{22}{chapter.6}
-\contentsline {chapter}{Bibliography}{23}{chapter*.16}
+\contentsline {section}{\numberline {4.4}Spatial Correlation}{21}{section.4.4}
+\contentsline {section}{\numberline {4.5}Events Times Correlation}{21}{section.4.5}
+\contentsline {section}{\numberline {4.6}Spatial-Time Correlation}{21}{section.4.6}
+\contentsline {section}{\numberline {4.7}Differences to Previous Systems}{21}{section.4.7}
+\contentsline {chapter}{\numberline {5}Results}{22}{chapter.5}
+\contentsline {chapter}{\numberline {6}Conclusions}{23}{chapter.6}
+\contentsline {chapter}{Bibliography}{24}{chapter*.16}

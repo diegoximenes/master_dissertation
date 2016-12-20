@@ -7,7 +7,7 @@
 \contentsline {figure}{\numberline {2.2}{\ignorespaces Argus spatial aggregation.~\cite {argus_end_to_end_service_anomaly_detection_and_localization_from_an_isps_point_of_view}\relax }}{3}{figure.caption.5}
 \contentsline {figure}{\numberline {2.3}{\ignorespaces Facebook's network architecture.~\cite {netnorad}\relax }}{4}{figure.caption.6}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Median filter RTT\spacefactor \@m {}. $w=6$.\relax }}{9}{figure.caption.7}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Median filter RTT\spacefactor \@m . $w=6$.\relax }}{9}{figure.caption.7}
 \contentsline {figure}{\numberline {3.2}{\ignorespaces Median filter loss fraction. $w=2$.\relax }}{10}{figure.caption.8}
 \contentsline {figure}{\numberline {3.3}{\ignorespaces Online Sliding Windows.\relax }}{11}{figure.caption.9}
 \contentsline {figure}{\numberline {3.4}{\ignorespaces Offline Sliding Windows.\relax }}{11}{figure.caption.10}
