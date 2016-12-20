@@ -6,11 +6,12 @@
 The exposed time series of this work represent network end-to-end measures of a
 cable-television infrastructure, which runs DOCSIS with asymmetric download and
 upload bandwidths. Home routers connected to the cable modem communicate with
-one or more servers strategically located by the ISP. Measurements results from
+one or more servers strategically located by the ISP\@. Measurements results
+from
 each home router are consolidated every half hour and, by the end of every day,
 are transferred to a database. The software responsible for these procedures was
 developed by TGR (a startup at COPPE/UFRJ) in collaboration with the university
-(UFRJ), and is spread over a customers subset of a major Brazilian ISP.
+(UFRJ), and is spread over a customers subset of a major Brazilian ISP\@.
 
 In~\cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil},
 a preliminary investigation of several metrics is presented. To measure the
@@ -27,22 +28,17 @@ measurements are initiated only if the residential link is not under use by the
 ISP customer. Also, the client may have no Internet connection to start a
 measurement, or even be without electrical energy.
 
+TALK ABOUT TOPOLOGY
+
 \section{Supervised Learning Try}
 
-As stated in chapter~\ref{chap:change_point_detection} one of the main issues
-is how to select the algorithms as parameters.
-In this context, it is essential to evaluate the performance of a change point
-detection algorithm set up, which can be a challenging task in real data.
-In literature are several approaches to construct a
-change points dataset.
+As stated in Chapter~\ref{chap:change_point_detection}, one of the main issues
+of this work is the algorithms and parameters selection.
+In general, this process requires a dataset to enable the evaluation of an
+algorithm setup.
 
-It is important to note that the algorithms presented in
-chapter~\ref{chap:change_point_detection} doesn't use a previous point labels
-for a training phase. Once a change point dataset is constructed, in which a
-train set each labels each point of a time series as a change point or not, can
-open new possibilities to a supervised learning procedure, in which are not
-much explored in the literature of change pointe detection.
-
+There are several approaches to construct a
+change points dataset in the literature.
 Some works create simulated time series, in which distinct segments are sampled
 by the same generative model with different
 parameters~\cite{change_point_detection_in_time_series_data_by_relative_density_ratio_estimation}.
@@ -50,10 +46,9 @@ In general, this type of data is more easily handled by change point detection
 algorithms, since some methods assume the same models used in the dataset
 building process. Also, real data can have complex characteristics that are
 difficult to be reproduced by generative models. Another strategy is to join
-segments from different real time
-series~\cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series}.
-However, this can introduce unreal change points scenarios, and also it must be
-guaranted that the joined time series are statistically different.
+segments from different real time series with different
+characteristics~\cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series}.
+However, this can introduce unreal change points scenarios.
 
 When the latent information of the time series are available, and if there is a
 complete knowledge of what configurations changes in the latent state impact
@@ -117,18 +112,34 @@ more than 5 measures with loss fraction larger than 0.01. These filters resulted
 in 522 time series.
 
 Figure~\ref{fig:survey_system} presents a system snapshot.
-The vertical red line means that the user marked a change point in that position.
+The vertical red line means that the user marked a change point in that
+position.
+
+It is important to note that the algorithms presented in
+Chapter~\ref{chap:change_point_detection} doesn't use a previous point labels
+for a training phase. Once a change point dataset is constructed, in which a
+train set each labels each point of a time series as a change point or not, can
+open new possibilities to a supervised learning procedure, in which are not
+much explored in the literature of change pointe detection.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\linewidth]{./figures/methodology/supervised_learning_try/survey_system.png}
     \caption{Survey system snapshot.}
-    \label{fig:survey_system}
+\label{fig:survey_system}
 \end{figure}%
 
-\section{Proposed Pipeline}
+\section{Pipeline}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{./figures/methodology/pipeline/pipeline.png}
+    \caption{Pipeline.}
+\label{fig:survey_system}
+\end{figure}%
+
 \section{Spatial Aggregation}
-\section{Change Point Detection - Parameters Tuning}
+\section{Change Point Detection Parameters Tuning}
 \section{Time Aggregation}
 \section{Spatial/Time Correlation}
 \section{Differences to Previous Systems}
