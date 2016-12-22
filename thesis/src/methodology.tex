@@ -210,22 +210,15 @@ must be a tree.
 \section{Events Times Correlation}
 \label{sec:events_times_correlation}
 
-There are mainly two reasons to detect the same network event, such as an
+There are two main reasons to detect the same network event, such as an
 equipment failure, at different times in different clients. The first one is
 related to the fact that the time series are not regularly sampled. The second
-one is due to the change point detection algorithm. Therefore, it must be
-defined a procedure to, from different clients events, group the events that
-are close enough and report them.
+one is due to the change point detection algorithm behavior.
+Therefore, a procedure to group end-users events based on their type and time,
+should be flexible enough to take into consideration time delay effects.
 
-In~\cite{troubleshooting_chronic_conditions_in_large_ip_networks, argus_end_to_end_service_anomaly_detection_and_localization_from_an_isps_point_of_view}
-the time is transformed in bin, however these works doesn't present how the
-co-occurrence is detected, since it is considered a error interval around the
-events. Also this strategy introduces discontinuities, since depending no the
-data, two points in the same bin can be more distant then points in consecutive
-bins. Therefore this work present a different approach.
-
-The idea is an extension of the inexact voting in totally ordered
-space~\cite{voting_algorithms}.
+This issue was solved using an extension of the inexact voting in totally
+ordered space~\cite{voting_algorithms} algorithm.
 
 
 \section{Spatial-Time Correlation}

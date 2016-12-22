@@ -18,8 +18,8 @@ def get_cnt_class_per_ts(in_dir):
             if os.path.isdir("{}/{}".format(in_dir, dataset)):
                 df = pd.read_csv("{}/{}/dataset.csv".format(in_dir, dataset))
                 for idx, row in df.iterrows():
-                    key = (row["server"], row["mac"], row["date_start"],
-                           row["date_end"])
+                    key = (row["server"], row["mac"], row["dt_start"],
+                           row["dt_end"])
                     if key not in ts_cnt:
                         ts_cnt[key] = 0
                     ts_cnt[key] += 1
@@ -39,13 +39,16 @@ def plot_dataset():
             for idx, row in df.iterrows():
                 print "dataset={}, idx={}".format(dataset, idx)
 
-                ts = cp_utils.get_ts(row, {"filter_type": "none"})
+                ts = cp_utils.get_ts(row, {"filter_type": "none"}, "loss")
+                if not ts.y:
+                    continue
+
                 correct = cp_utils.from_str_to_int_list(
                     row["change_points_ids"])
 
                 _, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
-                ts_key = (row["server"], row["mac"], row["date_start"],
-                          row["date_end"])
+                ts_key = (row["server"], row["mac"], row["dt_start"],
+                          row["dt_end"])
                 out_file_name = utils.get_out_file_name(row["server"],
                                                         row["mac"],
                                                         dt_start,

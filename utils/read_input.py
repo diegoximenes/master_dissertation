@@ -33,6 +33,9 @@ def get_raw(in_path, metric, dt_start, dt_end, cross_traffic_thresh):
         y: values, according with x
     """
 
+    if not os.path.exists(in_path):
+        return [], []
+
     l = []
     df = pd.read_csv(in_path)
     for idx, row in df.iterrows():
