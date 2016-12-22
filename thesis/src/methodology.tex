@@ -3,7 +3,7 @@
 
 \section{Measurement Process}
 
-The exposed time series of this work represent network end-to-end measures of a
+The time series used in this work represent network end-to-end measures of a
 cable-television infrastructure, which runs DOCSIS with asymmetric download and
 upload bandwidths. Home routers connected to the cable modem communicate with
 one or more servers strategically located by the ISP\@. Measurements results
@@ -29,126 +29,6 @@ ISP customer. Also, the client may have no Internet connection to start a
 measurement, or even be without electrical energy.
 
 TALK ABOUT TOPOLOGY
-
-\section{Supervised Learning Try}
-
-As stated in Chapter~\ref{chap:change_point_detection}, one of the main issues
-of this work is the algorithms and parameters selection.
-In general, this process requires a dataset to enable the evaluation of an
-algorithm setup.
-
-There are several approaches to construct a
-change points dataset in the literature.
-Some works create simulated time series, in which distinct segments are sampled
-by the same generative model with different
-parameters~\cite{change_point_detection_in_time_series_data_by_relative_density_ratio_estimation}.
-In general, this type of data is more easily handled by change point detection
-algorithms, since some methods assume the same models used in the dataset
-building process. Also, real data can have complex characteristics that are
-difficult to be reproduced by generative models. Another strategy is to join
-segments from different real time series with different
-characteristics~\cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series}.
-However, this can introduce unreal change points scenarios. Since one of
-the goals of this work is to work with real data, this approach was discarded.
-
-When the latent information of the time series are available, and if there is a
-complete knowledge of what configurations changes in the latent state impact
-data, it is possible to check the change points only analyzing this underlying
-information. As an example, consider a time series that represents the cardiac
-frequency of a soccer player during a match. Also, consider that in this
-controlled environment, the only causes of changes in the cardiac frequency are
-the variations of physical activities, such as starting or stopping to run.
-Therefore,
-it is possible to use the times in which a player changed his movement behavior
-as the change points, whithout even analyzing the time series. However, in the
-application domain of the present work, this approach would be impractical.
-First, this would need the expertise of how the configurations of network
-topology, routers congestion, physical equipment problems, among other features,
-affect the different end-to-end QoS metrics.
-Second, this kind of information is absent in the dataset, and would be too
-complex to collect it.
-
-Another way is to use visual annotations,
-as it was done
-in~\cite{learning_sparse_penalties_for_change_point_detection_using_max_margin_interval_regression}.
-Also, manual labeling is usual for
-anomaly indentification in traffic
-traces~\ref{webclass_adding_rigor_to_manual_labeling_of_traffic_anomalies}.
-In this strategy, an application domain expert is exposed to a time series,
-and visually indicates his opinion about the change points locations.
-
-It is known that visual inspection methods can bring erroneous
-conclusions~\cite{leveraging_cloud_data_to_mitigate_user_experience_from_breaking_bad},
-and also amplify subjectivity, however, to better understand the problem, this
-approach was experimented in this work.
-
-Through a web system a user freely marked the change points with a mouse.
-The fact that data is not regularly sampled in time could bring an unwanted
-visual change perception. Therefore, the X axis of the displayed time series
-represented only the temporal order of the measures.
-It was only presented raw
-loss fraction time series with 10 days of data.
-Also, it was selected only the ones that have at
-least 85\% of the maximum possible number of points during the specified period,
-considering that data is sampled at most two times in a hour. Change points can
-be interpreted as rare events in this dataset, and several data streams have
-almost
-all measures with zero losses. Therefore, to increase the entropy,
-it was only selected time series that have at least one window of length 48 with
-more than 5 measures with loss fraction larger than 0.01.
-
-Additionally, it was provided a set of tips to the specialist:
-
-\begin{itemize}
-    \item In the case of packet loss fraction, mean changes between 0 and 0.1
-    are more sensible to the end users.
-    \item The time axis only represents the temporal order of the measurements.
-    However, in general, consecutive points in time axis are separated by 30
-    minutes.
-    \item Outlier is not a statistical change. An outlier is an observation that
-    lies outside the overall pattern of a distribution.
-\end{itemize}
-
-Figure~\ref{fig:survey_system} presents a system's snapshot.
-The vertical red line means that the user marked a change point in that
-position.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\linewidth]{./figures/methodology/supervised_learning_try/survey_system.png}
-    \caption{Survey system snapshot.}
-\label{fig:survey_system}
-\end{figure}%
-
-Five specialists with experience in network measurements and statistical
-modeling, but without background in change point detection, classified Y time
-series.
-For each time series, the Y classifications were pairwise compared through a
-metric of agreement that vary from zero (no agreement) to one (full
-agreement). Then is evaluated the average of the agreement of each time series.
-
-The confusion matrix is assessed through the following method. The change
-points of one client are represented by
-
-THE ABOVE METRIC IS ASSOCIATIVe?
-
-The change point detection problem can be interpreted as a binary
-classification problem in which each point of a time series is classified as
-``is a change point'' or ``is not a change point''.
-EMPIRICALLY SHOW THE UNBALANCE
-
-Through this analysis looking the different classification patterns it was
-defined that this strategy can be noisy, and not reflect real network faults.
-
-It is important to note that the algorithms presented in
-Chapter~\ref{chap:change_point_detection} doesn't use a previous point labels
-for a training phase. Once a change point dataset is constructed, in which a
-train set each labels each point of a time series as a change point or not, can
-open new possibilities to a supervised learning procedure, in which are not
-much explored in the literature of change pointe detection.
-
-THIS PROCEDURE IMPACT THE MINIMUM/MAXIMUM NUMBER OF CHAGE POINTS TO BE SELECTED
-IN THE PIPELINE
 
 \section{Pipeline}
 
@@ -215,13 +95,200 @@ equipment failure, at different times in different clients. The first one is
 related to the fact that the time series are not regularly sampled. The second
 one is due to the change point detection algorithm behavior.
 Therefore, a procedure to group end-users events based on their type and time,
-should be flexible enough to take into consideration time delay effects.
+should be flexible enough to take into consideration time delay effects, and
+the fact that each time series can have more than one change point.
 
-This issue was solved using an extension of the inexact voting in totally
-ordered space~\cite{voting_algorithms} algorithm.
+Therefore a detected change point in a time series is transformed in a interval
+according with a time tolerance. As an example, a change point identified at
+time $t$ means that exists a change point at the interval
+$[t - \delta, t + \delta]$. To be consistent, given the parameter $\delta$, the
+change point algorithms must report change points separated at least by
+$\delta$. The algorithms presented in Chapter~\ref{chap:change_point_detection}
+can be easily adapted to respect this restriction. However, this can also be
+overcomed by, processing the change points by an increasing time order, if two
+points are less than $\delta$ apart, then only the right one is removed.
 
+The problem then, can be described as defining the best set of points that
+cover all change points. However the best is subjective. As an example, not
+necessarily selecting the minimum number of intervals that cover all change
+points can be the most appropriated solution.
+Then
+It was used the following greedy procedure. Select the interval, in which all
+points are at most $\delta$ apart with the biggest number of points.
+By construction this interval will maximal.
+In case of
+ties, select the left most interval (left left end).
+Define a change point as the mean between
+the left and right ends of this interval. Remove the points in this interval
+and repeat the procedure until every points were removed.
+
+This heuristic was inspired in the inexact voting in totally
+ordered space~\cite{voting_algorithms} problem. In this problem a set o voters
+vote in a single point in the real line, also considering the $\delta$ parameter,
+and the objective is to
+select the interval with the biggest number of voters.
 
 \section{Spatial-Time Correlation}
 \label{sec:spatial_time_correlation}
 
+\section{Change Point Detection }
+
+As stated in Chapter~\ref{chap:change_point_detection}, one of the main issues
+of this work is the algorithms and parameters selection.
+In general, this process requires a dataset to enable the evaluation of an
+algorithm setup.
+
+There are several approaches to construct a
+change points dataset in the literature.
+Some works create simulated time series, in which distinct segments are sampled
+by the same generative model with different
+parameters~\cite{change_point_detection_in_time_series_data_by_relative_density_ratio_estimation}.
+In general, this type of data is more easily handled by change point detection
+algorithms, since some methods assume the same models used in the dataset
+building process. Also, real data can have complex characteristics that are
+difficult to be reproduced by generative models. Another strategy is to join
+segments from different real time series with different
+characteristics~\cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series}.
+However, this can introduce unreal change points scenarios. Since one of
+the goals of this work is to deal directly with real data,
+this approach was discarded.
+
+When the latent information of the time series are available, and if there is a
+complete knowledge of what configurations changes in the latent state impact
+data, it is possible to check the change points only analyzing this underlying
+information. As an example, consider a time series that represents the cardiac
+frequency of a soccer player during a match. Also, consider that in this
+controlled environment, the only causes of changes in the cardiac frequency are
+the variations of physical activities, such as starting or stopping to run.
+Therefore,
+it is possible to use the times in which a player changed his movement behavior
+as the change points, whithout even analyzing the time series. However, in the
+application domain of the present work, this approach would be impractical.
+First, this would need the expertise of how the configurations of network
+topology, routers congestion, physical equipment problems, among other features,
+affect the different end-to-end QoS metrics.
+Second, this kind of information is absent in the dataset, and would be too
+complex to collect it.
+
+Another way is to use visual annotations,
+as it was done
+in~\cite{learning_sparse_penalties_for_change_point_detection_using_max_margin_interval_regression}.
+Also, manual labeling is usual for anomaly indentification in traffic
+traces~\ref{webclass_adding_rigor_to_manual_labeling_of_traffic_anomalies}.
+In this strategy, an application domain expert is exposed to a time series,
+and visually indicates his opinion about the change points locations.
+
+It is known that visual inspection methods can bring erroneous
+conclusions~\cite{leveraging_cloud_data_to_mitigate_user_experience_from_breaking_bad},
+and also amplify subjectivity, however, to better understand the problem, this
+approach was experimented in this work.
+
+Through a web system a user freely marked the change points with a mouse.
+The fact that data is not regularly sampled in time could bring an unwanted
+visual change perception. Therefore, the X axis of the displayed time series
+represented only the temporal order of the measures.
+It was only presented raw
+loss fraction time series with 10 days of data.
+Also, it was selected only the ones that have at
+least 85\% of the maximum possible number of points during the specified period,
+considering that data is sampled at most two times in a hour. Change points can
+be interpreted as rare events in this dataset, and several data streams have
+almost
+all measures with zero losses. Therefore, to increase the entropy,
+it was only selected time series that have at least one window of length 48 with
+more than 5 measures with loss fraction larger than 0.01.
+
+Additionally, it was provided a set of tips to the specialist:
+
+\begin{itemize}
+    \item In the case of packet loss fraction, mean changes between 0 and 0.1
+    are more sensible to the end users.
+    \item The time axis only represents the temporal order of the measurements.
+    However, in general, consecutive points in time axis are separated by 30
+    minutes.
+    \item Outlier is not a statistical change. An outlier is an observation that
+    lies outside the overall pattern of a distribution.
+\end{itemize}
+
+Figure~\ref{fig:survey_system} presents a system's snapshot.
+The vertical red line means that the user marked a change point in that
+position.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{./figures/methodology/supervised_learning_try/survey_system.png}
+    \caption{Survey system snapshot.}
+\label{fig:survey_system}
+\end{figure}%
+
+X specialists with experience in network measurements and statistical
+modeling, but without background in change point detection, classified X time
+series.
+To analyze the agreement between different users classifications,
+for each time series, was applied the Events Times Correlation procedure
+described in Section~\ref{sec:events_times_correlation}. Therefore, it was
+considered that each user voted to a set of change points positions.
+The hours tolerance was set to 7 hours, which means 14 consecutive points. Also
+if a user classified points that are too near, it only considered the left most
+one. As an example if a user marked a change point at time $t$ and $t + 4$
+hours, than it was only considered the point at time $t$.
+Then, it
+was counted, for each change point voted at least once, the number of
+specialists that voted in that change point.
+Figure~\ref{fig:classifications_per_vote} shows the histogram of this counting.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{./figures/methodology/supervised_learning_try/cnt_classifications_per_vote.png}
+    \caption{Classifications per vote distribution.}
+\label{fig:classifications_per_vote}
+\end{figure}%
+
+It is possible to note that, about X\% of the change points were only voted by
+a single user, and only Y\% were voted by the majority (more than X votes).
+Therefore, in general,
+the consesus of change point locations is low.
+
+Next, in Figures~\ref{fig:user_classifications_match} is presented the
+classification by users that agree with each other, and
+Figure~\ref{fig:user_classifications_unmatch} presents a time series with
+several disagreements.
+
+It is possible to note that the users disagrees between them and also that some
+users use different statistical classification patterns in the same time
+series. At the end of the experiment it was asked to the specialists, and they
+sad that their classification pattern changed through they classified time
+series, they could classify in different days, and also that the problem is
+subjective.
+
+Therefore since, this initial experiment resulted in a noisy dataset, that
+probably don't reflect real network events, and that
+would be difficult to scale the experiment, including more time series and more
+specialists, this strategy was aborted.
+
+However, another result from this experiment is an quantitative study of the
+rarity of a
+change point. The change point detection problem can be interpreted as a binary
+classification problem in which each point of a time series is classified as
+``is a change point'' or ``is not a change point''. The voting process, that
+resulted in a logical OR opinion of the specialists resulted in X\% of the
+points being classfied in change points.
+
+It is important to note that the algorithms presented in
+Chapter~\ref{chap:change_point_detection} doesn't use a previous point labels
+for a training phase. Once a change point dataset is constructed, in which a
+train set each labels each point of a time series as a change point or not, can
+open new possibilities to a supervised learning procedure, in which are not
+much explored in the literature of change pointe detection.
+
 \section{Differences to Previous Systems}
+
+The high level abstraction of the proposed pipeline has several similarities
+with
+Argus~\ref{argus_end_to_end_service_anomaly_detection_and_localization_from_an_isps_point_of_view}.
+For example, both systems
+
+In general the differences are guided by the data availability and the
+measurement process already implemented.
+
+\section{Deployment Issues}
