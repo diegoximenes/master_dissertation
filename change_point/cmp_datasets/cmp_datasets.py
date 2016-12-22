@@ -1,82 +1,78 @@
 import os
 import sys
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pylab as plt
+import numpy as np
+from collections import defaultdict
+from operator import itemgetter
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
-import change_point.cp_utils.cmp_class as cmp_class
+import utils.dt_procedures as dt_procedures
 import change_point.cp_utils.cp_utils as cp_utils
+import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 
 
-def cmp_datasets():
-    cmp_class_args = {"win_len": 15}
-    f_metrics = [cmp_class.f_half_score, cmp_class.f_1_score,
-                 cmp_class.f_2_score, cmp_class.jcc, cmp_class.acc,
-                 cmp_class.bacc]
+def cmp_datasets(eps_hours):
+    tsid_cpdts = defaultdict(list)
+    tsid_cnt = defaultdict(int)
 
-    in_dir = "{}/change_point/input/".format(base_dir)
-
-    datasets = []
+    in_dir = "{}/change_point/input".format(base_dir)
     for dataset in os.listdir(in_dir):
-        if os.path.isdir("{}/{}".format(in_dir, dataset)):
-            datasets.append(dataset)
+        dataset_path = "{}/{}".format(in_dir, dataset)
+        if (os.path.isdir(dataset_path) and
+                ("unsupervised" not in dataset_path) and
+                ("edmundo@land.ufrj.br" != dataset)):
+            in_path = "{}/dataset.csv".format(dataset_path)
 
-    with open("{}/cmp_datasets.csv".format(script_dir), "w") as f:
-        # write header
-        f.write("dataset_ground_truth,dataset_other,cnt_compared_ts,"
-                "tp,tn,fp,fn")
-        for f_metric in f_metrics:
-            f.write(",{}".format(f_metric.__name__))
-        f.write("\n")
+            df = pd.read_csv(in_path)
+            for idx, row in df.iterrows():
+                tsid_dic = {"server": row["server"],
+                            "mac": row["mac"],
+                            "dt_start": row["dt_start"],
+                            "dt_end": row["dt_end"]}
+                tsid = tuple(sorted(tsid_dic.items()))
 
-        for dataset1 in datasets:
-            for dataset2 in datasets:
-                if ((dataset1 != dataset2) and (dataset1 != "unsupervised") and
-                        (dataset2 != "unsupervised")):
-                    print "dataset1={}, dataset2={}".format(dataset1, dataset2)
+                if row["change_points"] == "\'\'":
+                    cp_dts = []
+                else:
+                    cp_dts = map(dt_procedures.from_js_strdt_to_dt,
+                                 row["change_points"].split(","))
+                    cp_dts = cp_utils.merge_close_cps(cp_dts, eps_hours)
 
-                    df1 = pd.read_csv("{}/{}/dataset.csv".format(in_dir,
-                                                                 dataset1))
-                    df2 = pd.read_csv("{}/{}/dataset.csv".format(in_dir,
-                                                                 dataset2))
+                tsid_cpdts[tsid] += cp_dts
+                tsid_cnt[tsid] += 1
 
-                    conf = {"tp": 0, "tn": 0, "fp": 0, "fn": 0}
-                    cnt_compared_ts = 0
+    cnt_classific_per_vote = []
+    for tsid, cnt in tsid_cnt.iteritems():
+        if cnt == 4:
+            tsid_dic = dict(tsid)
+            l = map(lambda dt: {"dt": dt},
+                    tsid_cpdts[tsid])
+            l.sort(key=itemgetter("dt"))
+            votes = unsupervised_utils.multiple_inexact_voting(l, eps_hours)
 
-                    for idx, row in df1.iterrows():
-                        query = ((df2["mac"] == row["mac"]) &
-                                 (df2["server"] == row["server"]) &
-                                 (df2["dt_start"] == row["dt_start"]) &
-                                 (df2["dt_end"] == row["dt_end"]))
-                        df_intersec = df2[query]
+            for vote in votes:
+                cnt_classific_per_vote.append(len(vote["interval"]))
 
-                        # df_intersec must have 0 or 1 row
-                        if df_intersec.shape[0] == 1:
-                            cnt_compared_ts += 1
-
-                            ts = cp_utils.get_ts(row, {"filter_type": "none"},
-                                                 "loss")
-                            correct = cp_utils.from_str_to_int_list(
-                                row["change_points_ids"])
-                            pred = cp_utils.from_str_to_int_list(
-                                df_intersec.iloc[0]["change_points_ids"])
-
-                            lconf = cmp_class.conf_mat(correct, pred, ts,
-                                                       cmp_class.match_id,
-                                                       **cmp_class_args)
-                            for key in lconf.keys():
-                                conf[key] += lconf[key]
-
-                    line = "{},{},{}" + ",{}" * 4
-                    line = line.format(dataset1, dataset2, cnt_compared_ts,
-                                       conf["tp"], conf["tn"], conf["fp"],
-                                       conf["fn"])
-                    for f_metric in f_metrics:
-                        line += ",{}".format(f_metric(conf))
-                    line += "\n"
-                    f.write(line)
+    print sorted(cnt_classific_per_vote)
+    out_path = "{}/cnt_classifications_per_vote.png".format(script_dir)
+    plt.clf()
+    matplotlib.rcParams.update({"font.size": 27})
+    plt.gcf().set_size_inches(16, 11)
+    bins = range(1, max(cnt_classific_per_vote) + 2)
+    weights = (np.asarray([1.0] * len(cnt_classific_per_vote)) /
+               len(cnt_classific_per_vote))
+    plt.ylabel("frequency")
+    plt.xlabel("votes per change point")
+    plt.xticks(bins[:-1])
+    plt.hist(cnt_classific_per_vote, bins=bins, normed=True, weights=weights)
+    plt.savefig(out_path)
 
 
 if __name__ == "__main__":
-    cmp_datasets()
+    eps_hours = 4
+    cmp_datasets(eps_hours)

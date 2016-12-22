@@ -170,6 +170,17 @@ def get_f_dist(f_dist, bin_size_f_dist, min_bin_f_dist, max_bin_f_dist):
     return f_dist
 
 
+def merge_close_cps(cp_dts, eps_hours):
+    if not cp_dts:
+        return []
+
+    ret_cp_dts = [cp_dts[0]]
+    for i in xrange(1, len(cp_dts)):
+        if not dt_procedures.dt_is_close(cp_dts[i], ret_cp_dts[-1], eps_hours):
+            ret_cp_dts.append(cp_dts[i])
+    return ret_cp_dts
+
+
 def detect_peaks(x, mph=None, mpd=1, threshold=0, edge='rising',
                  kpsh=False, valley=False, show=False, ax=None):
 

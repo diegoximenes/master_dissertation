@@ -60,7 +60,8 @@ def plot_dataset():
                 utils.create_dirs([out_dir])
                 plot_procedures.plot_ts(ts, out_path, ylim=[-0.02, 1.02],
                                         dt_axvline=np.asarray(ts.x)[correct],
-                                        compress=True)
+                                        compress=True, ylabel="loss fraction",
+                                        xlabel="$i$", title="raw")
 
 
 if __name__ == "__main__":
