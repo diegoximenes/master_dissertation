@@ -6,32 +6,30 @@
 The time series used in this work represent network end-to-end measures of a
 cable-television infrastructure, which runs DOCSIS with asymmetric download and
 upload bandwidths. Home routers connected to the cable modem communicate with
-one or more servers strategically located by the ISP\@. Measurements results
-from
+a server strategically located by the ISP\@.
+Each server is responsible for measurements of several end-users.
+Measurements results from
 each home router are consolidated every half hour and, by the end of every day,
 are transferred to a database. The software responsible for these procedures was
 developed by TGR (a startup at COPPE/UFRJ) in collaboration with the university
 (UFRJ), and is spread over a customers subset of a major Brazilian ISP\@.
 
-In~\cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil},
-a preliminary investigation of several metrics is presented. To measure the
+To measure the
 round
 trip packet loss fraction and RTT between the home router and the associated
 server, the
 home router sends a train of short UDP packets, and then the server bounces back
 them. The data here presented considers a train of 100 UDP packets of 32 bytes,
 separated by 1 millisecond. This dissertation only deals with these two
-metrics.
+metrics. Also, the traceroute using UDP packets from the end-users to
+the respective servers are collected with the same frequency.
+In~\cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil},
+a preliminary investigation of several metrics is presented.
 
 The resulted time series are unevenly spaced due to a range of reasons. First,
 measurements are initiated only if the residential link is not under use by the
 ISP customer. Also, the client may have no Internet connection to start a
 measurement, or even be without electrical energy.
-
-Each server is responsible to conduct measurements of several end-users.
-
-The traceroute is implemented through UDP packets, since this type of packets
-is more accepted in the Tier-2 and Tier-3 ISP's of the environment.
 
 \section{Pipeline}
 
@@ -69,7 +67,8 @@ identified by a mean decrease.
 The inconclusive event means that the segments averages are too close.
 
 The Spatial Correlation procedure cluster the end-users in end-groups
-according with their location in the network.
+according with their location in the network. This grouping then can be used in
+further steps to reduce the search space of possible events locations.
 This stage must produce a specific grouping structure, which is detailed in
 Section~\ref{sec:spatial_correlation}.
 
@@ -91,11 +90,16 @@ This is better exaplained in Section~\ref{sec:spatial_time_correlation}.
 This procedure aims at cluster end-users in user-groups.
 An end-user can
 participate in more than one end-group.
-In each user-groups the end-users of this group share at least one physical
+In each user-groups the end-users of this group share at least one network
 equipment.
+
 To reasons that will be explained in
 Session~\ref{sec:spatial_time_correlation} the resulting end-groups structure
 must be a tree.
+
+The clients in which the traceroute changes during the specified time period
+was discarded from the analysis. The changes can occur in routing tables
+update.
 
 The end-users are clients of a Tier-3 ISP\@. The measurement server localization
 is classified in two cases. In the OFF-NET case, the traffic between the
@@ -114,7 +118,8 @@ are the first routers that appear in the traceroute, and the root is the
 server. The internal vertexes are routers from the Tier-3 ISP\@.
 
 In HFC network, the first network component to respond to the traceroute can be
-a CMTS, however some CMTSs are configured to not answer ICMP packets. However,
+a CMTS, however some CMTSs are configured to not answer the traceroute
+requests. However,
 since the end-user and the associated CMTS are in the same subnetwork, the CMTS
 respond with it's private IP, that can be used by different CMTS\@. Therefore to
 differentiate distinct CMTS that have the same private IP, each vertex of the
@@ -125,8 +130,8 @@ However inn the OFF-NET case the traceroute reconstruction don't lead to a
 tree due to the load balancing. To overcome this problem the vertex associated
 with the Tier-2 ISP is compressed to only one vertex. In only one case this
 procedure don't lead to a tree, when the traffic from the Tier-2 ISP to the
-Tier-2 ISP can leave to different routers. By now this case was removed from
-the analysis.
+Tier-2 ISP can leave to different routers. By now this case rare in the dataset
+and was removed from the dataset.
 
 In Figure~\ref{fig:} contains an example of the reconstructed
 topology. The names and IPS were aninymazed.
@@ -262,8 +267,51 @@ there are other clients that don't passes through them and present the problem.
 It is possible to note that this commom problems will be a suffix mathc of this
 prefix problems.
 
-Figure~\ref{fig} presentes several topologies and different network events.
-From this analysis it is shown the possible locations found by the algorithm.
+Figure~\ref{fig:network_events_locations_examples} presentes several topologies
+and different network events. The gray vertexes indicate a real network event
+that occurre in this location.
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.2\textwidth}
+            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/graph1.png}
+            \caption{}\label{fig:network_events_locations_examples_1}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.2\textwidth}
+            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/graph2.png}
+            \caption{}\label{fig:network_events_locations_examples_2}
+        \end{subfigure}%
+        \begin{subfigure}[b]{0.3\textwidth}
+            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/graph3.png}
+            \caption{}\label{fig:network_events_locations_examples_3}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.3\textwidth}
+            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/graph4.png}
+            \caption{}\label{fig:network_events_locations_examples_4}
+        \end{subfigure}%
+    }
+    \caption{Network events locations examples.}
+\label{fig:network_events_locations_examples}
+\end{figure}%
+
+In Figure~\ref{fig:network_events_locations_examples_1} the analysis made
+in the path (A, B, C, D) result in the following possible events locations (A,
+B, C, D). The analysis made in the path (E, F, C, D) results in the following
+possible locations (E, F, C, D). Correlating both paths results checking the
+suffix of the prefix, the possible locations are (C, D). In
+Figure~\ref{fig:network_events_locations_examples_2} the analysis is the same
+of the previous case.
+
+In Figure~\ref{fig:network_events_locations_examples_3} the analyis made in the
+all paths result in the own path. Correlating the resultings the output is the
+D vertex.
+
+In Figure~\ref{fig:network_events_locations_examples_4} the analysis in path
+(G, H, D) don't detect the event. The path (A, B, C, D) find that (A, B, C) are
+the possible locations. Path (E, F, C, D) result in the (E, F, C) possible
+locations. Correlating the results of different paths result in the C vertex,
+which is exacly the correct location.
 
 The comparison of network events of different user-groups is made comparing if
 they are close enough.
@@ -444,3 +492,7 @@ In general the differences are guided by the data availability and the
 measurement process already implemented.
 
 \section{Deployment Issues}
+
+In general, the procedures are paralelazied. For example the change point
+algorithm can be independtly executed in for each client. The path analysis
+from the spatial time correlation can be executed independtly per path.
