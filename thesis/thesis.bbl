@@ -1,4 +1,4 @@
-\begin{thebibliography}{27}
+\begin{thebibliography}{28}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -183,6 +183,11 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://doi.acm.org/2940116.2940135}\textgreater .
 
+\bibitem[\MakeUppercase{Parhami}(1994)Parhami]{voting_algorithms}
+\MakeUppercase{Parhami, B.}
+\newblock \enquote{Voting algorithms}, \emph{IEEE transactions on reliability},
+  v.~43, n.~4, \penalty0 pp.~617--629, 1994.
+
 \bibitem[\MakeUppercase{Liu}\emph{ et~al.}(2013)Liu, Yamada, Collier, e
   Sugiyama]{change_point_detection_in_time_series_data_by_relative_density_ratio_estimation}
 \MakeUppercase{Liu, S., Yamada, M., Collier, N., \MakeLowercase{et~al.}}
@@ -227,10 +232,14 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://doi.acm.org/10.1145/1544012.1544014}\textgreater .
 
-\bibitem[\MakeUppercase{Parhami}(1994)Parhami]{voting_algorithms}
-\MakeUppercase{Parhami, B.}
-\newblock \enquote{Voting algorithms}, \emph{IEEE transactions on reliability},
-  v.~43, n.~4, \penalty0 pp.~617--629, 1994.
+\bibitem[\MakeUppercase{Augustin}\emph{ et~al.}(2006)Augustin, Cuvellier,
+  Orgogozo, Viger, Friedman, Latapy, Magnien, e
+  Teixeira]{avoiding_traceroute_anomalies_with_paris_traceroute}
+\MakeUppercase{Augustin, B., Cuvellier, X., Orgogozo, B.,
+  \MakeLowercase{et~al.}}
+\newblock \enquote{Avoiding traceroute anomalies with Paris traceroute}. In:
+  \emph{Proceedings of the 6th ACM SIGCOMM conference on Internet measurement},
+  pp. 153--158. ACM, 2006.
 
 \bibitem[\MakeUppercase{Auger} e \MakeUppercase{Lawrence}(1989)Auger e
   Lawrence]{algorithms_for_the_optimal_identification_of_segment_neighborhoods}

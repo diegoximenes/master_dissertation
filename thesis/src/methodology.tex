@@ -28,15 +28,21 @@ measurements are initiated only if the residential link is not under use by the
 ISP customer. Also, the client may have no Internet connection to start a
 measurement, or even be without electrical energy.
 
-TALK ABOUT TOPOLOGY
+Each server is responsible to conduct measurements of several end-users.
+
+The traceroute is implemented through UDP packets, since this type of packets
+is more accepted in the Tier-2 and Tier-3 ISP's of the environment.
 
 \section{Pipeline}
 
 This section describes, in a high level abstraction, the proposed workflow
 used to detect network events and localize their cause. When necessary, some
 steps are better explored in further sections.
-The analysis seeks for events during a specific time period, and considers a
+The analysis seeks for events during a specific time period, in a single
+measurement server, and considers a
 single metric (loss fraction or RTT), which are specified as parameters.
+Therefore the complete analysis, considere several executions, for different
+servers, and parameters.
 Figure~\ref{fig:pipeline} illustrates the process.
 
 \begin{figure}[H]
@@ -82,13 +88,60 @@ This is better exaplained in Section~\ref{sec:spatial_time_correlation}.
 \section{Spatial Correlation}
 \label{sec:spatial_correlation}
 
-This procedure aims at cluster end-users in end-groups. An end-user can
-participate in more than one end-group. To reasons that will be explained in
+This procedure aims at cluster end-users in user-groups.
+An end-user can
+participate in more than one end-group.
+In each user-groups the end-users of this group share at least one physical
+equipment.
+To reasons that will be explained in
 Session~\ref{sec:spatial_time_correlation} the resulting end-groups structure
 must be a tree.
 
+The end-users are clients of a Tier-3 ISP\@. The measurement server localization
+is classified in two cases. In the OFF-NET case, the traffic between the
+end-user and server goes through a Tier-2 ISP\@. In the ON-NET case, the traffic
+between them doesn't leave the Tier-3 ISP infrastructure. The Tier-3 doesn't
+applies load balancing and don't have MPLS, however the Tier-2 ISP is more
+complicated, presenting both techniques. The IP topology is reconstructed
+through traceroute measurements started from the end-users to the server. As
+with the other metrics, the traceroute is executed in every 30 minutes.
+
+Therefore fixing a single server, and only the ON-NET case, the lack of load
+balancing gurantee that the traceroute
+reconstruction topology lead to tree structure. In this case, each router that
+responds the traceroute can be used as an user-group. In this context the leafs
+are the first routers that appear in the traceroute, and the root is the
+server. The internal vertexes are routers from the Tier-3 ISP\@.
+
+In HFC network, the first network component to respond to the traceroute can be
+a CMTS, however some CMTSs are configured to not answer ICMP packets. However,
+since the end-user and the associated CMTS are in the same subnetwork, the CMTS
+respond with it's private IP, that can be used by different CMTS\@. Therefore to
+differentiate distinct CMTS that have the same private IP, each vertex of the
+topology is defined by the IP responded + the first public IP that appears to
+the path to the server.
+
+However inn the OFF-NET case the traceroute reconstruction don't lead to a
+tree due to the load balancing. To overcome this problem the vertex associated
+with the Tier-2 ISP is compressed to only one vertex. In only one case this
+procedure don't lead to a tree, when the traffic from the Tier-2 ISP to the
+Tier-2 ISP can leave to different routers. By now this case was removed from
+the analysis.
+
+In Figure~\ref{fig:} contains an example of the reconstructed
+topology. The names and IPS were aninymazed.
+
+Also, in End-Users Filtering, some clients are removed due to traceroute
+inconsistencies~\cite{avoiding_traceroute_anomalies_with_paris_traceroute},
+such as the same node that appears more than once in different
+hops, traceroutes that don't reach the target.
+
 \section{Events Times Correlation}
 \label{sec:events_times_correlation}
+
+The motivation of this step is to, given the change points of each end-user of
+an end-group, infer information of network events that can be common to these
+end-users.
 
 There are two main reasons to detect the same network event, such as an
 equipment failure, at different times in different clients. The first one is
@@ -98,40 +151,139 @@ Therefore, a procedure to group end-users events based on their type and time,
 should be flexible enough to take into consideration time delay effects, and
 the fact that each time series can have more than one change point.
 
-Therefore a detected change point in a time series is transformed in a interval
-according with a time tolerance. As an example, a change point identified at
-time $t$ means that exists a change point at the interval
-$[t - \delta, t + \delta]$. To be consistent, given the parameter $\delta$, the
-change point algorithms must report change points separated at least by
-$\delta$. The algorithms presented in Chapter~\ref{chap:change_point_detection}
+In order to relax the change point location, a detected change point is
+transformed in an interval in accordance to a time tolerance.
+Therefore, a change point identified at
+time $t$ means that exists a change point in the interval
+$[t - \delta, t + \delta]$. To be consistent,
+change point algorithms must report locations by separated more than
+$2 \delta$ time units. The algorithms presented in
+Chapter~\ref{chap:change_point_detection}
 can be easily adapted to respect this restriction. However, this can also be
-overcomed by, processing the change points by an increasing time order, if two
-points are less than $\delta$ apart, then only the right one is removed.
+achieved by a post processing step, in which sweeping points from left to right,
+if two
+points are less or equal than $2 \delta$ apart, then the right one is removed.
 
-The problem then, can be described as defining the best set of points that
-cover all change points. However the best is subjective. As an example, not
-necessarily selecting the minimum number of intervals that cover all change
-points can be the most appropriated solution.
-Then
-It was used the following greedy procedure. Select the interval, in which all
-points are at most $\delta$ apart with the biggest number of points.
-By construction this interval will maximal.
-In case of
-ties, select the left most interval (left left end).
-Define a change point as the mean between
-the left and right ends of this interval. Remove the points in this interval
-and repeat the procedure until every points were removed.
+Then, the problem can be defined as selecting a set of network events, that
+includes time and type, that explain all end-users events of a end-group. This
+problem have several possible solutions, and the comparison between two
+possible solutions is subjective. As an example, not
+necessarily selecting the minimum number of events that cover all change
+points is the most appropriate solution.
 
-This heuristic was inspired in the inexact voting in totally
+Therefore, it was created a heuristic inspired in the inexact voting in totally
 ordered space~\cite{voting_algorithms} problem. In this problem a set o voters
-vote in a single point in the real line, also considering the $\delta$ parameter,
+vote in a single point in the real line, also considering a $\delta$ parameter,
 and the objective is to
 select the interval with the biggest number of voters.
+
+Then greedy procedure, called here is Multiple Inexact Voting in Totally
+Ordered Space, is specified in
+Algorithm~\ref{alg:multiple_inexact_voting_totally_ordered_space}
+
+\begin{algorithm}[H]
+\caption{Multiple Inexact Voting in Totally Ordered Space}
+\label{alg:multiple_inexact_voting_totally_ordered_space}
+    \begin{algorithmic}[1]
+        \State{} Let $l$ be the end-users events sorted by time
+        \While{$l$ is not empty}
+            \State{} Select the interval $d$ with the biggest number of events,
+            in which all events are at most $2 * \delta + 1$ apart.
+            In case of ties select the left most one. Report the mean of $d$ as
+            a network event
+            \State{} Remove all events from $l$ that are in $d$
+        \EndWhile{}
+    \end{algorithmic}
+\end{algorithm}
+
+It is possible to note that, in each iteration the procedure solves an instance
+of the inexact voting in totally ordered space.
+
+A more straighforward solution that was not tested in this work is to create
+regular time-bins, and if two end-users events are in the same bin them they
+are a common network event. However this type of solution can introduce
+discontinuities. If a network event occur in at the end/begining of a time-bin,
+then is likely to different end-user events truly associated with the same
+network event will be located in different bins. The proposed method can also
+suffer from a similar problem, when two network events are too close, it is
+possible misclassfy events when ties occur.
+However supposing
+that network events sensible to end-to-end QoS metrics are signifcantly apart,
+this issue will be irrelevant with a relative small $\delta$.
+
+Idenpendtly of how to define the network events, if exists co-occurrent events
+with same type then it is not possible to separate them. Event considering the
+$\delta$ parameter, if an end-user event is detected far from the real network
+event, it will be ideintified as a different event. This can better handled
+increasing the sampling frequency.
 
 \section{Spatial-Time Correlation}
 \label{sec:spatial_time_correlation}
 
-\section{Change Point Detection }
+These step aims to correlate network events detected in different user-groups
+to localize network events.
+
+Suppose a single network event, defined by a time and a type. The following
+analysis is based in the inclusion/exclusion principle. Also, it considers that
+if a specific equipment presents a failure or an improvement, all QoS metrics
+in which the traffic goes through this equipment will sense the modification.
+Also, it is considered that if a change point detection setup is able to
+detect a network event in a end-user dataset, it will also be able to detect
+the same event in other end-user time series if this event impacted both
+end-users. Also it is considered that co-occurrent events are not possible.
+
+Suppose that only a proper subset of the clients of an user-group defined by a
+leaf in the user-group topolgy detects the event. Therefore, through the
+suppositions is possible to afirm that these clients share some common network
+equipment before the first hop that caused the event. It is possible to exclude
+the first or posterior hops from this conclusion, since not all clients which
+traffic goes to this first hop detected the event.
+
+However if a all clietns of the first hop detected the event, then the  problem
+can be this hop. But also can be before the first hop if all clients share a
+single equipment before the hop. Also can be after the first hop. To check the
+after, the same kind of analysis is applied to the next hop to the server. If
+not all clients of the second hop detected this event, then the problem is not
+at the second hop. So for sure is at most at the first hop. However if all
+clients of the second hop have the problem than then analysis recursively goes
+untill reach a case of find a hop without every clients with the event or
+reaching the server.
+
+This analysis is made for every possible path to the server, that is, starting
+for each leaf of the user-group topology.
+
+However different paths share common network equipments and the resulted
+problematic components gathered from each path analysis can be correlated. The
+list of possible problematic locations from a path analysis consists of a path
+prefix from the end-user to the server. If in different path the same network
+event is detected, then they must share at least one equipment in commum. The
+ones that are not in commom can be discarded from the problematic list, since
+there are other clients that don't passes through them and present the problem.
+It is possible to note that this commom problems will be a suffix mathc of this
+prefix problems.
+
+Figure~\ref{fig} presentes several topologies and different network events.
+From this analysis it is shown the possible locations found by the algorithm.
+
+The comparison of network events of different user-groups is made comparing if
+they are close enough.
+
+If more than one network event of the same type occur at the same type is
+possible to have an empty suffix match if the some affected end-users don't
+share components. Threfore, to avoid this situation, the analysis only
+considers paths that share the last problematic vertex.
+
+Also the tree topolgy requirement can be relaxed. In case of load balancing
+only considering the source address the proposed procedure works. However the
+problem correlation between different paths will not result in suffix of the
+prefix problems, but the problems will only the single matches. The only
+drawback is the co-occurrence.
+
+As will be seen in Chapter~\ref{chap:conclusions} this kind of analysis suffer
+from sparsiness of the clients, for example several vertex can be traversed by
+the same clients.
+
+\section{Change Point Detection Issues}
 
 As stated in Chapter~\ref{chap:change_point_detection}, one of the main issues
 of this work is the algorithms and parameters selection.
