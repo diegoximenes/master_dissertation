@@ -1,0 +1,9 @@
+digraph {
+   "((u'badfb801.virtua.com.br', u'186.223.184.1'), (u'badfb801.virtua.com.br', u'186.223.184.1'))" -> "((u'badfa001.virtua.com.br', u'186.223.160.1'), (u'badfa001.virtua.com.br', u'186.223.160.1'))"
+   "((u'b3e9800a.virtua.com.br', u'179.233.128.10'), (u'b3e9800a.virtua.com.br', u'179.233.128.10'))" -> "(('embratel', 'embratel'), ('embratel', 'embratel'))"
+   "(('embratel', 'embratel'), ('embratel', 'embratel'))" -> "(('NRIDTCLDM031', 'NRIDTCLDM031'), ('NRIDTCLDM031', 'NRIDTCLDM031'))"
+   "((u'b5df6801.virtua.com.br', u'181.223.104.1'), (u'b5df6801.virtua.com.br', u'181.223.104.1'))" -> "((u'b3e9800a.virtua.com.br', u'179.233.128.10'), (u'b3e9800a.virtua.com.br', u'179.233.128.10'))"
+   "((u'b3e99801.virtua.com.br', u'179.233.152.1'), (u'b3e99801.virtua.com.br', u'179.233.152.1'))" -> "((u'b3e9800a.virtua.com.br', u'179.233.128.10'), (u'b3e9800a.virtua.com.br', u'179.233.128.10'))"
+   "((u'10.19.0.1', u'10.19.0.1'), (u'badfa001.virtua.com.br', u'186.223.160.1'))" -> "((u'badfa001.virtua.com.br', u'186.223.160.1'), (u'badfa001.virtua.com.br', u'186.223.160.1'))"
+   "((u'badfa001.virtua.com.br', u'186.223.160.1'), (u'badfa001.virtua.com.br', u'186.223.160.1'))" -> "(('NRIDTCLDM031', 'NRIDTCLDM031'), ('NRIDTCLDM031', 'NRIDTCLDM031'))"
+}

@@ -4,6 +4,7 @@
 /change_point/unsupervised/prints
 
 #except these files
+!/thesis_graphs/**
 !/thesis/**
 !.gitignore
 !*.sh

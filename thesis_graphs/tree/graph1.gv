@@ -1,0 +1,9 @@
+digraph {
+    rankdir=BT
+    "A" -> "B"
+    "B" -> "C"
+    "C" -> "D"
+    "E" -> "F"
+    "F" -> "C"
+    "D" [style=filled, fillcolor=gray]
+}
