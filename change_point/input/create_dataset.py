@@ -58,13 +58,13 @@ def from_dt_to_id(in_path, metric, dt_start, dt_end, l_dt):
     return l_id
 
 
-def add_cp_ids(target_email):
+def add_cp_ids():
     """
     write to in_path a new column: the change points ids (index of change
     points when points are sorted by measure datetime)
     """
 
-    in_path = "{}/{}/data_web_system.csv".format(script_dir, target_email)
+    in_path = "{}/data_web_system.csv".format(script_dir)
     df = pd.read_csv(in_path)
     if "change_points_ids" not in df:
         cp_ids = []
@@ -74,6 +74,12 @@ def add_cp_ids(target_email):
             dt_dir = utils.get_dt_dir(dt_start, dt_end)
             in_path = "{}/input/{}/{}/{}.csv".format(base_dir, dt_dir,
                                                      row["server"], row["mac"])
+
+            ts = TimeSeries(in_path, "loss", dt_start=dt_start, dt_end=dt_end)
+            if not ts.x:
+                cp_ids.append("")
+                continue
+
             if str(row["change_points"]) != "\'\'":
                 l_dt = map(dt_procedures.from_js_strdt_to_dt,
                            row["change_points"].split(","))
@@ -81,23 +87,29 @@ def add_cp_ids(target_email):
                 cp_ids.append(",".join(map(str, l_id)))
             else:
                 cp_ids.append("")
+
         df["change_points_ids"] = cp_ids
-        df.to_csv("{}/{}/data_web_system.csv".format(script_dir, target_email),
-                  index=False)
+        df.to_csv("{}/data_web_system.csv".format(script_dir), index=False)
 
 
 if __name__ == "__main__":
-    for target_email in ["gabriel.mendonca@tgr.net.br", "edmundo@land.ufrj.br",
-                         "gustavo.santos@tgr.net.br", "rosam@land.ufrj.br",
-                         "guisenges@land.ufrj.br"]:
+    target_emails = ["gabriel.mendonca@tgr.net.br", "edmundo@land.ufrj.br",
+                     "gustavo.santos@tgr.net.br", "rosam@land.ufrj.br",
+                     "guisenges@land.ufrj.br", "edmundosilva@gmail.com"]
+
+    shutil.copyfile("{}/change_point/from_unsupervised_to_supervised/"
+                    "classifications.csv".format(base_dir),
+                    "{}/data_web_system.csv"
+                    "".format(script_dir))
+    add_cp_ids()
+
+    for target_email in target_emails:
         print "target_email={}".format(target_email)
 
         utils.create_dirs(["{}/change_point/input/{}".format(base_dir,
                                                              target_email)])
-        shutil.copyfile("{}/change_point/from_unsupervised_to_supervised/"
-                        "classifications.csv".format(base_dir),
-                        "{}/change_point/input/{}/data_web_system.csv"
-                        "".format(base_dir, target_email))
-        add_cp_ids(target_email)
+        shutil.copyfile("{}/data_web_system.csv".format(script_dir),
+                        "{}/{}/data_web_system.csv".format(script_dir,
+                                                           target_email))
         create_dataset(target_email)
         split_train_test(target_email)
