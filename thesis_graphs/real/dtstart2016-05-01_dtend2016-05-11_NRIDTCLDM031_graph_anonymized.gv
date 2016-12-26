@@ -1,0 +1,10 @@
+digraph {
+    rankdir=BT
+    "PUBLIC_1, PUBLIC_1" -> "PUBLIC_2, PUBLIC_2"
+    "PUBLIC_3, PUBLIC_3" -> "PUBLIC_2, PUBLIC_2"
+    "PUBLIC_2, PUBLIC_2" -> "TIER-2"
+    "TIER-2" -> "SERVER"
+    "PUBLIC_4, PUBLIC_4" -> "PUBLIC_5, PUBLIC_5"
+    "PRIVATE_6, PUBLIC_5" -> "PUBLIC_5, PUBLIC_5"
+    "PUBLIC_5, PUBLIC_5" -> "SERVER"
+}

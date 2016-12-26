@@ -1,30 +1,38 @@
 \chapter{Methodology}
 \label{chap:methodology}
 
+This chapter describes the proposed data analytics workflow to detect and
+localize events in computer networks through end-to-end measurements. Also, the
+QoS data gathering procedures are briefly presented. Finally, the proposed
+system is compared with previous projects.
+
 \section{Measurement Process}
 
 The time series used in this work represent network end-to-end measures of a
 cable-television infrastructure, which runs DOCSIS with asymmetric download and
-upload bandwidths. Home routers connected to the cable modem communicate with
-a server strategically located by the ISP\@.
-Each server is responsible for measurements of several end-users.
-Measurements results from
-each home router are consolidated every half hour and, by the end of every day,
-are transferred to a database. The software responsible for these procedures was
-developed by TGR (a startup at COPPE/UFRJ) in collaboration with the university
-(UFRJ), and is spread over a customers subset of a major Brazilian ISP\@.
+upload bandwidths. Home routers connected to cable modems communicate
+with servers strategically located by the ISP\@. Each server is responsible
+for measurements of several end-users.
+Measurements are triggered in
+each home router in every half hour and, by the end of every day,
+the results are transferred to a database.
+The software responsible for these procedures was
+developed by TGR (a startup at COPPE/UFRJ),
+and is spread over approximately four thousand customers of a major Brazilian
+Tier-3 ISP\@.
 
-To measure the
-round
-trip packet loss fraction and RTT between the home router and the associated
+To measure the round
+trip packet loss fraction and the RTT between the home router and the associated
 server, the
-home router sends a train of short UDP packets, and then the server bounces back
+home router sends a train of short UDP packets, and the server bounces back
 them. The data here presented considers a train of 100 UDP packets of 32 bytes,
-separated by 1 millisecond. This dissertation only deals with these two
-metrics. Also, the traceroute using UDP packets from the end-users to
-the respective servers are collected with the same frequency.
+separated by 1 millisecond.
+Also, the traceroutes from the end-users
+to the respective servers are collected with the same frequency. Traceroutes
+from servers to end-users are not gathered.
 In~\cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil},
-a preliminary investigation of several metrics is presented.
+a preliminary descriptive investigation of loss fraction, RTT and other metrics
+is presented.
 
 The resulted time series are unevenly spaced due to a range of reasons. First,
 measurements are initiated only if the residential link is not under use by the
@@ -39,8 +47,8 @@ steps are better explored in further sections.
 The analysis seeks for events during a specific time period, in a single
 measurement server, and considers a
 single metric (loss fraction or RTT), which are specified as parameters.
-Therefore the complete analysis, considere several executions, for different
-servers, and parameters.
+Therefore, a complete analysis can be accomplished considering different
+executions with distinct parameters.
 Figure~\ref{fig:pipeline} illustrates the process.
 
 \begin{figure}[H]
@@ -55,134 +63,155 @@ which aims to remove clients that can negatively affect the analysis.
 As an example, this work eliminates clients
 that don't have enough measurements, or present
 traceroute inconsistencies (in Section~\ref{sec:spatial_correlation}
-this issue is better explored).
+this issue is better examined).
 
 The Change Point Detection phase preprocess the end-users time series and
 identify change points.
 Also, the change points are classified in three types of events: failure,
-improvement, or inconclusive. For both metrics, a change point defines a
+improvement, or inconclusive. For both QoS metrics used,
+a change point defines a
 failure event if the average of the window after this point is greater than the
 average of the window before. The improvement event is analogous, however is
-identified by a mean decrease.
+characterized by a mean decrease.
 The inconclusive event means that the segments averages are too close.
 
 The Spatial Correlation procedure cluster the end-users in end-groups
-according with their location in the network. This grouping then can be used in
-further steps to reduce the search space of possible events locations.
+according with their position in the network. This clustering can then be used
+in further steps to isolate possible events locations.
 This stage must produce a specific grouping structure, which is detailed in
 Section~\ref{sec:spatial_correlation}.
 
 The Events Times Correlation aims to combine similar events of different
 end-users of an end-group. For example, if three end-users detect a failure at
-the same time, this information will be identified in this step. The resulted
-grouped events are then named as network events.
-The details of this method are clarified in
+the same time, then this information will be identified in this step.
+The clustered end-users events are named as network events.
+The details of this method are enlightened in
 Section~\ref{sec:events_times_correlation}.
 
 Finally, to localize the events cause, the Spatial-Time Correlation
-correlates network events
+matches network events
 from different user-groups with the end-groups structure.
-This is better exaplained in Section~\ref{sec:spatial_time_correlation}.
+This is better explained in Section~\ref{sec:spatial_time_correlation}.
 
 \section{Spatial Correlation}
 \label{sec:spatial_correlation}
 
-This procedure aims at cluster end-users in user-groups.
-An end-user can
-participate in more than one end-group.
-In each user-groups the end-users of this group share at least one network
-equipment.
+This procedure enables to check which network equipments are shared by end-users
+that perceive the same network event. The used strategy was guided by the
+specific ISP's topology.
 
-To reasons that will be explained in
-Session~\ref{sec:spatial_time_correlation} the resulting end-groups structure
-must be a tree.
+The server position relative to the end-user
+can be categorized in two contexts.
+In the OFF-NET case, the traffic between them
+goes through a Tier-2 ISP\@.
+However, in the ON-NET case, the traffic
+doesn't leave the Tier-3 ISP infrastructure.
+The latter situation represents a simpler IP topology, since the Tier-3 ISP
+uses static routing and
+doesn't applies load balancing nor MPLS, techniques that are usual in the Tier-2
+ISP network.
 
-The clients in which the traceroute changes during the specified time period
-was discarded from the analysis. The changes can occur in routing tables
-update.
+Therefore, considering measurements against a single server and the ON-NET
+case, paths from end-users to the server form a hierarchically
+structured topology, which is a required design to be consumed by the
+Spatial Time Correlation procedure~\ref{sec:spatial_time_correlation}.
+It is
+This work doesn't have access to the ISP network
+topology, therefore, this structure is reconstructed through traceroutes.
+In this context, each equipment that responds to traceroutes
+pings are used as user-groups.
 
-The end-users are clients of a Tier-3 ISP\@. The measurement server localization
-is classified in two cases. In the OFF-NET case, the traffic between the
-end-user and server goes through a Tier-2 ISP\@. In the ON-NET case, the traffic
-between them doesn't leave the Tier-3 ISP infrastructure. The Tier-3 doesn't
-applies load balancing and don't have MPLS, however the Tier-2 ISP is more
-complicated, presenting both techniques. The IP topology is reconstructed
-through traceroute measurements started from the end-users to the server. As
-with the other metrics, the traceroute is executed in every 30 minutes.
+The first hop of the traceroutes, which corresponds to the home gateway, is
+removed from the analysis. Also, CMTSs are reported with their private IPs,
+since they are in the same subnetwork of the end-users.
+Therefore, to differentiate distinct CMTSs, the
+user-groups are defined by their reported IP and the first public IP that
+appears from their hop until reach the server. Additionally, not all CMTSs are
+configured to answer to traceroute pings.
 
-Therefore fixing a single server, and only the ON-NET case, the lack of load
-balancing gurantee that the traceroute
-reconstruction topology lead to tree structure. In this case, each router that
-responds the traceroute can be used as an user-group. In this context the leafs
-are the first routers that appear in the traceroute, and the root is the
-server. The internal vertexes are routers from the Tier-3 ISP\@.
+In the OFF-NET case, due to the load balancing applied by the Tier-2 ISP,
+the traceroute reconstruction doesn't lead in a hierarchical topology.
+To overcome this issue, sequential hops related to the
+the Tier-2 ISP are compressed to a single hop.
+As an example, the path (Tier-3 Router 1, Tier-2 Router 1, Tier-2 Router 2,
+Tier-3 Router 2, Server) is
+transformed to (Tier-3 Router 1, Tier-2, Tier-3 Router 2, Server).
+In general, this process conducts to a hierarchical topology,
+the exception happens when the Tier-2 ISP has output connections to
+different routers of the Tier-3 ISP in the same network region.
+However, this is an uncommom situation in
+the current dataset, and then was removed from the analysis.
+The distinction between
+Tier-3 and Tier-2 hops is made thorough the investigation of hops names.
 
-In HFC network, the first network component to respond to the traceroute can be
-a CMTS, however some CMTSs are configured to not answer the traceroute
-requests. However,
-since the end-user and the associated CMTS are in the same subnetwork, the CMTS
-respond with it's private IP, that can be used by different CMTS\@. Therefore to
-differentiate distinct CMTS that have the same private IP, each vertex of the
-topology is defined by the IP responded + the first public IP that appears to
-the path to the server.
+Figure~\ref{fig:real_graph} presents an example of the reconstructed
+topology. The routers were anonymised. The ``Tier-2'' and ``Server''
+user-groups are self explanatory. The others are represented by a tuple, in
+which the first field indicates the reported IP in the traceroute, and the
+second specifies the first hop until reach the server that reported a public
+IP\@.
 
-However inn the OFF-NET case the traceroute reconstruction don't lead to a
-tree due to the load balancing. To overcome this problem the vertex associated
-with the Tier-2 ISP is compressed to only one vertex. In only one case this
-procedure don't lead to a tree, when the traffic from the Tier-2 ISP to the
-Tier-2 ISP can leave to different routers. By now this case rare in the dataset
-and was removed from the dataset.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend2016-05-11_NRIDTCLDM031_graph_anonymized.png}
+    \caption{User-groups topology.}
+\label{fig:real_graph}
+\end{figure}%
 
-In Figure~\ref{fig:} contains an example of the reconstructed
-topology. The names and IPS were aninymazed.
-
-Also, in End-Users Filtering, some clients are removed due to traceroute
-inconsistencies~\cite{avoiding_traceroute_anomalies_with_paris_traceroute},
-such as the same node that appears more than once in different
-hops, traceroutes that don't reach the target.
+During the End-Users Filtering step, some clients are removed due to traceroute
+inconsistencies~\cite{avoiding_traceroute_anomalies_with_paris_traceroute}.
+As an example, the same equipment can appear in different hops. Also,
+considering that the software limits the maximum number of hops, it were
+removed the cases in which the traceroute didn't reach the server.
+Since routing tables can be updated, it were only considered clients
+in which the traceroute didn't change during the specified time period.
 
 \section{Events Times Correlation}
 \label{sec:events_times_correlation}
 
 The motivation of this step is to, given the change points of each end-user of
-an end-group, infer information of network events that can be common to these
-end-users.
+an end-group, infer network events that can explain these end-users events.
 
 There are two main reasons to detect the same network event, such as an
 equipment failure, at different times in different clients. The first one is
 related to the fact that the time series are not regularly sampled. The second
 one is due to the change point detection algorithm behavior.
 Therefore, a procedure to group end-users events based on their type and time,
-should be flexible enough to take into consideration time delay effects, and
-the fact that each time series can have more than one change point.
+should be flexible enough to take into consideration time delay effects. Also,
+it must be robust to deal with multiple change points per time series.
 
-In order to relax the change point location, a detected change point is
-transformed in an interval in accordance to a time tolerance.
-Therefore, a change point identified at
-time $t$ means that exists a change point in the interval
+In order to relax a change point location, a detected change point is
+transformed into an interval in accordance to a time tolerance.
+Therefore, given a parameter $\delta$, a change point identified at
+time $t$ means that exists a change point within
 $[t - \delta, t + \delta]$. To be consistent,
-change point algorithms must report locations by separated more than
+change point algorithms must report locations separated by more than
 $2 \delta$ time units. The algorithms presented in
 Chapter~\ref{chap:change_point_detection}
 can be easily adapted to respect this restriction. However, this can also be
-achieved by a post processing step, in which sweeping points from left to right,
-if two
-points are less or equal than $2 \delta$ apart, then the right one is removed.
+achieved by the following post processing step:
+sweeping time from left to right, if two
+points are at most $2 \delta$ time units apart, then the right one is removed.
 
-Then, the problem can be defined as selecting a set of network events, that
-includes time and type, that explain all end-users events of a end-group. This
-problem have several possible solutions, and the comparison between two
-possible solutions is subjective. As an example, not
-necessarily selecting the minimum number of events that cover all change
-points is the most appropriate solution.
+Then, the problem can be defined as selecting a set of network events,
+that explain all end-users events of a end-group.
+An end-user event is explained by a network event if they have the same type,
+and the end-user event time is inside the network event time interval.
+This problem has several possible solutions, and the comparison between
+them is subjective. As an example, not
+necessarily selecting the minimum number of network events that cover all
+end-user events is the most appropriate answer.
+Also, considering a specific event type, it is required that network events
+time intervals have an empty intersection.
 
-Therefore, it was created a heuristic inspired in the inexact voting in totally
-ordered space~\cite{voting_algorithms} problem. In this problem a set o voters
-vote in a single point in the real line, also considering a $\delta$ parameter,
-and the objective is to
+To this goal, it was developed a heuristic inspired in the inexact voting in
+totally
+ordered space~\cite{voting_algorithms} problem. In this problem, people
+vote in a single point in the real line, and also considering a $\delta$
+parameter, the objective is to
 select the interval with the biggest number of voters.
 
-Then greedy procedure, called here is Multiple Inexact Voting in Totally
+The created greedy procedure, called here as Multiple Inexact Voting in Totally
 Ordered Space, is specified in
 Algorithm~\ref{alg:multiple_inexact_voting_totally_ordered_space}
 
@@ -190,13 +219,16 @@ Algorithm~\ref{alg:multiple_inexact_voting_totally_ordered_space}
 \caption{Multiple Inexact Voting in Totally Ordered Space}
 \label{alg:multiple_inexact_voting_totally_ordered_space}
     \begin{algorithmic}[1]
-        \State{} Let $l$ be the end-users events sorted by time
+        \State{Let $l$ be the end-users events of a specific type sorted by
+        time}
         \While{$l$ is not empty}
-            \State{} Select the interval $d$ with the biggest number of events,
-            in which all events are at most $2 * \delta + 1$ apart.
-            In case of ties select the left most one. Report the mean of $d$ as
-            a network event
-            \State{} Remove all events from $l$ that are in $d$
+            \State{Select the interval $d$ with the biggest number of
+            end-users events,
+            in which all these events are at most $2 \delta$ apart.
+            In case of ties select the left most one}
+            \State{Report the mean time of
+            the $d$ extremes as the network event time}
+            \State{Remove all end-users events from $l$ that are in $d$}
         \EndWhile{}
     \end{algorithmic}
 \end{algorithm}
@@ -204,26 +236,23 @@ Algorithm~\ref{alg:multiple_inexact_voting_totally_ordered_space}
 It is possible to note that, in each iteration the procedure solves an instance
 of the inexact voting in totally ordered space.
 
-A more straighforward solution that was not tested in this work is to create
-regular time-bins, and if two end-users events are in the same bin them they
-are a common network event. However this type of solution can introduce
-discontinuities. If a network event occur in at the end/begining of a time-bin,
-then is likely to different end-user events truly associated with the same
-network event will be located in different bins. The proposed method can also
-suffer from a similar problem, when two network events are too close, it is
-possible misclassfy events when ties occur.
-However supposing
-that network events sensible to end-to-end QoS metrics are signifcantly apart,
-this issue will be irrelevant with a relative small $\delta$.
+A more straighforward solution, that was not used in this work, is to create
+regular time-bins, and interpret all end-users events that occur at the same
+bin as a common network event.
+However, this strategy can introduce
+discontinuities. If a network event occur in the end/beginning of a time-bin,
+then it is likely to different end-user events associated with this
+network event be located in different bins.
 
-Idenpendtly of how to define the network events, if exists co-occurrent events
-with same type then it is not possible to separate them. Event considering the
-$\delta$ parameter, if an end-user event is detected far from the real network
-event, it will be ideintified as a different event. This can better handled
-increasing the sampling frequency.
+If co-occurrent events with the same type affect the same user-group,
+it is not possible to distinguish them. Nonetheless, the probability of
+detecting different events at the same time can reduce with the increase
+of the time series sampling frequency.
 
 \section{Spatial-Time Correlation}
 \label{sec:spatial_time_correlation}
+
+PROBLEM OF TWO WAY METRICs.
 
 These step aims to correlate network events detected in different user-groups
 to localize network events.
@@ -275,19 +304,19 @@ that occurre in this location.
     \centering
     \makebox[\textwidth][c]{%
         \begin{subfigure}[b]{0.2\textwidth}
-            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/graph1.png}
+            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/event_tree_graph_1.png}
             \caption{}\label{fig:network_events_locations_examples_1}
         \end{subfigure}
         \begin{subfigure}[b]{0.2\textwidth}
-            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/graph2.png}
+            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/event_tree_graph_2.png}
             \caption{}\label{fig:network_events_locations_examples_2}
         \end{subfigure}%
         \begin{subfigure}[b]{0.3\textwidth}
-            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/graph3.png}
+            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/event_tree_graph_3.png}
             \caption{}\label{fig:network_events_locations_examples_3}
         \end{subfigure}
         \begin{subfigure}[b]{0.3\textwidth}
-            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/graph4.png}
+            \includegraphics[width=\textwidth]{./figures/methodology/spatial_time_correlation/event_tree_graph_4.png}
             \caption{}\label{fig:network_events_locations_examples_4}
         \end{subfigure}%
     }
@@ -321,11 +350,10 @@ possible to have an empty suffix match if the some affected end-users don't
 share components. Threfore, to avoid this situation, the analysis only
 considers paths that share the last problematic vertex.
 
-Also the tree topolgy requirement can be relaxed. In case of load balancing
-only considering the source address the proposed procedure works. However the
-problem correlation between different paths will not result in suffix of the
-prefix problems, but the problems will only the single matches. The only
-drawback is the co-occurrence.
+Also the tree topolgy requirement can be relaxed, and the a similar algorithm
+can be derived in cases where there is only load balancing per source address.
+However since this case is not applied in the current dataset, this extension
+is not presented in this dissertation.
 
 As will be seen in Chapter~\ref{chap:conclusions} this kind of analysis suffer
 from sparsiness of the clients, for example several vertex can be traversed by
@@ -374,7 +402,7 @@ Another way is to use visual annotations,
 as it was done
 in~\cite{learning_sparse_penalties_for_change_point_detection_using_max_margin_interval_regression}.
 Also, manual labeling is usual for anomaly indentification in traffic
-traces~\ref{webclass_adding_rigor_to_manual_labeling_of_traffic_anomalies}.
+traces~\cite{webclass_adding_rigor_to_manual_labeling_of_traffic_anomalies}.
 In this strategy, an application domain expert is exposed to a time series,
 and visually indicates his opinion about the change points locations.
 
@@ -421,78 +449,164 @@ position.
 \label{fig:survey_system}
 \end{figure}%
 
-X specialists with experience in network measurements and statistical
-modeling, but without background in change point detection, classified X time
+Six specialists with experience in network measurements and statistical
+modeling, but without background in change point detection, classified 71 time
 series.
 To analyze the agreement between different users classifications,
 for each time series, was applied the Events Times Correlation procedure
 described in Section~\ref{sec:events_times_correlation}. Therefore, it was
-considered that each user voted to a set of change points positions.
-The hours tolerance was set to 7 hours, which means 14 consecutive points. Also
-if a user classified points that are too near, it only considered the left most
-one. As an example if a user marked a change point at time $t$ and $t + 4$
-hours, than it was only considered the point at time $t$.
-Then, it
-was counted, for each change point voted at least once, the number of
-specialists that voted in that change point.
+considered that each specialist voted to a set of change points positions.
+The time tolerance was set to 7 hours, which means 14 consecutive points.
+
+Then, for each change point voted at least once, it was counted the number of
+specialists that voted in that location.
 Figure~\ref{fig:classifications_per_vote} shows the histogram of this counting.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\linewidth]{./figures/methodology/supervised_learning_try/cnt_classifications_per_vote.png}
-    \caption{Classifications per vote distribution.}
+    \includegraphics[width=0.7\linewidth]{./figures/methodology/supervised_learning_try/cnt_classifications_per_vote.png}
+    \caption{Number of votes per change point histogram.}
 \label{fig:classifications_per_vote}
 \end{figure}%
 
-It is possible to note that, about X\% of the change points were only voted by
-a single user, and only Y\% were voted by the majority (more than X votes).
-Therefore, in general,
-the consesus of change point locations is low.
+It is possible to note that, 44\% of the change points were only voted by
+a single user, and only 23\% were voted by the majority (more than 3 votes).
+Therefore, in general, the consensus of change point locations is low.
 
-Next, in Figures~\ref{fig:user_classifications_match} is presented the
-classification by users that agree with each other, and
-Figure~\ref{fig:user_classifications_unmatch} presents a time series with
+In Figure~\ref{fig:classification_match} is presented the specialists
+classifications in a time series with a high level of agreement on the change
+points locations.
+However, Figure~\ref{fig:classification_mismatch} shows a time series with
 several disagreements.
+It was verified that the latter case is the most representative in the
+constructed dataset, fact that corroborates the problem subjectiveness.
 
-It is possible to note that the users disagrees between them and also that some
-users use different statistical classification patterns in the same time
-series. At the end of the experiment it was asked to the specialists, and they
-sad that their classification pattern changed through they classified time
-series, they could classify in different days, and also that the problem is
-subjective.
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br}.png}
+            \caption{Specialist 1}\label{fig:classification_match_1}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br}.png}
+            \caption{Specialist 2}\label{fig:classification_match_2}
+        \end{subfigure}
+    }
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br}.png}
+            \caption{Specialist 3}\label{fig:classification_match_3}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gabriel.mendonca@tgr.net.br}.png}
+            \caption{Specialist 4}\label{fig:classification_match_4}
+        \end{subfigure}
+    }
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com}.png}
+            \caption{Specialist 5}\label{fig:classification_match_5}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br}.png}
+            \caption{Specialist 6}\label{fig:classification_match_6}
+        \end{subfigure}
+    }
+    \caption{Classifications agreements.}
+\label{fig:classification_match}
+\end{figure}%
 
-Therefore since, this initial experiment resulted in a noisy dataset, that
-probably don't reflect real network events, and that
-would be difficult to scale the experiment, including more time series and more
-specialists, this strategy was aborted.
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br}.png}
+            \caption{Specialist 1}\label{fig:classification_mismatch_1}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br}.png}
+            \caption{Specialist 2}\label{fig:classification_mismatch_2}
+        \end{subfigure}
+    }
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br}.png}
+            \caption{Specialist 3}\label{fig:classification_mismatch_3}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gabriel.mendonca@tgr.net.br}.png}
+            \caption{Specialist 4}\label{fig:classification_mismatch_4}
+        \end{subfigure}
+    }
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com}.png}
+            \caption{Specialist 5}\label{fig:classification_mismatch_5}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br}.png}
+            \caption{Specialist 6}\label{fig:classification_mismatch_6}
+        \end{subfigure}
+    }
+    \caption{Classifications disagreements.}
+\label{fig:classification_mismatch}
+\end{figure}%
 
-However, another result from this experiment is an quantitative study of the
-rarity of a
-change point. The change point detection problem can be interpreted as a binary
-classification problem in which each point of a time series is classified as
-``is a change point'' or ``is not a change point''. The voting process, that
-resulted in a logical OR opinion of the specialists resulted in X\% of the
-points being classfied in change points.
+Also, it is possible to note that some users apparently changed their
+classification pattern in the same time series. As an example,
+Figure~\ref{fig:diff_class_same_time_series} presents two specialists that fits
+this description. Also, in general, users changed their classification pattern
+in different time series.
 
-It is important to note that the algorithms presented in
-Chapter~\ref{chap:change_point_detection} doesn't use a previous point labels
-for a training phase. Once a change point dataset is constructed, in which a
-train set each labels each point of a time series as a change point or not, can
-open new possibilities to a supervised learning procedure, in which are not
-much explored in the literature of change pointe detection.
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br}.png}
+            \caption{Specialist 1}\label{fig:diff_class_same_time_series_1}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.55\textwidth}
+            \includegraphics[width=\textwidth]{{./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br}.png}
+            \caption{Specialist 6}\label{fig:diff_class_same_time_series_6}
+        \end{subfigure}
+    }
+    \caption{Different classification pattern in the same time series.}
+\label{fig:diff_class_same_time_series}
+\end{figure}%
+
+Since this initial experiment resulted in a noisy dataset, in which change
+points probably don't reflect real network events, this strategy was aborted.
+Also, it would difficult to scale the study to include more
+specialists and time series.
+
+It is important to note that the algorithms described in
+Chapter~\ref{chap:change_point_detection} are unsupervised methods.
+Once a change point dataset is constructed, it is possible to apply supervised
+learning procedures, which are not much explored in the change
+point detection literature.
 
 \section{Differences to Previous Systems}
 
-The high level abstraction of the proposed pipeline has several similarities
-with
-Argus~\ref{argus_end_to_end_service_anomaly_detection_and_localization_from_an_isps_point_of_view}.
-For example, both systems
+The proposed data analytics architecture has several similarities with the
+projects described in Chapter~\ref{chap:literature_review}.
 
-In general the differences are guided by the data availability and the
-measurement process already implemented.
+As with Argus and NetNorad, this work clusters end-users in user-groups, however
+with finer topology granularity. Also, to increase the system's scalability,
+NetNorad and Argus use this grouping to reduce the number of tracked time
+series. This strategy was not applied in this project,
+since the finer granularity requires more time series to be spread in different
+network locations, and the current dataset has a low number of end-users.
 
-\section{Deployment Issues}
+To detect faults, Argus applies an anomaly detection procedure, but the present
+work uses a change point detection method. The difference between
+these two problems is subtle, and can be fuzzy in the literature. The
+anomaly detection assumes that a standard pattern is already known or
+is identified by the procedure, then the goal is to find when the data
+stream
+deviates from it's standard. The change point detection only seeks for
+points where the statistical properties change, and doesn't take into
+consideration a standard time series behaviour.
 
-In general, the procedures are paralelazied. For example the change point
-algorithm can be independtly executed in for each client. The path analysis
-from the spatial time correlation can be executed independtly per path.
+Additionally, beyond the network edge point of view, Argus and NetNorad
+uses some internal network information, which is absent in the present work.
