@@ -101,9 +101,9 @@ def run_single(metric, dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    metric = "latency"
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
+    metric = "throughput_up"
+    dt_start = datetime.datetime(2016, 7, 1)
+    dt_end = datetime.datetime(2016, 7, 11)
 
     parallel_args = {"metric": metric}
     sequential_args = parallel_args
@@ -111,4 +111,5 @@ if __name__ == "__main__":
     single_args.update(parallel_args)
     cp_utils.parse_args(run_single, single_args,
                         run_parallel, parallel_args,
-                        run_sequential, sequential_args)
+                        run_sequential, sequential_args,
+                        None, None)

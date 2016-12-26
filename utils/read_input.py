@@ -46,6 +46,9 @@ def get_raw(in_path, metric, dt_start, dt_end, cross_traffic_thresh):
                 if metric == "traceroute":
                     yi = yi.replace("nan", "None")
                     yi = ast.literal_eval(yi)
+                elif metric == "throughput_up":
+                    # yi = float(yi) / float(row["nominal_up"])
+                    yi = float(yi)
                 elif metric != "server_ip":
                     yi = float(yi)
                 l.append([dt, yi])

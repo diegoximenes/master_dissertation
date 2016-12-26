@@ -134,4 +134,5 @@ if __name__ == "__main__":
     single_args.update(parallel_args)
     cp_utils.parse_args(run_single, single_args,
                         run_parallel, parallel_args,
-                        run_sequential, sequential_args)
+                        run_sequential, sequential_args,
+                        None, None)
