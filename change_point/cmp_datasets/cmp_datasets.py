@@ -17,6 +17,8 @@ import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 
 
 def cmp_datasets(eps_hours):
+    number_of_voters = 6
+
     tsid_cpdts = defaultdict(list)
     tsid_cnt = defaultdict(int)
 
@@ -24,8 +26,7 @@ def cmp_datasets(eps_hours):
     for dataset in os.listdir(in_dir):
         dataset_path = "{}/{}".format(in_dir, dataset)
         if (os.path.isdir(dataset_path) and
-                ("unsupervised" not in dataset_path) and
-                ("edmundo@land.ufrj.br" != dataset)):
+                ("unsupervised" not in dataset_path)):
             in_path = "{}/dataset.csv".format(dataset_path)
 
             df = pd.read_csv(in_path)
@@ -46,9 +47,11 @@ def cmp_datasets(eps_hours):
                 tsid_cpdts[tsid] += cp_dts
                 tsid_cnt[tsid] += 1
 
+    cnt_classific = 0
     cnt_classific_per_vote = []
     for tsid, cnt in tsid_cnt.iteritems():
-        if cnt == 4:
+        if cnt == number_of_voters:
+            cnt_classific += 1
             tsid_dic = dict(tsid)
             l = map(lambda dt: {"dt": dt},
                     tsid_cpdts[tsid])
@@ -58,7 +61,12 @@ def cmp_datasets(eps_hours):
             for vote in votes:
                 cnt_classific_per_vote.append(len(vote["interval"]))
 
+    print "cnt_classfic={}".format(cnt_classific)
     print sorted(cnt_classific_per_vote)
+    for i in xrange(1, number_of_voters + 1):
+        print "p({})={}".format(i, cnt_classific_per_vote.count(i) /
+                                float(len(cnt_classific_per_vote)))
+
     out_path = "{}/cnt_classifications_per_vote.png".format(script_dir)
     plt.clf()
     matplotlib.rcParams.update({"font.size": 27})
