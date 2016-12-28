@@ -1,4 +1,4 @@
-\begin{thebibliography}{28}
+\begin{thebibliography}{29}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -183,6 +183,15 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://doi.acm.org/2940116.2940135}\textgreater .
 
+\bibitem[\MakeUppercase{Augustin}\emph{ et~al.}(2006)Augustin, Cuvellier,
+  Orgogozo, Viger, Friedman, Latapy, Magnien, e
+  Teixeira]{avoiding_traceroute_anomalies_with_paris_traceroute}
+\MakeUppercase{Augustin, B., Cuvellier, X., Orgogozo, B.,
+  \MakeLowercase{et~al.}}
+\newblock \enquote{Avoiding traceroute anomalies with Paris traceroute}. In:
+  \emph{Proceedings of the 6th ACM SIGCOMM conference on Internet measurement},
+  pp. 153--158. ACM, 2006.
+
 \bibitem[\MakeUppercase{Parhami}(1994)Parhami]{voting_algorithms}
 \MakeUppercase{Parhami, B.}
 \newblock \enquote{Voting algorithms}, \emph{IEEE transactions on reliability},
@@ -214,11 +223,26 @@
   \textless\url{http://jmlr.org/proceedings/papers/v28/hocking13.pdf}\textgreater
   .
 
+\bibitem[\MakeUppercase{Ringberg}\emph{ et~al.}(2008)Ringberg, Soule, e
+  Rexford]{webclass_adding_rigor_to_manual_labeling_of_traffic_anomalies}
+\MakeUppercase{Ringberg, H., Soule, A., Rexford, J.}
+\newblock \enquote{Webclass: adding rigor to manual labeling of traffic
+  anomalies}, \emph{ACM SIGCOMM Computer Communication Review}, v.~38, n.~1,
+  \penalty0 pp.~35--38, 2008.
+
 \bibitem[\MakeUppercase{James}\emph{ et~al.}(2014)James, Kejariwal, e
   Matteson]{leveraging_cloud_data_to_mitigate_user_experience_from_breaking_bad}
 \MakeUppercase{James, N.~A., Kejariwal, A., Matteson, D.~S.}
 \newblock \enquote{Leveraging Cloud Data to Mitigate User Experience from"
   Breaking Bad"}, \emph{arXiv preprint arXiv:1411.7955}, 2014.
+
+\bibitem[\MakeUppercase{Sundaresan}\emph{ et~al.}(2012)Sundaresan, De~Donato,
+  Feamster, Teixeira, Crawford, e
+  Pescap{\`e}]{measuring_home_broadband_performance}
+\MakeUppercase{Sundaresan, S., De~Donato, W., Feamster, N.,
+  \MakeLowercase{et~al.}}
+\newblock \enquote{Measuring home broadband performance}, \emph{Communications
+  of the ACM}, v.~55, n.~11, \penalty0 pp.~100--109, 2012.
 
 \bibitem[\MakeUppercase{Mahimkar}\emph{ et~al.}(2008)Mahimkar, Yates, Zhang,
   Shaikh, Wang, Ge, e
@@ -232,15 +256,6 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://doi.acm.org/10.1145/1544012.1544014}\textgreater .
 
-\bibitem[\MakeUppercase{Augustin}\emph{ et~al.}(2006)Augustin, Cuvellier,
-  Orgogozo, Viger, Friedman, Latapy, Magnien, e
-  Teixeira]{avoiding_traceroute_anomalies_with_paris_traceroute}
-\MakeUppercase{Augustin, B., Cuvellier, X., Orgogozo, B.,
-  \MakeLowercase{et~al.}}
-\newblock \enquote{Avoiding traceroute anomalies with Paris traceroute}. In:
-  \emph{Proceedings of the 6th ACM SIGCOMM conference on Internet measurement},
-  pp. 153--158. ACM, 2006.
-
 \bibitem[\MakeUppercase{Auger} e \MakeUppercase{Lawrence}(1989)Auger e
   Lawrence]{algorithms_for_the_optimal_identification_of_segment_neighborhoods}
 \MakeUppercase{Auger, I.~E., Lawrence, C.~E.}
@@ -251,12 +266,5 @@
 \newblock \doi{10.1007/BF02458835}.
 \newblock Dispon{\' i}vel em:
   \textless\url{http://dx.doi.org/10.1007/BF02458835}\textgreater .
-
-\bibitem[\MakeUppercase{Ringberg}\emph{ et~al.}(2008)Ringberg, Soule, e
-  Rexford]{webclass_adding_rigor_to_manual_labeling_of_traffic_anomalies}
-\MakeUppercase{Ringberg, H., Soule, A., Rexford, J.}
-\newblock \enquote{Webclass: adding rigor to manual labeling of traffic
-  anomalies}, \emph{ACM SIGCOMM Computer Communication Review}, v.~38, n.~1,
-  \penalty0 pp.~35--38, 2008.
 
 \end{thebibliography}

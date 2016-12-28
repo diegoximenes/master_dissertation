@@ -120,9 +120,7 @@ Spatial Time Correlation procedure~\ref{sec:spatial_time_correlation}.
 This work doesn't have access to the ISP network
 topology, therefore, this structure is reconstructed through traceroutes.
 In this context, each equipment that responds to traceroute
-pings is used as an user-group. Considering a specific user-group,
-all end-users in which this user-group appears in the traceroute belongs to
-this user-group.
+pings is used as an user-group.
 
 The first hop of the traceroutes, which corresponds to the home gateway, is
 removed from the analysis. Also, CMTSs are reported with their private IPs,
@@ -164,8 +162,6 @@ a public IP\@.
 It is possible to see that this topology can be modeled as a DAG\@. The zero
 in degree vertexes indicate equipments the only appear as the first the hop,
 however an internal vertex can appear as the first hop in a traceroute.
-Considering an arc (A, B), all users that belongs to A also belongs to B,
-but the inverse is not necessarily true.
 
 During the End-Users Filtering step, some clients are removed due to traceroute
 inconsistencies~\cite{avoiding_traceroute_anomalies_with_paris_traceroute}.
@@ -273,52 +269,46 @@ performance.
 Hence, this work restricts to report possible events locations considering that
 they are caused by equipments in the path from the end-user to the server.
 
-The method supposes that there are no co-occurrent events with the
-same type in the same network region. However, co-occurrent events with
-different types, or co-ocurrent events with same in different network region is
-allowed. The concept of network region will be better explored later.
-The system also expects that, considering a specific network event,
+The following method supposes that there are no co-occurrent events with the
+same type in the same network region.
+It also expects that, considering a specific network event,
 a change point detection algorithm setup is able to detect all end-users
 affected by this event, or no end-user is identified.
-Besides, with exception of the Tier-2 user-group, the mechanism considers that
-if an event occur in an user-group,
-all traffic that goes through this cluster is affected by the event.
 
 In the first part of the analysis, it will be disconsidered the presence of the
 Tier-2 user-group. Also, it will be considered that all traceroute paths start
-in a zero indegree vertex. Later, these restrictions will be removed, treating
-them separately.
-Unless stated differently, in the rest of this section is considered an
-unique network event.
+in a zero indegree vertex. Latter, these restrictions will be removed treating
+this cases separately.
+For the rest of this section is considered a specific network event.
 
 The procedure starts analysing zero indegree vertexes.
 Suppose that only a proper subset of the clients that belongs to a zero
-indegree node perceive the event. In this situation, it is possible to afirm
+indegree vertex perceive the event. In this situation, it is possible to afirm
 that this vertex is not the cause of the event, since not all clients detected
-it. For the same reason, the cause is not located in posterior nodes
+the event. For the same reason, the cause is not located in posterior vertexes
 in the path to server.
-Then, if this set size is bigger than one, these end-users must share
+Then, this set of end-users must share
 a network equipment, which is the cause, that don't respond to traceroute pings
 and is located before the first hop.
 
 However, if all clients of the zero indegree vertex detect the event, then
 there are three options:
-this vertex can be the cause, or these end-users can share an equipment before
-the first hop that explains the event,
-or the cause s located after the first hop. Due to the
+this vertex can be the cause, or these end-users can share an equipment that
+explains the event before
+the first hop, or the cause can be located after the first hop. Due to the
 lack of information about the topology above the IP layer, the first two cases
 can't be
 distinguished. Nonetheless, to check the latter scenario, the same type of
 analysis is applied to the next vertex in the path to the server. If not all
-clients of the second hop detected this event, then the event is surely located
-in the first hop or before. Otherwise, the procedure continues to the next hop.
+clients of the second hop detect this event, then problem is surely located in
+the first hop or before. Otherwise, the procedure continues to the next hop.
 
 When applied to different zero indegree vertexes,
 this method results in possible events location that are defined as prefix of
 the paths to the server.
 However, different paths share common network equipments, and then these prefix
 outcomes can be correlated.
-If in different paths the same network
+If in different path the same network
 event is detected, then they must share at least one equipment. The
 ones that are not in commom can be discarded from the possible cause list, since
 there are end-users that don't belong to them and still perceive the event.
@@ -353,82 +343,48 @@ that occurred in this location.
 \label{fig:network_events_locations_examples}
 \end{figure}%
 
-In Figure~\ref{fig:network_events_locations_examples_1}, the analysis
-starting at vertex A results in the following feasible event locations,
-\{A, B, C, D\}. The reasoning through node E leads to
-\{E, F, C, D\}. Correlating both results, the possible locations are \{C, D\}.
-Figure~\ref{fig:network_events_locations_examples_2} presents a scenario with
-the same conclusion.
+In Figure~\ref{fig:network_events_locations_examples_1} the analysis made
+in the path (A, B, C, D) result in the following possible events locations (A,
+B, C, D). The analysis made in the path (E, F, C, D) results in the following
+possible locations (E, F, C, D). Correlating both paths results checking the
+suffix of the prefix, the possible locations are (C, D). In
+Figure~\ref{fig:network_events_locations_examples_2} the analysis is the same
+of the previous case.
 
-In Figure~\ref{fig:network_events_locations_examples_3}, the analyis made
-through the zero indegree vertexes result in the paths from them to the server.
-Matching the outcomes, the D vertex is the only possible event location.
+In Figure~\ref{fig:network_events_locations_examples_3} the analyis made in the
+all paths result in the own path. Correlating the resultings the output is the
+D vertex.
 
-In Figure~\ref{fig:network_events_locations_examples_4}, the reasoning through
-node G doesn't detect the event. The analysis in A finds \{A, B, C\}. Through
-node E, \{E, F, C\} is the result.
-Correlating the outcomes, C is the only feasible event location.
+In Figure~\ref{fig:network_events_locations_examples_4} the analysis in path
+(G, H, D) don't detect the event. The path (A, B, C, D) find that (A, B, C) are
+the possible locations. Path (E, F, C, D) result in the (E, F, C) possible
+locations. Correlating the results of different paths result in the C vertex,
+which is exacly the correct location.
 
-If there are co-occurrent events with the same type, and in the same network
-region, then it is not possible to distinguish them. However, if co-occurrent
-events affect completely different parts of the network, the feasible locations
-detected from zero indegree vertexes affected by different events have
-empty intersection.
-Therefore, in the
-latter case, is possible to localize both causes, only correlating results from
-the zero indegree nodes that share at least one vertex.
-Figure~\ref{fig:network_events_locations_examples_5}
-illustrates this case.
+The comparison of network events of different user-groups is made comparing if
+they are close enough.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.35\linewidth]{./figures/methodology/spatial_time_correlation/event_tree_graph_5.png}
-    \caption{Co-occurent events with no spatial instersection.}
-\label{fig:real_graph}
-\end{figure}%
+If more than one network event of the same type occur at the same type is
+possible to have an empty suffix match if the some affected end-users don't
+share components. Threfore, to avoid this situation, the analysis only
+considers paths that share the last problematic vertex.
 
-Through node A, the feasible locations are \{A, B, C\}. Checking E, the results
-is \{E, F, C\}. In vertex G, the outcome is \{G, H\}.
-Since the outcome of the G analysis has empty intersection with the results of
-other vertexes, it is possible to afirm that the event that affected the E node
-is different from the event that influenced the other zero indegree vertexes.
-Also since the intersection of the outcomes of the A and E analysis it not
-empty, a single event interfered in thoses nodes. Matching the results, one
-event location is C, and the other is in \{G, H\}.
+Also the tree topolgy requirement can be relaxed, and the a similar algorithm
+can be derived in cases where there is only load balancing per source address.
+However since this case is not applied in the current dataset, this extension
+is not presented in this dissertation.
 
-The previous analysis can't be applies directly when the Tier-2 user-group is
-considered. As an example, the traffic from two end-users in positioned in
-completely different geographical positions, can go to the server through the
-Tier-2 ISP, however even considering the load balancing, the traffic goes to
-two different Tier-2 netork locations. Therefore, is possible to a problem in
-the Tier-2 ISP network affect a end-user and other not. There are three types
-of load balancing: per packet, per flow, per destination. Since in this
-analysis is considered the same server, the per destination load balancing
-doesn't has effects. The per packet can be considered random. Since different
-measuremets occur with different source and destination ports, different
-measures betweern the same end-user and the server are different flows.
-Therefore, in the regions where is applied load balancing, different
-measuremets traffic from the same server and end-user goes to different paths.
-This justifyies the supposition that it is not possible to different end-users
-in the same network region on ebe affected and other not by a Tier-2 ISP event.
-To overcome this issue, when analysing a path, if a event can be located in the
-previous hop of the Tier-2 user-group, then the event can also be located at
-the Tier-2 vertex, even considering that not all end-users of this user-group
-perceived the event,
-and the analys follow to the next hop of the hop of the
-Tier-2 user group.
+As will be seen in Chapter~\ref{chap:conclusions} this kind of analysis suffer
+from sparsiness of the clients, for example several vertex can be traversed by
+the same clients.
 
-Beyond analysing the zero indegree vertexes, it is also necessary to check the
-paths that doesn't start those vertexes. In this case if all end-users of the
-vertex associated associated with the first hop detected the event, then no
-addtional analysis is made. However if a subset of the clients with this path
-detected this event them they have same equipment in common before the first
-hop that caused the event.
-
-It is possible to note that from this procedure, it is possible to formulate a
-problem to define the minimum number of end-usesr to be monitores and their
-placement to localize events causes with the minimum number of feasible
-locations.
+Through the previous analysis the case of the Tier-2 ISP is treated separately.
+Since the Tier-2 ISP can apply load balancing based on origin address, the
+problem can be located at the Tier-2 ISP but not all end-users in which traffic
+passes there can perceive the same network event, since they can go always
+throgh different equipments inside the Tier-2 ISP. Therefore, if there is a
+network in end-users goes through embratel, then embratel is considered as
+problematic.
 
 \section{Change Point Detection Issues}
 
