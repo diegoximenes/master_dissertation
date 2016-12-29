@@ -1,3 +1,43 @@
 \chapter{Results}
 \label{chap:results}
 
+As stated in Chapter~\ref{chap:methodology}, the available data doesn't allow
+an accuracy study. Therefore this chapter presents illustrative examples of the
+proposed pipeline outcomes. It is possible to visually note that these examples
+probably represent a real network event, that is a true positive.
+Also it is made a comparison between
+change points detected in different QoS metrics. It is also presented an
+example that don't follow the proposed restrictions.
+
+Due to it's simplicity, it the results of this chapter were obtained only using
+the offline sliding windows method. Also it is used time series with a median
+filter.
+The used parameters were different to each
+QoS metric, and were manually selected checking the change point detection
+performance in specific time series. DESCRIBE PARAMETERS.
+
+Eight months of data, may 2016 to december 2016 was divided in batches of
+10 days.
+For each batch, the pipeline was applied to the three types of events, the
+round trip loss fraction, RTT, and maximum achievable upstream throughput, and
+for each server.
+
+Considering the detection of a real network event as a positive case,
+Section~\ref{sec:possible_true_positive_examples} presents some possible true
+positive cases. Section~\ref{sec:possible_false_negative_examples}, shows
+possible false negative cases. Since network events can be considered rare,
+true negative cases are abundant and not presented here. Possible false
+positives were not found, since it were selected conservattives change point
+detection and filter parameters.
+
+\section{Possible True Positive Examples}
+\label{sec:possible_true_positive_examples}
+
+\section{Possible False Negative Examples}
+\label{sec:possible_false_negative_examples}
+
+\section{Comparison Between Change Points in Different QoS Metrics}
+\label{sec:comparison_between_change_points_in_different_qos_metrics}
+
+\section{Events Without Traceable Location}
+\label{sec:events_without_traceable_location}

@@ -25,5 +25,9 @@
 \BOOKMARK [1][-]{section.4.6}{Change Point Detection Issues}{chapter.4}% 25
 \BOOKMARK [1][-]{section.4.7}{Differences to Previous Systems}{chapter.4}% 26
 \BOOKMARK [0][-]{chapter.5}{Results}{}% 27
-\BOOKMARK [0][-]{chapter.6}{Conclusions}{}% 28
-\BOOKMARK [0][-]{chapter*.23}{Bibliography}{}% 29
+\BOOKMARK [1][-]{section.5.1}{Possible True Positive Examples}{chapter.5}% 28
+\BOOKMARK [1][-]{section.5.2}{Possible Falase Negative Examples}{chapter.5}% 29
+\BOOKMARK [1][-]{section.5.3}{Comparison Between Change Points in Different QoS Metrics}{chapter.5}% 30
+\BOOKMARK [1][-]{section.5.4}{Events Without Traceable Location}{chapter.5}% 31
+\BOOKMARK [0][-]{chapter.6}{Conclusions}{}% 32
+\BOOKMARK [0][-]{chapter*.23}{Bibliography}{}% 33
