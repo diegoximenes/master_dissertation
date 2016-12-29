@@ -1,4 +1,4 @@
-\begin{thebibliography}{29}
+\begin{thebibliography}{28}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -235,14 +235,6 @@
 \MakeUppercase{James, N.~A., Kejariwal, A., Matteson, D.~S.}
 \newblock \enquote{Leveraging Cloud Data to Mitigate User Experience from"
   Breaking Bad"}, \emph{arXiv preprint arXiv:1411.7955}, 2014.
-
-\bibitem[\MakeUppercase{Sundaresan}\emph{ et~al.}(2012)Sundaresan, De~Donato,
-  Feamster, Teixeira, Crawford, e
-  Pescap{\`e}]{measuring_home_broadband_performance}
-\MakeUppercase{Sundaresan, S., De~Donato, W., Feamster, N.,
-  \MakeLowercase{et~al.}}
-\newblock \enquote{Measuring home broadband performance}, \emph{Communications
-  of the ACM}, v.~55, n.~11, \penalty0 pp.~100--109, 2012.
 
 \bibitem[\MakeUppercase{Mahimkar}\emph{ et~al.}(2008)Mahimkar, Yates, Zhang,
   Shaikh, Wang, Ge, e
