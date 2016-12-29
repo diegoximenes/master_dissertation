@@ -22,4 +22,12 @@
 % \item collect on way metrics, including the traceroute, and change the TCP
 % throughput to UDP to avoid interference of packet loss in the backward path
 % passively?
+% \item better explore the Tier-2 ISP topology and applied load balancing
+% and MPLS techniques. This can improve the granularity of the user-groups
+% associated with the Tier-2 network. Say that some paths are constant in the
+% traceroute that traverse Tier-2 network. This can indicate parts of the
+% network that doesn't applies load balancing, or only apply per flow load
+% balancing, or the presence of a single minimum cost path. This info could be
+% useful for topology inference.
+% \item correlate routing updates with change points
 % \end{itemize}

@@ -23,10 +23,10 @@
 \contentsline {section}{\numberline {4.1}Measurement Process}{17}{section.4.1}
 \contentsline {section}{\numberline {4.2}Pipeline}{18}{section.4.2}
 \contentsline {section}{\numberline {4.3}Spatial Correlation}{19}{section.4.3}
-\contentsline {section}{\numberline {4.4}Events Times Correlation}{20}{section.4.4}
-\contentsline {section}{\numberline {4.5}Spatial-Time Correlation}{22}{section.4.5}
-\contentsline {section}{\numberline {4.6}Change Point Detection Issues}{24}{section.4.6}
-\contentsline {section}{\numberline {4.7}Differences to Previous Systems}{30}{section.4.7}
-\contentsline {chapter}{\numberline {5}Results}{32}{chapter.5}
-\contentsline {chapter}{\numberline {6}Conclusions}{33}{chapter.6}
-\contentsline {chapter}{Bibliography}{34}{chapter*.23}
+\contentsline {section}{\numberline {4.4}Events Times Correlation}{21}{section.4.4}
+\contentsline {section}{\numberline {4.5}Spatial-Time Correlation}{23}{section.4.5}
+\contentsline {section}{\numberline {4.6}Change Point Detection Issues}{25}{section.4.6}
+\contentsline {section}{\numberline {4.7}Differences to Previous Systems}{31}{section.4.7}
+\contentsline {chapter}{\numberline {5}Results}{33}{chapter.5}
+\contentsline {chapter}{\numberline {6}Conclusions}{34}{chapter.6}
+\contentsline {chapter}{Bibliography}{35}{chapter*.23}

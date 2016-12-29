@@ -1,10 +1,9 @@
 \chapter{Methodology}
 \label{chap:methodology}
 
-This chapter describes the proposed data analytics workflow, used to detect and
-localize events in computer networks through end-to-end measurements. Also, the
-QoS data gathering procedures are briefly presented. Finally, the proposed
-system is compared with previous projects.
+This chapter describes the proposed data analytics workflow.
+Besides, the QoS data gathering procedures are briefly presented,
+and the proposed system is compared with previous projects.
 
 \section{Measurement Process}
 
@@ -14,7 +13,7 @@ upload bandwidths. A home router connected to a cable modem communicates
 with a server strategically located by the ISP\@. Each server is responsible
 for measurements of several end-users.
 Measurements are triggered in
-each home router in every half hour and, by the end of every day,
+each home router every half hour and, by the end of every day,
 the results are transferred to a database.
 The software responsible for these procedures was
 developed by TGR (a startup at UFRJ),
@@ -27,20 +26,20 @@ server, the
 home router sends a train of short UDP packets, and the server bounces back
 them. The data here presented considers a train of 100 UDP packets of 32 bytes,
 separated by 1 millisecond.
-Maximum achievable upstream throughput is measured by ``overflowing'' the upload
+Maximum achievable upstream throughput is measured by overflowing the upload
 links with parallel TCP data transfers from the end-user to the
 server.
 Also, the traceroutes from the end-users
 to the respective servers are collected with the same frequency. Traceroutes
 from servers to end-users are not gathered.
-In~\cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil},
-a preliminary descriptive investigation of loss fraction, RTT and other metrics
-is presented.
+In~\cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil}
+is presented a preliminary descriptive investigation of these metrics.
 
 The resulted time series are unevenly spaced due to a range of reasons. First,
 measurements are initiated only if the residential link is not under use by the
 ISP customer. Also, the client may have no Internet connection to start a
-measurement, or even be without electrical energy.
+measurement, or even be without electrical energy. Other details about the
+measurement software are presented during the text, as they are needed.
 
 \section{Pipeline}
 
@@ -48,9 +47,11 @@ This section describes, in a high level abstraction, the proposed workflow
 used to detect network events and localize their cause. When necessary, some
 steps are better explored in further sections.
 The analysis seeks for events during a specific time period, in a single
-measurement server, and considers a
-single metric (loss fraction or RTT), which are specified as parameters.
-Therefore, a complete analysis can be accomplished considering different
+measurement server, and considers an
+particular metric (round trip, loss fraction, RTT, or maximum achievable
+upstream throughput),
+which are specified as parameters.
+A complete analysis can be accomplished through different
 executions with distinct parameters.
 Figure~\ref{fig:pipeline} illustrates the process.
 
@@ -64,65 +65,63 @@ Figure~\ref{fig:pipeline} illustrates the process.
 The workflow starts with the End-Users Filtering step,
 which aims to remove clients that can negatively affect the analysis.
 As an example, this work eliminates clients
-that don't have enough measurements, or present
-traceroute inconsistencies (in Section~\ref{sec:spatial_correlation}
-this issue is better examined).
+with a small number of measurement samples.
 
 The Change Point Detection phase preprocess the end-users time series and
 identify change points.
 Also, the change points are classified in three types of events: failure,
-improvement, or inconclusive. For both used QoS metrics,
+improvement, or inconclusive. For the used QoS metrics,
 a change point defines a
 failure event if the average of the window after this point is greater than the
 average of the window before. The improvement event is analogous, however is
 characterized by a mean decrease.
 The inconclusive event means that the segments averages are too close.
 
-The Spatial Correlation procedure cluster the end-users in user-groups
+The Spatial Correlation procedure clusterizes the end-users in user-groups
 according with their position in the network. This clustering can then be used
 in further steps to isolate possible events locations.
 This stage must produce a specific grouping structure, which is detailed in
 Section~\ref{sec:spatial_correlation}.
 
 The Events Times Correlation aims to combine similar events of different
-end-users of an user-group. For example, if three end-users detect a failure at
-the same time, then this information will be identified in this step.
-The clustered end-users events are named as network events.
+end-users. For example, if three end-users detect a failure at
+the same time, then this information will be identified at this step.
+The grouped end-users events of an user-group are named as network events.
 The details of this method are enlightened in
 Section~\ref{sec:events_times_correlation}.
 
-Finally, to localize the events cause, the Spatial-Time Correlation
+Finally, to localize the events cause, the Spatial-Time Correlation method
 matches network events with the user-groups structure.
 This is better explained in Section~\ref{sec:spatial_time_correlation}.
 
 \section{Spatial Correlation}
 \label{sec:spatial_correlation}
 
-This method enables to check which network equipments are shared by end-users
-that perceive the same network event. The used strategy was guided by the
-specific ISP's topology.
+This method provides the necessary information to check which network equipments
+are shared by end-users that perceive the same network event.
+The developed strategies were guided by the specific ISP's topology.
 
 The server position relative to the end-user
 can be categorized in two contexts.
 In the OFF-NET case, the traffic between them
 goes through a Tier-2 ISP\@.
-However, in the ON-NET case, the traffic
+In the ON-NET case, the traffic
 doesn't leave the Tier-3 ISP infrastructure.
 The latter situation represents a simpler IP topology, since the Tier-3 ISP
 uses static routing and
 doesn't applies load balancing nor MPLS, techniques that are usual in the Tier-2
 ISP network.
 
-Therefore, considering measurements against a single server and the ON-NET
+Then, considering measurements against a single server and the ON-NET
 case, paths from end-users to the server form a hierarchically
 structured topology, which is a required design to be consumed by the
 Spatial Time Correlation procedure~\ref{sec:spatial_time_correlation}.
 This work doesn't have access to the ISP network
 topology, therefore, this structure is reconstructed through traceroutes.
 In this context, each equipment that responds to traceroute
-pings is used as an user-group. Considering a specific user-group,
-all end-users in which this user-group appears in the traceroute belongs to
-this user-group.
+pings is used as an user-group.
+An user-group is formed by all end-users in which traceroutes contain the
+associated network equipment.
 
 The first hop of the traceroutes, which corresponds to the home gateway, is
 removed from the analysis. Also, CMTSs are reported with their private IPs,
@@ -134,53 +133,96 @@ configured to not answer traceroute pings.
 
 In the OFF-NET case, due to the load balancing applied by the Tier-2 ISP,
 the traceroute reconstruction doesn't lead in a hierarchical topology.
-To overcome this issue, sequential hops related to the
+Routers can implement three types of load balancing
+policies~\cite{avoiding_traceroute_anomalies_with_paris_traceroute}.
+The per
+destination load balancing can be disconsidered in the current analysis, since
+the target is always the same. The per flow load balancing attempts to
+maintain packets from the same flow in the same path. A flow is identified
+by header's fields of IP packets. For example, a
+router can employ that packets with equal source/destination
+address, protocol, and source/destination port,
+belong to the same flow. The per packet load
+balancing ensures that the load is equally distributed over the feasible output
+links, deploying, for example, a round-robin strategy. However, the latter
+method doesn't
+make attempts to keep packets from the same flow in the same path.
+
+For an end-user and server pair,
+the measurement software uses the same ports over time to execute a specfic
+measurement type, e.g., round trip loss fraction.
+Hence, if routers only apply per flow load balancing,
+and considering a time period without routing tables updates, and
+depending of which IP header's fields are used to define a flow, it is possible
+that all packets generated by a specific measurement type traverse the same
+path. However, these are strong and unlikely suppositions.
+Additionaly, since the implemented traceroute also uses the same ports over
+time, and considering that different measurements types use distinct ports,
+the
+path followed by traceroute packets can be different from the path folowed by
+the QoS mesurements packets. Then, in this scenario, even with static paths in
+the Tier-2 ISP network, the correlation between traceroutes
+results with end-to-end metrics can reach wrong conclusions.
+
+Therefore, this work supposes that the Tier-2 ISP only applies per packet load
+balancing, which is modeled here as a random strategy. With this hypothesis,
+if two end-users are geographically near, then it is likely that their packets
+traverse in the same set of routers in the Tier-2 network. This implies that if
+an event occur in a Tier-2 router, it is not possible that only one of these
+end-users perceive the event. This is a important consequence explored in
+Section~\ref{sec:spatial_time_correlation}.
+
+To handle the OFF-NET case, sequential hops related to
 the Tier-2 ISP are compressed to a single hop.
 As an example, the path (Tier-3 Router 1, Tier-2 Router 1, Tier-2 Router 2,
 Tier-3 Router 2, Server) is
 transformed to (Tier-3 Router 1, Tier-2, Tier-3 Router 2, Server).
 In general, this process conducts to a hierarchical topology.
-The exception happens when the Tier-2 ISP has output connections to
+The exception occurs when the Tier-2 ISP has output connections to
 different routers of the Tier-3 ISP in the same network region.
-However, this is an uncommom situation in
+However, this is an unusual situation in
 the current dataset, and therefore, was removed from the analysis.
 The distinction between
 Tier-3 and Tier-2 hops is made through the investigation of hop names.
 
 Figure~\ref{fig:real_graph} presents an example of the reconstructed
-topology. The routers were anonymised. The ``Tier-2'' and ``Server''
+topology. The equipments were anonymised. The ``Tier-2'' and ``Server''
 user-groups are self explanatory. The others are represented by a tuple, in
 which the first field indicates the reported IP in the traceroute, and the
-second specifies the first hop from the associated position onward that reported
-a public IP\@.
+second specifies the first hop, from the associated position onward,
+that reported a public IP\@.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend2016-05-11_NRIDTCLDM031_graph_anonymized.png}
-    \caption{User-groups topology.}
+    \caption{User-groups structure.}
 \label{fig:real_graph}
 \end{figure}%
 
-It is possible to see that this topology can be modeled as a DAG\@. The zero
-in degree vertexes indicate equipments the only appear as the first the hop,
-however an internal vertex can appear as the first hop in a traceroute.
-Considering an arc (A, B), all users that belongs to A also belongs to B,
+Since the links were oriented from the end-users to the server,
+it is possible to model this structure as a DAG\@. The zero
+in degree vertexes indicate equipments that only appear as the first hop,
+however, an internal vertex can be a first hop in a traceroute.
+Considering an arc (A, B), all users who belong to A also belong to B,
 but the inverse is not necessarily true.
 
 During the End-Users Filtering step, some clients are removed due to traceroute
 inconsistencies~\cite{avoiding_traceroute_anomalies_with_paris_traceroute}.
-As an example, there cases in which the same equipment appears in different
-hops. Also,
-considering that the software limits the maximum number of hops, it were
-removed the cases in which the traceroute didn't reach the server.
-Since routing tables can be updated, it were only considered clients
-in which the traceroute didn't change during the specified time period.
+As an example, there are cases in which the same equipment appears in different
+hops of the same end-user traceroute. Also,
+the measurement software limits the maximum number of hops, then,
+scenarios in which the traceroute doesn't reach the server are discarded.
+Since routing tables can be updated, after the Tier-2 vertexes compression,
+it is only considered clients with static traceroutes
+during the specified time period.
+Situations characterized by Tier-2 routers that doesn't appear as consecutive
+elements in the traceroute are also deleted.
 
 \section{Events Times Correlation}
 \label{sec:events_times_correlation}
 
-The motivation of this step is to, given the change points of each end-user of
-an user-group, infer network events that can explain these end-users events.
+The motivation of this mechanism is to infer network events that can explain
+end-users events of an user-group.
 
 There are two main reasons to detect the same network event, such as an
 equipment failure, at different times in different clients. The first one is
@@ -191,20 +233,21 @@ should be flexible enough to take into consideration time delay effects. Also,
 it must be robust to deal with multiple change points per time series.
 
 In order to relax a change point location, a detected change point is
-transformed into an interval in accordance to a time tolerance.
+transformed into an interval according to a time tolerance.
 Therefore, given a parameter $\delta$, a change point identified at
-time $t$ implies that exists a change point within
+time $t$ implies in the existence of a change point within
 $[t - \delta, t + \delta]$. To be consistent,
 change point algorithms must report locations separated by more than
-$2 \delta$ time units. The algorithms presented in
+$2 \delta$ time units. In general, the algorithms presented in
 Chapter~\ref{chap:change_point_detection}
-can be easily adapted to respect this restriction. However, this can also be
+can be adapted to respect this restriction. However, this can also be
 achieved by the following post processing step:
 sweeping time from left to right, if two
 points are at most $2 \delta$ time units apart, then the right one is removed.
 
-Therefore, the problem can be defined as selecting a set of network events,
-that explain all end-users events of an user-group.
+Consequently, the problem can be defined as selecting a set of network events,
+that explain all end-users events. It is important to note that events are
+defined only by their time and type.
 An end-user event is explained by a network event if they have the same type,
 and the end-user event time is inside the network event time interval.
 This problem has several possible solutions, and the comparison between
@@ -215,9 +258,9 @@ end-user events is the most appropriate answer.
 To this goal, it was developed a heuristic inspired in the Inexact Voting in
 Totally
 Ordered Space problem~\cite{voting_algorithms}. In this problem, people
-vote in a single point in the real line, and also considering a $\delta$
+vote in a single point in the real line. Also considering a $\delta$
 parameter, the objective is to
-select the interval with the highest number of voters.
+select the interval with the greatest number of voters.
 
 The created greedy procedure, called here as Multiple Inexact Voting in Totally
 Ordered Space, is specified in
@@ -230,7 +273,7 @@ Algorithm~\ref{alg:multiple_inexact_voting_totally_ordered_space}
         \State{Let $l$ be the end-users events of a specific type sorted by
         time}
         \While{$l$ is not empty}
-            \State{Select the interval $d$ with the highest number of
+            \State{Select the interval $d$ with the greatest number of
             end-users events,
             in which all these events are at most $2 \delta$ apart.
             In case of ties, select the left most one}
@@ -243,16 +286,18 @@ Algorithm~\ref{alg:multiple_inexact_voting_totally_ordered_space}
 
 It is possible to note that, in each iteration the procedure solves an instance
 of the Inexact Voting in Totally Ordered Space.
+The proposed algorithm is executed three times in every user-group,
+one for each event type.
 
 A more straighforward solution, that was not used in this work, is to create
 regular time-bins, and interpret all end-users events that occur at the same
 bin as a common network event.
 However, this strategy can introduce
-discontinuities. If a network event occur in the end/beginning of a time-bin,
+discontinuities. If a network event occurs in the end/beginning of a time-bin,
 then it is likely to different end-user events, associated with this
 network event, be located in different bins.
 
-If co-occurrent events with the same type affect the same user-group,
+If co-occurrent events with the same type affect the same end-users set,
 it is not possible to distinguish them. Nonetheless, the chances of
 detecting different events at the same time can reduce with the increase
 of the time series sampling frequency.
@@ -260,52 +305,52 @@ of the time series sampling frequency.
 \section{Spatial-Time Correlation}
 \label{sec:spatial_time_correlation}
 
-This step matches network events from different user-groups to localize
-their cause.
+This step matches network events from different user-groups to define
+a set of feasible events locations.
 
-It is not possible to check if changes in round trip loss fraction,
-or RTT, are caused in the path from the end-user to the server or vice versa.
+It is not possible to check if changes in round trip metrics, such as RTT,
+are caused in the path from the end-user to the server or vice versa.
 Therefore, correlate those metrics with the available traceroutes can lead to
 erroneous or inconclusive outcomes. Also, the maximum achievable upstream
 throughput can be affected by a service degradation on the path from the server
-to the end-user, since losses of TCP ACKs can influence the measurement
+to the end-user, since losses of TCP's ACKs can influence the measurement
 performance.
 Hence, this work restricts to report possible events locations considering that
 they are caused by equipments in the path from the end-user to the server.
 
-The method supposes that there are no co-occurrent events with the
-same type in the same network region. However, co-occurrent events with
-different types, or co-ocurrent events with same in different network region is
-allowed. The concept of network region will be better explored later.
-The system also expects that, considering a specific network event,
+The method expects that
 a change point detection algorithm setup is able to detect all end-users
-affected by this event, or no end-user is identified.
-Besides, with exception of the Tier-2 user-group, the mechanism considers that
+affected by a network event, or no end-user is identified.
+Besides, with exception of the Tier-2 user-group, the mechanism supposes that
 if an event occur in an user-group,
-all traffic that goes through this cluster is affected by the event.
+all traffic that goes through this cluster is affected by the event. Since
+there is a direct connection between an user-group and an unique network
+equipment, this is a reasonable hypothesis.
 
-In the first part of the analysis, it will be disconsidered the presence of the
-Tier-2 user-group. Also, it will be considered that all traceroute paths start
-in a zero indegree vertex. Later, these restrictions will be removed, treating
-them separately.
+In the first reasoning part, it will be processed cases without the
+presence of the Tier-2 user-group. Also, it will be removed
+traceroutes paths that doesn't start in a zero indegree vertex.
+Additionally, it will be disconsidered co-occurrent events with the same type.
+Later, these restrictions will be removed and treated separately.
 Unless stated differently, in the rest of this section is considered an
-unique network event.
+unique network event in the period of study.
 
 The procedure starts analysing zero indegree vertexes.
-Suppose that only a proper subset of the clients that belongs to a zero
+Suppose that only a proper subset of the clients that belong to a zero
 indegree node perceive the event. In this situation, it is possible to afirm
 that this vertex is not the cause of the event, since not all clients detected
 it. For the same reason, the cause is not located in posterior nodes
 in the path to server.
 Then, if this set size is bigger than one, these end-users must share
-a network equipment, which is the cause, that don't respond to traceroute pings
-and is located before the first hop.
+a network equipment, which is the cause, that doesn't respond to traceroute
+pings, and is located before the first hop. As an example,
+this equipment can be a fiber node.
 
 However, if all clients of the zero indegree vertex detect the event, then
 there are three options:
 this vertex can be the cause, or these end-users can share an equipment before
 the first hop that explains the event,
-or the cause s located after the first hop. Due to the
+or the cause is located after the first hop. Due to the
 lack of information about the topology above the IP layer, the first two cases
 can't be
 distinguished. Nonetheless, to check the latter scenario, the same type of
@@ -314,16 +359,15 @@ clients of the second hop detected this event, then the event is surely located
 in the first hop or before. Otherwise, the procedure continues to the next hop.
 
 When applied to different zero indegree vertexes,
-this method results in possible events location that are defined as prefix of
+this method results in possible events locations that are prefixes of
 the paths to the server.
-However, different paths share common network equipments, and then these prefix
-outcomes can be correlated.
-If in different paths the same network
-event is detected, then they must share at least one equipment. The
-ones that are not in commom can be discarded from the possible cause list, since
-there are end-users that don't belong to them and still perceive the event.
-Therefore, the cause lists of different paths are matched, resulting in the
-suffix match of the individual path prefixes.
+However, different paths share common network equipments, then these prefixes
+can be correlated.
+
+If different paths detect the same network
+event, then they must share at least one equipment. The
+ones that are not common can be discarded from the possible cause list, since
+there are end-users that dont't belong to them and still perceive the event.
 
 Figure~\ref{fig:network_events_locations_examples} presents several topologies
 and different network events. The gray vertexes indicate a network event
@@ -349,7 +393,7 @@ that occurred in this location.
             \caption{}\label{fig:network_events_locations_examples_4}
         \end{subfigure}%
     }
-    \caption{Network event locations examples.}
+    \caption{Network event location examples.}
 \label{fig:network_events_locations_examples}
 \end{figure}%
 
@@ -369,66 +413,45 @@ node G doesn't detect the event. The analysis in A finds \{A, B, C\}. Through
 node E, \{E, F, C\} is the result.
 Correlating the outcomes, C is the only feasible event location.
 
-If there are co-occurrent events with the same type, and in the same network
-region, then it is not possible to distinguish them. However, if co-occurrent
-events affect completely different parts of the network, the feasible locations
-detected from zero indegree vertexes affected by different events have
-empty intersection.
-Therefore, in the
-latter case, is possible to localize both causes, only correlating results from
-the zero indegree nodes that share at least one vertex.
-Figure~\ref{fig:network_events_locations_examples_5}
+The previous analysis can't be fully applied in situations with the Tier-2
+user-group.
+As an example, suppose two geographically distant end-users in an OFF-NET case.
+The packets from these two users can go through completely different paths in
+the Tier-2 ISP\@. Then, it is possible that an event in the Tier-2 ISP only
+affects one of the users, which contradicts one of the established restrictions.
+To overcome this issue, when analysing a path, if an event can be located in the
+previous hop of the Tier-2 user-group, then the event can also be located at
+the Tier-2 vertex, even considering that not all end-users of this user-group
+perceived the event.
+
+Now, suppose paths that doesn't start in zero indegree vertexes, which should
+be processed after the analysis explained above.
+If all clients of the first hop user-group detect the event, then this
+path was already treated. Otherwise, the end-users that detected the event
+share an equipment, that doesn't answer to traceroute pings and is the cause.
+
+If there are co-occurrent events with the same type, the complete procedure can
+result in a wrong outcome. Figure~\ref{fig:network_events_locations_examples_5}
 illustrates this case.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.35\linewidth]{./figures/methodology/spatial_time_correlation/event_tree_graph_5.png}
-    \caption{Co-occurent events with no spatial instersection.}
-\label{fig:real_graph}
+    \caption{Co-occurent events.}
+\label{fig:network_events_locations_examples_5}
 \end{figure}%
 
-Through node A, the feasible locations are \{A, B, C\}. Checking E, the results
-is \{E, F, C\}. In vertex G, the outcome is \{G, H\}.
-Since the outcome of the G analysis has empty intersection with the results of
-other vertexes, it is possible to afirm that the event that affected the E node
-is different from the event that influenced the other zero indegree vertexes.
-Also since the intersection of the outcomes of the A and E analysis it not
-empty, a single event interfered in thoses nodes. Matching the results, one
-event location is C, and the other is in \{G, H\}.
+Through node A, the feasible locations are \{A, B, C, D\}.
+Checking E, the result is \{E, F, C, D\}.
+In vertex G, the outcome is \{G, H, D\}.
+Correlating the paths results leads to the location D, which is a mistake.
+Therefore, when considering co-occurrent events with the same type, the step of
+correlating the conclusions of different paths must not be applied, and the
+union of these results should be the final outcome.
 
-The previous analysis can't be applies directly when the Tier-2 user-group is
-considered. As an example, the traffic from two end-users in positioned in
-completely different geographical positions, can go to the server through the
-Tier-2 ISP, however even considering the load balancing, the traffic goes to
-two different Tier-2 netork locations. Therefore, is possible to a problem in
-the Tier-2 ISP network affect a end-user and other not. There are three types
-of load balancing: per packet, per flow, per destination. Since in this
-analysis is considered the same server, the per destination load balancing
-doesn't has effects. The per packet can be considered random. Since different
-measuremets occur with different source and destination ports, different
-measures betweern the same end-user and the server are different flows.
-Therefore, in the regions where is applied load balancing, different
-measuremets traffic from the same server and end-user goes to different paths.
-This justifyies the supposition that it is not possible to different end-users
-in the same network region on ebe affected and other not by a Tier-2 ISP event.
-To overcome this issue, when analysing a path, if a event can be located in the
-previous hop of the Tier-2 user-group, then the event can also be located at
-the Tier-2 vertex, even considering that not all end-users of this user-group
-perceived the event,
-and the analys follow to the next hop of the hop of the
-Tier-2 user group.
-
-Beyond analysing the zero indegree vertexes, it is also necessary to check the
-paths that doesn't start those vertexes. In this case if all end-users of the
-vertex associated associated with the first hop detected the event, then no
-addtional analysis is made. However if a subset of the clients with this path
-detected this event them they have same equipment in common before the first
-hop that caused the event.
-
-It is possible to note that from this procedure, it is possible to formulate a
-problem to define the minimum number of end-usesr to be monitores and their
-placement to localize events causes with the minimum number of feasible
-locations.
+From this procedure, it is possible to formulate a
+problem to define the minimum number of end-users to be monitored, and their
+placement to localize events with the minimum number of feasible locations.
 
 \section{Change Point Detection Issues}
 
