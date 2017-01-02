@@ -16,7 +16,7 @@ from utils.time_series import TimeSeries
 import change_point.cp_utils.cp_utils as cp_utils
 
 
-def get_ip_name(traceroute):
+def get_ip_name(traceroutes):
     """
     get the ip->name mapping:
     the dns resolution can fail, and the ip can be
@@ -24,11 +24,18 @@ def get_ip_name(traceroute):
     """
 
     ip_name = {}
-    for hop in traceroute:
-        for ip, name in izip(hop["ips"], hop["names"]):
-            if ((name != u"##") and ((ip not in ip_name) or
-                                     (not utils.is_valid_ip(name)))):
-                ip_name[ip] = name
+    for traceroute in traceroutes:
+        for hop in traceroute:
+            for ip, name in izip(hop["ips"], hop["names"]):
+                if name != u"##":
+                    if ip not in ip_name:
+                        ip_name[ip] = name
+                    elif utils.is_valid_ip(ip_name[ip]):
+                        ip_name[ip] = name
+                    elif ((not utils.is_valid_ip(ip_name[ip])) and
+                          (not utils.is_valid_ip(name)) and
+                          (ip_name[ip] != name)):
+                        return {}
     return ip_name
 
 
@@ -40,122 +47,180 @@ def get_name(name, ip_name):
         return ip_name.get(name)
 
 
-def get_traceroute(ts_traceroute, ts_server_ip, allow_embratel,
-                   compress_embratel):
-    hops_default_names = []
-    hops_default_ips = []
-    server_ip = None
+def get_traceroute(ts_traceroute, allow_embratel, compress_embratel,
+                   allow_last_hop_embratel):
+    hops_default = []
+
+    # sometimes only a few traceroutes present different names in the same hop
+    cnt_diff_name_same_hop = 0
+    thresh_diff_name_same_hop = 0.01
+
+    ip_name = get_ip_name(ts_traceroute.y)
+    # considering dynamic ips, is possible that during a time interval,
+    # the same ip is used for more than one equipments
+    update_ip_name = False
+    if not ip_name:
+        update_ip_name = True
+
     for i in xrange(len(ts_traceroute.y)):
         traceroute = copy.deepcopy(ts_traceroute.y[i])
-        server_ip = ts_server_ip.y[i]
 
-        if allow_embratel and compress_embratel:
-            # rename embratel equipments to "embratel"
-            for hop in traceroute:
-                for j in range(len(hop["names"])):
-                    if "embratel" in hop["names"][j]:
-                        hop["names"][j] = "embratel"
-                        hop["ips"][j] = "embratel"
-
-        # THIS PIECE OF CODE EXPOSES A TRACEROUTE INCONSISTENCY
-        # IN 2016_06
-        # if traceroute:
-        #     cnt = 0
-        #     for hop in traceroute:
-        #         if ((hop["names"] is not None) and
-        #                 (u"10.12.0.1" in hop["names"])):
-        #             cnt += 1
-        #     if cnt > 1:
-        #         for hop in traceroute:
-        #             print "hop={}".format(hop)
-        #         print ("mac={}, server={}, row.dt={}".
-        #                format(mac, server, row["dt"]))
-        #
-        #         return
+        # some traceroutes presents a weak inconsistency then ignore them
+        ignore_traceroute = False
 
         if traceroute:
-            ip_name = get_ip_name(traceroute)
+            if update_ip_name:
+                ip_name = get_ip_name([traceroute])
 
-            hops_names = []
-            hops_ips = []
+            # rename embratel equipments to "embratel"
+            if allow_embratel and compress_embratel:
+                for hop in traceroute:
+                    for j in xrange(len(hop["names"])):
+                        if "embratel" in get_name(hop["names"][j], ip_name):
+                            hop["names"][j] = "embratel"
+                            hop["ips"][j] = "embratel"
+
+            # get a single (hop name, hop ip) tuple for each hop of the current
+            # traceroute. If there are strong inconsistencies return False
+            hops_current = []
             for hop in traceroute:
+                # check if there is an unwanted embratel hop
+                if not allow_embratel:
+                    for name in hop["names"]:
+                        if "embratel" in name:
+                            return (False, "hop_with_embratel={}".format(hop))
+
                 # get a single name for each hop
                 hop_name = hop_ip = None
-                if not allow_embratel:
-                    for name, ip in izip(hop["names"], hop["ips"]):
-                        if "embratel" in name:
-                            return (False, "hop_with_embratel={}".format(hop),
-                                    server_ip)
                 for name, ip in izip(hop["names"], hop["ips"]):
                     if (name != u"##"):
                         hop_name = get_name(name, ip_name)
                         hop_ip = ip
-                for name, ip in izip(hop["names"], hop["ips"]):
-                    if name == u"##":
-                        hop_name = hop_ip = None
-                        break
 
-                # check if more than one name appear in the
-                # same hop
+                # check if more than one name appear in the same hop
                 if hop_name is not None:
                     for name in hop["names"]:
+                        if name == u"##":
+                            ignore_traceroute = True
+
                         if ((name != u"##") and
                                 (hop_name != get_name(name, ip_name))):
-                            return (False, "diff_name_same_hop={}".format(hop),
-                                    server_ip)
+                            cnt_diff_name_same_hop += 1
+                            frac_diff_name_same_hop = \
+                                (float(cnt_diff_name_same_hop) /
+                                 len(ts_traceroute.y))
+                            if (frac_diff_name_same_hop >
+                                    thresh_diff_name_same_hop):
+                                return (False,
+                                        "cnt_diff_name_same_hop={},"
+                                        "diff_name_same_hop={}".
+                                        format(cnt_diff_name_same_hop, hop))
+                            else:
+                                ignore_traceroute = True
+                                continue
 
-                hops_names.append(hop_name)
-                hops_ips.append(hop_ip)
+                hops_current.append({"name": hop_name, "ip": hop_ip})
 
-            if allow_embratel and compress_embratel and hops_names:
-                # compress embratel hops
-                hops_names_aux = [hops_names[0]]
-                hops_ips_aux = [hops_ips[0]]
-                for j in xrange(1, len(hops_names)):
-                    if ((hops_names[j] == "embratel") and
-                            (hops_names_aux[-1] == "embratel")):
+            if ignore_traceroute:
+                continue
+
+            # compress embratel hops
+            if allow_embratel and compress_embratel and hops_current:
+                hops_current_aux = [hops_current[0]]
+                for j in xrange(1, len(hops_current)):
+                    if ((hops_current[j]["name"] == "embratel") and
+                            (hops_current_aux[-1]["name"] == "embratel")):
                         continue
-                    hops_names_aux.append(hops_names[j])
-                    hops_ips_aux.append(hops_ips[j])
-                hops_names = hops_names_aux
-                hops_ips = hops_ips_aux
+                    hops_current_aux.append(hops_current[j])
+                hops_current = hops_current_aux
 
-            if not hops_default_names:
-                hops_default_names = copy.deepcopy(hops_names)
-                hops_default_ips = copy.deepcopy(hops_ips)
+            if not hops_default:
+                # first traceroute to be analysed
+                hops_default = hops_current
             else:
+                # check if current traceroute has more info than previous ones.
+                # Also checks if current traceroute is different from previous
+                # ones.
+
                 update_hops_default = False
-                for name_hops, name_hops_default in izip(hops_names,
-                                                         hops_default_names):
-                    if ((name_hops is not None) and
-                            (name_hops_default is None)):
-                        # current traceroute have more
-                        # information than previous ones
+
+                for j in xrange(min(len(hops_current), len(hops_default))):
+                    name_current = hops_current[j]["name"]
+                    ip_current = hops_current[j]["ip"]
+                    name_default = hops_default[j]["name"]
+                    ip_default = hops_default[j]["ip"]
+
+                    if ((name_current is not None) and
+                            (name_default is None)):
+                        # current traceroute have more info than previous ones
                         update_hops_default = True
-                    elif ((name_hops is not None) and
-                          (name_hops_default is not None) and
-                          (name_hops != name_hops_default)):
-                        # different traceroutes
-                        return (False,
-                                "hops1={},hops2={}".format(hops_names,
-                                                           hops_default_names),
-                                server_ip)
+                    elif ((name_current is not None) and
+                          (name_default is not None) and
+                          (name_current != name_default)):
+                        if ((ip_default is not None) and
+                                (ip_current is not None) and
+                                (ip_current == ip_default)):
+                            # since dns can fail and the ip can be places at
+                            # the names field, the same hop can have different
+                            # names. Therefore if names are different also
+                            # check if ips are differents
+                                if not utils.is_valid_ip(name_current):
+                                    update_hops_default = True
+                        else:
+                            # different traceroutes
+                            return (False,
+                                    "hops1={},hops2={},traceroute1={},"
+                                    "traceroute2={}".format(hops_current[j],
+                                                            hops_default[j],
+                                                            hops_current,
+                                                            hops_default))
+
+                # current traceroute has more info than prevous ones
+                if len(hops_current) > len(hops_default):
+                    update_hops_default = True
 
                 if update_hops_default:
-                    hops_default_names = copy.deepcopy(hops_names)
-                    hops_default_ips = copy.deepcopy(hops_ips)
+                    hops_default = hops_current
 
-    for name in hops_default_names:
-        if name and (hops_default_names.count(name) > 1):
-            return (False,
-                    "more_than_one_occurrence={}".format(hops_default_names),
-                    server_ip)
+    # check if the same name appears in more than one hop
+    name_set = set()
+    for hop in hops_default:
+        name = hop["name"]
+        if (name is not None) and (name in name_set):
+            return (False, "more_than_one_occurrence={}".format(hops_default))
+        else:
+            name_set.add(name)
 
-    hops_default = []
-    for name_hops_default, ip_hops_default in izip(hops_default_names,
-                                                   hops_default_ips):
-        hops_default.append((name_hops_default, ip_hops_default))
-    return True, "{}".format(hops_default), server_ip
+    # check if last hop is embratel
+    if not allow_last_hop_embratel:
+        for hop in reversed(hops_default):
+            if hop["name"] == "embratel":
+                return False, "last_hop_with_embratel={}".format(hops_default)
+            elif hop["name"] is not None:
+                break
+
+    # compress traceroute: remove nones from left and right
+    i = 0
+    j = len(hops_default) - 1
+    while (i < len(hops_default)) and (hops_default[i]["name"] is None):
+        i += 1
+    while (j >= 0) and (hops_default[j]["name"] is None):
+        j -= 1
+    if j >= i:
+        hops_default = hops_default[i:j + 1]
+    else:
+        return False, "empty_traceroute"
+
+    # check if there are Nones after compression
+    for hop in hops_default:
+        if hop["name"] is None:
+            return False, "traceroute_with_nones={}".format(hops_default)
+
+    # convert to format to be consumed by other procedures
+    ret_hops_default = []
+    for hop in hops_default:
+        ret_hops_default.append((hop["name"], hop["ip"]))
+    return True, "{}".format(ret_hops_default)
 
 
 def get_traceroute_filtered(str_traceroute_list):
@@ -184,68 +249,54 @@ def get_traceroute_filtered(str_traceroute_list):
     return traceroute_filtered
 
 
-def compress_traceroute(traceroute, traceroute_type):
-    """
-    remove left/right ((None, None), (None, None)) hops from
-    traceroute_filtered or (None, None) from traceroute
-    """
-
-    if traceroute_type == "filtered":
-        target_hop = ((None, None), (None, None))
-    elif traceroute_type == "raw":
-        target_hop = (None, None)
-
-    i = 0
-    j = len(traceroute) - 1
-    while (i < len(traceroute)) and (traceroute[i] == target_hop):
-        i += 1
-    while (j >= 0) and (traceroute[j] == target_hop):
-        j -= 1
-
-    if j >= i:
-        compressed = copy.deepcopy(traceroute[i:j + 1])
-    else:
-        compressed = []
-    return compressed
-
-
-def print_traceroute_per_mac(dt_start, dt_end, mac_node, allow_embratel):
+def print_traceroute_per_mac(dt_start, dt_end):
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     out_path = ("{}/prints/{}/not_filtered/traceroute_per_mac.csv".
                 format(script_dir, str_dt))
     with open(out_path, "w") as f:
-        f.write("server,server_ip,node,mac,is_unique_traceroute,traceroute,"
-                "is_unique_traceroute_not_compress_embratel,"
-                "traceroute_not_compress_embratel\n")
+        f.write("server,mac,"
+                "valid_traceroute_compress_embratel,"
+                "traceroute_compress_embratel,"
+                "valid_traceroute_compress_embratel_without_last_hop_embratel,"
+                "traceroute_compress_embratel_without_last_hop_embratel,"
+                "valid_traceroute_without_embratel,"
+                "traceroute_without_embratel,"
+                "valid_traceroute,"
+                "traceroute\n")
         for server, mac, in_path in utils.iter_server_mac(dt_dir, True):
             ts_traceroute = TimeSeries(in_path=in_path, metric="traceroute",
                                        dt_start=dt_start, dt_end=dt_end)
-            ts_server_ip = TimeSeries(in_path=in_path, metric="server_ip",
-                                      dt_start=dt_start, dt_end=dt_end)
 
-            is_unique_traceroute, str_traceroute, server_ip = \
-                get_traceroute(ts_traceroute, ts_server_ip, allow_embratel,
-                               True)
-            if allow_embratel:
-                (is_unique_traceroute_not_compress_embratel,
-                 str_traceroute_not_compress_embratel, _) = \
-                    get_traceroute(ts_traceroute, ts_server_ip, allow_embratel,
-                                   False)
-            else:
-                (is_unique_traceroute_not_compress_embratel,
-                 str_traceroute_not_compress_embratel) = (None, None)
+            (valid_traceroute_compress_embratel,
+             traceroute_compress_embratel) = \
+                get_traceroute(ts_traceroute, True, True, True)
 
-            node = mac_node.get(mac)
+            (valid_traceroute_compress_embratel_without_last_hop_embratel,
+             traceroute_compress_embratel_without_last_hop_embratel) = \
+                get_traceroute(ts_traceroute, True, True, False)
 
-            l_formatter = "{},{},{},{},{},\"{}\",{},\"{}\"\n"
-            l = l_formatter.format(server, server_ip, node, mac,
-                                   is_unique_traceroute, str_traceroute,
-                                   is_unique_traceroute_not_compress_embratel,
-                                   str_traceroute_not_compress_embratel)
+            (valid_traceroute_without_embratel,
+             traceroute_without_embratel) = \
+                get_traceroute(ts_traceroute, False, False, False)
+
+            (valid_traceroute, traceroute) = \
+                get_traceroute(ts_traceroute, True, False, False)
+
+            l = "{},{}" + ",{},\"{}\"" * 4 + "\n"
+            l = l.format(
+                server, mac,
+                valid_traceroute_compress_embratel,
+                traceroute_compress_embratel,
+                valid_traceroute_compress_embratel_without_last_hop_embratel,
+                traceroute_compress_embratel_without_last_hop_embratel,
+                valid_traceroute_without_embratel,
+                traceroute_without_embratel,
+                valid_traceroute,
+                traceroute)
             f.write(l)
-    utils.sort_csv_file(out_path, ["server", "node"])
+    utils.sort_csv_file(out_path, ["server", "mac"])
 
 
 def print_traceroute_per_mac_filtered(dt_start, dt_end):
@@ -309,6 +360,8 @@ def print_traceroute_per_mac_filtered(dt_start, dt_end):
 
 
 def print_macs_per_name_filtered(dt_start, dt_end, mac_node):
+    # TODO: Probably deprecated
+
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     in_path = ("{}/prints/{}/filtered/traceroute_per_mac.csv".
@@ -338,6 +391,8 @@ def print_macs_per_name_filtered(dt_start, dt_end, mac_node):
 
 
 def print_name_ips(dt_start, dt_end):
+    # TODO: Probably deprecated
+
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -362,6 +417,8 @@ def print_name_ips(dt_start, dt_end):
 
 
 def print_names_per_mac(dt_start, dt_end, mac_node):
+    # TODO: Probably deprecated
+
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -387,6 +444,8 @@ def print_names_per_mac(dt_start, dt_end, mac_node):
 
 
 def print_macs_per_name(dt_start, dt_end, mac_node):
+    # TODO: Probably deprecated
+
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -423,9 +482,9 @@ def print_all(dt_start, dt_end, mac_node):
     # print_macs_per_name(dt_start, dt_end, mac_node)
     # print_names_per_mac(dt_start, dt_end, mac_node)
     # print_name_ips(dt_start, dt_end)
-    print_traceroute_per_mac(dt_start, dt_end, mac_node, True)
+    print_traceroute_per_mac(dt_start, dt_end)
 
-    print_traceroute_per_mac_filtered(dt_start, dt_end)
+    # print_traceroute_per_mac_filtered(dt_start, dt_end)
     # print_macs_per_name_filtered(dt_start, dt_end, mac_node)
 
 
@@ -448,8 +507,8 @@ def run_single(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
+    dt_start = datetime.datetime(2016, 5, 1)
+    dt_end = datetime.datetime(2016, 5, 11)
 
     parallel_args = {}
     sequential_args = parallel_args
