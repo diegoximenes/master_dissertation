@@ -1,20 +1,15 @@
 import os
 import sys
+import datetime
+import shutil
 from pymongo import MongoClient
-from datetime import datetime
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(base_dir)
 import utils.dt_procedures as dt_procedures
 import utils.utils as utils
-
-
-def create_dirs(dt_dir, server):
-    for dir in ["{}/{}".format(script_dir, dt_dir),
-                "{}/{}/{}/".format(script_dir, dt_dir, server)]:
-        if not os.path.exists(dir):
-            os.makedirs(dir)
+import change_point.cp_utils.cp_utils as cp_utils
 
 
 def valid_doc(doc):
@@ -23,19 +18,26 @@ def valid_doc(doc):
             ("date" not in doc["_id"])):
         return False
 
-    # check server(host), carrier(ISP), uf(client uf), huf(server uf) existence
-    if (("host" not in doc) or ("carrier" not in doc) or
-            ("uf" not in doc) or ("huf" not in doc)):
+    # check server(host), carrier(ISP) existence
+    if ("host" not in doc) or ("carrier" not in doc):
         return False
-
     if doc["carrier"] != "NET":
         return False
 
-    # client and server must have the same uf
-    if doc["uf"] != doc["huf"]:
-        return False
+    # check uf(client uf), huf(server uf) existence
+    # if ("uf" not in doc) or ("huf" not in doc):
+    #     return False
+    # # client and server must have the same uf
+    # if doc["uf"] != doc["huf"]:
+    #     return False
 
     return True
+
+
+def get_uf(doc):
+    if "uf" not in doc:
+        return None
+    return doc["uf"]
 
 
 def get_server_ip(doc):
@@ -104,108 +106,74 @@ def get_traceroute(doc):
     return doc["tcrt"]["hops"]
 
 
-def get_macs(cursor):
-    """
-    only consider clients that measured against a single server in the cursor
-    documents. Returns a list with the macs and another one with the associated
-    servers
-    """
-
-    mac_servers = {}
-    cnt = 0
-    for doc in cursor:
-        cnt += 1
-        print "get_macs, cnt={}".format(cnt)
-
-        if not valid_doc(doc):
-            continue
-
-        mac = doc["_id"]["mac"]
-        server = doc["host"]
-
-        if mac not in mac_servers:
-            mac_servers[mac] = set()
-        mac_servers[mac].add(server)
-
-    macs = []
-    servers = []
-    for mac in mac_servers:
-        if len(mac_servers[mac]) == 1:
-            macs.append(mac)
-            servers.append(mac_servers[mac].pop())
-    return macs, servers
-
-
 def write_csvs(dt_dir, dt_start, dt_end, cursor, collection):
-    macs, servers = get_macs(cursor)
+    for cnt, doc in enumerate(cursor):
+        print "{}, {}".format(cnt, utils.get_str_dt(dt_start, dt_end))
+        if valid_doc(doc):
+            mac = doc["_id"]["mac"]
+            server = doc["host"]
 
-    cnt = 0
-    for mac, server in zip(macs, servers):
-        cnt += 1
-        print "mac={}, cnt={}".format(mac, cnt)
+            utils.create_dirs(["{}/{}".format(script_dir, dt_dir),
+                               "{}/{}/{}/".format(script_dir, dt_dir, server)])
 
-        create_dirs(dt_dir, server)
+            out_path = "{}/{}/{}/{}.csv".format(script_dir, dt_dir, server,
+                                                mac)
 
-        cursor = collection.find({"$and": [{"_id.date": {"$gte": dt_start,
-                                                         "$lt": dt_end}},
-                                           {"_id.mac": mac}]})
-        out_path = "{}/{}/{}/{}.csv".format(script_dir, dt_dir, server,
-                                            mac)
-        with open(out_path, "w") as f:
-            f.write("dt,uf,server_ip,loss,latency,throughput_up,"
-                    "throughput_down,nominal_up,nominal_down,"
-                    "loss_cross_traffic_up,loss_cross_traffic_down,"
-                    "latency_cross_traffic_up,latency_cross_traffic_down,"
-                    "throughput_up_cross_traffic_up,"
-                    "throughput_up_cross_traffic_down,"
-                    "throughput_down_cross_traffic_up,"
-                    "throughput_down_cross_traffic_down,"
-                    "traceroute\n")
+            if not os.path.exists(out_path):
+                with open(out_path, "w") as f:
+                    l = ("dt,uf,server_ip,loss,latency,throughput_up,"
+                         "throughput_down,nominal_up,nominal_down,"
+                         "loss_cross_traffic_up,loss_cross_traffic_down,"
+                         "latency_cross_traffic_up,latency_cross_traffic_down,"
+                         "throughput_up_cross_traffic_up,"
+                         "throughput_up_cross_traffic_down,"
+                         "throughput_down_cross_traffic_up,"
+                         "throughput_down_cross_traffic_down,"
+                         "traceroute\n")
+                    f.write(l)
 
-            for doc in cursor:
-                if (not valid_doc(doc)):
-                    continue
+            uf = get_uf(doc)
+            server = doc["host"]
+            dt = dt_procedures.from_utc_to_sp(doc["_id"]["date"])
+            server_ip = get_server_ip(doc)
 
-                uf = doc["uf"]
-                server = doc["host"]
-                dt = dt_procedures.from_utc_to_sp(doc["_id"]["date"])
-                server_ip = get_server_ip(doc)
+            (loss, loss_cross_traffic_up, loss_cross_traffic_down) = \
+                get_loss(doc)
 
-                (loss, loss_cross_traffic_up, loss_cross_traffic_down) = \
-                    get_loss(doc)
+            (latency, latency_cross_traffic_up,
+             latency_cross_traffic_down) = get_latency(doc)
 
-                (latency, latency_cross_traffic_up,
-                 latency_cross_traffic_down) = get_latency(doc)
+            (throughput_up, nominal_up,
+             throughput_up_cross_traffic_up,
+             throughput_up_cross_traffic_down) = get_throughput_up(doc)
 
-                (throughput_up, nominal_up,
-                 throughput_up_cross_traffic_up,
-                 throughput_up_cross_traffic_down) = get_throughput_up(doc)
+            (throughput_down, nominal_down,
+             throughput_down_cross_traffic_up,
+             throughput_down_cross_traffic_down) = get_throughput_down(doc)
 
-                (throughput_down, nominal_down,
-                 throughput_down_cross_traffic_up,
-                 throughput_down_cross_traffic_down) = get_throughput_down(doc)
+            traceroute = get_traceroute(doc)
 
-                traceroute = get_traceroute(doc)
-
-                l = "{}" + ",{}" * 16 + ",\"{}\"\n"
-                f.write(l.format(dt,
-                                 uf,
-                                 server_ip,
-                                 loss,
-                                 latency,
-                                 throughput_up,
-                                 throughput_down,
-                                 nominal_up,
-                                 nominal_down,
-                                 loss_cross_traffic_up,
-                                 loss_cross_traffic_down,
-                                 latency_cross_traffic_up,
-                                 latency_cross_traffic_down,
-                                 throughput_up_cross_traffic_up,
-                                 throughput_up_cross_traffic_down,
-                                 throughput_down_cross_traffic_up,
-                                 throughput_down_cross_traffic_down,
-                                 traceroute))
+            l = "{}" + ",{}" * 16 + ",\"{}\"\n"
+            l = l.format(dt,
+                         uf,
+                         server_ip,
+                         loss,
+                         latency,
+                         throughput_up,
+                         throughput_down,
+                         nominal_up,
+                         nominal_down,
+                         loss_cross_traffic_up,
+                         loss_cross_traffic_down,
+                         latency_cross_traffic_up,
+                         latency_cross_traffic_down,
+                         throughput_up_cross_traffic_up,
+                         throughput_up_cross_traffic_down,
+                         throughput_down_cross_traffic_up,
+                         throughput_down_cross_traffic_down,
+                         traceroute)
+            with open(out_path, "a") as f:
+                f.write(l)
 
 
 def get_data(dt_start_sp, dt_end_sp):
@@ -214,6 +182,10 @@ def get_data(dt_start_sp, dt_end_sp):
     """
 
     dt_dir = utils.get_dt_dir(dt_start_sp, dt_end_sp)
+
+    out_dir = "{}/{}".format(script_dir, dt_dir)
+    if os.path.isdir(out_dir):
+        shutil.rmtree(out_dir)
 
     client = MongoClient("cabul", 27017)
     collection = client["NET"]["measures"]
@@ -225,12 +197,38 @@ def get_data(dt_start_sp, dt_end_sp):
     write_csvs(dt_dir, dt_start, dt_end, cursor, collection)
 
 
-if __name__ == "__main__":
-    # dt_start_sp = datetime(2016, 10, 1, 0, 0, 0)
-    # dt_end_sp = datetime(2016, 11, 1, 0, 0, 0)
-    # get_data(dt_start_sp, dt_end_sp)
+def iter_dt_months():
+    for month in range(5, 12):
+        dt_start = datetime.datetime(2016, month, 1)
+        dt_end = datetime.datetime(2016, month + 1, 1)
+        yield dt_start, dt_end
+    dt_start = datetime.datetime(2016, 12, 1)
+    dt_end = datetime.datetime(2017, 1, 1)
+    yield dt_start, dt_end
 
-    for month in range(7, 10):
-        dt_start_sp = datetime(2016, month, 1)
-        dt_end_sp = datetime(2016, month + 1, 1)
-        get_data(dt_start_sp, dt_end_sp)
+
+def run_sequential():
+    for dt_start, dt_end in iter_dt_months():
+        get_data(dt_start, dt_end)
+
+
+def run_parallel():
+    utils.parallel_exec(get_data, list(iter_dt_months()))
+
+
+def run_single(dt_start, dt_end):
+    get_data(dt_start, dt_end)
+
+
+if __name__ == "__main__":
+    dt_start = datetime.datetime(2016, 5, 1)
+    dt_end = datetime.datetime(2016, 6, 1)
+
+    parallel_args = {}
+    sequential_args = parallel_args
+    single_args = {"dt_start": dt_start, "dt_end": dt_end}
+    single_args.update(parallel_args)
+    cp_utils.parse_args(run_single, single_args,
+                        run_parallel, parallel_args,
+                        run_sequential, sequential_args,
+                        None, None)
