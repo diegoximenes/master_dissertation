@@ -199,6 +199,10 @@ def get_traceroute(ts_traceroute, allow_embratel, compress_embratel,
             elif hop["name"] is not None:
                 break
 
+    # check if reached server in less hops than the maximum allowed
+    if hops_default and (hops_default[-1]["name"] is not None):
+        return False, "last_hop_diff_than_none={}".format(hops_default)
+
     # compress traceroute: remove nones from left and right
     i = 0
     j = len(hops_default) - 1
@@ -216,20 +220,37 @@ def get_traceroute(ts_traceroute, allow_embratel, compress_embratel,
         if hop["name"] is None:
             return False, "traceroute_with_nones={}".format(hops_default)
 
+    # check if there is at least one public ip
+    has_public_ip = False
+    for hop in hops_default:
+        if not utils.is_private_ip(hop["ip"]):
+            has_public_ip = True
+            break
+    if not has_public_ip:
+        return False, "no_public_ip={}".format(hops_default)
+
     # convert to format to be consumed by other procedures
     ret_hops_default = []
     for hop in hops_default:
         ret_hops_default.append((hop["name"], hop["ip"]))
-    return True, "{}".format(ret_hops_default)
+    return True, ret_hops_default
 
 
-def get_traceroute_filtered(str_traceroute_list):
+def get_traceroute_filtered(valid_traceroute, str_traceroute, server):
     """
     if the ip is private get the next ip in traceroute that is public
     """
 
-    traceroute = ast.literal_eval(str_traceroute_list)
+    if not valid_traceroute:
+        return "not_valid"
 
+    traceroute = ast.literal_eval(str_traceroute)
+
+    # remove local ip
+    if traceroute[0][0].split(".")[0] == "192":
+        traceroute = traceroute[1:]
+
+    # to each hop, add next hop with public ip
     traceroute_filtered = []
     for i in xrange(len(traceroute) - 1):
         filtered = ((None, None), (None, None))
@@ -241,10 +262,12 @@ def get_traceroute_filtered(str_traceroute_list):
                         break
             if filtered == ((None, None), (None, None)):
                 filtered = (traceroute[i], traceroute[i])
-
         traceroute_filtered.append(filtered)
     if traceroute:
         traceroute_filtered.append((traceroute[-1], traceroute[-1]))
+
+    # add server hop
+    traceroute_filtered += ((server, server), (server, server))
 
     return traceroute_filtered
 
@@ -305,58 +328,60 @@ def print_traceroute_per_mac_filtered(dt_start, dt_end):
     out_path = ("{}/prints/{}/filtered/traceroute_per_mac.csv".
                 format(script_dir, str_dt))
     with open(out_path, "w") as f:
-        f.write("server,node,mac,traceroute_filtered,is_unique_traceroute,"
-                "traceroute\n")
+        l = ("server,mac,"
+             "valid_traceroute_compress_embratel,"
+             "traceroute_compress_embratel_filter,"
+             "valid_traceroute_compress_embratel_without_last_hop_embratel,"
+             "traceroute_compress_embratel_without_last_hop_embratel_filter,"
+             "valid_traceroute_without_embratel,"
+             "traceroute_without_embratel_filter,"
+             "valid_traceroute,"
+             "traceroute_filter\n")
+        f.write(l)
+
         in_path = ("{}/prints/{}/not_filtered/traceroute_per_mac.csv".
                    format(script_dir, str_dt))
         df = pd.read_csv(in_path)
         for idx, row in df.iterrows():
-            if row["is_unique_traceroute"] is False:
-                continue
+            traceroute_compress_embratel_filter = \
+                get_traceroute_filtered(
+                    row["valid_traceroute_compress_embratel"],
+                    row["traceroute_compress_embratel"],
+                    row["server"])
 
-            traceroute_filtered = compress_traceroute(
-                get_traceroute_filtered(row["traceroute"]), "filtered")
-            traceroute = ast.literal_eval(row["traceroute"])
+            traceroute_compress_embratel_without_last_hop_embratel_filter = \
+                get_traceroute_filtered(
+                    row["valid_traceroute_compress_embratel_"
+                        "without_last_hop_embratel"],
+                    row["traceroute_compress_embratel_"
+                        "without_last_hop_embratel"],
+                    row["server"])
 
-            # only consider traceroutes that reached the server in less hops
-            # that the maximum number of hops
-            if (not traceroute) or (traceroute[-1] != (None, None)):
-                continue
+            traceroute_without_embratel_filter = \
+                get_traceroute_filtered(
+                    row["valid_traceroute_without_embratel"],
+                    row["traceroute_without_embratel"],
+                    row["server"])
 
-            traceroute = compress_traceroute(traceroute, "raw")
+            traceroute_filter = \
+                get_traceroute_filtered(
+                    row["valid_traceroute"],
+                    row["traceroute"],
+                    row["server"])
 
-            if traceroute_filtered == []:
-                continue
-            target_traceroute = True
-            for hop in traceroute_filtered:
-                if hop[0][0] is None:
-                    target_traceroute = False
-                    break
-                if (utils.is_private_ip(hop[0][1]) and
-                        utils.is_private_ip(hop[1][1])):
-                    target_traceroute = False
-                    break
-            if not target_traceroute:
-                continue
-
-            aux_traceroute_filtered = copy.deepcopy(traceroute_filtered)
-            traceroute_filtered = []
-            for hop in aux_traceroute_filtered:
-                if ((hop[0][0] is not None) and
-                        (hop[0][1].split(".")[0] == "192")):
-                    continue
-                traceroute_filtered.append(hop)
-            # add server to traceroute
-            server_name = ((row["server"], row["server"]),
-                           (row["server"], row["server"]))
-            traceroute_filtered += [server_name]
-
-            l = ("{},{},{},\"{}\",{},\"{}\"\n".
-                 format(row["server"], row["node"], row["mac"],
-                        traceroute_filtered, row["is_unique_traceroute"],
-                        traceroute))
+            l = "{},{}" + ",{},\"{}\"" * 4 + "\n"
+            l = l.format(
+                row["server"], row["mac"],
+                row["valid_traceroute_compress_embratel"],
+                traceroute_compress_embratel_filter,
+                row["valid_traceroute_compress_embratel_"
+                    "without_last_hop_embratel"],
+                traceroute_compress_embratel_without_last_hop_embratel_filter,
+                row["valid_traceroute_without_embratel"],
+                traceroute_without_embratel_filter,
+                row["valid_traceroute"],
+                traceroute_filter)
             f.write(l)
-    utils.sort_csv_file(out_path, ["traceroute_filtered", "server", "mac"])
 
 
 def print_macs_per_name_filtered(dt_start, dt_end, mac_node):
@@ -484,7 +509,7 @@ def print_all(dt_start, dt_end, mac_node):
     # print_name_ips(dt_start, dt_end)
     print_traceroute_per_mac(dt_start, dt_end)
 
-    # print_traceroute_per_mac_filtered(dt_start, dt_end)
+    print_traceroute_per_mac_filtered(dt_start, dt_end)
     # print_macs_per_name_filtered(dt_start, dt_end, mac_node)
 
 
