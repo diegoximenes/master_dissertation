@@ -28,7 +28,7 @@ def parse_args(run_single, single_args, run_parallel, parallel_args,
     if args.run_mode == "parallel":
         run_parallel(**parallel_args)
     elif args.run_mode == "sequential":
-        run_parallel(**parallel_args)
+        run_sequential(**sequential_args)
     elif args.run_mode == "specific_client":
         run_specific_client(**specific_client_args)
     else:

@@ -207,13 +207,11 @@ def iter_dt_months():
     yield dt_start, dt_end
 
 
+# ALERT: parallel is not working in this script...i dont know why
+
 def run_sequential():
     for dt_start, dt_end in iter_dt_months():
         get_data(dt_start, dt_end)
-
-
-def run_parallel():
-    utils.parallel_exec(get_data, list(iter_dt_months()))
 
 
 def run_single(dt_start, dt_end):
@@ -224,11 +222,9 @@ if __name__ == "__main__":
     dt_start = datetime.datetime(2016, 5, 1)
     dt_end = datetime.datetime(2016, 6, 1)
 
-    parallel_args = {}
-    sequential_args = parallel_args
+    sequential_args = {}
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
-    single_args.update(parallel_args)
     cp_utils.parse_args(run_single, single_args,
-                        run_parallel, parallel_args,
+                        None, None,
                         run_sequential, sequential_args,
                         None, None)
