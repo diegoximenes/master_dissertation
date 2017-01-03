@@ -13,7 +13,8 @@ import utils.utils as utils
 import change_point.cp_utils.cp_utils as cp_utils
 
 
-def get_graph(dt_start, dt_end, server=None):
+def get_graph(dt_start, dt_end, valid_traceroute_field, traceroute_field,
+              server=None):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     in_path = "{}/prints/{}/filtered/traceroute_per_mac.csv".format(script_dir,
@@ -25,15 +26,16 @@ def get_graph(dt_start, dt_end, server=None):
     if server:
         df = df[df["server"] == server]
     for idx, row in df.iterrows():
-        traceroute = ast.literal_eval(row["traceroute_filtered"])
-        last_name = None
-        for name in traceroute:
-            names.add(name)
-            if name not in name_neigh:
-                name_neigh[name] = set()
-            if last_name:
-                name_neigh[last_name].add(name)
-            last_name = name
+        if row[valid_traceroute_field]:
+            traceroute = ast.literal_eval(row[traceroute_field])
+            last_name = None
+            for name in traceroute:
+                names.add(name)
+                if name not in name_neigh:
+                    name_neigh[name] = set()
+                if last_name:
+                    name_neigh[last_name].add(name)
+                last_name = name
 
     for name in names:
         if name not in name_neigh:
@@ -51,7 +53,7 @@ def write_graph(out_path, name_neigh):
         f.write("}")
 
 
-def check_graph(out_dir, name_neigh):
+def check_graph(out_dir, name_neigh, traceroute_field):
     def dfs(name_neigh, mark, name, f=None):
         mark[name] = 1
 
@@ -82,7 +84,8 @@ def check_graph(out_dir, name_neigh):
             if not dfs(name_neigh, mark, name):
                 valid_graph = False
                 mark = defaultdict(int)
-                out_path = "{}/invalid_subgraph.gv".format(out_dir)
+                out_path = "{}/{}_invalid_subgraph.gv".format(out_dir,
+                                                              traceroute_field)
                 f = open(out_path, "w")
                 f.write("digraph {\n")
                 dfs(name_neigh, mark, name, f)
@@ -90,7 +93,7 @@ def check_graph(out_dir, name_neigh):
                 f.close()
                 break
 
-    out_path = "{}/graph_stats.txt".format(out_dir)
+    out_path = "{}/{}_graph_stats.txt".format(out_dir, traceroute_field)
     with open(out_path, "w") as f:
         f.write("valid_graph={}\n".format(valid_graph))
 
@@ -99,31 +102,36 @@ def process_graphs(dt_start, dt_end):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     out_dir = "{}/prints/{}/filtered/graph/".format(script_dir, str_dt)
-    out_path = "{}/graph.gv".format(out_dir)
-
     utils.create_dirs([out_dir])
-
-    name_neigh = get_graph(dt_start, dt_end)
-    write_graph(out_path, name_neigh)
-    check_graph(out_dir, name_neigh)
 
     in_path = "{}/prints/{}/filtered/traceroute_per_mac.csv".format(script_dir,
                                                                     str_dt)
     servers = np.unique(pd.read_csv(in_path)["server"].values)
-    for server in servers:
-        name_neigh = get_graph(dt_start, dt_end, server)
 
-        utils.create_dirs(["{}/prints/{}/filtered/graph/".format(script_dir,
-                                                                 str_dt),
-                           "{}/prints/{}/filtered/graph/{}".format(script_dir,
-                                                                   str_dt,
-                                                                   server)])
+    traceroute_types = \
+        ["traceroute_compress_embratel",
+         "traceroute_compress_embratel_without_last_hop_embratel",
+         "traceroute_without_embratel",
+         "traceroute"]
+    for traceroute_type in traceroute_types:
+        traceroute_field = "{}_filter".format(traceroute_type)
+        valid_traceroute_field = "valid_{}".format(traceroute_type)
 
-        out_dir = "{}/prints/{}/filtered/graph/{}".format(script_dir, str_dt,
-                                                          server)
-        out_path = "{}/graph.gv".format(out_dir)
-        write_graph(out_path, name_neigh)
-        check_graph(out_dir, name_neigh)
+        for server in servers:
+            utils.create_dirs(["{}/prints/{}/filtered/graph/".
+                               format(script_dir, str_dt),
+                               "{}/prints/{}/filtered/graph/{}".
+                               format(script_dir, str_dt, server)])
+
+            out_dir = "{}/prints/{}/filtered/graph/{}".format(script_dir,
+                                                              str_dt,
+                                                              server)
+            out_path = "{}/{}_graph.gv".format(out_dir, traceroute_field)
+
+            name_neigh = get_graph(dt_start, dt_end, valid_traceroute_field,
+                                   traceroute_field, server)
+            write_graph(out_path, name_neigh)
+            check_graph(out_dir, name_neigh, traceroute_field)
 
 
 def run_parallel():
@@ -141,8 +149,8 @@ def run_single(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
+    dt_start = datetime.datetime(2016, 5, 1)
+    dt_end = datetime.datetime(2016, 5, 11)
 
     parallel_args = {}
     sequential_args = parallel_args

@@ -267,7 +267,7 @@ def get_traceroute_filtered(valid_traceroute, str_traceroute, server):
         traceroute_filtered.append((traceroute[-1], traceroute[-1]))
 
     # add server hop
-    traceroute_filtered += ((server, server), (server, server))
+    traceroute_filtered += [((server, server), (server, server))]
 
     return traceroute_filtered
 
