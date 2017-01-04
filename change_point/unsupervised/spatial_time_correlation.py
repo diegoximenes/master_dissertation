@@ -7,6 +7,7 @@ import functools
 import pandas as pd
 import numpy as np
 from collections import defaultdict
+from itertools import izip
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
@@ -48,37 +49,43 @@ def read_graph(dt_start, dt_end, server, traceroute_type):
     return g
 
 
-def all_clients_with_same_pattern(name, cp_dt, str_dt, metric, server,
-                                  hour_tol=4):
-    in_path = "{}/plots/names/{}/{}/{}/{}/cps_per_mac.csv".format(script_dir,
-                                                                  str_dt,
-                                                                  metric,
-                                                                  server,
-                                                                  name)
+def all_clients_with_same_pattern(name, cp_dt, cp_type, str_dt, metric,
+                                  traceroute_type, server, hour_tol=4):
+    """
+    by now only check if there if every client has at least one close
+    change points with same pattern
+    """
+
+    in_path = ("{}/plots/names/{}/{}/{}/{}/{}/cps_per_mac.csv".
+               format(script_dir, str_dt, metric, traceroute_type, server,
+                      name))
 
     df = pd.read_csv(in_path)
     for idx, row in df.iterrows():
         match_row = False
-        for strdt in ast.literal_eval(row["cp_dt"]):
-            dt = dt_procedures.from_strdt_to_dt(strdt)
-            if dt_procedures.dt_is_close(dt, cp_dt, hour_tol):
+        for str_dt, curr_type_cp in izip(ast.literal_eval(row["cp_dts"]),
+                                         ast.literal_eval(row["type_cps"])):
+            dt = dt_procedures.from_strdt_to_dt(str_dt)
+            if ((cp_type == curr_type_cp) and
+                    dt_procedures.dt_is_close(dt, cp_dt, hour_tol)):
                 match_row = True
         if not match_row:
             return False
     return True
 
 
-def analyse_path(path, cp_dt_start, cp_dt_end, str_dt, metric,
-                 server):
+def analyse_path(path, cp_dt_start, cp_dt_end, cp_type, str_dt, metric,
+                 traceroute_type, server):
     cp_dt = cp_dt_start + (cp_dt_end - cp_dt_start) / 2
     for i, name in enumerate(path[1:]):
-        if not all_clients_with_same_pattern(name, cp_dt, str_dt, metric,
-                                             server):
+        if not all_clients_with_same_pattern(name, cp_dt, cp_type, str_dt,
+                                             metric, traceroute_type, server):
                 return path[0:i + 1]
     return path
 
 
-def analyse_zero_indegree_vertex(g, u, metric, server, dt_start, dt_end):
+def analyse_zero_indegree_vertex(g, u, metric, server, dt_start, dt_end,
+                                 traceroute_type):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     path = [u]
@@ -87,8 +94,9 @@ def analyse_zero_indegree_vertex(g, u, metric, server, dt_start, dt_end):
         path.append(u)
 
     dir_path = "/".join(list(reversed(path)))
-    dir_path = "{}/plots/paths/{}/{}/{}/{}".format(script_dir, str_dt, metric,
-                                                   server, dir_path)
+    dir_path = "{}/plots/paths/{}/{}/{}/{}/{}".format(script_dir, str_dt,
+                                                      metric, traceroute_type,
+                                                      server, dir_path)
 
     out_path = "{}/problem_location.csv".format(dir_path)
     with open(out_path, "w") as f:
@@ -102,7 +110,9 @@ def analyse_zero_indegree_vertex(g, u, metric, server, dt_start, dt_end):
                     row["cp_dt_start"])
                 cp_dt_end = dt_procedures.from_strdt_to_dt(row["cp_dt_end"])
                 problem_location = analyse_path(path, cp_dt_start,
-                                                cp_dt_end, str_dt, metric,
+                                                cp_dt_end, row["cp_type"],
+                                                str_dt, metric,
+                                                traceroute_type,
                                                 server)
                 problem_location = map(ast.literal_eval, problem_location)
             else:
@@ -114,9 +124,10 @@ def analyse_zero_indegree_vertex(g, u, metric, server, dt_start, dt_end):
                                     row["cnt_clients"],
                                     row["clients"], problem_location))
 
-    out_path_name = "{}/plots/names/{}/{}/{}/{}".format(script_dir, str_dt,
-                                                        metric, server,
-                                                        path[0])
+    out_path_name = "{}/plots/names/{}/{}/{}/{}/{}".format(script_dir, str_dt,
+                                                           metric,
+                                                           traceroute_type,
+                                                           server, path[0])
     shutil.copy(out_path, out_path_name)
 
 
@@ -253,14 +264,15 @@ def localize_events(dt_start, dt_end, metric, eps_hours):
                 for u in g:
                     if u_indegree[u] == 0:
                         analyse_zero_indegree_vertex(g, u, metric, server,
-                                                     dt_start, dt_end)
+                                                     dt_start, dt_end,
+                                                     traceroute_type)
 
-                correlate_zero_indegree_vertexes(g, u_indegree, server,
-                                                 dt_start, dt_end, metric,
-                                                 eps_hours)
+                # correlate_zero_indegree_vertexes(g, u_indegree, server,
+                #                                  dt_start, dt_end, metric,
+                #                                  eps_hours)
                 break
 
-    aggregate_server_correlations(dt_start, dt_end, metric, servers)
+    # aggregate_server_correlations(dt_start, dt_end, metric, servers)
 
 
 def run_sequential(metric, eps_hours):
@@ -292,4 +304,5 @@ if __name__ == "__main__":
     single_args.update(parallel_args)
     cp_utils.parse_args(run_single, single_args,
                         run_parallel, parallel_args,
-                        run_sequential, sequential_args)
+                        run_sequential, sequential_args,
+                        None, None)

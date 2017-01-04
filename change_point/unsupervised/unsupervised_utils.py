@@ -1,7 +1,9 @@
 import os
 import sys
 import copy
+import ast
 import pandas as pd
+from collections import defaultdict
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
@@ -11,7 +13,24 @@ import utils.dt_procedures as dt_procedures
 import change_point.cp_utils.cp_utils as cp_utils
 
 
+def get_client_cps(plot_cps, str_dt, metric):
+    # get client->cps mapping
+    client_cps = defaultdict(list)
+    if plot_cps:
+        in_path = "{}/prints/{}/filtered/{}/cps_per_mac.csv".format(script_dir,
+                                                                    str_dt,
+                                                                    metric)
+        if os.path.isfile(in_path):
+            df = pd.read_csv(in_path)
+            for idx, row in df.iterrows():
+                client = utils.get_client(row["server"], row["mac"])
+                client_cps[client] = map(dt_procedures.from_strdt_to_dt,
+                                         ast.literal_eval(row["cp_dts"]))
+    return client_cps
+
+
 def iter_traceroute_types():
+    # this order must be preserved
     traceroute_types = \
         ["traceroute_compress_embratel",
          "traceroute_compress_embratel_without_last_hop_embratel",
@@ -75,40 +94,43 @@ def print_per_path(dt_start, dt_end, metric, file_name):
                        "{}/plots/paths/{}/{}".format(out_dir, str_dt,
                                                      metric)])
 
-    mac_traceroute = cp_utils.get_mac_traceroute_filtered(dt_start, dt_end)
-
-    path_dirs = set()
-
     in_path = "{}/prints/{}/filtered/{}/{}".format(script_dir, str_dt, metric,
                                                    file_name)
-    df = pd.read_csv(in_path)
-    for idx, row in df.iterrows():
-        mac = row["mac"]
-        server = row["server"]
-        traceroute = mac_traceroute[mac]
 
-        dir_path = "{}/plots/paths/{}/{}/{}/".format(out_dir, str_dt,
-                                                     metric, server)
-        utils.create_dirs([dir_path])
+    for traceroute_type in iter_traceroute_types():
+        valid_traceroute_field, traceroute_field = \
+            cp_utils.get_traceroute_fields(traceroute_type)
 
-        first_hop = True
-        for name in reversed(traceroute):
-            if (name[0][0] is None) and first_hop:
-                continue
-            splitted = name[0][0].split(".")
-            if splitted[0] == "192":
-                continue
-            first_hop = False
+        client_traceroute = cp_utils.get_client_traceroute(dt_start, dt_end,
+                                                           traceroute_type)
 
-            dir_path = "{}/{}".format(dir_path, name)
-            utils.create_dirs([dir_path])
+        path_dirs = set()
 
-            out_path = "{}/{}".format(dir_path, file_name)
-            if dir_path not in path_dirs:
-                create_csv_with_same_header(out_path, df)
-            pd.DataFrame(row).T.to_csv(out_path, mode="a", header=False,
-                                       index=False)
-            path_dirs.add(dir_path)
+        df = pd.read_csv(in_path)
+        for idx, row in df.iterrows():
+            client = utils.get_client(row["server"], row["mac"])
+            if client in client_traceroute:
+                traceroute = client_traceroute[client]
+
+                dir_path = "{}/plots/paths/{}/{}/{}/{}".format(out_dir, str_dt,
+                                                               metric,
+                                                               traceroute_type,
+                                                               row["server"])
+                utils.create_dirs([dir_path])
+
+                for name in reversed(traceroute):
+                    if name[0][0].split(".")[0] == "192":
+                        continue
+
+                    dir_path = "{}/{}".format(dir_path, name)
+                    utils.create_dirs([dir_path])
+
+                    out_path = "{}/{}".format(dir_path, file_name)
+                    if dir_path not in path_dirs:
+                        create_csv_with_same_header(out_path, df)
+                    pd.DataFrame(row).T.to_csv(out_path, mode="a",
+                                               header=False, index=False)
+                    path_dirs.add(dir_path)
 
 
 def print_per_name(dt_start, dt_end, metric, file_name):
@@ -121,29 +143,38 @@ def print_per_name(dt_start, dt_end, metric, file_name):
                        "{}/plots/names/{}/{}".format(out_dir, str_dt,
                                                      metric)])
 
-    mac_traceroute = cp_utils.get_mac_traceroute_filtered(dt_start, dt_end)
-
-    name_dirs = set()
-
     in_path = "{}/prints/{}/filtered/{}/{}".format(script_dir, str_dt, metric,
                                                    file_name)
-    df = pd.read_csv(in_path)
-    for idx, row in df.iterrows():
-        mac = row["mac"]
-        server = row["server"]
-        traceroute = mac_traceroute[mac]
 
-        dir_path = "{}/plots/names/{}/{}/{}/".format(out_dir, str_dt,
-                                                     metric, server)
-        utils.create_dirs([dir_path])
+    for traceroute_type in iter_traceroute_types():
+        valid_traceroute_field, traceroute_field = \
+            cp_utils.get_traceroute_fields(traceroute_type)
 
-        for name in cp_utils.iter_names_traceroute_filtered(traceroute):
-            name_path = "{}/{}".format(dir_path, name)
-            utils.create_dirs([name_path])
+        client_traceroute = cp_utils.get_client_traceroute(dt_start, dt_end,
+                                                           traceroute_type)
 
-            out_path = "{}/{}".format(name_path, file_name)
-            if name_path not in name_dirs:
-                create_csv_with_same_header(out_path, df)
-            pd.DataFrame(row).T.to_csv(out_path, mode="a", header=False,
-                                       index=False)
-            name_dirs.add(name_path)
+        name_dirs = set()
+
+        df = pd.read_csv(in_path)
+        for idx, row in df.iterrows():
+            client = utils.get_client(row["server"], row["mac"])
+            if client in client_traceroute:
+                traceroute = client_traceroute[client]
+
+                dir_path = "{}/plots/names/{}/{}/{}/{}".format(out_dir, str_dt,
+                                                               metric,
+                                                               traceroute_type,
+                                                               row["server"])
+                utils.create_dirs([dir_path])
+
+                for name in cp_utils.iter_names_traceroute_filtered(
+                        traceroute):
+                    name_path = "{}/{}".format(dir_path, name)
+                    utils.create_dirs([name_path])
+
+                    out_path = "{}/{}".format(name_path, file_name)
+                    if name_path not in name_dirs:
+                        create_csv_with_same_header(out_path, df)
+                    pd.DataFrame(row).T.to_csv(out_path, mode="a",
+                                               header=False, index=False)
+                    name_dirs.add(name_path)

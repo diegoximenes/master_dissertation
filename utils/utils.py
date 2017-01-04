@@ -14,6 +14,10 @@ base_dir = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(base_dir)
 
 
+def get_client(server, mac):
+    return (server, mac)
+
+
 def f_unpack(args, f):
     return f(*args)
 

@@ -14,8 +14,14 @@ import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
 
 
+def get_traceroute_fields(traceroute_type):
+    valid_traceroute_field = "valid_{}".format(traceroute_type)
+    traceroute_field = "{}_filter".format(traceroute_type)
+    return valid_traceroute_field, traceroute_field
+
+
 def iter_cp_types():
-    for cp_type in ["same", "increase", "decrease"]:
+    for cp_type in ["inconclusive", "improvement", "failure"]:
         yield cp_type
 
 
@@ -35,18 +41,21 @@ def parse_args(run_single, single_args, run_parallel, parallel_args,
         run_single(**single_args)
 
 
-def get_mac_traceroute_filtered(dt_start, dt_end):
+def get_client_traceroute(dt_start, dt_end, traceroute_type):
     str_dt = utils.get_str_dt(dt_start, dt_end)
+
+    valid_traceroute_field, traceroute_field = \
+        get_traceroute_fields(traceroute_type)
 
     in_path = ("{}/change_point/unsupervised/prints/{}/filtered/"
                "traceroute_per_mac.csv".format(base_dir, str_dt))
     df = pd.read_csv(in_path)
-    mac_traceroute = {}
+    client_traceroute = {}
     for idx, row in df.iterrows():
-        if row["is_unique_traceroute"]:
-            mac_traceroute[row["mac"]] = \
-                ast.literal_eval(row["traceroute_filtered"])
-    return mac_traceroute
+        if row["valid_cnt_samples"] and row[valid_traceroute_field]:
+            client = utils.get_client(row["server"], row["mac"])
+            client_traceroute[client] = ast.literal_eval(row[traceroute_field])
+    return client_traceroute
 
 
 def iter_names_traceroute_filtered(traceroute, only_cmts=False):

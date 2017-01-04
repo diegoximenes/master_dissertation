@@ -39,7 +39,7 @@ def voting(dt_start, dt_end, metric, in_dir, eps_hours):
                     for idx, row in df.iterrows():
                         cp_dts = []
                         cp_dts_aux = map(dt_procedures.from_strdt_to_dt,
-                                         ast.literal_eval(row["cp_dt"]))
+                                         ast.literal_eval(row["cp_dts"]))
                         cp_types_aux = ast.literal_eval(row["type_cps"])
                         for i_cp_dt, i_cp_type in izip(cp_dts_aux,
                                                        cp_types_aux):
@@ -97,8 +97,8 @@ def run_single(dt_start, dt_end, metric, eps_hours):
 if __name__ == "__main__":
     eps_hours = 4
     metric = "latency"
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
+    dt_start = datetime.datetime(2016, 5, 1)
+    dt_end = datetime.datetime(2016, 5, 11)
 
     parallel_args = {"metric": metric, "eps_hours": eps_hours}
     sequential_args = parallel_args

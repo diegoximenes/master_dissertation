@@ -525,7 +525,7 @@ def print_all(dt_start, dt_end, mac_node):
     # print_macs_per_name(dt_start, dt_end, mac_node)
     # print_names_per_mac(dt_start, dt_end, mac_node)
     # print_name_ips(dt_start, dt_end)
-    # print_traceroute_per_mac(dt_start, dt_end)
+    print_traceroute_per_mac(dt_start, dt_end)
 
     print_traceroute_per_mac_filtered(dt_start, dt_end)
     # print_macs_per_name_filtered(dt_start, dt_end, mac_node)

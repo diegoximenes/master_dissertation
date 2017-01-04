@@ -66,6 +66,9 @@ class ChangePointAlg:
         # if is an unsupervised problem, plot the predicted cps in the ts
         if "unsupervised" in dataset:
             pred, correct = correct, pred
+            cp_to_print = correct
+        else:
+            cp_to_print = pred
 
         in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
 
@@ -74,7 +77,7 @@ class ChangePointAlg:
         self.plot(ts_preprocessed, ts_raw, correct, pred, conf, out_path)
 
         out_path = "{}.csv".format(out_path)
-        self.print_cp(ts_raw, pred, out_path)
+        self.print_cp(ts_raw, cp_to_print, out_path)
 
     def plot_all(self, dataset, out_dir_path, cmp_class_args):
         train_path = "{}/change_point/input/{}/dataset.csv".format(base_dir,

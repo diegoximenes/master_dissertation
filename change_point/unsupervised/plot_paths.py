@@ -5,14 +5,12 @@ import ast
 import functools
 import shutil
 import pandas as pd
-from collections import defaultdict
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
 import utils.plot_procedures as plot_procedures
-import utils.dt_procedures as dt_procedures
 from utils.time_series import TimeSeries
 import change_point.cp_utils.cp_utils as cp_utils
 import change_point.unsupervised.unsupervised_utils as unsupervised_utils
@@ -27,25 +25,14 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
                        "{}/plots/paths/{}/{}".format(script_dir, str_dt,
                                                      metric)])
 
-    # get client->cps mapping
-    client_cps = defaultdict(list)
-    if plot_cps:
-        in_path = "{}/prints/{}/filtered/{}/cps_per_mac.csv".format(script_dir,
-                                                                    str_dt,
-                                                                    metric)
-        if os.path.isfile(in_path):
-            df = pd.read_csv(in_path)
-            for idx, row in df.iterrows():
-                client_cps[(row["server"], row["mac"])] = \
-                    map(dt_procedures.from_strdt_to_dt,
-                        ast.literal_eval(row["cp_dts"]))
+    client_cps = unsupervised_utils.get_client_cps(plot_cps, str_dt, metric)
 
     # avoid reploting
     client_plotPath = {}
 
     for traceroute_type in unsupervised_utils.iter_traceroute_types():
-        traceroute_field = "{}_filter".format(traceroute_type)
-        valid_traceroute_field = "valid_{}".format(traceroute_type)
+        valid_traceroute_field, traceroute_field = \
+            unsupervised_utils.get_traceroute_fields(traceroute_type)
 
         utils.create_dirs(["{}/plots/paths/{}/{}/{}".format(script_dir, str_dt,
                                                             metric,
@@ -82,7 +69,7 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
                                                                traceroute_type,
                                                                row["server"])
 
-                client = (row["server"], row["mac"])
+                client = utils.get_client(row["server"], row["mac"])
                 cp_dts = client_cps[client]
 
                 for name in reversed(traceroute):
