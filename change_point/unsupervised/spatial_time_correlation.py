@@ -17,7 +17,7 @@ import change_point.cp_utils.cp_utils as cp_utils
 import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 
 
-def get_deg_in(g):
+def get_indegree(g):
     u_degin = defaultdict(int)
     for u in g:
         for v in g[u]:
@@ -25,22 +25,21 @@ def get_deg_in(g):
     return u_degin
 
 
-def valid_graph(dt_start, dt_end, server):
+def valid_graph(dt_start, dt_end, server, traceroute_type):
     str_dt = utils.get_str_dt(dt_start, dt_end)
-    in_path = ("{}/prints/{}/filtered/graph/{}/graph_stats.txt".
-               format(script_dir, str_dt, server))
+    in_path = ("{}/prints/{}/filtered/graph/{}/{}_filter_graph_stats.txt".
+               format(script_dir, str_dt, server, traceroute_type))
     with open(in_path) as f:
         for line in f:
             if "valid_graph=" in line:
                 return (line.split("=")[-1].rstrip("\n") == "True")
 
 
-def read_graph(dt_start, dt_end, server):
+def read_graph(dt_start, dt_end, server, traceroute_type):
     str_dt = utils.get_str_dt(dt_start, dt_end)
-
+    in_path = "{}/prints/{}/filtered/graph/{}/{}_filter_graph.gv".format(
+        script_dir, str_dt, server, traceroute_type)
     g = defaultdict(list)
-    in_path = "{}/prints/{}/filtered/graph/{}/graph.gv".format(script_dir,
-                                                               str_dt, server)
     with open(in_path) as f:
         for line in f.readlines()[1:-1]:
             u = line.split(" -> ")[0].lstrip(" ").lstrip("\"").rstrip("\"")
@@ -79,7 +78,7 @@ def analyse_path(path, cp_dt_start, cp_dt_end, str_dt, metric,
     return path
 
 
-def analyse_zero_in_deg_vertex(g, u, metric, server, dt_start, dt_end):
+def analyse_zero_indegree_vertex(g, u, metric, server, dt_start, dt_end):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     path = [u]
@@ -137,7 +136,7 @@ def suffix_match(ll):
     return suffix
 
 
-def correlation_zero_in_deg_vertexes(g, mac_degin, server, dt_start, dt_end,
+def correlate_zero_indegree_vertexes(g, mac_degin, server, dt_start, dt_end,
                                      metric, eps_hours):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -239,53 +238,52 @@ def aggregate_server_correlations(dt_start, dt_end, metric, servers):
                         ascending=False)
 
 
-def localize_problems(dt_start, dt_end, metric, eps_hours):
-    """
-    considers that the graph is a tree
-    """
-
+def localize_events(dt_start, dt_end, metric, eps_hours):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     in_path = "{}/prints/{}/filtered/traceroute_per_mac.csv".format(script_dir,
                                                                     str_dt)
     servers = np.unique(pd.read_csv(in_path)["server"].values)
     for server in servers:
-        if valid_graph(dt_start, dt_end, server):
-            g = read_graph(dt_start, dt_end, server)
-            mac_degin = get_deg_in(g)
+        for traceroute_type in unsupervised_utils.iter_traceroute_types():
+            if valid_graph(dt_start, dt_end, server, traceroute_type):
+                g = read_graph(dt_start, dt_end, server, traceroute_type)
+                u_indegree = get_indegree(g)
 
-            for u in g:
-                if mac_degin[u] == 0:
-                    analyse_zero_in_deg_vertex(g, u, metric, server, dt_start,
-                                               dt_end)
+                for u in g:
+                    if u_indegree[u] == 0:
+                        analyse_zero_indegree_vertex(g, u, metric, server,
+                                                     dt_start, dt_end)
 
-            correlation_zero_in_deg_vertexes(g, mac_degin, server, dt_start,
-                                             dt_end, metric, eps_hours)
+                correlate_zero_indegree_vertexes(g, u_indegree, server,
+                                                 dt_start, dt_end, metric,
+                                                 eps_hours)
+                break
 
     aggregate_server_correlations(dt_start, dt_end, metric, servers)
 
 
 def run_sequential(metric, eps_hours):
     for dt_start, dt_end in utils.iter_dt_range():
-        localize_problems(dt_start, dt_end, metric, eps_hours)
+        localize_events(dt_start, dt_end, metric, eps_hours)
 
 
 def run_parallel(metric, eps_hours):
     dt_ranges = list(utils.iter_dt_range())
-    f_localize_problems = functools.partial(localize_problems, metric=metric,
-                                            eps_hours=eps_hours)
-    utils.parallel_exec(f_localize_problems, dt_ranges)
+    f_localize_events = functools.partial(localize_events, metric=metric,
+                                          eps_hours=eps_hours)
+    utils.parallel_exec(f_localize_events, dt_ranges)
 
 
 def run_single(dt_start, dt_end, metric, eps_hours):
-    localize_problems(dt_start, dt_end, metric, eps_hours)
+    localize_events(dt_start, dt_end, metric, eps_hours)
 
 
 if __name__ == "__main__":
     eps_hours = 4
     metric = "latency"
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
+    dt_start = datetime.datetime(2016, 5, 1)
+    dt_end = datetime.datetime(2016, 5, 11)
 
     parallel_args = {"eps_hours": eps_hours, "metric": metric}
     sequential_args = parallel_args

@@ -104,8 +104,8 @@ if __name__ == "__main__":
     server = "NHODTCSRV04"
     mac = "64:66:B3:A6:B3:22"
     # only used if RUN_MODE == specific_client or RUN_MODE == single
-    dt_start = datetime.datetime(2016, 7, 1)
-    dt_end = datetime.datetime(2016, 7, 11)
+    dt_start = datetime.datetime(2016, 5, 1)
+    dt_end = datetime.datetime(2016, 5, 11)
     # used in all RUN_MODE
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "percentile_filter",

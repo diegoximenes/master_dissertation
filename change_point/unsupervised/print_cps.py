@@ -9,39 +9,42 @@ script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
-import utils.read_input as read_input
 from utils.time_series import TimeSeries
 import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 import change_point.cp_utils.cp_utils as cp_utils
 
 
-def update_type_cps(type_cps, mean1, mean2):
+def update_type_cps(type_cps, mean1, mean2, metric):
     if np.isclose(mean1, mean2):
-        type_cps.append("same")
-    elif mean1 > mean2:
-        type_cps.append("decrease")
+        type_cps.append("inconclusive")
+    if "throughput" in metric:
+        if mean1 > mean2:
+            type_cps.append("failure")
+        else:
+            type_cps.append("improvement")
     else:
-        type_cps.append("increase")
+        if mean1 > mean2:
+            type_cps.append("improvement")
+        else:
+            type_cps.append("failure")
 
 
-def print_cps(dt_start, dt_end, dir_model, metric, filtered):
+def print_cps(dt_start, dt_end, dir_model, metric):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     utils.create_dirs(["{}/prints/".format(script_dir),
                        "{}/prints/{}".format(script_dir, str_dt),
-                       "{}/prints/{}/{}".format(script_dir, str_dt, filtered),
-                       "{}/prints/{}/{}/{}".format(script_dir, str_dt,
-                                                   filtered, metric)])
+                       "{}/prints/{}/filtered".format(script_dir, str_dt),
+                       "{}/prints/{}/filtered/{}".format(script_dir, str_dt,
+                                                         metric)])
 
-    out_path = "{}/prints/{}/{}/{}/cps_per_mac.csv".format(script_dir, str_dt,
-                                                           filtered, metric)
+    out_path = "{}/prints/{}/filtered/{}/cps_per_mac.csv".format(script_dir,
+                                                                 str_dt,
+                                                                 metric)
     with open(out_path, "w") as f:
-        f.write("server,mac,cp_dt,type_cps,seg_means\n")
+        f.write("server,mac,cp_dts,type_cps,seg_means\n")
         in_path_dir = ("{}/change_point/models/{}/plots/unsupervised/{}/{}".
                        format(base_dir, dir_model, str_dt, metric))
-
-        target_macs = read_input.get_macs_traceroute_filter(dt_start, dt_end,
-                                                            filtered)
 
         cnt = 0
         for file_name in os.listdir(in_path_dir):
@@ -51,9 +54,6 @@ def print_cps(dt_start, dt_end, dir_model, metric, filtered):
 
                 server = file_name.split("server")[1].split("_")[0]
                 mac = file_name.split("mac")[1].split("_")[0]
-
-                if mac not in target_macs:
-                    continue
 
                 dt_cps = []
                 id_cps = []
@@ -73,23 +73,22 @@ def print_cps(dt_start, dt_end, dir_model, metric, filtered):
                     for i in range(1, len(id_cps)):
                         mean2 = np.mean(ts.y[id_cps[i - 1]:id_cps[i]])
                         seg_means.append(mean2)
-                        update_type_cps(type_cps, mean1, mean2)
+                        update_type_cps(type_cps, mean1, mean2, metric)
                         mean1 = mean2
                     mean2 = np.mean(ts.y[id_cps[-1]:-1])
                     seg_means.append(mean2)
-                    update_type_cps(type_cps, mean1, mean2)
+                    update_type_cps(type_cps, mean1, mean2, metric)
 
                 f.write("{},{},\"{}\",\"{}\",\"{}\"\n".format(server, mac,
                                                               dt_cps, type_cps,
                                                               seg_means))
 
 
-def run_parallel(dir_model, metric, filtered):
+def run_parallel(dir_model, metric):
     dt_ranges = list(utils.iter_dt_range())
     fp_print_cps = functools.partial(print_cps,
                                      dir_model=dir_model,
-                                     metric=metric,
-                                     filtered=filtered)
+                                     metric=metric)
     utils.parallel_exec(fp_print_cps, dt_ranges)
 
     fp_print_per_name = functools.partial(unsupervised_utils.print_per_name,
@@ -103,17 +102,17 @@ def run_parallel(dir_model, metric, filtered):
     utils.parallel_exec(fp_print_per_path, dt_ranges)
 
 
-def run_sequential(dir_model, metric, filtered):
+def run_sequential(dir_model, metric):
     for dt_start, dt_end in utils.iter_dt_range():
-        print_cps(dt_start, dt_end, dir_model, metric, filtered)
+        print_cps(dt_start, dt_end, dir_model, metric)
         unsupervised_utils.print_cps_per_name(dt_start, dt_end, metric,
                                               "cps_per_mac.csv")
         unsupervised_utils.print_cps_per_path(dt_start, dt_end, metric,
                                               "cps_per_mac.csv")
 
 
-def run_single(dir_model, metric, filtered, dt_start, dt_end):
-    print_cps(dt_start, dt_end, dir_model, metric, filtered)
+def run_single(dir_model, metric, dt_start, dt_end):
+    print_cps(dt_start, dt_end, dir_model, metric)
     unsupervised_utils.print_per_name(dt_start, dt_end, metric,
                                       "cps_per_mac.csv")
     unsupervised_utils.print_per_path(dt_start, dt_end, metric,
@@ -123,12 +122,10 @@ def run_single(dir_model, metric, filtered, dt_start, dt_end):
 if __name__ == "__main__":
     metric = "latency"
     dir_model = "sliding_windows/offline"
-    filtered = "filtered"
-    dt_start = datetime.datetime(2016, 6, 21)
-    dt_end = datetime.datetime(2016, 7, 1)
+    dt_start = datetime.datetime(2016, 5, 1)
+    dt_end = datetime.datetime(2016, 5, 11)
 
-    parallel_args = {"dir_model": dir_model, "metric": metric,
-                     "filtered": filtered}
+    parallel_args = {"dir_model": dir_model, "metric": metric}
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
     single_args.update(parallel_args)

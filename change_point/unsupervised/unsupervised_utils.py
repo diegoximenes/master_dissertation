@@ -11,6 +11,15 @@ import utils.dt_procedures as dt_procedures
 import change_point.cp_utils.cp_utils as cp_utils
 
 
+def iter_traceroute_types():
+    traceroute_types = \
+        ["traceroute_compress_embratel",
+         "traceroute_compress_embratel_without_last_hop_embratel",
+         "traceroute_without_embratel"]
+    for traceroute in traceroute_types:
+        yield traceroute
+
+
 def multiple_inexact_voting(l, eps_hours):
     """
     multiple inexact voting totally ordered

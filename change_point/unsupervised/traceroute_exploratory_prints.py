@@ -322,13 +322,14 @@ def print_traceroute_per_mac(dt_start, dt_end):
     utils.sort_csv_file(out_path, ["server", "mac"])
 
 
-def print_traceroute_per_mac_filtered(dt_start, dt_end):
+def print_traceroute_per_mac_filtered(dt_start, dt_end,
+                                      min_fraction_of_samples=0.5):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     out_path = ("{}/prints/{}/filtered/traceroute_per_mac.csv".
                 format(script_dir, str_dt))
     with open(out_path, "w") as f:
-        l = ("server,mac,"
+        l = ("server,mac,valid_cnt_samples,"
              "valid_traceroute_compress_embratel,"
              "traceroute_compress_embratel_filter,"
              "valid_traceroute_compress_embratel_without_last_hop_embratel,"
@@ -342,7 +343,10 @@ def print_traceroute_per_mac_filtered(dt_start, dt_end):
         in_path = ("{}/prints/{}/not_filtered/traceroute_per_mac.csv".
                    format(script_dir, str_dt))
         df = pd.read_csv(in_path)
-        for idx, row in df.iterrows():
+        for cnt, (idx, row) in enumerate(df.iterrows()):
+            print ("print_traceroute_per_mac_filtered, str_dt={}, cnt={}".
+                   format(str_dt, cnt))
+
             traceroute_compress_embratel_filter = \
                 get_traceroute_filtered(
                     row["valid_traceroute_compress_embratel"],
@@ -369,9 +373,23 @@ def print_traceroute_per_mac_filtered(dt_start, dt_end):
                     row["traceroute"],
                     row["server"])
 
-            l = "{},{}" + ",{},\"{}\"" * 4 + "\n"
+            # check if client has the minimum number of samples. Since the
+            # metric is not specified at the moment, only check the presence of
+            # the measurement timestamp
+            in_path = utils.get_in_path(row["server"], row["mac"], dt_start,
+                                        dt_end)
+            ts = TimeSeries(in_path=in_path, metric="dt", dt_start=dt_start,
+                            dt_end=dt_end)
+            delta_days = (dt_end - dt_start).days
+            fraction_of_samples = float(len(ts.y)) / (delta_days * 24.0 * 2.0)
+            if fraction_of_samples < min_fraction_of_samples:
+                valid_cnt_samples = False
+            else:
+                valid_cnt_samples = True
+
+            l = "{},{},{}" + ",{},\"{}\"" * 4 + "\n"
             l = l.format(
-                row["server"], row["mac"],
+                row["server"], row["mac"], valid_cnt_samples,
                 row["valid_traceroute_compress_embratel"],
                 traceroute_compress_embratel_filter,
                 row["valid_traceroute_compress_embratel_"
@@ -507,7 +525,7 @@ def print_all(dt_start, dt_end, mac_node):
     # print_macs_per_name(dt_start, dt_end, mac_node)
     # print_names_per_mac(dt_start, dt_end, mac_node)
     # print_name_ips(dt_start, dt_end)
-    print_traceroute_per_mac(dt_start, dt_end)
+    # print_traceroute_per_mac(dt_start, dt_end)
 
     print_traceroute_per_mac_filtered(dt_start, dt_end)
     # print_macs_per_name_filtered(dt_start, dt_end, mac_node)

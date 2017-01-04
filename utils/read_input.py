@@ -11,6 +11,9 @@ import utils
 
 
 def valid_row(metric, row, cross_traffic_thresh):
+    if metric == "dt":
+        return True
+
     if (metric == "traceroute") or (metric == "server_ip"):
         return row[metric] != "None"
 
@@ -49,6 +52,8 @@ def get_raw(in_path, metric, dt_start, dt_end, cross_traffic_thresh):
                 elif metric == "throughput_up":
                     # yi = float(yi) / float(row["nominal_up"])
                     yi = float(yi)
+                elif metric == "dt":
+                    yi = dt
                 elif metric != "server_ip":
                     yi = float(yi)
                 l.append([dt, yi])
