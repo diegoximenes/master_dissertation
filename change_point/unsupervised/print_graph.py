@@ -26,7 +26,7 @@ def get_graph(dt_start, dt_end, valid_traceroute_field, traceroute_field,
     if server:
         df = df[df["server"] == server]
     for idx, row in df.iterrows():
-        if row[valid_traceroute_field]:
+        if row["valid_cnt_samples"] and row[valid_traceroute_field]:
             traceroute = ast.literal_eval(row[traceroute_field])
             last_name = None
             for name in traceroute:
@@ -93,6 +93,10 @@ def check_graph(out_dir, name_neigh, traceroute_field):
                 f.close()
                 break
 
+    # empty graph
+    if not name_neigh:
+        valid_graph = False
+
     out_path = "{}/{}_graph_stats.txt".format(out_dir, traceroute_field)
     with open(out_path, "w") as f:
         f.write("valid_graph={}\n".format(valid_graph))
@@ -114,8 +118,8 @@ def process_graphs(dt_start, dt_end):
          "traceroute_without_embratel",
          "traceroute"]
     for traceroute_type in traceroute_types:
-        traceroute_field = "{}_filter".format(traceroute_type)
-        valid_traceroute_field = "valid_{}".format(traceroute_type)
+        valid_traceroute_field, traceroute_field = \
+            cp_utils.get_traceroute_fields(traceroute_type)
 
         for server in servers:
             utils.create_dirs(["{}/prints/{}/filtered/graph/".

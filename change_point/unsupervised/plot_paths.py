@@ -32,7 +32,7 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
 
     for traceroute_type in unsupervised_utils.iter_traceroute_types():
         valid_traceroute_field, traceroute_field = \
-            unsupervised_utils.get_traceroute_fields(traceroute_type)
+            cp_utils.get_traceroute_fields(traceroute_type)
 
         utils.create_dirs(["{}/plots/paths/{}/{}/{}".format(script_dir, str_dt,
                                                             metric,
@@ -108,7 +108,7 @@ def run_single(metric, dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    metric = "throughput_up"
+    metric = "latency"
     dt_start = datetime.datetime(2016, 5, 1)
     dt_end = datetime.datetime(2016, 5, 11)
 

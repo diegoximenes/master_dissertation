@@ -247,7 +247,7 @@ def get_traceroute_filtered(valid_traceroute, str_traceroute, server):
     traceroute = ast.literal_eval(str_traceroute)
 
     # remove local ip
-    if traceroute[0][0].split(".")[0] == "192":
+    while traceroute and traceroute[0][0].split(".")[0] == "192":
         traceroute = traceroute[1:]
 
     # to each hop, add next hop with public ip

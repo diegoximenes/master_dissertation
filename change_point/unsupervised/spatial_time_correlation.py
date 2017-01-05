@@ -78,14 +78,16 @@ def analyse_path(path, cp_dt_start, cp_dt_end, cp_type, str_dt, metric,
                  traceroute_type, server):
     cp_dt = cp_dt_start + (cp_dt_end - cp_dt_start) / 2
     for i, name in enumerate(path[1:]):
+        if "embratel" in name:
+            continue
         if not all_clients_with_same_pattern(name, cp_dt, cp_type, str_dt,
                                              metric, traceroute_type, server):
                 return path[0:i + 1]
     return path
 
 
-def analyse_zero_indegree_vertex(g, u, metric, server, dt_start, dt_end,
-                                 traceroute_type):
+def analyse_zero_indegree_vertex(g, u, is_zero_indegree, metric, server,
+                                 dt_start, dt_end, traceroute_type):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     path = [u]
@@ -147,23 +149,25 @@ def suffix_match(ll):
     return suffix
 
 
-def correlate_zero_indegree_vertexes(g, mac_degin, server, dt_start, dt_end,
-                                     metric, eps_hours):
+def correlate_zero_indegree_vertexes(g, u_indegree, server, dt_start, dt_end,
+                                     metric, traceroute_type, eps_hours):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
-    out_path = ("{}/plots/paths/{}/{}/{}/problem_correlation.csv".
-                format(script_dir, str_dt, metric, server))
+    out_path = ("{}/plots/paths/{}/{}/{}/{}/zero_indegree_vertexes_correlation"
+                ".csv".format(script_dir, str_dt, metric, traceroute_type,
+                              server))
     with open(out_path, "w") as f:
-        f.write("cp_dt_start,cp_dt_end,cp_type,"
-                "cnt_vertexes_with_zero_in_deg,suffix_match,"
-                "vertexes_with_zero_in_deg\n")
+        f.write("cp_dt_start,cp_dt_end,cp_type,traceroute_type,"
+                "cnt_vertexes_with_zero_indegree,suffix_match,"
+                "vertexes_with_zero_indegree\n")
         for u in g:
             l = []
-            if mac_degin[u] == 0:
-                in_path = ("{}/plots/names/{}/{}/{}/{}/"
+            if u_indegree[u] == 0:
+                in_path = ("{}/plots/names/{}/{}/{}/{}/{}/"
                            "problem_location.csv".format(script_dir,
                                                          str_dt,
                                                          metric,
+                                                         traceroute_type,
                                                          server, u))
                 df = pd.read_csv(in_path)
 
@@ -186,10 +190,11 @@ def correlate_zero_indegree_vertexes(g, mac_degin, server, dt_start, dt_end,
 
                         if problem_locations == ["before"]:
                             dic["dt"] = str(dic["dt"])
-                            f.write("{},{},{},\"{}\",\"{}\"\n".
+                            f.write("{},{},{},{},\"{}\",\"{}\"\n".
                                     format(row["cp_dt_start"],
                                            row["cp_dt_end"],
                                            cp_type,
+                                           traceroute_type,
                                            1,
                                            problem_locations,
                                            [dic]))
@@ -208,16 +213,17 @@ def correlate_zero_indegree_vertexes(g, mac_degin, server, dt_start, dt_end,
 
                         for dic in vote["interval"]:
                             dic["dt"] = str(dic["dt"])
-                        f.write("{},{},{},{},\"{}\",\"{}\"\n".
+                        f.write("{},{},{},{},{},\"{}\",\"{}\"\n".
                                 format(vote["l_dt"],
                                        vote["r_dt"],
                                        cp_type,
+                                       traceroute_type,
                                        len(vote["interval"]),
                                        suffix_matches,
                                        vote["interval"]))
 
-    out_path_name = ("{}/plots/names/{}/{}/{}".
-                     format(script_dir, str_dt, metric,
+    out_path_name = ("{}/plots/names/{}/{}/{}/{}".
+                     format(script_dir, str_dt, metric, traceroute_type,
                             server))
     shutil.copy(out_path, out_path_name)
 
@@ -225,28 +231,50 @@ def correlate_zero_indegree_vertexes(g, mac_degin, server, dt_start, dt_end,
 def aggregate_server_correlations(dt_start, dt_end, metric, servers):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
-    out_path = ("{}/prints/{}/filtered/{}/problem_correlation.csv".
-                format(script_dir, str_dt, metric))
+    out_path = ("{}/prints/{}/filtered/{}/zero_indegree_vertexes_correlation"
+                ".csv".format(script_dir, str_dt, metric))
     with open(out_path, "w") as f:
         f.write("server,cp_dt_start,cp_dt_end,cp_type,"
-                "cnt_vertexes_with_zero_in_deg,suffix_match,"
-                "vertexes_with_zero_in_deg\n")
+                "cnt_vertexes_with_zero_indegree,suffix_match,"
+                "vertexes_with_zero_indegree\n")
         for server in servers:
-            if not valid_graph(dt_start, dt_end, server):
-                continue
-            in_path = ("{}/plots/names/{}/{}/{}/problem_correlation.csv".
-                       format(script_dir, str_dt, metric, server))
-            df = pd.read_csv(in_path)
-            for idx, row in df.iterrows():
-                f.write("{},{},{},{},\"{}\",\"{}\"\n".
-                        format(server,
-                               row["cp_dt_start"],
-                               row["cp_dt_end"],
-                               row["cnt_vertexes_with_zero_in_deg"],
-                               row["suffix_match"],
-                               row["vertexes_with_zero_in_deg"]))
-    utils.sort_csv_file(out_path, ["cnt_vertexes_with_zero_in_deg"],
+            for traceroute_type in unsupervised_utils.iter_traceroute_types():
+                if valid_graph(dt_start, dt_end, server, traceroute_type):
+                    in_path = ("{}/plots/names/{}/{}/{}/{}/"
+                               "zero_indegree_vertexes_correlation.csv".
+                               format(script_dir, str_dt, metric,
+                                      traceroute_type, server))
+                    df = pd.read_csv(in_path)
+                    for idx, row in df.iterrows():
+                        f.write("{},{},{},{},{},\"{}\",\"{}\"\n".
+                                format(server,
+                                       row["cp_dt_start"],
+                                       row["cp_dt_end"],
+                                       row["cp_type"],
+                                       row["cnt_vertexes_with_zero_indegree"],
+                                       row["suffix_match"],
+                                       row["vertexes_with_zero_indegree"]))
+                    break
+
+    utils.sort_csv_file(out_path, ["cnt_vertexes_with_zero_indegree"],
                         ascending=False)
+
+
+def get_first_hops(dt_start, dt_end, server, traceroute_type):
+    str_dt = utils.get_str_dt(dt_start, dt_end)
+
+    valid_traceroute_field, traceroute_field = \
+        cp_utils.get_traceroute_fields(traceroute_type)
+
+    first_hops = set()
+    in_path = "{}/prints/{}/filtered/traceroute_per_mac.csv".format(script_dir,
+                                                                    str_dt)
+    df = pd.read_csv(in_path)
+    for idx, row in df.iterrows():
+        if row["valid_cnt_samples"] and row[valid_traceroute_field]:
+            traceroute = ast.literal_eval(row[traceroute_field])
+            first_hops.add(traceroute[0])
+    return first_hops
 
 
 def localize_events(dt_start, dt_end, metric, eps_hours):
@@ -263,16 +291,25 @@ def localize_events(dt_start, dt_end, metric, eps_hours):
 
                 for u in g:
                     if u_indegree[u] == 0:
-                        analyse_zero_indegree_vertex(g, u, metric, server,
-                                                     dt_start, dt_end,
+                        analyse_zero_indegree_vertex(g, u, True, metric,
+                                                     server, dt_start, dt_end,
                                                      traceroute_type)
 
-                # correlate_zero_indegree_vertexes(g, u_indegree, server,
-                #                                  dt_start, dt_end, metric,
-                #                                  eps_hours)
+                correlate_zero_indegree_vertexes(g, u_indegree, server,
+                                                 dt_start, dt_end, metric,
+                                                 traceroute_type, eps_hours)
+
+                first_hops = get_first_hops(dt_start, dt_end, server,
+                                            traceroute_type)
+                for first_hop in first_hops:
+                    if u_indegree[first_hop] != 0:
+                        analyse_zero_indegree_vertex(g, u, False, metric,
+                                                     server, dt_start, dt_end,
+                                                     traceroute_type)
+
                 break
 
-    # aggregate_server_correlations(dt_start, dt_end, metric, servers)
+    aggregate_server_correlations(dt_start, dt_end, metric, servers)
 
 
 def run_sequential(metric, eps_hours):
