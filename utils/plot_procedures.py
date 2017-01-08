@@ -19,6 +19,18 @@ def get_default_ylabel(ts):
         return "RTT (ms)"
 
 
+def get_default_xlabel(compress):
+    if compress:
+        return "$i$"
+    return "month/day/year"
+
+
+def get_default_xtick_rotation(compress):
+    if compress:
+        return 45
+    return 0
+
+
 def update_title(title, ts):
     if ts.metric:
         title += " metric={}".format(ts.metric)
@@ -32,12 +44,16 @@ def get_xticks(dt_start, dt_end):
     daily xticks of [dt_start, dt_end]
     """
     xticks, xticks_labels = [], []
-    for i in range((dt_end - dt_start).days + 2):
+    for i in range((dt_end - dt_start).days + 1):
         dt = dt_start + datetime.timedelta(days=i)
         xticks.append(dt)
-        xticks_labels.append("{}/{}".
-                             format(str(dt.day).zfill(2),
-                                    str(dt.month).zfill(2)))
+        if i % 2 == 0:
+            xticks_labels.append("{}/{}/{}".
+                                 format(str(dt.month).zfill(2),
+                                        str(dt.day).zfill(2),
+                                        str(dt.year % 100)))
+        else:
+            xticks_labels.append("")
     return xticks, xticks_labels
 
 
@@ -59,7 +75,7 @@ def plot_axvline(ts, dt_axvline, compress, ax):
         ax.axvline(xvline, color="r", linewidth=2.0)
 
 
-def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
+def plot_ts(ts, out_path, dt_axvline=[], ylabel=None, xlabel=None, ylim=None,
             compress=False, title=""):
     """
     if compress is true than ts.y must not have None
@@ -67,6 +83,7 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
 
     plt.clf()
     matplotlib.rcParams.update({'font.size': 27})
+    matplotlib.rcParams.update({'xtick.major.pad': 15})
     plt.gcf().set_size_inches(17, 12)
 
     if compress:
@@ -83,7 +100,13 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
     plt.grid()
     plt.title(title)
 
+    if ylabel is None:
+        ylabel = get_default_ylabel(ts)
+    if xlabel is None:
+        xlabel = get_default_xlabel(compress)
+
     plt.ylabel(ylabel)
+
     if ts.metric == "loss":
         plt.ylim([-0.02, 1.02])
         plt.yticks(np.arange(0, 1 + 0.05, 0.05))
@@ -93,7 +116,9 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel="", xlabel="", ylim=None,
     plt.xlabel(xlabel)
     if not compress:
         plt.xlim([ts.dt_start, ts.dt_end])
-    plt.xticks(xticks, xticks_labels, rotation=45)
+
+    rotation = get_default_xtick_rotation(compress)
+    plt.xticks(xticks, xticks_labels, rotation=rotation)
 
     if compress:
         plt.scatter(range(len(ts.x)), ts.y, s=9)

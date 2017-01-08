@@ -111,10 +111,10 @@ if __name__ == "__main__":
     preprocess_args = {"filter_type": "percentile_filter",
                        "win_len": 13,
                        "p": 0.5}
-    param = {"win_len": 20,
-             "thresh": 15,
+    param = {"win_len": 30,
+             "thresh": 0.2,
              "min_peak_dist": 18,
-             "f_dist": cmp_win.mean_dist,
+             "f_dist": cmp_win.relative_mean_dist,
              "bin_size_f_dist": 5,
              "min_bin_f_dist": 0.0,
              "max_bin_f_dist": 200}

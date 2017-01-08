@@ -11,6 +11,7 @@ base_dir = os.path.join(os.path.dirname(__file__), "../..")
 sys.path.append(base_dir)
 import utils.utils as utils
 import change_point.cp_utils.cp_utils as cp_utils
+import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 
 
 def get_graph(dt_start, dt_end, valid_traceroute_field, traceroute_field,
@@ -112,12 +113,7 @@ def process_graphs(dt_start, dt_end):
                                                                     str_dt)
     servers = np.unique(pd.read_csv(in_path)["server"].values)
 
-    traceroute_types = \
-        ["traceroute_compress_embratel",
-         "traceroute_compress_embratel_without_last_hop_embratel",
-         "traceroute_without_embratel",
-         "traceroute"]
-    for traceroute_type in traceroute_types:
+    for traceroute_type in unsupervised_utils.iter_traceroute_types():
         valid_traceroute_field, traceroute_field = \
             cp_utils.get_traceroute_fields(traceroute_type)
 

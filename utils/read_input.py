@@ -40,7 +40,7 @@ def get_raw(in_path, metric, dt_start, dt_end, cross_traffic_thresh):
         return [], []
 
     l = []
-    df = pd.read_csv(in_path)
+    df = pd.read_csv(in_path, error_bad_lines=False)
     for idx, row in df.iterrows():
         if valid_row(metric, row, cross_traffic_thresh):
             dt = dt_procedures.from_strdt_to_dt(row["dt"])

@@ -59,7 +59,6 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
                                                         row["mac"],
                                                         dt_start, dt_end)
 
-                ts = TimeSeries(in_path, metric, dt_start, dt_end)
                 ts_filter = TimeSeries(in_path, metric, dt_start, dt_end)
                 ts_filter.percentile_filter(win_len=13, p=0.5)
 
@@ -84,12 +83,9 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
                     else:
                         client_plotPath[client] = out_path
 
-                        plot_procedures.plot_ts_share_x(ts, ts_filter,
-                                                        out_path,
-                                                        compress=False,
-                                                        plot_type2="scatter",
-                                                        dt_axvline1=cp_dts,
-                                                        dt_axvline2=cp_dts)
+                        plot_procedures.plot_ts(ts_filter, out_path,
+                                                dt_axvline=cp_dts,
+                                                title="median filtered")
 
 
 def run_parallel(metric):

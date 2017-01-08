@@ -100,19 +100,19 @@ if __name__ == "__main__":
     server = "RIBDTCSRV03"
     mac = "64:66:B3:A6:BB:10"
     # only used if RUN_MODE == specific_client or RUN_MODE == single
-    dt_start = datetime.datetime(2016, 7, 1)
-    dt_end = datetime.datetime(2016, 7, 11)
+    dt_start = datetime.datetime(2016, 5, 1)
+    dt_end = datetime.datetime(2016, 5, 11)
     # used in all RUN_MODE
     cmp_class_args = {"win_len": 15}
     preprocess_args = {"filter_type": "percentile_filter",
-                       "win_len": 5,
+                       "win_len": 13,
                        "p": 0.5}
-    param = {"const_pen": 20,
-             "f_pen": "n_cps",
+    param = {"const_pen": 100,
+             "f_pen": "n_cps ^ 2",
              "seg_model": "Normal",
              "min_seg_len": 5,
              "max_cps": 4}
-    metric = "loss"
+    metric = "latency"
 
     parallel_args = {"cmp_class_args": cmp_class_args,
                      "preprocess_args": preprocess_args, "param": param,
