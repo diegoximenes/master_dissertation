@@ -121,7 +121,7 @@ def is_valid_ip(str_ip):
     try:
         socket.inet_aton(str_ip)
         return True
-    except socket.error:
+    except (socket.error, UnicodeEncodeError):
         return False
 
 

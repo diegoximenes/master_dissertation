@@ -76,7 +76,8 @@ def get_traceroute(ts_traceroute, allow_embratel, compress_embratel,
             if allow_embratel and compress_embratel:
                 for hop in traceroute:
                     for j in xrange(len(hop["names"])):
-                        if "embratel" in get_name(hop["names"][j], ip_name):
+                        name = get_name(hop["names"][j], ip_name)
+                        if (name is not None) and ("embratel" in name):
                             hop["names"][j] = "embratel"
                             hop["ips"][j] = "embratel"
 
@@ -550,8 +551,8 @@ def run_single(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 5, 1)
-    dt_end = datetime.datetime(2016, 5, 11)
+    dt_start = datetime.datetime(2016, 11, 1)
+    dt_end = datetime.datetime(2016, 11, 11)
 
     parallel_args = {}
     sequential_args = parallel_args
