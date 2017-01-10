@@ -18,6 +18,7 @@ import change_point.unsupervised.plot_paths as plot_paths
 import change_point.models.seg_neigh.seg_neigh as seg_neigh
 import change_point.unsupervised.plot_latencies_traceroute as \
     plot_latencies_traceroute
+import change_point.models.change_point_alg as change_point_alg
 
 
 def myprint(s):
@@ -55,8 +56,9 @@ if __name__ == "__main__":
     myprint("create_dataset_unsupervised")
     create_dataset_unsupervised.run_parallel()
 
-    myprint("sliding_windows_offline")
-    seg_neigh.run_parallel(cmp_class_args, preprocess_args, param, metric)
+    myprint("change_point_alg")
+    change_point_alg.run_parallel(cmp_class_args, preprocess_args, param,
+                                  metric, seg_neigh.run)
 
     myprint("print_cps")
     print_cps.run_parallel(dir_model, metric)
