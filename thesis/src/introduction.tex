@@ -1,3 +1,67 @@
 \chapter{Introduction}
-\section{Contributions}  
+
+To better understand the performance of it's own broadband services, a major
+Tier-3 Brazilian ISP, in partneship with UFRJ and the startup TGR,
+estabilished a project to collect end-to-end QoS metrics from a subset
+of it's customers.
+
+Considering the ISP's cable-television infrastructure with DOCSIS,
+those metrics are gathered through a software placed at home routers connected
+to cable modems. This software is responsible to perform end-to-end
+measurements from those home houters against servers strategically
+located by the ISP.
+
+In this context, guided by the specific ISP's network topology
+and the current measurement process,
+this dissertation aims to check the viability of
+only using end-to-end QoS measures and traceroutes
+to identify and localize network events. An event can be interpreted as a
+behavioral change in a network equipment that affect QoS metrics of end-users,
+such as a router failure. The localization procedure defines a set of
+feasible locations where an event could have happened.
+
+For such purpose, this work proposes a data analytics framework, which is able
+to track statistical changes in the QoS metrics time series of different
+clients.
+To detect and localize events, the mechanism correlates those change
+patterns with traceroutes.
+In order to increase the system's performance,
+this dissertation also indicates possible improvements on the current
+measurement methodology.
+
+\section{Contributions}
+
+Considering the specific ISP's network topology, and the already implemented
+measurement process, next is presented contributions of this dissertation.
+
+\begin{itemize}
+\item
+Study the viability of only using the available end-to-end QoS metrics and
+traceroutes to detect and localize network events.
+
+\item Propose a data analytics pipeline to identify and localize events.
+
+\item Guide possible improvements on the current measurement methodology,
+in order to enhance the proposed system's performance.
+
+\item List a set of ISP's informations that could be gathered to increase the
+framework's performance.
+
+\end{itemize}
+
 \section{Dissertation Outline}
+
+In Chapter~\ref{chap:literature_review} is made a literature review, presenting
+three previous systems that use
+end-to-end measurements to localize the cause of network events.
+To track changes in statistical properties of time series, the current
+work deploys change point detection algorithms. Then,
+Chapter~\ref{chap:change_point_detection} presents several of those methods,
+including the developed strategies to better handle the end-to-end QoS data
+characteristics.
+In Chapter~\ref{chap:methodology} is detailed the measurement methodology and
+the proposed data analytics workflow.
+Chapter~\ref{chap:results} presents several results of the proposed pipeline
+applied to real data.
+Finally, Chapter~\ref{chap:conclusion} concludes the work and
+points future directions.
