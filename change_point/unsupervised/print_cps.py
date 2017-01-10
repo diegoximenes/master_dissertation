@@ -121,7 +121,7 @@ def run_single(dir_model, metric, dt_start, dt_end):
 
 if __name__ == "__main__":
     metric = "latency"
-    dir_model = "sliding_windows/offline"
+    dir_model = "seg_neigh"
     dt_start = datetime.datetime(2016, 5, 1)
     dt_end = datetime.datetime(2016, 5, 11)
 

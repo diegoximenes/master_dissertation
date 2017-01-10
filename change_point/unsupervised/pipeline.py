@@ -16,6 +16,8 @@ import change_point.unsupervised.spatial_time_correlation as \
 import change_point.unsupervised.plot_names as plot_names
 import change_point.unsupervised.plot_paths as plot_paths
 import change_point.models.seg_neigh.seg_neigh as seg_neigh
+import change_point.unsupervised.plot_latencies_traceroute as \
+    plot_latencies_traceroute
 
 
 def myprint(s):
@@ -70,5 +72,8 @@ if __name__ == "__main__":
 
     myprint("plot_paths")
     plot_paths.run_parallel(metric)
+
+    myprint("plot_latencies_traceroute")
+    plot_latencies_traceroute.run_parallel()
 
     sys.stdout = sys.__stdout__
