@@ -66,8 +66,8 @@ if __name__ == "__main__":
     myprint("time_correlation")
     time_correlation.run_parallel(metric, hours_tol)
 
-    myprint("spatial_time_correlation")
-    spatial_time_correlation.run_parallel(metric, hours_tol)
+    # myprint("spatial_time_correlation")
+    # spatial_time_correlation.run_parallel(metric, hours_tol)
 
     myprint("plot_names")
     plot_names.run_parallel(metric)
