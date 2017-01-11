@@ -2,6 +2,7 @@ import sys
 import os
 import datetime
 import ast
+import shutil
 import functools
 import pandas as pd
 
@@ -15,7 +16,7 @@ import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 from utils.time_series import TimeSeries
 
 
-def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps):
+def plot_per_name(dt_start, dt_end, metric, plot_cps=True):
     dt_dir = utils.get_dt_dir(dt_start, dt_end)
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
@@ -26,6 +27,9 @@ def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps):
                                                      metric)])
 
     client_cps = unsupervised_utils.get_client_cps(plot_cps, str_dt, metric)
+
+    # avoid reploting
+    client_plotPath = {}
 
     for traceroute_type in unsupervised_utils.iter_traceroute_types():
         valid_traceroute_field, traceroute_field = \
@@ -44,13 +48,10 @@ def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps):
                        format(cnt, traceroute_type, str_dt))
                 cnt += 1
 
+                client = utils.get_client(row["server"], row["mac"])
+
                 for name in cp_utils.iter_names_traceroute_filtered(
                         ast.literal_eval(row[traceroute_field])):
-
-                    cp_dts = {}
-                    if plot_cps:
-                        client = utils.get_client(row["server"], row["mac"])
-                        cp_dts = client_cps[client]
 
                     utils.create_dirs(["{}/plots/names/{}/{}/{}/{}".
                                        format(script_dir, str_dt, metric,
@@ -60,9 +61,6 @@ def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps):
                                               traceroute_type, row["server"],
                                               name)])
 
-                    in_path = "{}/input/{}/{}/{}.csv".format(base_dir, dt_dir,
-                                                             row["server"],
-                                                             row["mac"])
                     out_file_name = utils.get_out_file_name(row["server"],
                                                             row["mac"],
                                                             dt_start, dt_end)
@@ -71,27 +69,39 @@ def plot_per_name(dt_start, dt_end, metric, only_cmts, plot_cps):
                                        traceroute_type, row["server"], name,
                                        out_file_name))
 
-                    ts_filter = TimeSeries(in_path, metric, dt_start, dt_end)
-                    ts_filter.percentile_filter(win_len=13, p=0.5)
-                    plot_procedures.plot_ts(ts_filter, out_path,
-                                            dt_axvline=cp_dts,
-                                            title="median filtered")
+                    # avoid reploting
+                    if client in client_plotPath:
+                        shutil.copyfile(client_plotPath[client], out_path)
+                    else:
+                        client_plotPath[client] = out_path
+                        cp_dts = client_cps[client]
+
+                        in_path = "{}/input/{}/{}/{}.csv".format(base_dir,
+                                                                 dt_dir,
+                                                                 row["server"],
+                                                                 row["mac"])
+
+                        ts_filter = TimeSeries(in_path, metric, dt_start,
+                                               dt_end)
+                        ts_filter.percentile_filter(win_len=13, p=0.5)
+                        plot_procedures.plot_ts(ts_filter, out_path,
+                                                dt_axvline=cp_dts,
+                                                title="median filtered")
 
 
 def run_parallel(metric):
     dt_ranges = list(utils.iter_dt_range())
-    f_plot_per_name = functools.partial(plot_per_name, metric=metric,
-                                        only_cmts=False, plot_cps=True)
+    f_plot_per_name = functools.partial(plot_per_name, metric=metric)
     utils.parallel_exec(f_plot_per_name, dt_ranges)
 
 
 def run_sequential(metric):
     for dt_start, dt_end in utils.iter_dt_range():
-        plot_per_name(dt_start, dt_end, metric, False, True)
+        plot_per_name(dt_start, dt_end, metric)
 
 
 def run_single(metric, dt_start, dt_end):
-    plot_per_name(dt_start, dt_end, metric, False, True)
+    plot_per_name(dt_start, dt_end, metric)
 
 
 if __name__ == "__main__":

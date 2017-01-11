@@ -16,7 +16,7 @@ import change_point.cp_utils.cp_utils as cp_utils
 import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 
 
-def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
+def plot_per_path(dt_start, dt_end, metric, plot_cps=True):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     utils.create_dirs(["{}/plots/".format(script_dir),
@@ -53,14 +53,9 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
 
                 traceroute = ast.literal_eval(row[traceroute_field])
 
-                in_path = utils.get_in_path(row["server"], row["mac"],
-                                            dt_start, dt_end)
                 out_file_name = utils.get_out_file_name(row["server"],
                                                         row["mac"],
                                                         dt_start, dt_end)
-
-                ts_filter = TimeSeries(in_path, metric, dt_start, dt_end)
-                ts_filter.percentile_filter(win_len=13, p=0.5)
 
                 dir_path = "{}/plots/paths/{}/{}/{}/{}".format(script_dir,
                                                                str_dt,
@@ -69,7 +64,6 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
                                                                row["server"])
 
                 client = utils.get_client(row["server"], row["mac"])
-                cp_dts = client_cps[client]
 
                 for name in reversed(traceroute):
                     dir_path = "{}/{}".format(dir_path, name)
@@ -82,6 +76,13 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=False):
                         shutil.copyfile(client_plotPath[client], out_path)
                     else:
                         client_plotPath[client] = out_path
+                        cp_dts = client_cps[client]
+
+                        in_path = utils.get_in_path(row["server"], row["mac"],
+                                                    dt_start, dt_end)
+                        ts_filter = TimeSeries(in_path, metric, dt_start,
+                                               dt_end)
+                        ts_filter.percentile_filter(win_len=13, p=0.5)
 
                         plot_procedures.plot_ts(ts_filter, out_path,
                                                 dt_axvline=cp_dts,
@@ -100,7 +101,7 @@ def run_sequential(metric):
 
 
 def run_single(metric, dt_start, dt_end):
-    plot_per_path(dt_start, dt_end, metric, True)
+    plot_per_path(dt_start, dt_end, metric)
 
 
 if __name__ == "__main__":
