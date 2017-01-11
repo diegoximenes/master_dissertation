@@ -1,34 +1,67 @@
 \chapter{Conclusions}
 \label{chap:conclusion}
 
-% Future work:
-% \begin{itemize}
-% \item collect datailed topology from the ISP which will enable more precise
-% localizations
-% \item previous problems database and end-users reclamations to the ISP call center.
-% This can enable the problem be interpreted as a supervised problem.
-% \item model the system as a reinforcement learning procedure, in which operators
-% can feedback the system with correct/mistakes in the detection and localization
-% of problems, then the system can be able to adapt automatically chossing the
-% best algorithms and hyperparameters.
-% \item active increase mesuremet frequency in locations with potential problems,
-% avoiding incorrect classifications and decreasing the detection time.
-% \item choose best network metrics that can increase the system performance
-% \item if a more data is available try space aggregation techniques, as in Argus
-% \item correlate path change in traceroute with changes in end-to-end metrics
-% \item the proposed mechanism can also be expanded to detect attacks on networks
-% \item catch other types of statistical changes, such as in periodicity
-% \item is possible to detect and localize problems only with data collected
-% \item collect on way metrics, including the traceroute, and change the TCP
-% throughput to UDP to avoid interference of packet loss in the backward path
-% passively?
-% \item better explore the Tier-2 ISP topology and applied load balancing
-% and MPLS techniques. This can improve the granularity of the user-groups
-% associated with the Tier-2 network. Say that some paths are constant in the
-% traceroute that traverse Tier-2 network. This can indicate parts of the
-% network that doesn't applies load balancing, or only apply per flow load
-% balancing, or the presence of a single minimum cost path. This info could be
-% useful for topology inference.
-% \item correlate routing updates with change points
-% \item correlate empty_segs
-% \end{itemize}
+\section{Future Work}
+
+\begin{itemize}
+\item
+Collect the traceroutes from the servers to the end-users.
+Also focus in one way QoS metrics, for example,
+instead of tracking round trip loss fraction,
+assess the loss fraction in the path from the end-user to the server, and also
+from the server to the end-user.
+Additionally, measuring the throughput using parallel UDP connections can avoid
+interferences in the backward path as the TCP, since losses of TCP's ACKs can
+affect the performance.
+These adjustments can enable the system to capture events from both path ways.
+
+\item
+The issue of how to create a failure events dataset can be tackled analysing
+end-users reclamations in the ISP call center. In this case, if several clients
+report a problem at the same time period, it is likely that their QoS metrics
+changed their statistical pattern in the same time. However, this database can
+ben noisy. Also, in some cases, the ISP maintain a database with the network
+failures tracked manually or by internal information of the network equipments.
+It is possible to use to use this database to improve the failures events
+dataset. However, from a preliminary contact with the ISP's engineers, this
+dataset can be quite noisy. First not all encontoured failures are documented.
+Also the stored failure time can be very different from the real event time,
+simply due to the delay of detecting it.
+
+\item
+Once the system is deployed, the algorithms and parameteres selection can be
+accomplished through a reinforcement learning procedure. Network operators can
+feedback to the system if it detected or not real events, and the system uses
+this input as base to select it's configuration.
+
+\item
+Also, the measurement frequency can be adaptatively increased in possible
+events locations when the system
+detects a stistical change, in order to corroborates it's findings, and
+reducing the time to trigger an alarm.
+
+\item
+It is planned that the number of tracked customers will increase. In that case
+the system can benefit from techniques to aggregate data from different clients
+in a single time series, as it was done in Argus.
+
+\item
+Detect other types of statistical changes, such as in periodicity. For example,
+a daily periodic pattern in some metrics can indicate congestion, since in
+hours of high usage, such as at night, can degradate the performance.
+
+\item
+Better explore the Tier-2 ISP topology and applied load balancing and MPLS
+teciques. This can improve the user-groups granularity related to the Tier-2
+network.
+
+\item
+Beyond using only change point detection, it is possible to also check the
+correlate patterns of the Internet connection availability.
+
+\item
+Correlate change point patterns from different QoS metrics. This was not
+already done since the used parameters could no be optimized,
+then this correlation could reach erroneuous conclusions.
+
+\end{itemize}
