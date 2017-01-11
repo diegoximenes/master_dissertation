@@ -1,3 +1,5 @@
+# TODO: change to hmmlearn
+
 import os
 import sys
 import ghmm
