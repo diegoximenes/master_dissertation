@@ -1,67 +1,126 @@
 \chapter{Conclusions}
 \label{chap:conclusion}
 
+Considering the specific ISP's topology, and the current end-to-end measurement
+methodology, this dissertation proposes a data analytics framework to
+detect and localize network events.
+For such purpose, the mechanism tracks
+statistical changes in the end-to-end QoS time series from different clients,
+and correlates those patterns with traceroutes.
+Besides, the proposed mechanism was compared with previous systems.
+Finally, it were presented several outcomes when the procedure was applied to
+real data.
+
+The results show that, considering the exposed restrictions,
+it is possible to only use end-to-end QoS metrics, and traceroutes, from
+different clients, to identify and localize network events.
+However, due to the lack of an events dataset, important
+questions persist unanswered.
+For instance, a quantitative accuracy study
+would allow to check which types of events can't be handled by the
+proposed procedure.
+A dataset would also allow to better understand the events
+patterns, and fine tune the system.
+
+The use of end-to-end measurements has the advantage of dealing with
+metrics that are directly related with the service perceived by the customers.
+As an example, this feature can be used to rank simultaneous failure events
+according with their impact to the customers.
+Nonetheless, would be interesting to study the impact of introducing
+internal network information to the framework.
+
+Besides the data availability, the current measurement process imposed
+several restrictions to this project.
+In order to better explore the proposed solution,
+a further continuation of this project
+would require a stronger partnership with the ISP,
+and also flexibility to adapt the measurement software.
+However, this work can be used as a first guide to TGR's and ISP's engineers.
+
 \section{Future Work}
+
+Next is presented a list of future development directions of this work.
+Considering the detection and localization of events, several adaptations to
+the current measurement methodology are suggested.
+Also, it is indicated deployment approaches which
+were unable to be tackled by this project.
 
 \begin{itemize}
 \item
-Collect the traceroutes from the servers to the end-users.
-Also focus in one way QoS metrics, for example,
-instead of tracking round trip loss fraction,
-assess the loss fraction in the path from the end-user to the server, and also
-from the server to the end-user.
-Additionally, measuring the throughput using parallel UDP connections can avoid
-interferences in the backward path as the TCP, since losses of TCP's ACKs can
-affect the performance.
-These adjustments can enable the system to capture events from both path ways.
+The used QoS metrics are affected by equipments in the path from the server to
+the end-user, and also by devices in the reverse direction.
+However, only the paths from end-users to servers are available.
+Hence, a complete
+localization analysis requires traceroutes from servers to end-users.
+Besides, instead of only considering the round trip loss information,
+the one way loss fraction from both directions can be tracked.
+Further, the maximum achievable one way throughput measurement can be
+implemented using UDP instead of TCP, which eliminates the interference of
+performance degradation in the reverse path.
 
 \item
-The issue of how to create a failure events dataset can be tackled analysing
-end-users reclamations in the ISP call center. In this case, if several clients
-report a problem at the same time period, it is likely that their QoS metrics
-changed their statistical pattern in the same time. However, this database can
-ben noisy. Also, in some cases, the ISP maintain a database with the network
-failures tracked manually or by internal information of the network equipments.
-It is possible to use to use this database to improve the failures events
-dataset. However, from a preliminary contact with the ISP's engineers, this
-dataset can be quite noisy. First not all encontoured failures are documented.
-Also the stored failure time can be very different from the real event time,
-simply due to the delay of detecting it.
+If available, the HFC physical topology between the home router and the
+first hop of the traceroute can be incorporated to the analysis.
+Also, beyond only using end-to-end QoS metrics,
+the proposed mechanism can be extended
+to use internal network devices information, such as signal-to-noise ratio.
 
 \item
-Once the system is deployed, the algorithms and parameteres selection can be
-accomplished through a reinforcement learning procedure. Network operators can
-feedback to the system if it detected or not real events, and the system uses
-this input as base to select it's configuration.
+A network failure events dataset can be built with ISP's auxiliary data.
+As an example, customers complaints gathered from call centers can be used to,
+during a specific time period, infer clients affected by a QoE deterioration,
+which can then be translated to true network failure events.
+Additionally, it is possible to use records from current failure detection
+methods deployed by the ISP, such as manual inspection, or through equipments
+that are able to self report specific faults.
+However, through preliminary talks with ISP's engineers,
+both databases are noisy, and mining useful information
+from them can be a challenging task.
+For instance, some devices flaws are manually
+detected and corrected, but those informations aren't stored.
+Also, during the dataset construction, the inferred events times can be
+considerably different from their true occurrence time.
+As stated in Chapter~\ref{chap:methodology}, a dataset could open new
+supervised learning possibilities to the change point detection problem.
 
 \item
-Also, the measurement frequency can be adaptatively increased in possible
-events locations when the system
-detects a stistical change, in order to corroborates it's findings, and
-reducing the time to trigger an alarm.
+Once a network events dataset is constructed, the correlation between
+change points of different QoS metrics can reveal useful information
+about the network behavior. This analysis was not done since the algorithms'
+hyperparameters couldn't be optimized, hence, those comparisons could reach
+wrong conclusions.
 
 \item
-It is planned that the number of tracked customers will increase. In that case
-the system can benefit from techniques to aggregate data from different clients
-in a single time series, as it was done in Argus.
+A deeper knowledge of the Tier-2 ISP's infrastructure
+can be used to model the Tier-2 network with finer granularity in the Spatial
+Correlation procedure, which can improve the system's event localization
+precision.
 
 \item
-Detect other types of statistical changes, such as in periodicity. For example,
-a daily periodic pattern in some metrics can indicate congestion, since in
-hours of high usage, such as at night, can degradate the performance.
+It is planned in the ISP's roadmap to increase the number of tracked customers.
+In this case, the system's computational performance can benefit from data
+aggregation techniques, as it was done in Argus.
+Besides, this increase will naturally improve the internal network equipments
+coverage by the end-to-end measurements, which, as the previous topic, can
+enhance the events localization precision.
 
 \item
-Better explore the Tier-2 ISP topology and applied load balancing and MPLS
-teciques. This can improve the user-groups granularity related to the Tier-2
-network.
+Once the system is deployed, the algorithms and parameters can be selected
+through a reinforcement learning approach. If network operators
+feedback the outcomes correctness, the system can adaptively optimize the used
+strategies.
 
 \item
-Beyond using only change point detection, it is possible to also check the
-correlate patterns of the Internet connection availability.
+Considering a real time processing environment, in order to decrease the
+event detection delay, the system can adaptively control the measurement
+frequency.
+Increase the amount of data related to potentially problematic regions
+can improve the system's output confidence in a short time period.
+Also, it is possible to reduce the measurement frequency in well behaved
+localities, which can lower the traffic overhead generated by measurements, and
+increase the data analytics computational performance.
 
 \item
-Correlate change point patterns from different QoS metrics. This was not
-already done since the used parameters could no be optimized,
-then this correlation could reach erroneuous conclusions.
+Extend the mechanism to other types of network infrastructures.
 
 \end{itemize}

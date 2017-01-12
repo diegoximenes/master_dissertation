@@ -33,4 +33,5 @@
 \contentsline {section}{\numberline {5.3}Comparison Between Change Points in Different QoS Metrics}{35}{section.5.3}
 \contentsline {section}{\numberline {5.4}Events Without Traceable Location}{35}{section.5.4}
 \contentsline {chapter}{\numberline {6}Conclusions}{36}{chapter.6}
-\contentsline {chapter}{Bibliography}{37}{chapter*.23}
+\contentsline {section}{\numberline {6.1}Future Work}{37}{section.6.1}
+\contentsline {chapter}{Bibliography}{39}{chapter*.23}
