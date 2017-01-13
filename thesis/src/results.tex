@@ -1,43 +1,48 @@
 \chapter{Results}
 \label{chap:results}
 
-As stated in Chapter~\ref{chap:methodology}, the available data doesn't allow
-an accuracy study. Therefore this chapter presents illustrative examples of the
-proposed pipeline outcomes. It is possible to visually note that these examples
-probably represent a real network event, that is a true positive.
-Also it is made a comparison between
-change points detected in different QoS metrics. It is also presented an
-example that don't follow the proposed restrictions.
+As stated in Chapter~\ref{chap:methodology}, it is not possible to realize an
+extensive accuracy study due to the absence of an events dataset.
+However, this chapter presents illustrative examples when the proposed pipeline
+was applied to real data.
 
-Due to it's simplicity, it the results of this chapter were obtained only using
-the offline sliding windows method. Also it is used time series with a median
-filter.
-The used parameters were different to each
-QoS metric, and were manually selected checking the change point detection
-performance in specific time series. DESCRIBE PARAMETERS.
+It was considered 8 months of measurements, from may to december 2016.
+This data was then divided in batches of 10 days, and for each batch,
+a complete analysis was executed.
+Considering all batches, after the End-Users Filtering procedure,
+the number of target clients varied from X to X.
 
-Eight months of data, may 2016 to december 2016 was divided in batches of
-10 days.
-For each batch, the pipeline was applied to the three types of events, the
-round trip loss fraction, RTT, and maximum achievable upstream throughput, and
-for each server.
+For all cases, the time series were preprocessed with a median filter.
+The change points were detected through the optimization model described in
+Chapter~\ref{chap:change_point_detection}.
+For each QoS metric, the algorithms' hyperparameters were manually selected.
+It was opted by conservative values, in order to avoid change points that,
+through a visual inspection, may be arguably not related to a network event.
+Those algorithms choices were guided by two facts.
+First, through a empirical visual analysis,
+it was verified their reasonable perfomance with real data.
+Also, the impact of their hyperparameters can be easily interpreted, which is
+an important feature to manual tuning.
 
-Considering the detection of a real network event as a positive case,
-Section~\ref{sec:possible_true_positive_examples} presents some possible true
-positive cases. Section~\ref{sec:possible_false_negative_examples}, shows
-possible false negative cases. Since network events can be considered rare,
-true negative cases are abundant and not presented here. Possible false
-positives were not found, since it were selected conservattives change point
-detection and filter parameters.
+The event detection can be interpreted as a binary classification problem, in
+which events represent the positive class.
+Then, Section~\ref{sec:possible_true_positive_examples} presents some
+possible true positive cases.
+Also, it is illustrated the reasoning behind the events localization process.
+Section~\ref{sec:possible_false_negative_examples} shows some possible false
+negative cases.
+Since network events can be considered rare, true negative cases are abundant,
+and therefore, can be discarded from the analysis.
+Possible false positives were not detected, which can be explained by two
+reasons. First, it were selected conservative hyperparameters, which naturally
+decrease the false positive rate. Also, since the system reported
+several events, it was not possible to manually check all of them.
 
 \section{Possible True Positive Examples}
 \label{sec:possible_true_positive_examples}
 
 \section{Possible False Negative Examples}
 \label{sec:possible_false_negative_examples}
-
-\section{Comparison Between Change Points in Different QoS Metrics}
-\label{sec:comparison_between_change_points_in_different_qos_metrics}
 
 \section{Events Without Traceable Location}
 \label{sec:events_without_traceable_location}
