@@ -10,7 +10,7 @@ import utils.utils as utils
 
 def aggregate_first_hop_not_zero_indegree_vertex():
     out_path = ("{}/prints/problem_location_first_hop_not_zero_indegree_"
-                "vertex.csv")
+                "vertex.csv".format(script_dir))
     with open(out_path, "w") as f:
         f.write("str_dt,server,cp_dt_start,cp_dt_end,cp_type,"
                 "fraction_of_clients,cnt_clients,clients,problem_location\n")
@@ -22,7 +22,7 @@ def aggregate_first_hop_not_zero_indegree_vertex():
                                                             metric)
                 if os.path.isdir(in_dir):
                     in_path = ("{}/problem_location_first_hop_not_zero_"
-                               "indegree_vertex.csv")
+                               "indegree_vertex.csv".format(in_dir))
 
                     df = pd.read_csv(in_path)
                     for _, row in df.iterrows():
@@ -40,7 +40,7 @@ def aggregate_first_hop_not_zero_indegree_vertex():
 
 def aggregate_correlation():
     out_path = ("{}/prints/problem_location_zero_indegree_vertexes_"
-                "correlation.csv")
+                "correlation.csv".format(script_dir))
     with open(out_path, "w") as f:
         f.write("str_dt,server,traceroute_type,cp_dt_start,cp_dt_end,cp_type,"
                 "cnt_vertexes_with_zero_indegree,suffix_match,"
@@ -52,7 +52,7 @@ def aggregate_correlation():
                                                             metric)
                 if os.path.isdir(in_dir):
                     in_path = ("{}/problem_location_zero_indegree_vertexes_"
-                               "correlation.csv")
+                               "correlation.csv".format(in_dir))
                     df = pd.read_csv(in_path)
                     for _, row in df.iterrows():
                         f.write("{},{},{},{},{},{},{},\"{}\",\"{}\"\n".
@@ -71,7 +71,7 @@ def aggregate_correlation():
 
 
 def aggregate():
-    aggregate_first_hop_not_zero_indegree_vertex()
+    # aggregate_first_hop_not_zero_indegree_vertex()
     aggregate_correlation()
 
 

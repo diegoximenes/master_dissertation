@@ -107,12 +107,12 @@ if __name__ == "__main__":
     preprocess_args = {"filter_type": "percentile_filter",
                        "win_len": 13,
                        "p": 0.5}
-    param = {"const_pen": 100,
-             "f_pen": "n_cps ^ 2",
+    param = {"const_pen": 200,
+             "f_pen": "n_cps",
              "seg_model": "Normal",
              "min_seg_len": 5,
              "max_cps": 4}
-    metric = "latency"
+    metric = "throughput_up"
 
     parallel_args = {"cmp_class_args": cmp_class_args,
                      "preprocess_args": preprocess_args, "param": param,

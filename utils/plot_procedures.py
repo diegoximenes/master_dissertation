@@ -17,6 +17,8 @@ def get_default_ylabel(ts):
         return "loss fraction"
     elif ts.metric == "latency":
         return "RTT (ms)"
+    elif ts.metric == "throughput_up":
+        return "throughput up (bps)"
 
 
 def get_default_xlabel(compress):
@@ -82,8 +84,9 @@ def plot_ts(ts, out_path, dt_axvline=[], ylabel=None, xlabel=None, ylim=None,
     """
 
     plt.clf()
-    matplotlib.rcParams.update({'font.size': 27})
-    matplotlib.rcParams.update({'xtick.major.pad': 15})
+    matplotlib.rcParams.update({'font.size': 26})
+    if not compress:
+        matplotlib.rcParams.update({'xtick.major.pad': 15})
     plt.gcf().set_size_inches(17, 12)
 
     if compress:

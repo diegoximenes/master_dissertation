@@ -230,6 +230,12 @@ def get_traceroute(ts_traceroute, allow_embratel, compress_embratel,
     if not has_public_ip:
         return False, "no_public_ip={}".format(hops_default)
 
+    # check if 192. ips appear in the middle of the traceroute
+    for i in xrange(1, len(hops_default)):
+        ip = hops_default[i]["ip"]
+        if ip.split(".")[0] == "192":
+            return (False, "192_in_the_middle")
+
     # convert to format to be consumed by other procedures
     ret_hops_default = []
     for hop in hops_default:
@@ -248,7 +254,7 @@ def get_traceroute_filtered(valid_traceroute, str_traceroute, server):
     traceroute = ast.literal_eval(str_traceroute)
 
     # remove local ip
-    while traceroute and traceroute[0][0].split(".")[0] == "192":
+    while traceroute and traceroute[0][1].split(".")[0] == "192":
         traceroute = traceroute[1:]
 
     # to each hop, add next hop with public ip
@@ -551,8 +557,8 @@ def run_single(dt_start, dt_end):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 5, 1)
-    dt_end = datetime.datetime(2016, 5, 11)
+    dt_start = datetime.datetime(2016, 10, 1)
+    dt_end = datetime.datetime(2016, 10, 11)
 
     parallel_args = {}
     sequential_args = parallel_args

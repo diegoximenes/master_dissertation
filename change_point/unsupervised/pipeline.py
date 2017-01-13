@@ -27,28 +27,59 @@ def myprint(s):
     sys.stdout = open(os.devnull, "w")
 
 
+def get_change_point_alg_params(metric, dir_model):
+    if metric == "latency":
+        preprocess_args = {"filter_type": "percentile_filter",
+                           "win_len": 13,
+                           "p": 0.5}
+    elif metric == "loss":
+        preprocess_args = {"filter_type": "percentile_filter",
+                           "win_len": 5,
+                           "p": 0.5}
+    elif metric == "throughput_up":
+        preprocess_args = {"filter_type": "percentile_filter",
+                           "win_len": 13,
+                           "p": 0.5}
+
+    if dir_model == "seg_neigh":
+        if metric == "latency":
+            param = {"const_pen": 100,
+                     "f_pen": "n_cps ^ 2",
+                     "seg_model": "Normal",
+                     "min_seg_len": 5,
+                     "max_cps": 4}
+        elif metric == "loss":
+            param = {"const_pen": 200,
+                     "f_pen": "n_cps",
+                     "seg_model": "Normal",
+                     "min_seg_len": 5,
+                     "max_cps": 4}
+        elif metric == "throughput_up":
+            param = {"const_pen": 200,
+                     "f_pen": "n_cps",
+                     "seg_model": "Normal",
+                     "min_seg_len": 5,
+                     "max_cps": 4}
+
+    return preprocess_args, param
+
+
 if __name__ == "__main__":
     ############################
     # CHANGE POINT DETECTION PARAMETERS
     ############################
-    metric = "latency"
+    metric = "throughput_up"
     dir_model = "seg_neigh"
     hours_tol = 4
+
     cmp_class_args = {"win_len": 15}
-    preprocess_args = {"filter_type": "percentile_filter",
-                       "win_len": 13,
-                       "p": 0.5}
-    param = {"const_pen": 100,
-             "f_pen": "n_cps ^ 2",
-             "seg_model": "Normal",
-             "min_seg_len": 5,
-             "max_cps": 4}
+    preprocess_args, param = get_change_point_alg_params(metric, dir_model)
     ############################
 
     sys.stdout = open(os.devnull, "w")
 
-    myprint("traceroute_exploratory_prints")
-    traceroute_exploratory_prints.run_parallel()
+    # myprint("traceroute_exploratory_prints")
+    # traceroute_exploratory_prints.run_parallel()
 
     myprint("print_graph")
     print_graph.run_parallel()

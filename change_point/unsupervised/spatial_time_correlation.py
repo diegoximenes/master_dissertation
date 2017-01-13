@@ -123,11 +123,15 @@ def analyse_first_hop(g, u, is_zero_indegree, metric, server, dt_start, dt_end,
                 cp_dt_end = dt_procedures.from_strdt_to_dt(row["cp_dt_end"])
 
                 if is_zero_indegree:
-                    problem_location = analyse_path(path, cp_dt_start,
-                                                    cp_dt_end, row["cp_type"],
-                                                    str_dt, metric,
-                                                    traceroute_type,
-                                                    server)
+                    problem_location = map(ast.literal_eval,
+                                           analyse_path(path,
+                                                        cp_dt_start,
+                                                        cp_dt_end,
+                                                        row["cp_type"],
+                                                        str_dt,
+                                                        metric,
+                                                        traceroute_type,
+                                                        server))
                 else:
                     problem_location = ("already_analysed_during_zero_"
                                         "indegree_vertexes_analysis")
@@ -407,6 +411,7 @@ def localize_events(dt_start, dt_end, metric, eps_hours):
 
 def run_sequential(metric, eps_hours):
     for dt_start, dt_end in utils.iter_dt_range():
+        print "dt_start={}, dt_end={}".format(dt_start, dt_end)
         localize_events(dt_start, dt_end, metric, eps_hours)
 
 
@@ -424,8 +429,8 @@ def run_single(dt_start, dt_end, metric, eps_hours):
 if __name__ == "__main__":
     eps_hours = 4
     metric = "latency"
-    dt_start = datetime.datetime(2016, 5, 1)
-    dt_end = datetime.datetime(2016, 5, 11)
+    dt_start = datetime.datetime(2016, 10, 1)
+    dt_end = datetime.datetime(2016, 10, 11)
 
     parallel_args = {"eps_hours": eps_hours, "metric": metric}
     sequential_args = parallel_args
