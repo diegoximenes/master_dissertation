@@ -48,7 +48,8 @@ def get_name(name, ip_name):
 
 
 def get_traceroute(ts_traceroute, allow_embratel, compress_embratel,
-                   allow_last_hop_embratel):
+                   allow_last_hop_embratel,
+                   ignore_changes_in_private_hops=True):
     hops_default = []
 
     # sometimes only a few traceroutes present different names in the same hop
@@ -151,6 +152,13 @@ def get_traceroute(ts_traceroute, allow_embratel, compress_embratel,
                     name_default = hops_default[j]["name"]
                     ip_default = hops_default[j]["ip"]
 
+                    if (ignore_changes_in_private_hops and
+                            (ip_current is not None) and
+                            (ip_default is not None) and
+                            utils.is_private_ip(ip_current) and
+                            utils.is_private_ip(ip_default)):
+                        continue
+
                     if ((name_current is not None) and
                             (name_default is None)):
                         # current traceroute have more info than previous ones
@@ -230,11 +238,18 @@ def get_traceroute(ts_traceroute, allow_embratel, compress_embratel,
     if not has_public_ip:
         return False, "no_public_ip={}".format(hops_default)
 
-    # check if 192. ips appear in the middle of the traceroute
-    for i in xrange(1, len(hops_default)):
-        ip = hops_default[i]["ip"]
-        if ip.split(".")[0] == "192":
-            return (False, "192_in_the_middle")
+    # check if last hop is not private
+    if utils.is_private_ip(hops_default[-1]["ip"]):
+        return False, "last_hop_is_private_ip={}".format(hops_default)
+
+    # check if private ips appear in the middle of the traceroute
+    last_public_ip_hop = -1
+    for i in xrange(len(hops_default)):
+        if not utils.is_private_ip(hops_default[i]["ip"]):
+            if (last_public_ip_hop != -1) and (i - last_public_ip_hop > 1):
+                return (False,
+                        "private_ip_between_public_ips={}".
+                        format(hops_default))
 
     # convert to format to be consumed by other procedures
     ret_hops_default = []
@@ -253,8 +268,8 @@ def get_traceroute_filtered(valid_traceroute, str_traceroute, server):
 
     traceroute = ast.literal_eval(str_traceroute)
 
-    # remove local ip
-    while traceroute and traceroute[0][1].split(".")[0] == "192":
+    # remove local ip and cmts
+    while traceroute and utils.is_private_ip(traceroute[0][1]):
         traceroute = traceroute[1:]
 
     # to each hop, add next hop with public ip
@@ -330,7 +345,7 @@ def print_traceroute_per_mac(dt_start, dt_end):
 
 
 def print_traceroute_per_mac_filtered(dt_start, dt_end,
-                                      min_fraction_of_samples=0.5):
+                                      min_fraction_of_samples=0.7):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     out_path = ("{}/prints/{}/filtered/traceroute_per_mac.csv".

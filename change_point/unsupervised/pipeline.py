@@ -27,7 +27,7 @@ def myprint(s):
     sys.stdout = open(os.devnull, "w")
 
 
-def get_change_point_alg_params(metric, dir_model):
+def get_change_point_alg_params(metric, dir_model, hours_tol):
     if metric == "latency":
         preprocess_args = {"filter_type": "percentile_filter",
                            "win_len": 13,
@@ -46,20 +46,20 @@ def get_change_point_alg_params(metric, dir_model):
             param = {"const_pen": 100,
                      "f_pen": "n_cps ^ 2",
                      "seg_model": "Normal",
-                     "min_seg_len": 5,
-                     "max_cps": 4}
+                     "min_seg_len": hours_tol * 2 + 1,
+                     "max_cps": 6}
         elif metric == "loss":
             param = {"const_pen": 200,
                      "f_pen": "n_cps",
                      "seg_model": "Normal",
-                     "min_seg_len": 5,
-                     "max_cps": 4}
+                     "min_seg_len": hours_tol * 2 + 1,
+                     "max_cps": 6}
         elif metric == "throughput_up":
             param = {"const_pen": 200,
                      "f_pen": "n_cps",
                      "seg_model": "Normal",
-                     "min_seg_len": 5,
-                     "max_cps": 4}
+                     "min_seg_len": hours_tol * 2 + 1,
+                     "max_cps": 6}
 
     return preprocess_args, param
 
@@ -68,18 +68,19 @@ if __name__ == "__main__":
     ############################
     # CHANGE POINT DETECTION PARAMETERS
     ############################
-    metric = "throughput_up"
+    metric = "latency"
     dir_model = "seg_neigh"
-    hours_tol = 4
+    hours_tol = 12
 
     cmp_class_args = {"win_len": 15}
-    preprocess_args, param = get_change_point_alg_params(metric, dir_model)
+    preprocess_args, param = get_change_point_alg_params(metric, dir_model,
+                                                         hours_tol)
     ############################
 
     sys.stdout = open(os.devnull, "w")
 
-    # myprint("traceroute_exploratory_prints")
-    # traceroute_exploratory_prints.run_parallel()
+    myprint("traceroute_exploratory_prints")
+    traceroute_exploratory_prints.run_parallel()
 
     myprint("print_graph")
     print_graph.run_parallel()
@@ -100,13 +101,14 @@ if __name__ == "__main__":
     # myprint("spatial_time_correlation")
     # spatial_time_correlation.run_parallel(metric, hours_tol)
 
-    myprint("plot_names")
-    plot_names.run_parallel(metric)
+    # myprint("plot_names")
+    # plot_names.run_parallel(metric)
 
     myprint("plot_paths")
     plot_paths.run_parallel(metric)
 
-    myprint("plot_latencies_traceroute")
-    plot_latencies_traceroute.run_parallel()
+    if metric == "latency":
+        myprint("plot_latencies_traceroute")
+        plot_latencies_traceroute.run_parallel()
 
     sys.stdout = sys.__stdout__

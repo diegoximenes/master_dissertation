@@ -87,8 +87,6 @@ def plot_latencies_traceroute(dt_start, dt_end):
                                                                     str_dt)
     df = pd.read_csv(in_path)
     for _, row, in df.iterrows():
-        if row["mac"] != "64:66:B3:A6:AA:DC":
-            continue
         if row["valid_cnt_samples"]:
             in_path = utils.get_in_path(row["server"], row["mac"], dt_start,
                                         dt_end)
@@ -99,9 +97,6 @@ def plot_latencies_traceroute(dt_start, dt_end):
                 valid_traceroute_field, traceroute_field = \
                     cp_utils.get_traceroute_fields(traceroute_type)
                 if row[valid_traceroute_field]:
-                    print ("traceroute_type={}, server={}, mac={}".
-                           format(traceroute_type, row["server"], row["mac"]))
-
                     traceroute = ast.literal_eval(row[traceroute_field])
                     name_ts = get_ts_per_name(traceroute_type, ts_traceroute,
                                               dt_start, dt_end)

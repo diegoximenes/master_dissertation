@@ -16,26 +16,30 @@ def aggregate_first_hop_not_zero_indegree_vertex():
                 "fraction_of_clients,cnt_clients,clients,problem_location\n")
 
         for str_dt in os.listdir("{}/prints".format(script_dir)):
-            for metric in os.listdir("{}/prints/{}/filtered".format(script_dir,
-                                                                    str_dt)):
-                in_dir = "{}/prints/{}/filtered/{}/".format(script_dir, str_dt,
-                                                            metric)
-                if os.path.isdir(in_dir):
-                    in_path = ("{}/problem_location_first_hop_not_zero_"
-                               "indegree_vertex.csv".format(in_dir))
+            if os.path.isdir("{}/prints/{}".format(script_dir, str_dt)):
+                for metric in os.listdir("{}/prints/{}/filtered".
+                                         format(script_dir, str_dt)):
+                    if metric != "throughput_up":
+                        continue
 
-                    df = pd.read_csv(in_path)
-                    for _, row in df.iterrows():
-                        l_format = "{},{},{},{},{},{},{},\"{}\",\"{}\"\n"
-                        f.write(l_format.format(str_dt,
-                                                row["server"],
-                                                row["cp_dt_start"],
-                                                row["cp_dt_end"],
-                                                row["cp_type"],
-                                                row["fraction_of_clients"],
-                                                row["cnt_clients"],
-                                                row["clients"],
-                                                row["problem_location"]))
+                    in_dir = "{}/prints/{}/filtered/{}/".format(script_dir,
+                                                                str_dt, metric)
+                    if os.path.isdir(in_dir):
+                        in_path = ("{}/problem_location_first_hop_not_zero_"
+                                   "indegree_vertex.csv".format(in_dir))
+
+                        df = pd.read_csv(in_path)
+                        for _, row in df.iterrows():
+                            l_format = "{},{},{},{},{},{},{},\"{}\",\"{}\"\n"
+                            f.write(l_format.format(str_dt,
+                                                    row["server"],
+                                                    row["cp_dt_start"],
+                                                    row["cp_dt_end"],
+                                                    row["cp_type"],
+                                                    row["fraction_of_clients"],
+                                                    row["cnt_clients"],
+                                                    row["clients"],
+                                                    row["problem_location"]))
 
 
 def aggregate_correlation():
@@ -46,32 +50,38 @@ def aggregate_correlation():
                 "cnt_vertexes_with_zero_indegree,suffix_match,"
                 "vertexes_with_zero_indegree\n")
         for str_dt in os.listdir("{}/prints".format(script_dir)):
-            for metric in os.listdir("{}/prints/{}/filtered".format(script_dir,
-                                                                    str_dt)):
-                in_dir = "{}/prints/{}/filtered/{}/".format(script_dir, str_dt,
-                                                            metric)
-                if os.path.isdir(in_dir):
-                    in_path = ("{}/problem_location_zero_indegree_vertexes_"
-                               "correlation.csv".format(in_dir))
-                    df = pd.read_csv(in_path)
-                    for _, row in df.iterrows():
-                        f.write("{},{},{},{},{},{},{},\"{}\",\"{}\"\n".
-                                format(str_dt,
-                                       row["server"],
-                                       row["traceroute_type"],
-                                       row["cp_dt_start"],
-                                       row["cp_dt_end"],
-                                       row["cp_type"],
-                                       row["cnt_vertexes_with_zero_indegree"],
-                                       row["suffix_match"],
-                                       row["vertexes_with_zero_indegree"]))
+            if os.path.isdir("{}/prints/{}".format(script_dir, str_dt)):
+                for metric in os.listdir("{}/prints/{}/filtered".
+                                         format(script_dir, str_dt)):
+                    if metric != "throughput_up":
+                        continue
+
+                    in_dir = "{}/prints/{}/filtered/{}/".format(script_dir,
+                                                                str_dt, metric)
+                    if os.path.isdir(in_dir):
+                        in_path = ("{}/problem_location_zero_indegree_"
+                                   "vertexes_correlation.csv".format(in_dir))
+                        df = pd.read_csv(in_path)
+                        for _, row in df.iterrows():
+                            l = "{},{},{},{},{},{},{},\"{}\",\"{}\"\n"
+                            l = l.format(
+                                str_dt,
+                                row["server"],
+                                row["traceroute_type"],
+                                row["cp_dt_start"],
+                                row["cp_dt_end"],
+                                row["cp_type"],
+                                row["cnt_vertexes_with_zero_indegree"],
+                                row["suffix_match"],
+                                row["vertexes_with_zero_indegree"])
+                            f.write(l)
     utils.sort_csv_file(out_path,
                         ["cnt_vertexes_with_zero_indegree", "server"],
                         ascending=[False, True])
 
 
 def aggregate():
-    # aggregate_first_hop_not_zero_indegree_vertex()
+    aggregate_first_hop_not_zero_indegree_vertex()
     aggregate_correlation()
 
 

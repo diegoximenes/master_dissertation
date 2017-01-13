@@ -428,7 +428,7 @@ def run_single(dt_start, dt_end, metric, eps_hours):
 
 if __name__ == "__main__":
     eps_hours = 4
-    metric = "latency"
+    metric = "throughput_up"
     dt_start = datetime.datetime(2016, 10, 1)
     dt_end = datetime.datetime(2016, 10, 11)
 
