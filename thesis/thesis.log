@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.8.30)  13 JAN 2017 02:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.8.30)  13 JAN 2017 23:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -401,6 +401,9 @@ Package: subcaption 2016/02/20 v1.1-142 Sub-captions (AR)
 \c@subfigure=\count130
 \c@subtable=\count131
 )
+(/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen142
+)
 \@losfile=\write3
 \openout3 = `thesis.syx'.
 
@@ -413,33 +416,33 @@ Writing index of abbreviations file thesis.abx
 (./thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             https://www.ctan.org/pkg/pageslts
-(lastpage)             ! on input line 13.
+(lastpage)             ! on input line 14.
  (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count132
-\scratchdimen=\dimen142
+\scratchdimen=\dimen143
 \scratchbox=\box32
 \nofMPsegments=\count133
 \nofMParguments=\count134
 \everyMPshowfont=\toks27
 \MPscratchCnt=\count135
-\MPscratchDim=\dimen143
+\MPscratchDim=\dimen144
 \MPnumerator=\count136
 \makeMPintoPDFobject=\count137
 \everyMPtoPDFconversion=\toks28
@@ -494,7 +497,7 @@ e
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box33
-Package hyperref Info: Link coloring OFF on input line 13.
+Package hyperref Info: Link coloring OFF on input line 14.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -503,9 +506,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count138
 )
-LaTeX Info: Redefining \ref on input line 13.
-LaTeX Info: Redefining \pageref on input line 13.
-LaTeX Info: Redefining \nameref on input line 13.
+LaTeX Info: Redefining \ref on input line 14.
+LaTeX Info: Redefining \pageref on input line 14.
+LaTeX Info: Redefining \nameref on input line 14.
 
 (./thesis.out) (./thesis.out)
 \@outlinefile=\write5
@@ -513,30 +516,30 @@ LaTeX Info: Redefining \nameref on input line 13.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Option `breaklinks' set `true' on input line 36.
-Package hyperref Info: Option `raiselinks' set `true' on input line 36.
-Package hyperref Info: Option `pageanchor' set `true' on input line 36.
- <coppe-logo.pdf, id=140, 177.463pt x 76.285pt>
+Package hyperref Info: Option `breaklinks' set `true' on input line 37.
+Package hyperref Info: Option `raiselinks' set `true' on input line 37.
+Package hyperref Info: Option `pageanchor' set `true' on input line 37.
+ <coppe-logo.pdf, id=104, 177.463pt x 76.285pt>
 File: coppe-logo.pdf Graphic file (type pdf)
 
 <use coppe-logo.pdf>
-Package pdftex.def Info: coppe-logo.pdf used on input line 36.
+Package pdftex.def Info: coppe-logo.pdf used on input line 37.
 (pdftex.def)             Requested size: 177.46255pt x 76.2848pt.
 
-Underfull \hbox (badness 7740) in paragraph at lines 36--36
+Underfull \hbox (badness 7740) in paragraph at lines 37--37
 []\OT1/cmr/m/n/12 Disserta^^Xc~ao de Mestrado apresentada ao
  []
 
 
-Underfull \hbox (badness 3668) in paragraph at lines 36--36
+Underfull \hbox (badness 3668) in paragraph at lines 37--37
 \OT1/cmr/m/n/12 de Sistemas e Computa^^Xc~ao, COPPE, da
  []
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 36.
+LaTeX Font Info:    Try loading font information for U+msa on input line 37.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 36.
+LaTeX Font Info:    Try loading font information for U+msb on input line 37.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -544,36 +547,45 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./coppe-logo.pdf>]
-Underfull \hbox (badness 3884) in paragraph at lines 37--37
+Underfull \hbox (badness 3884) in paragraph at lines 38--38
 \OT1/cmr/m/n/12 DISSERTA[][]AO SUB-METIDA []AO CORPO DOCENTE DO INSTITUTO
  []
 
 
-Underfull \hbox (badness 3884) in paragraph at lines 37--37
+Underfull \hbox (badness 3884) in paragraph at lines 38--38
 \OT1/cmr/m/n/12 ALBERTO LUIZ COIMBRA DE P[]OS-GRADUA[][]AO E PESQUISA DE
  []
 
 
-Underfull \hbox (badness 2884) in paragraph at lines 37--37
+Underfull \hbox (badness 2884) in paragraph at lines 38--38
 \OT1/cmr/m/n/12 ENGENHARIA (COPPE) DA UNIVERSIDADE FEDERAL DO RIO DE
  []
 
 
-Underfull \hbox (badness 3386) in paragraph at lines 37--37
+Underfull \hbox (badness 3386) in paragraph at lines 38--38
 \OT1/cmr/m/n/12 JANEIRO COMO PARTE DOS REQUISITOS NECESS[]ARIOS PARA A
  []
 
 [2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 37--37
+Underfull \hbox (badness 10000) in paragraph at lines 38--38
 []\OT1/cmr/m/n/12 Event Detection and Localization in Computer
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 37--37
+Underfull \hbox (badness 10000) in paragraph at lines 38--38
 \OT1/cmr/m/n/12 Networks Using End-to-End Measurements/Diego
  []
+
+
+LaTeX Warning: Reference `LastPage' on page iii undefined on input line 38.
+
+
+LaTeX Warning: Reference `bib:begin' on page iii undefined on input line 38.
+
+
+LaTeX Warning: Reference `bib:end' on page iii undefined on input line 38.
 
 [3
 
@@ -581,18 +593,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 37--37
 
 ] (./src/abstract.tex) [5
 
-] (./thesis.toc [6
-
-])
+] (./thesis.toc)
 \tf@toc=\write6
 \openout6 = `thesis.toc'.
 
- [7]
+ [6
+
+]
 (./thesis.lof)
 \tf@lof=\write7
 \openout7 = `thesis.lof'.
 
- [8
+ [7
 
 ] (./thesis.lot)
 \tf@lot=\write8
@@ -601,7 +613,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 37--37
 
 No file thesis.los.
 No file thesis.lab.
-[9
+[8
 
 ] (./src/introduction.tex
 Chapter 1.
@@ -614,11 +626,41 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
  [1
 
 
-])
-(./src/literature_review.tex [2]
+]
+
+LaTeX Warning: Reference `chap:results' on page 2 undefined on input line 65.
+
+
+LaTeX Warning: Reference `chap:conclusion' on page 2 undefined on input line 67
+.
+
+) (./src/literature_review.tex [2]
 Chapter 2.
 
-<./figures/literature_review/argus_pipeline.png, id=290, 850.67813pt x 393.7209
+Package natbib Warning: Citation `argus_end_to_end_service_anomaly_detection_an
+d_localization_from_an_isps_point_of_view' on page 3 undefined on input line 5.
+
+
+
+Package natbib Warning: Citation `netnorad' on page 3 undefined on input line 6
+.
+
+
+Package natbib Warning: Citation `crowdsourcing_service_level_network_event_mon
+itoring' on page 3 undefined on input line 7.
+
+
+Package natbib Warning: Citation `argus_end_to_end_service_anomaly_detection_an
+d_localization_from_an_isps_point_of_view' on page 3 undefined on input line 12
+.
+
+
+Package natbib Warning: Citation `speed_testing_without_speed_tests_estimating_
+achievable_download_speed_from_passive_measurements' on page 3 undefined on inp
+ut line 19.
+
+
+<./figures/literature_review/argus_pipeline.png, id=161, 850.67813pt x 393.7209
 3pt>
 File: ./figures/literature_review/argus_pipeline.png Graphic file (type png)
  <use ./figures/literature_review/argus_pipeline.png>
@@ -626,7 +668,18 @@ Package pdftex.def Info: ./figures/literature_review/argus_pipeline.png used on
  input line 26.
 (pdftex.def)             Requested size: 341.43437pt x 158.02628pt.
 
-<./figures/literature_review/argus_spatial_aggregation.png, id=294, 749.80125pt
+
+Package natbib Warning: Citation `argus_end_to_end_service_anomaly_detection_an
+d_localization_from_an_isps_point_of_view' on page 3 undefined on input line 27
+.
+
+
+Package natbib Warning: Citation `argus_end_to_end_service_anomaly_detection_an
+d_localization_from_an_isps_point_of_view' on page 3 undefined on input line 27
+.
+
+
+<./figures/literature_review/argus_spatial_aggregation.png, id=163, 749.80125pt
  x 392.96812pt>
 File: ./figures/literature_review/argus_spatial_aggregation.png Graphic file (t
 ype png)
@@ -635,11 +688,26 @@ ype png)
 Package pdftex.def Info: ./figures/literature_review/argus_spatial_aggregation.
 png used on input line 43.
 (pdftex.def)             Requested size: 341.43437pt x 178.94467pt.
- [3
 
- <./figures/literature_review/argus_pipeline.png>] [4 <./figures/literature_rev
-iew/argus_spatial_aggregation.png>]
-<./figures/literature_review/netnorad_network_architecture.jpg, id=310, 554.07p
+
+Package natbib Warning: Citation `argus_end_to_end_service_anomaly_detection_an
+d_localization_from_an_isps_point_of_view' on page 3 undefined on input line 44
+.
+
+
+Package natbib Warning: Citation `argus_end_to_end_service_anomaly_detection_an
+d_localization_from_an_isps_point_of_view' on page 3 undefined on input line 44
+.
+
+[3
+
+ <./figures/literature_review/argus_pipeline.png>]
+
+Package natbib Warning: Citation `netnorad' on page 4 undefined on input line 9
+3.
+
+[4 <./figures/literature_review/argus_spatial_aggregation.png>]
+<./figures/literature_review/netnorad_network_architecture.jpg, id=176, 554.07p
 t x 430.60875pt>
 File: ./figures/literature_review/netnorad_network_architecture.jpg Graphic fil
 e (type jpg)
@@ -648,14 +716,45 @@ e (type jpg)
 Package pdftex.def Info: ./figures/literature_review/netnorad_network_architect
 ure.jpg used on input line 114.
 (pdftex.def)             Requested size: 298.75264pt x 232.18358pt.
- [5 <./figures/literature_review/netnorad_network_architecture.jpg>] [6])
-(./src/change_point_detection.tex [7]
+
+
+Package natbib Warning: Citation `netnorad' on page 5 undefined on input line 1
+15.
+
+
+Package natbib Warning: Citation `netnorad' on page 5 undefined on input line 1
+15.
+
+[5 <./figures/literature_review/netnorad_network_architecture.jpg>]
+
+Package natbib Warning: Citation `crowdsourcing_service_level_network_event_mon
+itoring' on page 6 undefined on input line 169.
+
+[6]) (./src/change_point_detection.tex [7]
 Chapter 3.
 [8
 
-] [9]
+]
+
+Package natbib Warning: Citation `an_introduction_to_wavelets' on page 9 undefi
+ned on input line 88.
+
+
+Package natbib Warning: Citation `ckmeans_1d_dp_optimal_k_means_clustering_in_o
+ne_dimension_by_dynamic_programming' on page 9 undefined on input line 89.
+
+
+Package natbib Warning: Citation `savgol' on page 9 undefined on input line 90.
+
+
+[9]
+
+Package natbib Warning: Citation `stl_a_seasonal_trend_decomposition_procedure_
+based_on_loess' on page 10 undefined on input line 96.
+
+
 <./figures/change_point_detection/preprocessing/median_filter_latency/serverAMR
-DTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png, id=348, 11
+DTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png, id=208, 11
 56.32pt x 867.24pt>
 File: ./figures/change_point_detection/preprocessing/median_filter_latency/serv
 erAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png Graphi
@@ -669,7 +768,7 @@ filter_latency/serverAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend20
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 
 <./figures/change_point_detection/preprocessing/median_filter_latency/serverAMR
-DTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png, id=350, 11
+DTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png, id=210, 11
 56.32pt x 867.24pt>
 File: ./figures/change_point_detection/preprocessing/median_filter_latency/serv
 erAMRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png Graphi
@@ -683,7 +782,7 @@ filter_latency/serverAMRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend20
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 
 <./figures/change_point_detection/preprocessing/median_filter_loss/serverAMRDTC
-PEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png, id=351, 1156.
+PEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png, id=211, 1156.
 32pt x 867.24pt>
 File: ./figures/change_point_detection/preprocessing/median_filter_loss/serverA
 MRDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png Graphic f
@@ -697,7 +796,7 @@ filter_loss/serverAMRDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 
 <./figures/change_point_detection/preprocessing/median_filter_loss/serverAMRDTC
-PEV01_mac64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png, id=352, 1156.
+PEV01_mac64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png, id=212, 1156.
 32pt x 867.24pt>
 File: ./figures/change_point_detection/preprocessing/median_filter_loss/serverA
 MRDTCPEV01_mac64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png Graphic f
@@ -715,12 +814,21 @@ gures/change_point_detection/preprocessing/median_filter_latency/serverAMRDTCPE
 V01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png>]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 150.
- [11 <./figures/change_point_detection/preprocessing/median_filter_loss/serverA
-MRDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png> <./figur
-es/change_point_detection/preprocessing/median_filter_loss/serverAMRDTCPEV01_ma
-c64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png>]
+
+
+Package natbib Warning: Citation `hellinger_distance' on page 11 undefined on i
+nput line 170.
+
+
+Package natbib Warning: Citation `the_earth_movers_distance_as_a_metric_for_ima
+ge_retrieval' on page 11 undefined on input line 172.
+
+[11 <./figures/change_point_detection/preprocessing/median_filter_loss/serverAM
+RDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png> <./figure
+s/change_point_detection/preprocessing/median_filter_loss/serverAMRDTCPEV01_mac
+64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png>]
 <./figures/change_point_detection/sliding_windows_online/id100_serverNHODTCSRV0
-4_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png, id=378, 1156.32pt
+4_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png, id=233, 1156.32pt
  x 867.24pt>
 File: ./figures/change_point_detection/sliding_windows_online/id100_serverNHODT
 CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png Graphic file 
@@ -734,7 +842,7 @@ e/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-1
 (pdftex.def)             Requested size: 298.75264pt x 224.06116pt.
 
 <./figures/change_point_detection/sliding_windows_offline/id100_serverNHODTCSRV
-04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png, id=380, 1156.32p
+04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png, id=235, 1156.32p
 t x 867.24pt>
 File: ./figures/change_point_detection/sliding_windows_offline/id100_serverNHOD
 TCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png Graphic file
@@ -746,12 +854,39 @@ Package pdftex.def Info: ./figures/change_point_detection/sliding_windows_offli
 ne/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-
 11.png used on input line 200.
 (pdftex.def)             Requested size: 298.75264pt x 224.06116pt.
- [12 <./figures/change_point_detection/sliding_windows_online/id100_serverNHODT
-CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png> <./figures/c
-hange_point_detection/sliding_windows_offline/id100_serverNHODTCSRV04_mac64:66:
-B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>] [13]
+
+
+Package natbib Warning: Citation `detecting_change_in_data_streams' on page 12 
+undefined on input line 205.
+
+[12 <./figures/change_point_detection/sliding_windows_online/id100_serverNHODTC
+SRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png> <./figures/ch
+ange_point_detection/sliding_windows_offline/id100_serverNHODTCSRV04_mac64:66:B
+3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>]
+
+Package natbib Warning: Citation `on_optimal_multiple_changepoint_algorithms_fo
+r_large_data' on page 13 undefined on input line 225.
+
+
+Package natbib Warning: Citation `on_optimal_multiple_changepoint_algorithms_fo
+r_large_data' on page 13 undefined on input line 251.
+
+[13]
+
+Package natbib Warning: Citation `optimal_detection_of_changepoints_with_a_line
+ar_computational_cost' on page 14 undefined on input line 263.
+
+
+Package natbib Warning: Citation `on_optimal_multiple_changepoint_algorithms_fo
+r_large_data' on page 14 undefined on input line 263.
+
+
+Package natbib Warning: Citation `computationally_efficient_changepoint_detecti
+on_for_a_range_of_penalties' on page 14 undefined on input line 263.
+
+
 <./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66:B3:A
-6:BB:10_dtstart2016-07-01_dtend2016-07-11.png, id=403, 1156.32pt x 1084.05pt>
+6:BB:10_dtstart2016-07-01_dtend2016-07-11.png, id=252, 1156.32pt x 1084.05pt>
 File: ./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66
 :B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type png)
 
@@ -763,7 +898,7 @@ nput line 285.
 (pdftex.def)             Requested size: 213.39568pt x 200.04987pt.
 
 <./figures/change_point_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:66:B3
-:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png, id=404, 1156.32pt x 1084.05pt>
+:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png, id=253, 1156.32pt x 1084.05pt>
 File: ./figures/change_point_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:
 66:B3:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type png)
 
@@ -773,12 +908,36 @@ Package pdftex.def Info: ./figures/change_point_detection/seg_neigh/id158_serve
 rSOCDTCPEV01_mac64:66:B3:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png used on
  input line 285.
 (pdftex.def)             Requested size: 213.39568pt x 200.04987pt.
- [14 <./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66
-:B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png> <./figures/change_point_det
-ection/seg_neigh/id158_serverSOCDTCPEV01_mac64:66:B3:A6:B9:D2_dtstart2016-07-01
-_dtend2016-07-11.png>]
+
+
+Package natbib Warning: Citation `a_hidden_markov_model_segmentation_procedure_
+for_hydrological_and_environmental_time_series' on page 14 undefined on input l
+ine 294.
+
+
+Package natbib Warning: Citation `fast_estimation_of_posterior_probabilities_in
+_change-point_analysis_through_a_constrained_hidden_markov_model' on page 14 un
+defined on input line 294.
+
+
+Package natbib Warning: Citation `inertial_hidden_markov_models_modeling_change
+_in_multivariate_time_series' on page 14 undefined on input line 294.
+
+[14 <./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66:
+B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png> <./figures/change_point_dete
+ction/seg_neigh/id158_serverSOCDTCPEV01_mac64:66:B3:A6:B9:D2_dtstart2016-07-01_
+dtend2016-07-11.png>]
+
+Package natbib Warning: Citation `inertial_hidden_markov_models_modeling_change
+_in_multivariate_time_series' on page 15 undefined on input line 317.
+
+
+Package natbib Warning: Citation `inertial_hidden_markov_models_modeling_change
+_in_multivariate_time_series' on page 15 undefined on input line 321.
+
+
 <./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_mac64:6
-6:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png, id=419, 1156.32pt x 867.24
+6:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png, id=262, 1156.32pt x 867.24
 pt>
 File: ./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_ma
 c64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png Graphic file (type png
@@ -790,10 +949,20 @@ Package pdftex.def Info: ./figures/change_point_detection/gaussian_hmm/id115_se
 rverRJODTCLDM031_mac64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png use
 d on input line 341.
 (pdftex.def)             Requested size: 341.43437pt x 256.07178pt.
- [15 <./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_ma
-c64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png>]
+
+
+Package natbib Warning: Citation `exact_and_efficient_bayesian_inference_for_mu
+ltiple_changepoint_problems' on page 15 undefined on input line 350.
+
+[15 <./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_mac
+64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png>]
+
+Package natbib Warning: Citation `bayesian_online_changepoint_detection' on pag
+e 16 undefined on input line 361.
+
+
 <./figures/change_point_detection/bayesian_offline/id305_serverSNEDTCPROB01_mac
-64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png, id=428, 1156.32pt x 86
+64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png, id=270, 1156.32pt x 86
 7.24pt>
 File: ./figures/change_point_detection/bayesian_offline/id305_serverSNEDTCPROB0
 1_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type
@@ -807,7 +976,7 @@ Package pdftex.def Info: ./figures/change_point_detection/bayesian_offline/id30
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 
 <./figures/change_point_detection/bayesian_online/id305_serverSNEDTCPROB01_mac6
-4:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png, id=429, 1156.32pt x 867
+4:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png, id=271, 1156.32pt x 867
 .24pt>
 File: ./figures/change_point_detection/bayesian_online/id305_serverSNEDTCPROB01
 _mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type 
@@ -828,18 +997,28 @@ LaTeX Warning: Reference `' on page 17 undefined on input line 405.
 
 ) (./src/methodology.tex [17]
 Chapter 4.
+
+Package natbib Warning: Citation `a_preliminary_performance_measurement_study_o
+f_residential_broadband_services_in_brazil' on page 18 undefined on input line 
+35.
+
 [18
 
 ]
-<./figures/methodology/pipeline/pipeline.png, id=451, 785.93625pt x 178.6675pt>
+<./figures/methodology/pipeline/pipeline.png, id=290, 785.93625pt x 178.6675pt>
 File: ./figures/methodology/pipeline/pipeline.png Graphic file (type png)
 <use ./figures/methodology/pipeline/pipeline.png>
 Package pdftex.def Info: ./figures/methodology/pipeline/pipeline.png used on in
 put line 60.
 (pdftex.def)             Requested size: 384.1096pt x 87.32155pt.
- [19 <./figures/methodology/pipeline/pipeline.png>] [20]
+ [19 <./figures/methodology/pipeline/pipeline.png>]
+
+Package natbib Warning: Citation `avoiding_traceroute_anomalies_with_paris_trac
+eroute' on page 20 undefined on input line 140.
+
+[20]
 <./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend2016-05-11_NR
-IDTCLDM031_graph_anonymized.png, id=470, 980.66376pt x 348.30125pt>
+IDTCLDM031_graph_anonymized.png, id=307, 980.66376pt x 348.30125pt>
 File: ./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend2016-05-
 11_NRIDTCLDM031_graph_anonymized.png Graphic file (type png)
 
@@ -849,9 +1028,19 @@ Package pdftex.def Info: ./figures/methodology/spatial_correlation/dtstart2016-
 05-01_dtend2016-05-11_NRIDTCLDM031_graph_anonymized.png used on input line 200.
 
 (pdftex.def)             Requested size: 426.79135pt x 151.5789pt.
- [21] [22 <./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend201
-6-05-11_NRIDTCLDM031_graph_anonymized.png>] [23] [24]
-<./figures/methodology/spatial_time_correlation/event_tree_graph_1.png, id=496,
+ [21]
+
+Package natbib Warning: Citation `avoiding_traceroute_anomalies_with_paris_trac
+eroute' on page 22 undefined on input line 213.
+
+[22 <./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend2016-05-1
+1_NRIDTCLDM031_graph_anonymized.png>]
+
+Package natbib Warning: Citation `voting_algorithms' on page 23 undefined on in
+put line 263.
+
+[23] [24]
+<./figures/methodology/spatial_time_correlation/event_tree_graph_1.png, id=332,
  179.67125pt x 348.30125pt>
 File: ./figures/methodology/spatial_time_correlation/event_tree_graph_1.png Gra
 phic file (type png)
@@ -861,7 +1050,7 @@ Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
 ree_graph_1.png used on input line 397.
 (pdftex.def)             Requested size: 85.35696pt x 165.47137pt.
 
-<./figures/methodology/spatial_time_correlation/event_tree_graph_2.png, id=497,
+<./figures/methodology/spatial_time_correlation/event_tree_graph_2.png, id=333,
  179.67125pt x 348.30125pt>
 File: ./figures/methodology/spatial_time_correlation/event_tree_graph_2.png Gra
 phic file (type png)
@@ -871,7 +1060,7 @@ Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
 ree_graph_2.png used on input line 397.
 (pdftex.def)             Requested size: 85.35696pt x 165.47137pt.
 
-<./figures/methodology/spatial_time_correlation/event_tree_graph_3.png, id=498,
+<./figures/methodology/spatial_time_correlation/event_tree_graph_3.png, id=334,
  276.03125pt x 348.30125pt>
 File: ./figures/methodology/spatial_time_correlation/event_tree_graph_3.png Gra
 phic file (type png)
@@ -881,7 +1070,7 @@ Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
 ree_graph_3.png used on input line 397.
 (pdftex.def)             Requested size: 128.0387pt x 161.56512pt.
 
-<./figures/methodology/spatial_time_correlation/event_tree_graph_4.png, id=499,
+<./figures/methodology/spatial_time_correlation/event_tree_graph_4.png, id=335,
  276.03125pt x 348.30125pt>
 File: ./figures/methodology/spatial_time_correlation/event_tree_graph_4.png Gra
 phic file (type png)
@@ -895,7 +1084,7 @@ ree_graph_4.png used on input line 397.
 figures/methodology/spatial_time_correlation/event_tree_graph_2.png> <./figures
 /methodology/spatial_time_correlation/event_tree_graph_3.png> <./figures/method
 ology/spatial_time_correlation/event_tree_graph_4.png>]
-<./figures/methodology/spatial_time_correlation/event_tree_graph_5.png, id=513,
+<./figures/methodology/spatial_time_correlation/event_tree_graph_5.png, id=350,
  276.03125pt x 348.30125pt>
 File: ./figures/methodology/spatial_time_correlation/event_tree_graph_5.png Gra
 phic file (type png)
@@ -905,9 +1094,30 @@ Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
 ree_graph_5.png used on input line 442.
 (pdftex.def)             Requested size: 149.37958pt x 188.49973pt.
 
+
+Package natbib Warning: Citation `change_point_detection_in_time_series_data_by
+_relative_density_ratio_estimation' on page 26 undefined on input line 470.
+
+
+Package natbib Warning: Citation `inertial_hidden_markov_models_modeling_change
+_in_multivariate_time_series' on page 26 undefined on input line 476.
+
 [26 <./figures/methodology/spatial_time_correlation/event_tree_graph_5.png>]
+
+Package natbib Warning: Citation `learning_sparse_penalties_for_change_point_de
+tection_using_max_margin_interval_regression' on page 27 undefined on input lin
+e 500.
+
+
+Package natbib Warning: Citation `webclass_adding_rigor_to_manual_labeling_of_t
+raffic_anomalies' on page 27 undefined on input line 502.
+
+
+Package natbib Warning: Citation `leveraging_cloud_data_to_mitigate_user_experi
+ence_from_breaking_bad' on page 27 undefined on input line 507.
+
 [27]
-<./figures/methodology/supervised_learning_try/survey_system.png, id=534, 1396.
+<./figures/methodology/supervised_learning_try/survey_system.png, id=363, 1396.
 21625pt x 804.00375pt>
 File: ./figures/methodology/supervised_learning_try/survey_system.png Graphic f
 ile (type png)
@@ -918,7 +1128,7 @@ ystem.png used on input line 544.
 (pdftex.def)             Requested size: 384.1096pt x 221.18146pt.
 
 <./figures/methodology/supervised_learning_try/cnt_classifications_per_vote.png
-, id=537, 1156.32pt x 794.97pt>
+, id=366, 1156.32pt x 794.97pt>
 File: ./figures/methodology/supervised_learning_try/cnt_classifications_per_vot
 e.png Graphic file (type png)
 
@@ -929,7 +1139,7 @@ sifications_per_vote.png used on input line 565.
 (pdftex.def)             Requested size: 298.75264pt x 205.38939pt.
  [28 <./figures/methodology/supervised_learning_try/survey_system.png>]
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=545, 1
+B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=375, 1
 228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png Graph
@@ -944,7 +1154,7 @@ d.ufrj.br.png used on input line 589.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
 B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br.png, id
-=546, 1228.59pt x 867.24pt>
+=376, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br.pn
 g Graphic file (type png)
@@ -958,7 +1168,7 @@ antos@tgr.net.br.png used on input line 589.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png, id=54
+B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png, id=37
 7, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png G
@@ -973,7 +1183,7 @@ verNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
 B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gabriel.mendonca@tgr.net.br.png, 
-id=548, 1228.59pt x 867.24pt>
+id=378, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gabriel.mendonca@tgr.net.br.
 png Graphic file (type png)
@@ -987,7 +1197,7 @@ endonca@tgr.net.br.png used on input line 599.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png, id=54
+B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png, id=37
 9, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png G
@@ -1001,7 +1211,7 @@ lva@gmail.com.png used on input line 609.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=550,
+B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=380,
  1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png Gra
@@ -1016,8 +1226,13 @@ and.ufrj.br.png used on input line 609.
 
 [29 <./figures/methodology/supervised_learning_try/cnt_classifications_per_vote
 .png>]
+
+LaTeX Warning: Reference `fig:classification_mismatch' on page 30 undefined on 
+input line 614.
+
+
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
-B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=557, 1
+B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=388, 1
 228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png Graph
@@ -1032,7 +1247,7 @@ d.ufrj.br.png used on input line 630.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
 B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br.png, id
-=558, 1228.59pt x 867.24pt>
+=389, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br.pn
 g Graphic file (type png)
@@ -1046,8 +1261,8 @@ antos@tgr.net.br.png used on input line 630.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
-B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png, id=55
-9, 1228.59pt x 867.24pt>
+B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png, id=39
+0, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png G
 raphic file (type png)
@@ -1061,7 +1276,7 @@ verCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/guisenges
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
 B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gabriel.mendonca@tgr.net.br.png, 
-id=560, 1228.59pt x 867.24pt>
+id=391, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gabriel.mendonca@tgr.net.br.
 png Graphic file (type png)
@@ -1075,8 +1290,8 @@ endonca@tgr.net.br.png used on input line 640.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
-B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png, id=56
-1, 1228.59pt x 867.24pt>
+B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png, id=39
+2, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png G
 raphic file (type png)
@@ -1089,7 +1304,7 @@ lva@gmail.com.png used on input line 650.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
-B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=562,
+B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=393,
  1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png Gra
@@ -1114,8 +1329,13 @@ ethodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:BC:B8_
 dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png> <./figures/method
 ology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtsta
 rt2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png>]
+
+LaTeX Warning: Reference `fig:diff_class_same_time_series' on page 31 undefined
+ on input line 657.
+
+
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=574, 1
+B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=404, 1
 228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png Graph
@@ -1129,7 +1349,7 @@ d.ufrj.br.png used on input line 672.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=575,
+B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=405,
  1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png Gra
@@ -1159,9 +1379,26 @@ rt2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png>]) (./src/results.tex
 gures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6
 :B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png>] [33]
 Chapter 5.
-) (./src/conclusion.tex [34
 
-] [35]
+LaTeX Warning: Reference `sec:possible_true_positive_examples' on page 34 undef
+ined on input line 29.
+
+
+LaTeX Warning: Reference `sec:possible_false_negative_examples' on page 34 unde
+fined on input line 32.
+
+
+LaTeX Warning: Reference `fig:before_first_hop' on page 34 undefined on input l
+ine 44.
+
+[34
+
+]
+
+LaTeX Warning: Reference `table:statistics_before' on page 35 undefined on inpu
+t line 51.
+
+) (./src/conclusion.tex [35]
 Chapter 6.
 [36
 
@@ -1195,13 +1432,24 @@ Missing character: There is no “ in font cmr12!
 
 ] [40] [41])
 
+Package natbib Warning: There were undefined citations.
+
+
+Package lastpage Warning: Rerun to get the references right on input line 71.
+
+
 AED: lastpage setting LastPage
 [42]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 70.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 70.
- (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 70.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 70.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 71.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 71.
+ (./thesis.aux
+
+Package natbib Warning: Citation(s) may have changed.
+(natbib)                Rerun to get citations correct.
+
+)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 71.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 71.
 
 
 Package rerunfilecheck Warning: File `thesis.out' has changed.
@@ -1209,26 +1457,26 @@ Package rerunfilecheck Warning: File `thesis.out' has changed.
 (rerunfilecheck)                or use package `bookmark'.
 
 Package rerunfilecheck Info: Checksums for `thesis.out':
-(rerunfilecheck)             Before: C0BB8A412C02B6B4F3A92D67A279E207;2112
-(rerunfilecheck)             After:  77C9CE0C30C2A21A45CFC053F298809B;2008.
+(rerunfilecheck)             Before: 53B77190C017BF63E53FBD3366274E5C;1495
+(rerunfilecheck)             After:  839D77A389D48C86A33BE77A3A86B133;2008.
 
 LaTeX Warning: There were undefined references.
 
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 70.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 71.
  ) 
 Here is how much of TeX's memory you used:
- 9823 strings out of 494888
- 168351 string characters out of 6179127
- 251250 words of memory out of 5000000
- 12747 multiletter control sequences out of 15000+600000
+ 9829 strings out of 494888
+ 168532 string characters out of 6179127
+ 248334 words of memory out of 5000000
+ 12749 multiletter control sequences out of 15000+600000
  13082 words of font info for 48 fonts, out of 8000000 for 9000
  38 hyphenation exceptions out of 8191
- 36i,11n,44p,453b,507s stack positions out of 5000i,500n,10000p,200000b,80000s
-pdfTeX warning (dest): name{section.5.4} has been referenced but does not exi
-st, replaced by a fixed one
+ 36i,13n,44p,453b,532s stack positions out of 5000i,500n,10000p,200000b,80000s
+pdfTeX warning (dest): name{page.ix} has been referenced but does not exist, 
+replaced by a fixed one
 
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/
 share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/
@@ -1245,10 +1493,10 @@ m/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10
 usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on thesis.pdf (51 pages, 3493712 bytes).
+Output written on thesis.pdf (50 pages, 3488330 bytes).
 PDF statistics:
- 759 PDF objects out of 1000 (max. 8388607)
- 608 compressed objects within 7 object streams
+ 623 PDF objects out of 1000 (max. 8388607)
+ 478 compressed objects within 5 object streams
  138 named destinations out of 1000 (max. 500000)
- 463 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 391 words of extra memory for PDF output out of 10000 (max. 10000000)
 
