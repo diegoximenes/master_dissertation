@@ -80,7 +80,7 @@ def get_ts_per_name(traceroute_type, ts_traceroute, dt_start, dt_end):
     return name_ts
 
 
-def plot_latencies_traceroute(dt_start, dt_end):
+def plot_latencies_traceroute(dt_start, dt_end, preprocess_args):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     in_path = "{}/prints/{}/filtered/traceroute_per_mac.csv".format(script_dir,
@@ -121,31 +121,43 @@ def plot_latencies_traceroute(dt_start, dt_end):
                                     format(dir_path, row["mac"],
                                            traceroute_path))
 
-                        name_ts[name].percentile_filter(win_len=13, p=0.5)
-                        plot_procedures.plot_ts(name_ts[name], out_path,
-                                                title="median filtered")
+                        ts_preprocessed = name_ts[name].copy()
+                        cp_utils.preprocess(ts_preprocessed, preprocess_args)
+
+                        plot_procedures.plot_ts_share_x(
+                            name_ts[name],
+                            ts_preprocessed,
+                            out_path,
+                            plot_type2="scatter",
+                            title1="raw",
+                            title2="median filtered",
+                            default_ylabel=True)
 
 
-def run_sequential():
+def run_sequential(preprocess_args):
     for dt_start, dt_end in utils.iter_dt_range():
-        plot_latencies_traceroute(dt_start, dt_end)
+        plot_latencies_traceroute(dt_start, dt_end, preprocess_args)
 
 
-def run_parallel():
+def run_parallel(preprocess_args):
     dt_ranges = list(utils.iter_dt_range())
-    fp = functools.partial(plot_latencies_traceroute)
+    fp = functools.partial(plot_latencies_traceroute,
+                           preprocess_args=preprocess_args)
     utils.parallel_exec(fp, dt_ranges)
 
 
-def run_single(dt_start, dt_end):
-    plot_latencies_traceroute(dt_start, dt_end)
+def run_single(dt_start, dt_end, preprocess_args):
+    plot_latencies_traceroute(dt_start, dt_end, preprocess_args)
 
 
 if __name__ == "__main__":
     dt_start = datetime.datetime(2016, 5, 1)
     dt_end = datetime.datetime(2016, 5, 11)
+    preprocess_args = {"filter_type": "percentile_filter",
+                       "win_len": 13,
+                       "p": 0.5}
 
-    parallel_args = {}
+    parallel_args = {"preprocess_args": preprocess_args}
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start,
                    "dt_end": dt_end}

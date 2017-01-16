@@ -1,3 +1,4 @@
+import copy
 import scipy.signal
 import numpy as np
 import rpy2.robjects as robjects
@@ -45,6 +46,17 @@ class TimeSeries:
 
                 if compressed:
                     self.compress()
+
+    def copy(self):
+        ts_copy = TimeSeries()
+        ts_copy.x = copy.deepcopy(self.x)
+        ts_copy.y = copy.deepcopy(self.y)
+        ts_copy.metric = self.metric
+        ts_copy.dt_start = self.dt_start
+        ts_copy.ts_type = self.ts_type
+        ts_copy.compressed = self.compressed
+        ts_copy.filters = copy.deepcopy(self.filters)
+        return ts_copy
 
     def read(self, in_path, metric, cross_traffic_thresh):
         raw_x, raw_y = read_input.get_raw(in_path, metric, self.dt_start,

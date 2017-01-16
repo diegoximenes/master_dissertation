@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 from collections import defaultdict
 from itertools import izip
+from operator import itemgetter
 
 script_dir = os.path.join(os.path.dirname(__file__), ".")
 base_dir = os.path.join(os.path.dirname(__file__), "../..")
@@ -49,39 +50,38 @@ def read_graph(dt_start, dt_end, server, traceroute_type):
     return g
 
 
-def all_clients_with_same_pattern(name, cp_dt, cp_type, str_dt, metric,
-                                  traceroute_type, server, hour_tol=4):
+def clients_with_same_pattern(name, cp_dt, cp_type, str_dt, metric,
+                              traceroute_type, server, eps_hours,
+                              min_fraction_of_clients):
     """
     by now only check if there if every client has at least one close
     change points with same pattern
     """
 
-    in_path = ("{}/plots/names/{}/{}/{}/{}/{}/cps_per_mac.csv".
+    in_path = ("{}/plots/names/{}/{}/{}/{}/{}/match_cps.csv".
                format(script_dir, str_dt, metric, traceroute_type, server,
                       name))
 
     df = pd.read_csv(in_path)
     for idx, row in df.iterrows():
-        match_row = False
-        for str_dt, curr_type_cp in izip(ast.literal_eval(row["cp_dts"]),
-                                         ast.literal_eval(row["type_cps"])):
-            dt = dt_procedures.from_strdt_to_dt(str_dt)
-            if ((cp_type == curr_type_cp) and
-                    dt_procedures.dt_is_close(dt, cp_dt, hour_tol)):
-                match_row = True
-        if not match_row:
-            return False
-    return True
+        curr_cp_dt_start = dt_procedures.from_strdt_to_dt(row["cp_dt_start"])
+        curr_cp_dt_end = dt_procedures.from_strdt_to_dt(row["cp_dt_end"])
+        curr_cp_dt = curr_cp_dt_start + (curr_cp_dt_end - curr_cp_dt_start) / 2
+        if (dt_procedures.dt_is_close(cp_dt, curr_cp_dt, eps_hours) and
+                (row["fraction_of_clients"] >= min_fraction_of_clients)):
+            return True
+    return False
 
 
 def analyse_path(path, cp_dt_start, cp_dt_end, cp_type, str_dt, metric,
-                 traceroute_type, server):
+                 traceroute_type, server, eps_hours, min_fraction_of_clients):
     cp_dt = cp_dt_start + (cp_dt_end - cp_dt_start) / 2
     for i, name in enumerate(path[1:]):
         if "embratel" in name:
             continue
-        if not all_clients_with_same_pattern(name, cp_dt, cp_type, str_dt,
-                                             metric, traceroute_type, server):
+        if not clients_with_same_pattern(name, cp_dt, cp_type, str_dt, metric,
+                                         traceroute_type, server, eps_hours,
+                                         min_fraction_of_clients):
                 return path[0:i + 1]
     return path
 
@@ -99,7 +99,7 @@ def get_path(g, u, str_dt, traceroute_type, server):
 
 
 def analyse_first_hop(g, u, is_zero_indegree, metric, server, dt_start, dt_end,
-                      traceroute_type):
+                      traceroute_type, eps_hours, min_fraction_of_clients):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     path, dir_path = get_path(g, u, str_dt, traceroute_type, server)
@@ -117,21 +117,24 @@ def analyse_first_hop(g, u, is_zero_indegree, metric, server, dt_start, dt_end,
         in_path = "{}/match_cps.csv".format(dir_path)
         df = pd.read_csv(in_path)
         for idx, row in df.iterrows():
-            if np.isclose(row["fraction_of_clients"], 1.0):
+            if row["fraction_of_clients"] >= min_fraction_of_clients:
                 cp_dt_start = dt_procedures.from_strdt_to_dt(
                     row["cp_dt_start"])
                 cp_dt_end = dt_procedures.from_strdt_to_dt(row["cp_dt_end"])
 
                 if is_zero_indegree:
-                    problem_location = map(ast.literal_eval,
-                                           analyse_path(path,
-                                                        cp_dt_start,
-                                                        cp_dt_end,
-                                                        row["cp_type"],
-                                                        str_dt,
-                                                        metric,
-                                                        traceroute_type,
-                                                        server))
+                    problem_location = \
+                        map(ast.literal_eval,
+                            analyse_path(path,
+                                         cp_dt_start,
+                                         cp_dt_end,
+                                         row["cp_type"],
+                                         str_dt,
+                                         metric,
+                                         traceroute_type,
+                                         server,
+                                         eps_hours,
+                                         min_fraction_of_clients))
                 else:
                     problem_location = ("already_analysed_during_zero_"
                                         "indegree_vertexes_analysis")
@@ -187,20 +190,39 @@ def aggregate_first_hop_not_zero_indegree_vertex(first_hops, g, metric, server,
     shutil.copy(out_path, out_path_name)
 
 
-def suffix_match(ll):
-    suffix = []
-    initial_len_ll = len(ll)
-    while len(ll) == initial_len_ll:
-        last = ll[0][-1]
-        ll_aux = []
-        for l in ll:
-            if last != l[-1]:
-                return suffix
-            if l[:-1]:
-                ll_aux.append(l[:-1])
-        ll = ll_aux
-        suffix.append(last)
-    return suffix
+def suffix_match(event):
+    def prefix_match(l1, l2):
+        l = []
+        for a, b in izip(l1, l2):
+            if a != b:
+                return l
+            else:
+                l.append(a)
+        return l
+
+    l = []
+    for vote in event["interval"]:
+        dic = {"vote": vote,
+               "reversed_problem_location":
+               list(reversed(vote["problem_locations"]))}
+        l.append(dic)
+    l.sort(key=itemgetter("reversed_problem_location"))
+
+    if l:
+        zero_indegree_vertexes = [l[0]["vote"]]
+        problem_location = l[0]["reversed_problem_location"]
+        for vote in l[1:]:
+            if problem_location[0] != vote["reversed_problem_location"][0]:
+                yield list(reversed(problem_location)), zero_indegree_vertexes
+
+                zero_indegree_vertexes = [vote["vote"]]
+                problem_location = vote["reversed_problem_location"]
+            else:
+                zero_indegree_vertexes.append(vote["vote"])
+                problem_location = \
+                    prefix_match(problem_location,
+                                 vote["reversed_problem_location"])
+        yield list(reversed(problem_location)), zero_indegree_vertexes
 
 
 def correlate_zero_indegree_vertexes(g, u_indegree, server, dt_start, dt_end,
@@ -214,18 +236,18 @@ def correlate_zero_indegree_vertexes(g, u_indegree, server, dt_start, dt_end,
         f.write("cp_dt_start,cp_dt_end,cp_type,traceroute_type,"
                 "cnt_vertexes_with_zero_indegree,suffix_match,"
                 "vertexes_with_zero_indegree\n")
-        for u in g:
-            l = []
-            if u_indegree[u] == 0:
-                in_path = ("{}/plots/names/{}/{}/{}/{}/{}/"
-                           "problem_location.csv".format(script_dir,
-                                                         str_dt,
-                                                         metric,
-                                                         traceroute_type,
-                                                         server, u))
-                df = pd.read_csv(in_path)
 
-                for cp_type in cp_utils.iter_cp_types():
+        for cp_type in cp_utils.iter_cp_types():
+            l = []
+            for u in g:
+                if u_indegree[u] == 0:
+                    in_path = ("{}/plots/names/{}/{}/{}/{}/{}/"
+                               "problem_location.csv".format(script_dir,
+                                                             str_dt,
+                                                             metric,
+                                                             traceroute_type,
+                                                             server, u))
+                    df = pd.read_csv(in_path)
                     for idx, row in df[df["cp_type"] == cp_type].iterrows():
                         cp_dt_start = dt_procedures.from_strdt_to_dt(
                             row["cp_dt_start"])
@@ -255,26 +277,22 @@ def correlate_zero_indegree_vertexes(g, u_indegree, server, dt_start, dt_end,
                         else:
                             l.append(dic)
 
-                    votes = \
-                        unsupervised_utils.multiple_inexact_voting(l,
-                                                                   eps_hours)
-                    for vote in votes:
-                        suffix_matches = suffix_match(
-                            map(lambda dic: dic["problem_locations"],
-                                vote["interval"]))
-                        if suffix_matches == []:
-                            suffix_matches = ["empty"]
-
-                        for dic in vote["interval"]:
-                            dic["dt"] = str(dic["dt"])
-                        f.write("{},{},{},{},{},\"{}\",\"{}\"\n".
-                                format(vote["l_dt"],
-                                       vote["r_dt"],
-                                       cp_type,
-                                       traceroute_type,
-                                       len(vote["interval"]),
-                                       suffix_matches,
-                                       vote["interval"]))
+            l.sort(key=itemgetter("dt"))
+            votes = \
+                unsupervised_utils.multiple_inexact_voting(l,
+                                                           eps_hours)
+            for event in votes:
+                for problem_location, votes in suffix_match(event):
+                    for dic in votes:
+                        dic["dt"] = str(dic["dt"])
+                    f.write("{},{},{},{},{},\"{}\",\"{}\"\n".
+                            format(event["l_dt"],
+                                   event["r_dt"],
+                                   cp_type,
+                                   traceroute_type,
+                                   len(votes),
+                                   problem_location,
+                                   votes))
 
     out_path_name = ("{}/plots/names/{}/{}/{}/{}".
                      format(script_dir, str_dt, metric, traceroute_type,
@@ -370,7 +388,8 @@ def get_first_hops(dt_start, dt_end, server, traceroute_type):
     return first_hops
 
 
-def localize_events(dt_start, dt_end, metric, eps_hours):
+def localize_events(dt_start, dt_end, metric, eps_hours,
+                    min_fraction_of_clients):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     in_path = "{}/prints/{}/filtered/traceroute_per_mac.csv".format(script_dir,
@@ -385,7 +404,8 @@ def localize_events(dt_start, dt_end, metric, eps_hours):
                 for u in g:
                     if u_indegree[u] == 0:
                         analyse_first_hop(g, u, True, metric, server, dt_start,
-                                          dt_end, traceroute_type)
+                                          dt_end, traceroute_type, eps_hours,
+                                          min_fraction_of_clients)
 
                 correlate_zero_indegree_vertexes(g, u_indegree, server,
                                                  dt_start, dt_end, metric,
@@ -396,7 +416,8 @@ def localize_events(dt_start, dt_end, metric, eps_hours):
                 for first_hop in first_hops:
                     if u_indegree[first_hop] != 0:
                         analyse_first_hop(g, u, False, metric, server,
-                                          dt_start, dt_end, traceroute_type)
+                                          dt_start, dt_end, traceroute_type,
+                                          eps_hours, min_fraction_of_clients)
                 aggregate_first_hop_not_zero_indegree_vertex(first_hops, g,
                                                              metric, server,
                                                              dt_start, dt_end,
@@ -409,30 +430,38 @@ def localize_events(dt_start, dt_end, metric, eps_hours):
                                                          metric, servers)
 
 
-def run_sequential(metric, eps_hours):
+def run_sequential(metric, eps_hours, min_fraction_of_clients):
     for dt_start, dt_end in utils.iter_dt_range():
-        print "dt_start={}, dt_end={}".format(dt_start, dt_end)
-        localize_events(dt_start, dt_end, metric, eps_hours)
+        localize_events(dt_start, dt_end, metric, eps_hours,
+                        min_fraction_of_clients)
 
 
-def run_parallel(metric, eps_hours):
+def run_parallel(metric, eps_hours, min_fraction_of_clients):
     dt_ranges = list(utils.iter_dt_range())
-    f_localize_events = functools.partial(localize_events, metric=metric,
-                                          eps_hours=eps_hours)
+    f_localize_events = functools.partial(
+        localize_events,
+        metric=metric,
+        eps_hours=eps_hours,
+        min_fraction_of_clients=min_fraction_of_clients)
     utils.parallel_exec(f_localize_events, dt_ranges)
 
 
-def run_single(dt_start, dt_end, metric, eps_hours):
-    localize_events(dt_start, dt_end, metric, eps_hours)
+def run_single(dt_start, dt_end, metric, eps_hours, min_fraction_of_clients):
+    localize_events(dt_start, dt_end, metric, eps_hours,
+                    min_fraction_of_clients)
 
 
 if __name__ == "__main__":
-    eps_hours = 4
+    min_fraction_of_clients = 0.75
+    eps_hours = 12
     metric = "throughput_up"
-    dt_start = datetime.datetime(2016, 10, 1)
-    dt_end = datetime.datetime(2016, 10, 11)
+    dt_start = datetime.datetime(2016, 5, 1)
+    dt_end = datetime.datetime(2016, 5, 11)
 
-    parallel_args = {"eps_hours": eps_hours, "metric": metric}
+    min_fraction_of_clients -= np.finfo(float).eps
+
+    parallel_args = {"eps_hours": eps_hours, "metric": metric,
+                     "min_fraction_of_clients": min_fraction_of_clients}
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start,
                    "dt_end": dt_end}

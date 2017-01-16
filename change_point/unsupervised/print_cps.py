@@ -29,7 +29,7 @@ def update_type_cps(type_cps, mean1, mean2, metric):
             type_cps.append("failure")
 
 
-def print_cps(dt_start, dt_end, dir_model, metric):
+def print_cps(dt_start, dt_end, dir_model, metric, preprocess_args):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     utils.create_dirs(["{}/prints/".format(script_dir),
@@ -64,6 +64,7 @@ def print_cps(dt_start, dt_end, dir_model, metric):
 
                 in_path = utils.get_in_path(server, mac, dt_start, dt_end)
                 ts = TimeSeries(in_path, metric, dt_start, dt_end)
+                cp_utils.preprocess(ts, preprocess_args)
 
                 seg_means = []
                 type_cps = []
@@ -84,11 +85,12 @@ def print_cps(dt_start, dt_end, dir_model, metric):
                                                               seg_means))
 
 
-def run_parallel(dir_model, metric):
+def run_parallel(dir_model, metric, preprocess_args):
     dt_ranges = list(utils.iter_dt_range())
     fp_print_cps = functools.partial(print_cps,
                                      dir_model=dir_model,
-                                     metric=metric)
+                                     metric=metric,
+                                     preprocess_args=preprocess_args)
     utils.parallel_exec(fp_print_cps, dt_ranges)
 
     fp_print_per_name = functools.partial(unsupervised_utils.print_per_name,
@@ -102,17 +104,17 @@ def run_parallel(dir_model, metric):
     utils.parallel_exec(fp_print_per_path, dt_ranges)
 
 
-def run_sequential(dir_model, metric):
+def run_sequential(dir_model, metric, preprocess_args):
     for dt_start, dt_end in utils.iter_dt_range():
-        print_cps(dt_start, dt_end, dir_model, metric)
+        print_cps(dt_start, dt_end, dir_model, metric, preprocess_args)
         unsupervised_utils.print_cps_per_name(dt_start, dt_end, metric,
                                               "cps_per_mac.csv")
         unsupervised_utils.print_cps_per_path(dt_start, dt_end, metric,
                                               "cps_per_mac.csv")
 
 
-def run_single(dir_model, metric, dt_start, dt_end):
-    print_cps(dt_start, dt_end, dir_model, metric)
+def run_single(dir_model, metric, dt_start, dt_end, preprocess_args):
+    print_cps(dt_start, dt_end, dir_model, metric, preprocess_args)
     unsupervised_utils.print_per_name(dt_start, dt_end, metric,
                                       "cps_per_mac.csv")
     unsupervised_utils.print_per_path(dt_start, dt_end, metric,
@@ -124,8 +126,12 @@ if __name__ == "__main__":
     dir_model = "seg_neigh"
     dt_start = datetime.datetime(2016, 5, 1)
     dt_end = datetime.datetime(2016, 5, 11)
+    preprocess_args = {"filter_type": "percentile_filter",
+                       "win_len": 13,
+                       "p": 0.5}
 
-    parallel_args = {"dir_model": dir_model, "metric": metric}
+    parallel_args = {"dir_model": dir_model, "metric": metric,
+                     "preprocess_args": preprocess_args}
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
     single_args.update(parallel_args)

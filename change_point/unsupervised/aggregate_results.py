@@ -12,14 +12,14 @@ def aggregate_first_hop_not_zero_indegree_vertex():
     out_path = ("{}/prints/problem_location_first_hop_not_zero_indegree_"
                 "vertex.csv".format(script_dir))
     with open(out_path, "w") as f:
-        f.write("str_dt,server,cp_dt_start,cp_dt_end,cp_type,"
+        f.write("metric,str_dt,server,cp_dt_start,cp_dt_end,cp_type,"
                 "fraction_of_clients,cnt_clients,clients,problem_location\n")
 
         for str_dt in os.listdir("{}/prints".format(script_dir)):
             if os.path.isdir("{}/prints/{}".format(script_dir, str_dt)):
                 for metric in os.listdir("{}/prints/{}/filtered".
                                          format(script_dir, str_dt)):
-                    if metric != "throughput_up":
+                    if metric == "graph":
                         continue
 
                     in_dir = "{}/prints/{}/filtered/{}/".format(script_dir,
@@ -30,8 +30,9 @@ def aggregate_first_hop_not_zero_indegree_vertex():
 
                         df = pd.read_csv(in_path)
                         for _, row in df.iterrows():
-                            l_format = "{},{},{},{},{},{},{},\"{}\",\"{}\"\n"
-                            f.write(l_format.format(str_dt,
+                            l_format = "{}" + ",{}" * 7 + ",\"{}\"" * 2 + "\n"
+                            f.write(l_format.format(metric,
+                                                    str_dt,
                                                     row["server"],
                                                     row["cp_dt_start"],
                                                     row["cp_dt_end"],
@@ -41,19 +42,22 @@ def aggregate_first_hop_not_zero_indegree_vertex():
                                                     row["clients"],
                                                     row["problem_location"]))
 
+    utils.sort_csv_file(out_path, ["metric", "str_dt", "metric", "server"],
+                        ascending=[True, True, True, True])
+
 
 def aggregate_correlation():
     out_path = ("{}/prints/problem_location_zero_indegree_vertexes_"
                 "correlation.csv".format(script_dir))
     with open(out_path, "w") as f:
-        f.write("str_dt,server,traceroute_type,cp_dt_start,cp_dt_end,cp_type,"
-                "cnt_vertexes_with_zero_indegree,suffix_match,"
+        f.write("metric,str_dt,server,traceroute_type,cp_dt_start,cp_dt_end,"
+                "cp_type,cnt_vertexes_with_zero_indegree,suffix_match,"
                 "vertexes_with_zero_indegree\n")
         for str_dt in os.listdir("{}/prints".format(script_dir)):
             if os.path.isdir("{}/prints/{}".format(script_dir, str_dt)):
                 for metric in os.listdir("{}/prints/{}/filtered".
                                          format(script_dir, str_dt)):
-                    if metric != "throughput_up":
+                    if metric == "graph":
                         continue
 
                     in_dir = "{}/prints/{}/filtered/{}/".format(script_dir,
@@ -63,8 +67,9 @@ def aggregate_correlation():
                                    "vertexes_correlation.csv".format(in_dir))
                         df = pd.read_csv(in_path)
                         for _, row in df.iterrows():
-                            l = "{},{},{},{},{},{},{},\"{}\",\"{}\"\n"
+                            l = "{},{},{},{},{},{},{},{},\"{}\",\"{}\"\n"
                             l = l.format(
+                                metric,
                                 str_dt,
                                 row["server"],
                                 row["traceroute_type"],
@@ -76,8 +81,9 @@ def aggregate_correlation():
                                 row["vertexes_with_zero_indegree"])
                             f.write(l)
     utils.sort_csv_file(out_path,
-                        ["cnt_vertexes_with_zero_indegree", "server"],
-                        ascending=[False, True])
+                        ["cnt_vertexes_with_zero_indegree", "metric", "str_dt",
+                         "metric", "server"],
+                        ascending=[False, True, True, True, True])
 
 
 def aggregate():

@@ -112,7 +112,7 @@ if __name__ == "__main__":
              "seg_model": "Normal",
              "min_seg_len": 5,
              "max_cps": 4}
-    metric = "throughput_up"
+    metric = "latency"
 
     parallel_args = {"cmp_class_args": cmp_class_args,
                      "preprocess_args": preprocess_args, "param": param,

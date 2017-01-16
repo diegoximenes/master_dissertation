@@ -68,47 +68,50 @@ if __name__ == "__main__":
     ############################
     # CHANGE POINT DETECTION PARAMETERS
     ############################
-    metric = "latency"
+    metric = "loss"
     dir_model = "seg_neigh"
     hours_tol = 12
 
     cmp_class_args = {"win_len": 15}
     preprocess_args, param = get_change_point_alg_params(metric, dir_model,
                                                          hours_tol)
+
+    min_fraction_of_clients = 0.85
     ############################
 
     sys.stdout = open(os.devnull, "w")
 
-    myprint("traceroute_exploratory_prints")
-    traceroute_exploratory_prints.run_parallel()
-
-    myprint("print_graph")
-    print_graph.run_parallel()
-
-    myprint("create_dataset_unsupervised")
-    create_dataset_unsupervised.run_parallel()
-
+    # myprint("traceroute_exploratory_prints")
+    # traceroute_exploratory_prints.run_parallel()
+    #
+    # myprint("print_graph")
+    # print_graph.run_parallel()
+    #
+    # myprint("create_dataset_unsupervised")
+    # create_dataset_unsupervised.run_parallel()
+    #
     myprint("change_point_alg")
     change_point_alg.run_parallel(cmp_class_args, preprocess_args, param,
                                   metric, seg_neigh.run)
 
     myprint("print_cps")
-    print_cps.run_parallel(dir_model, metric)
+    print_cps.run_parallel(dir_model, metric, preprocess_args)
 
     myprint("time_correlation")
     time_correlation.run_parallel(metric, hours_tol)
 
     # myprint("spatial_time_correlation")
-    # spatial_time_correlation.run_parallel(metric, hours_tol)
+    # spatial_time_correlation.run_parallel(metric, hours_tol,
+    #                                       min_fraction_of_clients)
 
     # myprint("plot_names")
-    # plot_names.run_parallel(metric)
+    # plot_names.run_parallel(metric, preprocess_args)
 
     myprint("plot_paths")
-    plot_paths.run_parallel(metric)
+    plot_paths.run_parallel(metric, preprocess_args)
 
     if metric == "latency":
         myprint("plot_latencies_traceroute")
-        plot_latencies_traceroute.run_parallel()
+        plot_latencies_traceroute.run_parallel(preprocess_args)
 
     sys.stdout = sys.__stdout__

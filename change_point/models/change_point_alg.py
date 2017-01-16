@@ -57,6 +57,8 @@ class ChangePointAlg:
                                           self.metric)
         pred = self.predict(ts_preprocessed)
         correct = cp_utils.from_str_to_int_list(row["change_points_ids"])
+        pred.sort()
+        correct.sort()
         conf = cmp_class.conf_mat(correct, pred, ts_preprocessed,
                                   cmp_class.match_id, **cmp_class_args)
         print "pred={}".format(pred)
@@ -64,11 +66,9 @@ class ChangePointAlg:
         print "conf={}".format(conf)
 
         # if is an unsupervised problem, plot the predicted cps in the ts
+        cp_to_print = pred
         if "unsupervised" in dataset:
             pred, correct = correct, pred
-            cp_to_print = correct
-        else:
-            cp_to_print = pred
 
         in_path, dt_start, dt_end = cp_utils.unpack_pandas_row(row)
 
@@ -77,7 +77,7 @@ class ChangePointAlg:
         self.plot(ts_preprocessed, ts_raw, correct, pred, conf, out_path)
 
         out_path = "{}.csv".format(out_path)
-        self.print_cp(ts_raw, cp_to_print, out_path)
+        self.print_cp(ts_preprocessed, cp_to_print, out_path)
 
     def plot_all(self, dataset, out_dir_path, cmp_class_args):
         train_path = "{}/change_point/input/{}/dataset.csv".format(base_dir,
@@ -100,10 +100,10 @@ class ChangePointAlg:
     def plot():
         pass
 
-    def print_cp(self, ts_raw, pred, out_path):
+    def print_cp(self, ts_preprocessed, pred, out_path):
         with open(out_path, "w") as f:
             f.write("dt_id,dt\n")
-            for dt_id, dt in zip(pred, np.asarray(ts_raw.x)[pred]):
+            for dt_id, dt in zip(pred, np.asarray(ts_preprocessed.x)[pred]):
                 f.write("{},{}\n".format(dt_id, dt))
 
 

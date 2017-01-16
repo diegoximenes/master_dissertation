@@ -16,7 +16,7 @@ import change_point.cp_utils.cp_utils as cp_utils
 import change_point.unsupervised.unsupervised_utils as unsupervised_utils
 
 
-def plot_per_path(dt_start, dt_end, metric, plot_cps=True):
+def plot_per_path(dt_start, dt_end, metric, preprocess_args, plot_cps=True):
     str_dt = utils.get_str_dt(dt_start, dt_end)
 
     utils.create_dirs(["{}/plots/".format(script_dir),
@@ -80,36 +80,39 @@ def plot_per_path(dt_start, dt_end, metric, plot_cps=True):
 
                         in_path = utils.get_in_path(row["server"], row["mac"],
                                                     dt_start, dt_end)
-                        ts_filter = TimeSeries(in_path, metric, dt_start,
-                                               dt_end)
-                        ts_filter.percentile_filter(win_len=13, p=0.5)
+                        ts = TimeSeries(in_path, metric, dt_start, dt_end)
+                        cp_utils.preprocess(ts, preprocess_args)
 
-                        plot_procedures.plot_ts(ts_filter, out_path,
+                        plot_procedures.plot_ts(ts, out_path,
                                                 dt_axvline=cp_dts,
                                                 title="median filtered")
 
 
-def run_parallel(metric):
+def run_parallel(metric, preprocess_args):
     dt_ranges = list(utils.iter_dt_range())
-    f_plot_per_path = functools.partial(plot_per_path, metric=metric)
+    f_plot_per_path = functools.partial(plot_per_path, metric=metric,
+                                        preprocess_args=preprocess_args)
     utils.parallel_exec(f_plot_per_path, dt_ranges)
 
 
-def run_sequential(metric):
+def run_sequential(metric, preprocess_args):
     for dt_start, dt_end in utils.iter_dt_range():
-        plot_per_path(dt_start, dt_end, metric)
+        plot_per_path(dt_start, dt_end, metric, preprocess_args)
 
 
-def run_single(metric, dt_start, dt_end):
+def run_single(metric, dt_start, dt_end, preprocess_args):
     plot_per_path(dt_start, dt_end, metric)
 
 
 if __name__ == "__main__":
-    metric = "latency"
     dt_start = datetime.datetime(2016, 5, 1)
     dt_end = datetime.datetime(2016, 5, 11)
+    metric = "latency"
+    preprocess_args = {"filter_type": "percentile_filter",
+                       "win_len": 13,
+                       "p": 0.5}
 
-    parallel_args = {"metric": metric}
+    parallel_args = {"metric": metric, "preprocess_args": preprocess_args}
     sequential_args = parallel_args
     single_args = {"dt_start": dt_start, "dt_end": dt_end}
     single_args.update(parallel_args)
