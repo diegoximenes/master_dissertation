@@ -1,8 +1,8 @@
 \select@language {english}
 \select@language {english}
 \select@language {english}
-\contentsline {chapter}{List of Figures}{vii}{chapter*.2}
-\contentsline {chapter}{List of Tables}{viii}{chapter*.3}
+\contentsline {chapter}{List of Figures}{viii}{chapter*.2}
+\contentsline {chapter}{List of Tables}{ix}{chapter*.3}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}Contributions}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}Dissertation Outline}{2}{section.1.2}
@@ -29,8 +29,8 @@
 \contentsline {section}{\numberline {4.7}Differences to Previous Systems}{32}{section.4.7}
 \contentsline {chapter}{\numberline {5}Results}{34}{chapter.5}
 \contentsline {section}{\numberline {5.1}Possible True Positive Examples}{35}{section.5.1}
-\contentsline {section}{\numberline {5.2}Possible False Negative Examples}{35}{section.5.2}
-\contentsline {section}{\numberline {5.3}Events Without Traceable Location}{35}{section.5.3}
-\contentsline {chapter}{\numberline {6}Conclusions}{36}{chapter.6}
-\contentsline {section}{\numberline {6.1}Future Work}{37}{section.6.1}
-\contentsline {chapter}{Bibliography}{39}{chapter*.24}
+\contentsline {section}{\numberline {5.2}Possible False Negative Examples}{36}{section.5.2}
+\contentsline {section}{\numberline {5.3}Events Without Traceable Location}{36}{section.5.3}
+\contentsline {chapter}{\numberline {6}Conclusions}{38}{chapter.6}
+\contentsline {section}{\numberline {6.1}Future Work}{39}{section.6.1}
+\contentsline {chapter}{Bibliography}{41}{chapter*.28}

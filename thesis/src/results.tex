@@ -46,53 +46,100 @@ several events, it was not possible to manually check all of them.
 \section{Possible True Positive Examples}
 \label{sec:possible_true_positive_examples}
 
-Figure~\ref{fig:ts_event_before_first_hop} shows the set of clients that belong
+Figure~\ref{fig:before_first_hop} shows the set of clients that belong
 to a specific user-group modeled by zero indegree vertex.
 
-The system identified a network event at time X, in which only subset of those
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[width=\textwidth]{./figures/results/correct_examples/before_first_hop/serverSDRDTCLDM012_mac64:66:B3:50:06:D4_dtstart2016-05-01_dtend2016-05-11.png}
+            \caption{Client 1.}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[width=\textwidth]{./figures/results/correct_examples/before_first_hop/serverSDRDTCLDM012_mac64:66:B3:A6:A9:70_dtstart2016-05-01_dtend2016-05-11.png}
+            \caption{Client 2.}
+        \end{subfigure}%
+    }
+    \caption{Before first hop.}
+\label{fig:before_first_hop}
+\end{figure}%
+
+The system identified a network event at time X, in which only 2 of 4 clients
+of the associated zero in degree vertex
 clients perceived the event. Therefore, by the estabilished suppositions, they
 share a physical equipment before the first hop, that caused this event.
 
-Table~\ref{table:statistics_before} summarizes the number of cases with
-this kind of outcome. Inconclusive events weren't detected. The ``single
-client''
-column represent the events in which only one customer perceived it.
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.65\textwidth}
+            \includegraphics[width=\textwidth]{./figures/results/correct_examples/zero_indegree_correlation/dtstart2016-06-01_dtend2016-06-11_SOCDTCPEV01_traceroute_compress_embratel_graph_anonymized.png}
+            \caption{Topology.}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.45\textwidth}
+            \includegraphics[width=\textwidth]{./figures/results/correct_examples/zero_indegree_correlation/serverSOCDTCPEV01_mac64:66:B3:4F:EA:E2_dtstart2016-06-01_dtend2016-06-11.png}
+            \caption{Client 1.}
+        \end{subfigure}%
+    }
+    \caption{Zero indegree correlation.}
+\label{fig:zero_indegreee_correlation}
+\end{figure}%
 
-Figure~\ref{fig:subgraph_event_first_hop_onward}, presents a subgraph of the
-user-groups structure for a specific server. Considering a specific network
-event, the red vertexes represent user-groups in which all end-users detected
-this event. Figure~\ref{fig:ts_event_prefix_detected} show a subset of client
-that
-belong, to vertex X. The other customers of this user-group also have the same
-change point pattern, but were not presented due to big number of users.
-Figure~\ref{fig:ts_event_prefix_didnt_detect} show a subset of users that
-belong to X but don't belong to Y.
-
-Since all vertexes that belong to X also belong to X, it is not possible to
-verify in which location the event can be placed. From the histogram in
-Figure~\ref{fig:indegree_distribution}, it is possible to note that the one
-indegree vertexes, which characterize this situation, are usual.
-
-Table~\ref{table:statistic_prefix} summarizes the number of outcomes in which
-the event is located in a prefix of the path between a zero indegree vertex to
-the server vertex.
-
-WRITE ABOUT CORRELATION BETWEEN PATHS
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.65\textwidth}
+            \includegraphics[width=\textwidth]{./figures/results/correct_examples/zero_indegree_single/dtstart2016-06-21_dtend2016-07-01_GRSCBCSRV01_traceroute_compress_embratel_filter_graph_anonymized.png}
+            \caption{Topology.}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.45\textwidth}
+            \includegraphics[width=\textwidth]{./figures/results/correct_examples/zero_indegree_single/serverGRSCBCSRV01_mac64:66:B3:50:05:56_dtstart2016-06-21_dtend2016-07-01.png}
+            \caption{Client 1.}
+        \end{subfigure}%
+    }
+    \caption{Zero indegree path analysis.}
+\label{fig:zero_indegreee_without_correlation}
+\end{figure}%
 
 \section{Possible False Negative Examples}
 \label{sec:possible_false_negative_examples}
 
-Figure~\ref{fig:false_negative} show the detected change points for of all
-clients that belong to a specific vertex with zero indegree.
+17 clients with this pattern
 
-It is possible to visually, note that, all time series changed it pattern at
-time X. However, the system was unable to detect this change on client X.
-This exemplify that the supposition that the change point algorithm is able to
-detect all clients affected by a network event or no client is detected is a
-strong supposition. Perhaps, relaxing this restriction, to instead of only
-considering all clients in a user-group with the same pattern, to consider a
-big fraction with the same pattern, can reduce this problem. However, since the
-current dataset is small, this approach was not done.
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[width=\textwidth]{./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV16_mac64:66:B3:A6:AB:80_dtstart2016-05-01_dtend2016-05-11.png}
+            \caption{Client 1.}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[width=\textwidth]{./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV16_mac64:66:B3:A6:AC:40_dtstart2016-05-01_dtend2016-05-11.png}
+            \caption{Client 2.}
+        \end{subfigure}%
+    }
+    \caption{Untraceable location.}
+\label{fig:untraceable_location}
+\end{figure}%
 
 \section{Events Without Traceable Location}
 \label{sec:events_without_traceable_location}
+
+In this example the traffic of the clients does'nt go to the Tier-2 ISP.
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[width=\textwidth]{./figures/results/wrong_examples/untraceable_example/serverBHZDTCLDM062_mac64:66:B3:50:00:68_dtstart2016-06-01_dtend2016-06-11.png}
+            \caption{Client 1.}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.5\textwidth}
+            \includegraphics[width=\textwidth]{./figures/results/wrong_examples/untraceable_example/serverBHZDTCLDM062_mac64:66:B3:50:00:B6_dtstart2016-06-01_dtend2016-06-11.png}
+            \caption{Client 2.}
+        \end{subfigure}%
+    }
+    \caption{Untraceable location.}
+\label{fig:untraceable_location}
+\end{figure}%
