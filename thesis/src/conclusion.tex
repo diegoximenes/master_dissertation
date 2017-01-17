@@ -1,7 +1,7 @@
 \chapter{Conclusions}
 \label{chap:conclusion}
 
-Considering the specific ISP's topology, and the current end-to-end measurement
+Considering the specific \gls*{isp}'s topology, and the current end-to-end measurement
 methodology, this dissertation proposes a data analytics framework to
 detect and localize network events.
 For such purpose, the mechanism tracks
@@ -33,9 +33,9 @@ Besides the data availability, the current measurement process imposed
 several restrictions to this project.
 In order to better explore the proposed solution,
 a further continuation of this project
-would require a stronger partnership with the ISP,
+would require a stronger partnership with the \gls*{isp},
 and also flexibility to adapt the measurement software.
-However, this work can be used as a first guide to TGR's and ISP's engineers.
+However, this work can be used as a first guide to TGR's and \gls*{isp}'s engineers.
 
 \section{Future Work}
 
@@ -66,14 +66,14 @@ the proposed mechanism can be extended
 to use internal network devices information, such as signal-to-noise ratio.
 
 \item
-A network failure events dataset can be built with ISP's auxiliary data.
+A network failure events dataset can be built with \gls*{isp}'s auxiliary data.
 As an example, customers complaints gathered from call centers can be used to,
 during a specific time period, infer clients affected by a QoE deterioration,
 which can then be translated to true network failure events.
 Additionally, it is possible to use records from current failure detection
-methods deployed by the ISP, such as manual inspection, or through equipments
+methods deployed by the \gls*{isp}, such as manual inspection, or through equipments
 that are able to self report specific faults.
-However, through preliminary talks with ISP's engineers,
+However, through preliminary talks with \gls*{isp}'s engineers,
 both databases are noisy, and mining useful information
 from them can be a challenging task.
 For instance, some devices flaws are manually
@@ -83,7 +83,7 @@ considerably different from their true occurrence time.
 As stated in Chapter~\ref{chap:methodology}, a dataset could open new
 supervised learning possibilities to the change point detection problem, such
 as hyperparameter optimization and model selection.
-Besides, since the Tier-2 ISP is not a project partner, this kind of data from
+Besides, since the Tier-2 \gls*{isp} is not a project partner, this kind of data from
 it's infrastuture may not be available.
 
 \item
@@ -94,13 +94,13 @@ hyperparameters couldn't be optimized, hence, those comparisons could reach
 wrong conclusions.
 
 \item
-A deeper knowledge of the Tier-2 ISP's infrastructure
+A deeper knowledge of the Tier-2 \gls*{isp}'s infrastructure
 can be used to model the Tier-2 network with finer granularity in the Spatial
 Correlation procedure, which can improve the system's event localization
 precision.
 
 \item
-It is planned in the ISP's roadmap to increase the number of tracked customers.
+It is planned in the \gls*{isp}'s roadmap to increase the number of tracked customers.
 In this case, the system's computational performance can benefit from data
 aggregation techniques, as it was done in Argus.
 Besides, this increase will naturally improve the internal network equipments

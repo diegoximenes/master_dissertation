@@ -10,7 +10,7 @@ and the proposed system is compared with previous projects.
 The time series used in this work represent network end-to-end measures of a
 cable-television infrastructure, which runs DOCSIS with asymmetric download and
 upload bandwidths. A home router connected to a cable modem communicates
-with a server strategically located by the ISP\@. Each server is responsible
+with a server strategically located by the \gls*{isp}\@. Each server is responsible
 for measurements of several end-users.
 Measurements are triggered in
 each home router every half hour and, by the end of every day,
@@ -18,7 +18,7 @@ the results are transferred to a database.
 The software responsible for these procedures was
 developed by TGR (a startup at UFRJ),
 and is spread over approximately X thousand customers of a major Brazilian
-Tier-3 ISP\@.
+Tier-3 \gls*{isp}\@.
 
 To measure the round
 trip packet loss fraction and the RTT between the home router and the associated
@@ -37,7 +37,7 @@ is presented a preliminary descriptive investigation of these metrics.
 
 The resulted time series are unevenly spaced due to a range of reasons. First,
 measurements are initiated only if the residential link is not under use by the
-ISP customer. Also, the client may have no Internet connection to start a
+\gls*{isp} customer. Also, the client may have no Internet connection to start a
 measurement, or even be without electrical energy. Other details about the
 measurement software are presented during the text, as they are needed.
 
@@ -102,24 +102,24 @@ This is better explained in Section~\ref{sec:spatial_time_correlation}.
 
 This method provides the necessary information to check which network equipment
 are shared by end-users that perceive the same network event.
-The developed strategies were guided by the specific ISP's topology.
+The developed strategies were guided by the specific \gls*{isp}'s topology.
 
 The server position relative to the end-user
 can be categorized in two contexts.
 In the OFF-NET case, the traffic between them
-goes through a Tier-2 ISP\@.
+goes through a Tier-2 \gls*{isp}\@.
 In the ON-NET case, the traffic
-doesn't leave the Tier-3 ISP infrastructure.
-The latter situation represents a simpler IP topology, since the Tier-3 ISP
+doesn't leave the Tier-3 \gls*{isp} infrastructure.
+The latter situation represents a simpler IP topology, since the Tier-3 \gls*{isp}
 uses static routing and
 doesn't applies load balancing nor MPLS, techniques that are usual in the Tier-2
-ISP network.
+\gls*{isp} network.
 
 Then, considering measurements against a single server and the ON-NET
 case, paths from end-users to the server form a hierarchically
 structured topology, which is a required design to be consumed by the
 Spatial Time Correlation procedure~\ref{sec:spatial_time_correlation}.
-This work doesn't have access to the ISP network
+This work doesn't have access to the \gls*{isp} network
 topology, therefore, this structure is reconstructed through traceroutes.
 In this context, each equipment that responds to traceroute
 pings is used as an user-group.
@@ -134,7 +134,7 @@ user-groups are defined by their reported IP and the first public IP that
 appears from their hop onward. Additionally, there are CMTSs
 configured to not answer traceroute pings.
 
-In the OFF-NET case, due to the load balancing applied by the Tier-2 ISP,
+In the OFF-NET case, due to the load balancing applied by the Tier-2 \gls*{isp},
 the traceroute reconstruction doesn't lead in a hierarchical topology.
 Routers can implement three types of load balancing
 policies~\cite{avoiding_traceroute_anomalies_with_paris_traceroute}.
@@ -164,10 +164,10 @@ time, and considering that different measurements types use distinct ports,
 the
 path followed by traceroute packets can be different from the path followed by
 the QoS measurements packets. Then, in this scenario, even with static paths in
-the Tier-2 ISP network, the correlation between traceroutes
+the Tier-2 \gls*{isp} network, the correlation between traceroutes
 results with end-to-end metrics can reach wrong conclusions.
 
-Therefore, this work supposes that the Tier-2 ISP only applies per packet load
+Therefore, this work supposes that the Tier-2 \gls*{isp} only applies per packet load
 balancing, which is modeled here as a random strategy. With this hypothesis,
 if two end-users are geographically near, then it is likely that their packets
 traverse in the same set of routers in the Tier-2 network. This implies that if
@@ -176,13 +176,13 @@ end-users perceive the event. This is a important consequence explored in
 Section~\ref{sec:spatial_time_correlation}.
 
 To handle the OFF-NET case, sequential hops related to
-the Tier-2 ISP are compressed to a single hop.
+the Tier-2 \gls*{isp} are compressed to a single hop.
 As an example, the path (Tier-3 Router 1, Tier-2 Router 1, Tier-2 Router 2,
 Tier-3 Router 2, Server) is
 transformed to (Tier-3 Router 1, Tier-2, Tier-3 Router 2, Server).
 In general, this process conducts to a hierarchical topology.
-The exception occurs when the Tier-2 ISP has output connections to
-different routers of the Tier-3 ISP in the same network region.
+The exception occurs when the Tier-2 \gls*{isp} has output connections to
+different routers of the Tier-3 \gls*{isp} in the same network region.
 However, this is an unusual situation in
 the current dataset, and therefore, was removed from the analysis.
 The distinction between
@@ -419,7 +419,7 @@ The previous analysis can't be fully applied in situations with the Tier-2
 user-group.
 As an example, suppose two geographically distant end-users in an OFF-NET case.
 The packets from these two users can go through completely different routers in
-the Tier-2 ISP\@. Then, it is possible that an event in the Tier-2 ISP only
+the Tier-2 \gls*{isp}\@. Then, it is possible that an event in the Tier-2 \gls*{isp} only
 affects one of the users, which contradicts one of the established suppositions.
 To overcome this issue, when analyzing a path, if an event can be located in the
 previous hop of the Tier-2 user-group, then the event can also be located at
