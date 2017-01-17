@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.9.8)  17 JAN 2017 18:11
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.9.8)  17 JAN 2017 18:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -763,11 +763,6 @@ Underfull \hbox (badness 3386) in paragraph at lines 42--42
 [2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 42--42
-[]\OT1/cmr/m/n/12 Event Detection and Localization in Computer
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 42--42
 \OT1/cmr/m/n/12 Networks Using End-to-End Measurements/Diego
  []
@@ -1646,7 +1641,7 @@ amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on thesis.pdf (54 pages, 3797712 bytes).
+Output written on thesis.pdf (54 pages, 3797775 bytes).
 PDF statistics:
  809 PDF objects out of 1000 (max. 8388607)
  635 compressed objects within 7 object streams
