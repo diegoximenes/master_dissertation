@@ -28,9 +28,9 @@
 \contentsline {section}{\numberline {4.6}Change Point Detection Issues}{26}{section.4.6}
 \contentsline {section}{\numberline {4.7}Differences to Previous Systems}{32}{section.4.7}
 \contentsline {chapter}{\numberline {5}Results}{34}{chapter.5}
-\contentsline {section}{\numberline {5.1}Possible True Positive Examples}{35}{section.5.1}
-\contentsline {section}{\numberline {5.2}Possible False Negative Examples}{36}{section.5.2}
-\contentsline {section}{\numberline {5.3}Events Without Traceable Location}{36}{section.5.3}
-\contentsline {chapter}{\numberline {6}Conclusions}{38}{chapter.6}
-\contentsline {section}{\numberline {6.1}Future Work}{39}{section.6.1}
-\contentsline {chapter}{Bibliography}{41}{chapter*.28}
+\contentsline {section}{\numberline {5.1}Possible Correct Outcomes}{34}{section.5.1}
+\contentsline {section}{\numberline {5.2}Possible Wrong Outcomes}{36}{section.5.2}
+\contentsline {section}{\numberline {5.3}Final Remarks}{38}{section.5.3}
+\contentsline {chapter}{\numberline {6}Conclusions}{39}{chapter.6}
+\contentsline {section}{\numberline {6.1}Future Work}{40}{section.6.1}
+\contentsline {chapter}{Bibliography}{42}{chapter*.29}
