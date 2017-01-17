@@ -1,0 +1,10 @@
+digraph {
+    rankdir=BT
+    "A" -> "B"
+    "C" -> "B"
+    "B" -> "Tier-2"
+    "Tier-2" -> "Server"
+    "D" -> "E"
+    "F" -> "E"
+    "E" -> "Server"
+}
