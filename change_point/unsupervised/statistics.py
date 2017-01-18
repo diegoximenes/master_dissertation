@@ -70,14 +70,10 @@ def basic_statistics_per_batch():
                 cnt_clients = 0
                 cnt_valid_clients = 0
 
-                if "12-31" not in str_dt:
-                    continue
-
                 in_path = ("{}/prints/{}/filtered/traceroute_per_mac.csv".
                            format(script_dir, str_dt))
                 df = pd.read_csv(in_path)
                 for _, row in df.iterrows():
-                    print "oi"
                     cnt_clients += 1
                     for traceroute_type in \
                             unsupervised_utils.iter_traceroute_types():
@@ -89,7 +85,6 @@ def basic_statistics_per_batch():
                             servers.add(row["server"])
                             cnt_valid_clients += 1
                             break
-                print servers
                 cnt_servers = len(servers)
 
                 l = "{}" + ",{}" * 3 + "\n"
@@ -101,7 +96,7 @@ def basic_statistics_per_batch():
 
 
 def statistics():
-    # problem_location_statistics()
+    problem_location_statistics()
     basic_statistics_per_batch()
 
 
