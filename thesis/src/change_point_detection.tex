@@ -10,6 +10,20 @@ series is missing, the target statistical properties can be considered
 subjective, bringing difficulties not only in the detection phase but also in
 the problem formalization.
 
+The choice of detecting events through change points was motivated in a
+visual inspection of the time series.
+It was noticed that statistical pattern changes, such as in the underlying
+distribution, persist for long time periods.
+In contrast, Argus applies an anomaly detection procedure.
+The difference between
+these two problems is subtle, and can be fuzzy in the literature. The
+anomaly detection assumes that a standard pattern is already known or
+is identified by the procedure, then the goal is to find when the data
+stream
+deviates from it's standard. The change point detection only seeks for
+points where the statistical properties change, and doesn't take into
+consideration a standard time series behavior.
+
 In this context, this chapter studies the problem and briefly discusses
 several change point detection algorithms. The literature of this area is
 extensive, and it is common to find methods that presents a poor performance

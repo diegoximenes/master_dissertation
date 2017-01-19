@@ -699,15 +699,7 @@ series. This strategy was not applied in this project,
 since the finer granularity requires more time series to be spread in different
 network locations, and the current dataset has a low number of end-users.
 
-To detect faults, Argus applies an anomaly detection procedure, but the present
-work uses a change point detection method. The difference between
-these two problems is subtle, and can be fuzzy in the literature. The
-anomaly detection assumes that a standard pattern is already known or
-is identified by the procedure, then the goal is to find when the data
-stream
-deviates from it's standard. The change point detection only seeks for
-points where the statistical properties change, and doesn't take into
-consideration a standard time series behavior.
-
 Additionally, beyond the network edge point of view, Argus and NetNorad
 uses some internal network information, which is absent in the present work.
+Besides, Argus uses anomaly detection, while this work deploys change point
+detection.
