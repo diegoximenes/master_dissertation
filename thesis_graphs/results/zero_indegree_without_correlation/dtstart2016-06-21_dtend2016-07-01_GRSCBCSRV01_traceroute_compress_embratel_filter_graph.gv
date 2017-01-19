@@ -1,0 +1,11 @@
+digraph {
+   "((u'b3eb7001.virtua.com.br', u'179.235.112.1'), (u'b3eb7001.virtua.com.br', u'179.235.112.1'))" -> "((u'c92ef067.virtua.com.br', u'201.46.240.103'), (u'c92ef067.virtua.com.br', u'201.46.240.103'))"
+   "((u'b3eb7c01.virtua.com.br', u'179.235.124.1'), (u'b3eb7c01.virtua.com.br', u'179.235.124.1'))" -> "((u'c92ef067.virtua.com.br', u'201.46.240.103'), (u'c92ef067.virtua.com.br', u'201.46.240.103'))"
+   "((u'bbb6d801.virtua.com.br', u'187.182.216.1'), (u'bbb6d801.virtua.com.br', u'187.182.216.1'))" -> "((u'c92ef067.virtua.com.br', u'201.46.240.103'), (u'c92ef067.virtua.com.br', u'201.46.240.103'))"
+   "((u'bb169c01.virtua.com.br', u'187.22.156.1'), (u'bb169c01.virtua.com.br', u'187.22.156.1'))" -> "((u'c92ef067.virtua.com.br', u'201.46.240.103'), (u'c92ef067.virtua.com.br', u'201.46.240.103'))"
+   "((u'c92ef067.virtua.com.br', u'201.46.240.103'), (u'c92ef067.virtua.com.br', u'201.46.240.103'))" -> "(('GRSCBCSRV01', 'GRSCBCSRV01'), ('GRSCBCSRV01', 'GRSCBCSRV01'))"
+   "((u'b3eb6e01.virtua.com.br', u'179.235.110.1'), (u'b3eb6e01.virtua.com.br', u'179.235.110.1'))" -> "((u'c92ef067.virtua.com.br', u'201.46.240.103'), (u'c92ef067.virtua.com.br', u'201.46.240.103'))"
+   "((u'b3eb7201.virtua.com.br', u'179.235.114.1'), (u'b3eb7201.virtua.com.br', u'179.235.114.1'))" -> "((u'c92ef067.virtua.com.br', u'201.46.240.103'), (u'c92ef067.virtua.com.br', u'201.46.240.103'))"
+   "((u'bb160001.virtua.com.br', u'187.22.0.1'), (u'bb160001.virtua.com.br', u'187.22.0.1'))" -> "(('GRSCBCSRV01', 'GRSCBCSRV01'), ('GRSCBCSRV01', 'GRSCBCSRV01'))"
+   "((u'bb16d401.virtua.com.br', u'187.22.212.1'), (u'bb16d401.virtua.com.br', u'187.22.212.1'))" -> "((u'c92ef067.virtua.com.br', u'201.46.240.103'), (u'c92ef067.virtua.com.br', u'201.46.240.103'))"
+}

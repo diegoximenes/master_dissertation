@@ -2,7 +2,7 @@
 \select@language {english}
 \select@language {english}
 \contentsline {chapter}{List of Figures}{viii}{chapter*.2}
-\contentsline {chapter}{List of Tables}{ix}{chapter*.3}
+\contentsline {chapter}{List of Tables}{x}{chapter*.3}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}Contributions}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}Dissertation Outline}{2}{section.1.2}
@@ -28,9 +28,9 @@
 \contentsline {section}{\numberline {4.6}Change Point Detection Issues}{26}{section.4.6}
 \contentsline {section}{\numberline {4.7}Differences to Previous Systems}{32}{section.4.7}
 \contentsline {chapter}{\numberline {5}Results}{34}{chapter.5}
-\contentsline {section}{\numberline {5.1}Possible Correct Outcomes}{34}{section.5.1}
-\contentsline {section}{\numberline {5.2}Possible Wrong Outcomes}{36}{section.5.2}
-\contentsline {section}{\numberline {5.3}Final Remarks}{38}{section.5.3}
-\contentsline {chapter}{\numberline {6}Conclusions}{39}{chapter.6}
-\contentsline {section}{\numberline {6.1}Future Work}{40}{section.6.1}
-\contentsline {chapter}{Bibliography}{42}{chapter*.29}
+\contentsline {section}{\numberline {5.1}Possible Correct Outcomes}{35}{section.5.1}
+\contentsline {section}{\numberline {5.2}Possible Incorrect Outcomes}{36}{section.5.2}
+\contentsline {section}{\numberline {5.3}Final Remarks}{40}{section.5.3}
+\contentsline {chapter}{\numberline {6}Conclusions}{43}{chapter.6}
+\contentsline {section}{\numberline {6.1}Future Work}{44}{section.6.1}
+\contentsline {chapter}{Bibliography}{46}{chapter*.34}

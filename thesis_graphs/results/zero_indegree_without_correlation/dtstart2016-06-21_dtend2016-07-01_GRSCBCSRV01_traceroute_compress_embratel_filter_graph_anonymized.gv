@@ -1,0 +1,23 @@
+digraph {
+    rankdir=BT
+    "A" -> "H"
+    "B" -> "H"
+    "C" -> "H"
+    "D" -> "H"
+    "E" -> "H"
+    "F" -> "H"
+    "G" -> "H"
+    "H" -> "Server"
+    "I" -> "Server"
+
+    "I" [label="I, 0/1 = 0.0"]
+    "A" [label="A, 0/1 = 0.0"]
+    "B" [label="B, 0/2 = 0.0"]
+    "C" [label="C, 0/2 = 0.0"]
+    "D" [label="D, 0/1 = 0.0"]
+    "E" [label="E, 0/1 = 0.0"]
+    "F" [label="F, 0/1 = 0.0"]
+    "G" [label="G, 2/2 = 1.0", style=filled, fillcolor=gray]
+    "H" [label="H, 2/15 = 0.13"]
+    "Server" [label="Server, 2/16 = 0.125"]
+}
