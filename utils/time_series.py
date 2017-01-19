@@ -53,6 +53,7 @@ class TimeSeries:
         ts_copy.y = copy.deepcopy(self.y)
         ts_copy.metric = self.metric
         ts_copy.dt_start = self.dt_start
+        ts_copy.dt_end = self.dt_end
         ts_copy.ts_type = self.ts_type
         ts_copy.compressed = self.compressed
         ts_copy.filters = copy.deepcopy(self.filters)

@@ -75,6 +75,8 @@ def get_ts_per_name(traceroute_type, ts_traceroute, dt_start, dt_end):
                     mean_latency = sum_latency / cnt_latency
                 else:
                     continue
+                name_ts[name].dt_start = ts_traceroute.dt_start
+                name_ts[name].dt_end = ts_traceroute.dt_end
                 name_ts[name].x.append(ts_traceroute.x[i])
                 name_ts[name].y.append(mean_latency)
     return name_ts
@@ -124,14 +126,17 @@ def plot_latencies_traceroute(dt_start, dt_end, preprocess_args):
                         ts_preprocessed = name_ts[name].copy()
                         cp_utils.preprocess(ts_preprocessed, preprocess_args)
 
-                        plot_procedures.plot_ts_share_x(
-                            name_ts[name],
-                            ts_preprocessed,
-                            out_path,
-                            plot_type2="scatter",
-                            title1="raw",
-                            title2="median filtered",
-                            default_ylabel=True)
+                        # plot_procedures.plot_ts_share_x(
+                        #     name_ts[name],
+                        #     ts_preprocessed,
+                        #     out_path,
+                        #     plot_type2="scatter",
+                        #     title1="raw",
+                        #     title2="median filtered",
+                        #     default_ylabel=True)
+                        ts_preprocessed.metric = "latency"
+                        plot_procedures.plot_ts(ts_preprocessed, out_path,
+                                                title="median filtered")
 
 
 def run_sequential(preprocess_args):
@@ -151,8 +156,8 @@ def run_single(dt_start, dt_end, preprocess_args):
 
 
 if __name__ == "__main__":
-    dt_start = datetime.datetime(2016, 5, 1)
-    dt_end = datetime.datetime(2016, 5, 11)
+    dt_start = datetime.datetime(2016, 6, 1)
+    dt_end = datetime.datetime(2016, 6, 11)
     preprocess_args = {"filter_type": "percentile_filter",
                        "win_len": 13,
                        "p": 0.5}
