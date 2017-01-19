@@ -1,8 +1,6 @@
 \chapter{Methodology}
 \label{chap:methodology}
 
-DISCONSIDER LINK FAILURES
-
 This chapter describes the proposed data analytics workflow.
 Besides, the QoS data gathering procedures are briefly presented,
 and the proposed system is compared with previous projects.
@@ -12,28 +10,29 @@ and the proposed system is compared with previous projects.
 The time series used in this work represent network end-to-end measures of a
 cable-television infrastructure, which runs DOCSIS with asymmetric download and
 upload bandwidths. A home router connected to a cable modem communicates
-with a server strategically located by the \gls*{isp}\@. Each server is responsible
-for measurements of several end-users.
+with a server strategically located by the \gls*{isp}.
+Each server is responsible for measurements of several end-users.
 Measurements are triggered in
 each home router every half hour and, by the end of every day,
 the results are transferred to a database.
 The software responsible for these procedures was
 developed by TGR (a startup at UFRJ),
-and is spread over approximately X thousand customers of a major Brazilian
-Tier-3 \gls*{isp}\@.
+and is spread over approximately four thousand customers of a major Brazilian
+Tier-3 \gls*{isp}.
 
 To measure the round
-trip packet loss fraction and the RTT between the home router and the associated
-server, the
-home router sends a train of short UDP packets, and the server bounces back
-them. The data here presented considers a train of 100 UDP packets of 32 bytes,
+trip packet loss fraction and the RTT between the end-user and the associated
+server, the home router sends a train of short UDP packets, and the server
+bounces back them.
+The final RTT is the average of the individual packets' RTTs.
+The data here presented considers a train of 100 UDP packets of 32 bytes,
 separated by 1 millisecond.
 Maximum achievable upstream throughput is measured by overflowing the upload
-links with parallel TCP data transfers from the end-user to the
-server.
-Also, the traceroutes from the end-users
-to the respective servers are collected with the same frequency. Traceroutes
-from servers to end-users are not gathered.
+links with parallel TCP data transfers from the home router to the server.
+Traceroutes from the end-users to the respective servers are collected with
+the same frequency.
+The ping packets used in this process is also used to infer RTT per hop.
+Traceroutes from servers to end-users are not gathered.
 In~\cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil}
 is presented a preliminary descriptive investigation of these metrics.
 
@@ -129,12 +128,14 @@ An user-group is formed by all end-users in which traceroutes contain the
 associated network equipment.
 
 The first hop of the traceroutes, which corresponds to the home gateway, is
-removed from the analysis. Also, CMTSs are reported with their private IPs,
-since they are in the same subnetwork of the end-users.
-Therefore, to differentiate distinct CMTSs, the
-user-groups are defined by their reported IP and the first public IP that
-appears from their hop onward. Additionally, there are CMTSs
-configured to not answer traceroute pings.
+removed from the analysis.
+Additionally, CMTSs configured to answer traceroute pings are reported
+with private IPs,
+since they are located in the same subnetwork of the home router.
+Besides, due to multiple network interfaces, these equipments can be related
+to different IPs.
+Therefore, considering the lack of a private IP to name mapping, the CMTSs
+were also discarded.
 
 In the OFF-NET case, due to the load balancing applied by the Tier-2 \gls*{isp},
 the traceroute reconstruction doesn't lead in a hierarchical topology.
@@ -191,11 +192,8 @@ The distinction between
 Tier-3 and Tier-2 hops is made through the investigation of hop names.
 
 Figure~\ref{fig:real_graph} presents an example of the reconstructed
-topology. The equipments were anonymised. The ``Tier-2'' and ``Server''
-user-groups are self explanatory. The others are represented by a tuple, in
-which the first field indicates the reported IP in the traceroute, and the
-second specifies the first hop, from the associated position onward,
-that reported a public IP\@.
+topology. The equipments were anonymised, and the edges were oriented from the
+end-users to the server.
 
 \begin{figure}[H]
     \centering
@@ -204,9 +202,8 @@ that reported a public IP\@.
 \label{fig:real_graph}
 \end{figure}%
 
-Since the links were oriented from the end-users to the server,
-it is possible to model this structure as a DAG\@. The zero
-indegree vertexes indicate equipments that only appear as the first hop,
+In this oriented tree, the zero
+indegree vertices indicate equipments that only appear as the first hop,
 however, an internal vertex can be a first hop in a traceroute.
 Considering an arc (A, B), all users who belong to A also belong to B,
 but the inverse is not necessarily true.
@@ -217,7 +214,7 @@ As an example, there are cases in which the same equipment appears in different
 hops of the same end-user traceroute. Also,
 the measurement software limits the maximum number of hops, then,
 scenarios in which the traceroute doesn't reach the server are discarded.
-Since routing tables can be updated, after the Tier-2 vertexes compression,
+Since routing tables can be updated, after the Tier-2 vertices compression,
 it is only considered clients with static traceroutes
 during the specified time period.
 Situations characterized by Tier-2 routers that doesn't appear as consecutive
@@ -324,24 +321,27 @@ performance.
 Hence, this work restricts to report possible events locations considering that
 they are caused by equipments in the path from the end-user to the server.
 
-The method expects that
-a change point detection algorithm setup is able to detect all end-users
-affected by a network event, or no end-user is identified.
-Besides, with exception of the Tier-2 user-group, the mechanism supposes that
+With exception of the Tier-2 user-group, the mechanism supposes that
 if an event occur in an user-group,
 all traffic that goes through this cluster is affected by the event. Since
 there is a direct connection between an user-group and an unique network
 equipment, this is a reasonable hypothesis.
+It also presume a hierarchical user-groups structure, and that there is at most
+sone link between two network equipments.
 
 In the first reasoning part, it will be processed cases without the
-presence of the Tier-2 user-group. Also, it will be removed
+presence of the Tier-2 user-group.
+Also, it will be removed
 traceroutes paths that doesn't start in a zero indegree vertex.
 Additionally, it will be disregarded co-occurrent events with the same type.
-Later, these restrictions will be removed and treated separately.
+Moreover it will be considered that
+a change point detection algorithm setup is able to detect all end-users
+affected by a network event, or no end-user is identified.
+Later, the mechanism will expanded and these restrictions will be removed.
 Unless stated differently, in the rest of this section is considered an
 unique network event in the period of study.
 
-The procedure starts analyzing zero indegree vertexes.
+The procedure starts analyzing zero indegree vertices.
 Suppose that only a proper subset of the clients that belong to a zero
 indegree node perceive the event. In this situation, it is possible to affirm
 that this vertex is not the cause of the event, since not all clients detected
@@ -364,7 +364,7 @@ analysis is applied to the next vertex in the path to the server. If not all
 clients of the second hop detected this event, then it is surely located
 in the first hop or before. Otherwise, the procedure continues to the next hop.
 
-When applied to different zero indegree vertexes,
+When applied to different zero indegree vertices,
 this method results in possible events locations that are prefixes of
 the paths to the server.
 Also, these prefixes can be correlated.
@@ -373,8 +373,11 @@ event, then they must share at least one equipment. The
 ones that are not common can be discarded from the possible cause list, since
 there are end-users that don't belong to them and still perceive the event.
 
+Also it is possible to note that a failure in the directed link from a router
+A to B is identified as a fault in A.
+
 Figure~\ref{fig:network_events_locations_examples} presents several topologies
-and different network events. The gray vertexes indicate a network event
+and different network events. The gray vertices indicate a network event
 that occurred in this location.
 
 \begin{figure}[H]
@@ -409,7 +412,7 @@ Figure~\ref{fig:network_events_locations_examples_2} presents a scenario with
 the same conclusion.
 
 In Figure~\ref{fig:network_events_locations_examples_3}, the analysis made
-through the zero indegree vertexes result in the paths from them to the server.
+through the zero indegree vertices result in the paths from them to the server.
 Matching the outcomes, the D vertex is the only possible event location.
 
 In Figure~\ref{fig:network_events_locations_examples_4}, the reasoning through
@@ -421,19 +424,29 @@ The previous analysis can't be fully applied in situations with the Tier-2
 user-group.
 As an example, suppose two geographically distant end-users in an OFF-NET case.
 The packets from these two users can go through completely different routers in
-the Tier-2 \gls*{isp}\@. Then, it is possible that an event in the Tier-2 \gls*{isp} only
+the Tier-2 \gls*{isp}. Then, it is possible that an event in the Tier-2 \gls*{isp} only
 affects one of the users, which contradicts one of the established suppositions.
 To overcome this issue, when analyzing a path, if an event can be located in the
 previous hop of the Tier-2 user-group, then the event can also be located at
 the Tier-2 vertex, even considering that not all end-users of this user-group
 perceive the event.
 
-Now, suppose paths that doesn't start in zero indegree vertexes.
+Now, suppose paths that doesn't start in zero indegree vertices.
 After the previous analysis,
 if all clients of the first hop user-group detect the event, then this
 path was already treated. Otherwise, the end-users that detected the event
 share an equipment before the first hop,
 that doesn't answer to traceroute pings, and is the cause.
+
+The hypothesis that a change point detection algorithm setup is able to
+identify all, or none, end-users affected by an event, is too strict.
+As an example, considering two clients, one closer to the server than the
+other, if a failure in a router impacts the RTT of both users, probably,
+the closest client's RTT will suffer a bigger relative variation than the
+other's RTT\@.
+Therefore, instead of checking if all users perceive the event,
+it is defined a threshold, and is verified if the fraction of clients
+that detect the event is bigger than this value.
 
 If there are co-occurrent events with the same type, the complete procedure can
 result in a wrong outcome. Figure~\ref{fig:network_events_locations_examples_5}
