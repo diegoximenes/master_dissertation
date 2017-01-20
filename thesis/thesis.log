@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.7.24)  20 JAN 2017 03:51
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.7.24)  20 JAN 2017 17:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -605,23 +605,23 @@ Writing index of abbreviations file thesis.abx
 (./thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             https://www.ctan.org/pkg/pageslts
-(lastpage)             ! on input line 36.
+(lastpage)             ! on input line 38.
  (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count160
@@ -686,7 +686,7 @@ e
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box38
-Package hyperref Info: Link coloring OFF on input line 36.
+Package hyperref Info: Link coloring OFF on input line 38.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -695,9 +695,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count166
 )
-LaTeX Info: Redefining \ref on input line 36.
-LaTeX Info: Redefining \pageref on input line 36.
-LaTeX Info: Redefining \nameref on input line 36.
+LaTeX Info: Redefining \ref on input line 38.
+LaTeX Info: Redefining \pageref on input line 38.
+LaTeX Info: Redefining \nameref on input line 38.
 
 (./thesis.out) (./thesis.out)
 \@outlinefile=\write5
@@ -711,30 +711,30 @@ Package: ltcaption 2013/06/09 v1.4-94 longtable captions (AR)
 )
 Package caption Info: supertabular package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Option `breaklinks' set `true' on input line 59.
-Package hyperref Info: Option `raiselinks' set `true' on input line 59.
-Package hyperref Info: Option `pageanchor' set `true' on input line 59.
+Package hyperref Info: Option `breaklinks' set `true' on input line 61.
+Package hyperref Info: Option `raiselinks' set `true' on input line 61.
+Package hyperref Info: Option `pageanchor' set `true' on input line 61.
 
 <coppe-logo.pdf, id=136, 177.463pt x 76.285pt>
 File: coppe-logo.pdf Graphic file (type pdf)
  <use coppe-logo.pdf>
-Package pdftex.def Info: coppe-logo.pdf used on input line 59.
+Package pdftex.def Info: coppe-logo.pdf used on input line 61.
 (pdftex.def)             Requested size: 177.46255pt x 76.2848pt.
 
-Underfull \hbox (badness 7740) in paragraph at lines 59--59
+Underfull \hbox (badness 7740) in paragraph at lines 61--61
 []\OT1/cmr/m/n/12 Disserta^^Xc~ao de Mestrado apresentada ao
  []
 
 
-Underfull \hbox (badness 3668) in paragraph at lines 59--59
+Underfull \hbox (badness 3668) in paragraph at lines 61--61
 \OT1/cmr/m/n/12 de Sistemas e Computa^^Xc~ao, COPPE, da
  []
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 59.
+LaTeX Font Info:    Try loading font information for U+msa on input line 61.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 59.
+LaTeX Font Info:    Try loading font information for U+msb on input line 61.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -742,29 +742,29 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./coppe-logo.pdf>]
-Underfull \hbox (badness 3884) in paragraph at lines 60--60
+Underfull \hbox (badness 3884) in paragraph at lines 62--62
 \OT1/cmr/m/n/12 DISSERTA[][]AO SUB-METIDA []AO CORPO DOCENTE DO INSTITUTO
  []
 
 
-Underfull \hbox (badness 3884) in paragraph at lines 60--60
+Underfull \hbox (badness 3884) in paragraph at lines 62--62
 \OT1/cmr/m/n/12 ALBERTO LUIZ COIMBRA DE P[]OS-GRADUA[][]AO E PESQUISA DE
  []
 
 
-Underfull \hbox (badness 2884) in paragraph at lines 60--60
+Underfull \hbox (badness 2884) in paragraph at lines 62--62
 \OT1/cmr/m/n/12 ENGENHARIA (COPPE) DA UNIVERSIDADE FEDERAL DO RIO DE
  []
 
 
-Underfull \hbox (badness 3386) in paragraph at lines 60--60
+Underfull \hbox (badness 3386) in paragraph at lines 62--62
 \OT1/cmr/m/n/12 JANEIRO COMO PARTE DOS REQUISITOS NECESS[]ARIOS PARA A
  []
 
 [2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 60--60
+Underfull \hbox (badness 10000) in paragraph at lines 62--62
 \OT1/cmr/m/n/12 Networks Using End-to-End Measurements/Diego
  []
 
@@ -1024,7 +1024,7 @@ Chapter 4.
 File: ./figures/methodology/pipeline/pipeline.png Graphic file (type png)
 <use ./figures/methodology/pipeline/pipeline.png>
 Package pdftex.def Info: ./figures/methodology/pipeline/pipeline.png used on in
-put line 61.
+put line 63.
 (pdftex.def)             Requested size: 384.1096pt x 87.32155pt.
  [19 <./figures/methodology/pipeline/pipeline.png>] [20]
 <./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend2016-05-11_NR
@@ -1035,7 +1035,7 @@ File: ./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend2016-05-
 <use ./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend2016-05-1
 1_NRIDTCLDM031_graph_anonymized.png>
 Package pdftex.def Info: ./figures/methodology/spatial_correlation/dtstart2016-
-05-01_dtend2016-05-11_NRIDTCLDM031_graph_anonymized.png used on input line 200.
+05-01_dtend2016-05-11_NRIDTCLDM031_graph_anonymized.png used on input line 203.
 
 (pdftex.def)             Requested size: 149.37958pt x 159.49773pt.
  [21] [22 <./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend201
@@ -1047,7 +1047,7 @@ phic file (type png)
 
 <use ./figures/methodology/spatial_time_correlation/event_tree_graph_1.png>
 Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
-ree_graph_1.png used on input line 402.
+ree_graph_1.png used on input line 404.
 (pdftex.def)             Requested size: 85.35696pt x 165.47137pt.
 
 <./figures/methodology/spatial_time_correlation/event_tree_graph_2.png, id=521,
@@ -1057,7 +1057,7 @@ phic file (type png)
 
 <use ./figures/methodology/spatial_time_correlation/event_tree_graph_2.png>
 Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
-ree_graph_2.png used on input line 402.
+ree_graph_2.png used on input line 404.
 (pdftex.def)             Requested size: 85.35696pt x 165.47137pt.
 
 <./figures/methodology/spatial_time_correlation/event_tree_graph_3.png, id=522,
@@ -1067,7 +1067,7 @@ phic file (type png)
 
 <use ./figures/methodology/spatial_time_correlation/event_tree_graph_3.png>
 Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
-ree_graph_3.png used on input line 402.
+ree_graph_3.png used on input line 404.
 (pdftex.def)             Requested size: 128.0387pt x 161.56512pt.
 
 <./figures/methodology/spatial_time_correlation/event_tree_graph_4.png, id=523,
@@ -1077,7 +1077,7 @@ phic file (type png)
 
 <use ./figures/methodology/spatial_time_correlation/event_tree_graph_4.png>
 Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
-ree_graph_4.png used on input line 402.
+ree_graph_4.png used on input line 404.
 (pdftex.def)             Requested size: 128.0387pt x 161.56512pt.
 
 [25 <./figures/methodology/spatial_time_correlation/event_tree_graph_1.png> <./
@@ -1091,7 +1091,7 @@ phic file (type png)
 
 <use ./figures/methodology/spatial_time_correlation/event_tree_graph_5.png>
 Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
-ree_graph_5.png used on input line 457.
+ree_graph_5.png used on input line 459.
 (pdftex.def)             Requested size: 149.37958pt x 188.49973pt.
 
 [26 <./figures/methodology/spatial_time_correlation/event_tree_graph_5.png>]
@@ -1103,7 +1103,7 @@ ile (type png)
 
 <use ./figures/methodology/supervised_learning_try/survey_system.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/survey_s
-ystem.png used on input line 559.
+ystem.png used on input line 561.
 (pdftex.def)             Requested size: 384.1096pt x 221.18146pt.
  [28 <./figures/methodology/supervised_learning_try/survey_system.png>]
 <./figures/methodology/supervised_learning_try/cnt_classifications_per_vote.png
@@ -1114,7 +1114,7 @@ e.png Graphic file (type png)
 <use ./figures/methodology/supervised_learning_try/cnt_classifications_per_vote
 .png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt_clas
-sifications_per_vote.png used on input line 580.
+sifications_per_vote.png used on input line 582.
 (pdftex.def)             Requested size: 298.75264pt x 205.38939pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
@@ -1128,7 +1128,7 @@ ic file (type png)
 :66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/rosam@lan
-d.ufrj.br.png used on input line 604.
+d.ufrj.br.png used on input line 606.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
@@ -1143,7 +1143,7 @@ g Graphic file (type png)
 >
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gustavo.s
-antos@tgr.net.br.png used on input line 604.
+antos@tgr.net.br.png used on input line 606.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
@@ -1157,7 +1157,7 @@ raphic file (type png)
 :66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges
-@land.ufrj.br.png used on input line 614.
+@land.ufrj.br.png used on input line 616.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
@@ -1172,7 +1172,7 @@ png Graphic file (type png)
 ng>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gabriel.m
-endonca@tgr.net.br.png used on input line 614.
+endonca@tgr.net.br.png used on input line 616.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
@@ -1186,7 +1186,7 @@ raphic file (type png)
 :66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundosi
-lva@gmail.com.png used on input line 624.
+lva@gmail.com.png used on input line 626.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
@@ -1200,7 +1200,7 @@ phic file (type png)
 :66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundo@l
-and.ufrj.br.png used on input line 624.
+and.ufrj.br.png used on input line 626.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 [29 <./figures/methodology/supervised_learning_try/cnt_classifications_per_vote
@@ -1216,7 +1216,7 @@ ic file (type png)
 :66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/rosam@lan
-d.ufrj.br.png used on input line 645.
+d.ufrj.br.png used on input line 647.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
@@ -1231,7 +1231,7 @@ g Graphic file (type png)
 >
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gustavo.s
-antos@tgr.net.br.png used on input line 645.
+antos@tgr.net.br.png used on input line 647.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
@@ -1245,7 +1245,7 @@ raphic file (type png)
 :66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/guisenges
-@land.ufrj.br.png used on input line 655.
+@land.ufrj.br.png used on input line 657.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
@@ -1260,7 +1260,7 @@ png Graphic file (type png)
 ng>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gabriel.m
-endonca@tgr.net.br.png used on input line 655.
+endonca@tgr.net.br.png used on input line 657.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
@@ -1274,7 +1274,7 @@ raphic file (type png)
 :66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundosi
-lva@gmail.com.png used on input line 665.
+lva@gmail.com.png used on input line 667.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
@@ -1288,7 +1288,7 @@ phic file (type png)
 :66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundo@l
-and.ufrj.br.png used on input line 665.
+and.ufrj.br.png used on input line 667.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 [30 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64
@@ -1314,7 +1314,7 @@ ic file (type png)
 :66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verNHODTCSRV04_mac64:66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/rosam@lan
-d.ufrj.br.png used on input line 687.
+d.ufrj.br.png used on input line 689.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
@@ -1328,7 +1328,7 @@ phic file (type png)
 :66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png>
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt6_ser
 verNHODTCSRV04_mac64:66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@l
-and.ufrj.br.png used on input line 687.
+and.ufrj.br.png used on input line 689.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 [31 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64
@@ -1360,7 +1360,7 @@ c64:66:B3:50:06:D4_dtstart2016-05-01_dtend2016-05-11.png Graphic file (type png
 64:66:B3:50:06:D4_dtstart2016-05-01_dtend2016-05-11.png>
 Package pdftex.def Info: ./figures/results/correct_examples/before_first_hop/se
 rverSDRDTCLDM012_mac64:66:B3:50:06:D4_dtstart2016-05-01_dtend2016-05-11.png use
-d on input line 56.
+d on input line 58.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/correct_examples/before_first_hop/serverSDRDTCLDM012_mac64:6
@@ -1374,7 +1374,7 @@ c64:66:B3:A6:A9:70_dtstart2016-05-01_dtend2016-05-11.png Graphic file (type png
 64:66:B3:A6:A9:70_dtstart2016-05-01_dtend2016-05-11.png>
 Package pdftex.def Info: ./figures/results/correct_examples/before_first_hop/se
 rverSDRDTCLDM012_mac64:66:B3:A6:A9:70_dtstart2016-05-01_dtend2016-05-11.png use
-d on input line 56.
+d on input line 58.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
  [33
 
@@ -1390,7 +1390,7 @@ type png)
 EV01_mac64:66:B3:4F:EA:E2_dtstart2016-06-01_dtend2016-06-11.png>
 Package pdftex.def Info: ./figures/results/correct_examples/zero_indegree_corre
 lation/serverSOCDTCPEV01_mac64:66:B3:4F:EA:E2_dtstart2016-06-01_dtend2016-06-11
-.png used on input line 90.
+.png used on input line 92.
 (pdftex.def)             Requested size: 192.0548pt x 135.55885pt.
 
 <./figures/results/correct_examples/zero_indegree_correlation/dtstart2016-06-01
@@ -1405,7 +1405,7 @@ File: ./figures/results/correct_examples/zero_indegree_correlation/dtstart2016-
 png>
 Package pdftex.def Info: ./figures/results/correct_examples/zero_indegree_corre
 lation/dtstart2016-06-01_dtend2016-06-11_SOCDTCPEV01_traceroute_compress_embrat
-el_graph_anonymized.png used on input line 90.
+el_graph_anonymized.png used on input line 92.
 (pdftex.def)             Requested size: 298.75264pt x 117.74646pt.
  [34 <./figures/results/correct_examples/before_first_hop/serverSDRDTCLDM012_ma
 c64:66:B3:50:06:D4_dtstart2016-05-01_dtend2016-05-11.png> <./figures/results/co
@@ -1426,7 +1426,7 @@ png)
 mac64:66:B3:50:05:56_dtstart2016-06-21_dtend2016-07-01.png>
 Package pdftex.def Info: ./figures/results/correct_examples/zero_indegree_singl
 e/serverGRSCBCSRV01_mac64:66:B3:50:05:56_dtstart2016-06-21_dtend2016-07-01.png 
-used on input line 120.
+used on input line 122.
 (pdftex.def)             Requested size: 192.0548pt x 135.55885pt.
 
 <./figures/results/correct_examples/zero_indegree_single/dtstart2016-06-21_dten
@@ -1441,7 +1441,7 @@ dtend2016-07-01_GRSCBCSRV01_traceroute_compress_embratel_filter_graph_anonymize
 d.png>
 Package pdftex.def Info: ./figures/results/correct_examples/zero_indegree_singl
 e/dtstart2016-06-21_dtend2016-07-01_GRSCBCSRV01_traceroute_compress_embratel_fi
-lter_graph_anonymized.png used on input line 120.
+lter_graph_anonymized.png used on input line 122.
 (pdftex.def)             Requested size: 298.75264pt x 64.25761pt.
 
 <./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV16_ma
@@ -1455,7 +1455,7 @@ e png)
 6_mac64:66:B3:A6:AB:80_dtstart2016-05-01_dtend2016-05-11.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/time_correlation_exam
 ple/serverSPOTVTSRV16_mac64:66:B3:A6:AB:80_dtstart2016-05-01_dtend2016-05-11.pn
-g used on input line 162.
+g used on input line 164.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV16_ma
@@ -1469,7 +1469,7 @@ e png)
 6_mac64:66:B3:A6:AC:40_dtstart2016-05-01_dtend2016-05-11.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/time_correlation_exam
 ple/serverSPOTVTSRV16_mac64:66:B3:A6:AC:40_dtstart2016-05-01_dtend2016-05-11.pn
-g used on input line 162.
+g used on input line 164.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
  [35 <./figures/results/correct_examples/zero_indegree_single/serverGRSCBCSRV01
 _mac64:66:B3:50:05:56_dtstart2016-06-21_dtend2016-07-01.png> <./figures/results
@@ -1486,7 +1486,7 @@ g)
 c64:66:B3:50:00:68_dtstart2016-06-01_dtend2016-06-11.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/s
 erverBHZDTCLDM062_mac64:66:B3:50:00:68_dtstart2016-06-01_dtend2016-06-11.png us
-ed on input line 192.
+ed on input line 194.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/serverBHZDTCLDM062_mac64:
@@ -1500,7 +1500,7 @@ g)
 c64:66:B3:50:00:B6_dtstart2016-06-01_dtend2016-06-11.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/s
 erverBHZDTCLDM062_mac64:66:B3:50:00:B6_dtstart2016-06-01_dtend2016-06-11.png us
-ed on input line 192.
+ed on input line 194.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
  [36 <./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV
 16_mac64:66:B3:A6:AB:80_dtstart2016-05-01_dtend2016-05-11.png> <./figures/resul
@@ -1518,7 +1518,7 @@ File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 50:00:68/hop00_b3ea1801.virtua.com.br.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/r
 tt_per_hop/64:66:B3:50:00:68/hop00_b3ea1801.virtua.com.br.png used on input lin
-e 246.
+e 248.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
@@ -1530,7 +1530,7 @@ File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 50:00:68/hop01_b3ea0001.virtua.com.br.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/r
 tt_per_hop/64:66:B3:50:00:68/hop01_b3ea0001.virtua.com.br.png used on input lin
-e 246.
+e 248.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
@@ -1542,7 +1542,7 @@ File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 50:00:68/hop02_c911a615.virtua.com.br.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/r
 tt_per_hop/64:66:B3:50:00:68/hop02_c911a615.virtua.com.br.png used on input lin
-e 256.
+e 258.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
@@ -1554,7 +1554,7 @@ File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 50:00:68/hop03_c91180fe.virtua.com.br.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/r
 tt_per_hop/64:66:B3:50:00:68/hop03_c91180fe.virtua.com.br.png used on input lin
-e 256.
+e 258.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
  [37]
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
@@ -1566,7 +1566,7 @@ File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 50:00:B6/hop00_b3ea1801.virtua.com.br.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/r
 tt_per_hop/64:66:B3:50:00:B6/hop00_b3ea1801.virtua.com.br.png used on input lin
-e 278.
+e 280.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
@@ -1578,7 +1578,7 @@ File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 50:00:B6/hop01_b3ea0001.virtua.com.br.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/r
 tt_per_hop/64:66:B3:50:00:B6/hop01_b3ea0001.virtua.com.br.png used on input lin
-e 278.
+e 280.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
@@ -1590,7 +1590,7 @@ File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 50:00:B6/hop02_c911a615.virtua.com.br.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/r
 tt_per_hop/64:66:B3:50:00:B6/hop02_c911a615.virtua.com.br.png used on input lin
-e 288.
+e 290.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
@@ -1602,7 +1602,7 @@ File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 50:00:B6/hop03_c91180fe.virtua.com.br.png>
 Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/r
 tt_per_hop/64:66:B3:50:00:B6/hop03_c91180fe.virtua.com.br.png used on input lin
-e 288.
+e 290.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
  [38 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:68/hop00_b3ea1801.virtua.com.br.png> <./figures/results/wrong_examples/u
@@ -1622,7 +1622,7 @@ ype png)
 V07_macF8:1A:67:2E:E4:9A_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/results/final_remarks/change_contracted_band
 width/serverGOIDTCSRV07_macF8:1A:67:2E:E4:9A_dtstart2016-07-01_dtend2016-07-11.
-png used on input line 308.
+png used on input line 310.
 (pdftex.def)             Requested size: 298.75264pt x 210.88109pt.
  [39 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:B6/hop00_b3ea1801.virtua.com.br.png> <./figures/results/wrong_examples/u
@@ -1640,7 +1640,7 @@ File: ./figures/results/final_remarks/client_sparsity/serverRJODTCLDM031_mac64:
 6:B3:4F:E9:24_dtstart2016-08-01_dtend2016-08-11.png>
 Package pdftex.def Info: ./figures/results/final_remarks/client_sparsity/server
 RJODTCLDM031_mac64:66:B3:4F:E9:24_dtstart2016-08-01_dtend2016-08-11.png used on
- input line 328.
+ input line 330.
 (pdftex.def)             Requested size: 192.0548pt x 135.55885pt.
 
 <./figures/results/final_remarks/client_sparsity/dtstart2016-08-01_dtend2016-08
@@ -1655,7 +1655,7 @@ ng Graphic file (type png)
 g>
 Package pdftex.def Info: ./figures/results/final_remarks/client_sparsity/dtstar
 t2016-08-01_dtend2016-08-11_RJODTCLDM031_traceroute_compress_embratel_filter_su
-bgraph_anonymized.png used on input line 328.
+bgraph_anonymized.png used on input line 330.
 (pdftex.def)             Requested size: 298.75264pt x 104.92697pt.
 
 <./figures/results/final_remarks/cnt_clients_zero_indegree_vertex_distribution.
@@ -1666,7 +1666,7 @@ tion.png Graphic file (type png)
 <use ./figures/results/final_remarks/cnt_clients_zero_indegree_vertex_distribut
 ion.png>
 Package pdftex.def Info: ./figures/results/final_remarks/cnt_clients_zero_indeg
-ree_vertex_distribution.png used on input line 343.
+ree_vertex_distribution.png used on input line 345.
 (pdftex.def)             Requested size: 298.75264pt x 205.38939pt.
 ) (./src/conclusion.tex [40 <./figures/results/final_remarks/change_contracted_
 bandwidth/serverGOIDTCSRV07_macF8:1A:67:2E:E4:9A_dtstart2016-07-01_dtend2016-07
@@ -1710,20 +1710,20 @@ Missing character: There is no “ in font cmr12!
 
 AED: lastpage setting LastPage
 [48]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 93.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 93.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 95.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 95.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 93.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 93.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 95.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 95.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: E7A55DA8C97DD5E54F977DA64D8473BE;1953.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 93.
+(rerunfilecheck)             Checksum: 2879B4CFE77ACAD3F37D983C1643CA72;1945.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 95.
  ) 
 Here is how much of TeX's memory you used:
- 14868 strings out of 494888
- 259743 string characters out of 6179127
- 391117 words of memory out of 5000000
- 17609 multiletter control sequences out of 15000+600000
+ 14928 strings out of 494888
+ 260651 string characters out of 6179127
+ 391981 words of memory out of 5000000
+ 17669 multiletter control sequences out of 15000+600000
  13082 words of font info for 48 fonts, out of 8000000 for 9000
  38 hyphenation exceptions out of 8191
  46i,14n,82p,1915b,548s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1742,7 +1742,7 @@ amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on thesis.pdf (58 pages, 5324232 bytes).
+Output written on thesis.pdf (58 pages, 5325380 bytes).
 PDF statistics:
  876 PDF objects out of 1000 (max. 8388607)
  672 compressed objects within 7 object streams

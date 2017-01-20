@@ -9,11 +9,11 @@ and the proposed system is compared with previous projects.
 
 The time series used in this work represent network end-to-end measures of a
 cable-television infrastructure, which runs \gls*{docsis} with asymmetric download and
-upload bandwidths. A home router connected to a cable modem communicates
+upload bandwidths. A home gateway, connected to a cable modem, communicates
 with a server strategically located by the \gls*{isp}.
 Each server is responsible for measurements of several end-users.
 Measurements are triggered in
-each home router every half hour and, by the end of every day,
+each home router every half hour, and, by the end of every day,
 the results are transferred to a database.
 The software responsible for these procedures was
 developed by TGR (a startup at \gls*{ufrj}),
@@ -21,7 +21,7 @@ and is spread over approximately four thousand customers of a major Brazilian
 tier-3 \gls*{isp}.
 
 To measure the round
-trip packet loss fraction and the \gls*{rtt} between the end-user and the associated
+trip packet loss fraction, and the \gls*{rtt}, between the end-user and the associated
 server, the home router sends a train of short \gls*{udp} packets, and the server
 bounces back them.
 The final \gls*{rtt} is the average of the individual packets' \gls*{rtt}s.
@@ -38,8 +38,10 @@ is presented a preliminary descriptive investigation of these metrics.
 
 The resulted time series are unevenly spaced due to a range of reasons. First,
 measurements are initiated only if the residential link is not under use by the
-\gls*{isp} customer. Also, the client may have no Internet connection to start a
-measurement, or even be without electrical energy. Other details about the
+customer. Also, the client may have no Internet connection to start a
+measurement, or even be without electrical energy.
+
+Other details about the
 measurement software are presented during the text, as they are needed.
 
 \section{Pipeline}
@@ -48,7 +50,7 @@ This section describes, in a high level abstraction, the proposed workflow
 used to detect network events and localize their cause. When necessary, some
 steps are better explored in further sections.
 The analysis seeks for events during a specific time period, in a single
-measurement server, and considers an
+measurement server, and considers a
 particular metric (round trip loss fraction, \gls*{rtt}, or maximum achievable
 upstream throughput),
 which are specified as parameters.
@@ -68,7 +70,7 @@ which aims to remove clients that can negatively affect the analysis.
 As an example, this work eliminates clients
 with a small number of measurement samples.
 
-The Change Point Detection phase preprocess the end-users time series and
+The Change Point Detection phase preprocess the end-users' time series and
 identify change points.
 Also, the change points are classified in three types of events: failure,
 improvement, or inconclusive. For the \gls*{rtt} and round trip loss fraction,
@@ -87,41 +89,42 @@ in further steps to isolate possible events locations.
 This stage must produce a specific grouping structure, which is detailed in
 Section~\ref{sec:spatial_correlation}.
 
-The Events Times Correlation aims to combine similar events of different
-end-users. For example, if three end-users detect a failure at
+The Time Correlation step aims to combine similar events of different
+end-users. For example, if three clients detect a failure at
 the same time, then this information is identified at this step.
 The grouped end-users events of an user-group are named as network events.
 The details of this method are enlightened in
-Section~\ref{sec:events_times_correlation}.
+Section~\ref{sec:time_correlation}.
 
-Finally, to localize the events cause, the Spatial-Time Correlation method
+Finally, to localize events' causes, the Spatial-Time Correlation method
 matches network events with the user-groups structure.
 This is better explained in Section~\ref{sec:spatial_time_correlation}.
 
 \section{Spatial Correlation}
 \label{sec:spatial_correlation}
 
-This method provides the necessary information to check which network equipment
+This method provides the necessary information to check which network
+equipments
 are shared by end-users that perceive the same network event.
 The developed strategies were guided by the specific \gls*{isp}'s topology.
 
-The server position relative to the end-user
+The server position relative to the client
 can be categorized in two contexts.
 In the OFF-NET case, the traffic between them
 goes through a tier-2 \gls*{isp}\@.
 In the ON-NET case, the traffic
-doesn't leave the tier-3 \gls*{isp} infrastructure.
+doesn't leave the tier-3 \gls*{isp}'s infrastructure.
 The latter situation represents a simpler \gls*{ip} topology, since the tier-3 \gls*{isp}
 uses static routing and
-doesn't applies load balancing nor MPLS, techniques that are usual in the tier-2
-\gls*{isp} network.
+doesn't applies load balancing nor \gls*{mpls}, techniques that are usual in the tier-2
+\gls*{isp}'s network.
 
 Then, considering measurements against a single server and the ON-NET
 case, paths from end-users to the server form a hierarchically
 structured topology, which is a required design to be consumed by the
-Spatial Time Correlation procedure~\ref{sec:spatial_time_correlation}.
-This work doesn't have access to the \gls*{isp} network
-topology, therefore, this structure is reconstructed through traceroutes.
+Spatial-Time Correlation procedure~\ref{sec:spatial_time_correlation}.
+This work doesn't have access to the \gls*{isp}'s routing tables,
+therefore, this structure is reconstructed through traceroutes.
 In this context, each equipment that responds to traceroute
 pings is used as an user-group.
 An user-group is formed by all end-users in which traceroutes contain the
@@ -129,13 +132,13 @@ associated network equipment.
 
 The first hop of the traceroutes, which corresponds to the home gateway, is
 removed from the analysis.
-Additionally, CMTSs configured to answer traceroute pings are reported
-with private \glspl*{ip},
+Additionally, \glspl*{cmts} configured to answer traceroute pings are reported
+with private \gls*{ip} addresses,
 since they are located in the same subnetwork of the home router.
 Besides, due to multiple network interfaces, these equipments can be related
-to different \glspl*{ip}.
-Therefore, considering the lack of a private \gls*{ip} to name mapping, the CMTSs
-were also discarded.
+to different \gls*{ip} addresses.
+Therefore, considering the lack of a private \gls*{ip} address to name mapping,
+the \glspl*{cmts} were also discarded.
 
 In the OFF-NET case, due to the load balancing applied by the tier-2 \gls*{isp},
 the traceroute reconstruction doesn't lead in a hierarchical topology.
@@ -145,9 +148,9 @@ The per
 destination load balancing can be disregarded in the current analysis, since
 the target is always the same. The per flow load balancing attempts to
 maintain packets from the same flow in the same path. A flow is identified
-by header's fields of \gls*{ip} packets. For example, a
+by header's fields of \gls*{ip} packets. For instance, a
 router can employ that packets with equal source/destination
-address, protocol, and source/destination port,
+addresses, protocol, and source/destination ports,
 belong to the same flow. The per packet load
 balancing ensures that the load is equally distributed over the feasible output
 links, deploying, for example, a round-robin strategy. However, the latter
@@ -167,7 +170,7 @@ time, and considering that different measurements types use distinct ports,
 the
 path followed by traceroute packets can be different from the path followed by
 the \gls*{qos} measurements packets. Then, in this scenario, even with static paths in
-the tier-2 \gls*{isp} network, the correlation between traceroutes
+the tier-2 \gls*{isp}'s network, the correlation between traceroutes
 results with end-to-end metrics can reach wrong conclusions.
 
 Therefore, this work supposes that the tier-2 \gls*{isp} only applies per packet load
@@ -175,7 +178,7 @@ balancing, which is modeled here as a random strategy. With this hypothesis,
 if two end-users are geographically near, then it is likely that their packets
 traverse in the same set of routers in the tier-2 network. This implies that if
 an event occur in a tier-2 router, it is not possible that only one of these
-end-users perceive the event. This is a important consequence explored in
+clients perceives the event. This is an important consequence explored in
 Section~\ref{sec:spatial_time_correlation}.
 
 To handle the OFF-NET case, sequential hops related to
@@ -220,23 +223,23 @@ during the specified time period.
 Situations characterized by tier-2 routers that doesn't appear as consecutive
 elements in the traceroute are also deleted.
 
-\section{Events Times Correlation}
-\label{sec:events_times_correlation}
+\section{Time Correlation}
+\label{sec:time_correlation}
 
 The motivation of this mechanism is to infer network events that can explain
 end-users events of an user-group.
 
 There are two main reasons to detect the same network event, such as an
-equipment failure, at different times in different clients. The first one is
+equipment failure, at distinct times in different clients. The first one is
 related to the fact that the time series are not regularly sampled. The second
 one is due to the change point detection algorithm behavior.
 Therefore, a procedure to group end-users events based on their type and time,
 should be flexible enough to take into consideration time delay effects. Also,
 it must be robust to deal with multiple change points per time series.
 
-In order to relax a change point location, a detected change point is
+In order to relax a change location, a detected change point is
 transformed into an interval according to a time tolerance.
-Therefore, given a parameter $\delta$, a change point identified at
+Hence, given a parameter $\delta$, a change point identified at
 time $t$ implies in the existence of a change point within
 $[t - \delta, t + \delta]$. To be consistent,
 change point algorithms must report locations separated by more than
@@ -250,12 +253,12 @@ points are at most $2 \delta$ time units apart, then the right one is removed.
 Consequently, the problem can be defined as selecting a set of network events,
 that explain all end-users events. It is important to note that events are
 defined only by their time and type.
-An end-user event is explained by a network event if they have the same type,
+A client event is explained by a network event if they have the same type,
 and the end-user event time is inside the network event time interval.
 This problem has several possible solutions, and the comparison between
 them is subjective. As an example, not
 necessarily selecting the minimum number of network events that cover all
-end-user events is the most appropriate answer.
+customers events is the most appropriate answer.
 
 To this goal, it was developed a heuristic inspired in the Inexact Voting in
 Totally
@@ -293,11 +296,11 @@ The proposed algorithm is executed three times in every user-group,
 one for each event type.
 
 A more straightforward solution, that was not used in this work, is to create
-regular time-bins, and interpret all end-users events that occur at the same
+regular time-bins, and interpret all end-users events that occur in the same
 bin as a common network event.
 However, this strategy can introduce
 discontinuities. If a network event occurs in the end/beginning of a time-bin,
-then it is likely to different end-user events, associated with this
+then it is likely to different clients events, associated with this
 network event, be located in different bins.
 
 If co-occurrent events with the same type affect the same end-users set,
@@ -313,10 +316,10 @@ a set of feasible events locations.
 
 It is not possible to check if changes in round trip metrics, such as \gls*{rtt},
 are caused in the path from the end-user to the server or vice versa.
-Therefore, correlate those metrics with the available traceroutes can lead to
+Therefore, correlate these metrics with the available traceroutes can lead to
 erroneous or inconclusive outcomes. Also, the maximum achievable upstream
 throughput can be affected by a service degradation on the path from the server
-to the end-user, since losses of \gls*{tcp}'s ACKs can influence the measurement
+to the end-user, since losses of \gls*{tcp} ACKs can influence the measurement
 performance.
 Hence, this work restricts to report possible events locations considering that
 they are caused by equipments in the path from the end-user to the server.
@@ -326,18 +329,18 @@ if an event occur in an user-group,
 all traffic that goes through this cluster is affected by the event. Since
 there is a direct connection between an user-group and an unique network
 equipment, this is a reasonable hypothesis.
-It also presume a hierarchical user-groups structure, and that there is at most
-sone link between two network equipments.
+It is also presumed a hierarchical user-groups structure, and that there is at most
+one link between two network equipments.
 
 In the first reasoning part, it will be processed cases without the
 presence of the tier-2 user-group.
 Also, it will be removed
 traceroutes paths that doesn't start in a zero indegree vertex.
 Additionally, it will be disregarded co-occurrent events with the same type.
-Moreover it will be considered that
+Moreover, it will be considered that
 a change point detection algorithm setup is able to detect all end-users
 affected by a network event, or no end-user is identified.
-Later, the mechanism will expanded and these restrictions will be removed.
+Later, the mechanism will be expanded, and these restrictions will be removed.
 Unless stated differently, in the rest of this section is considered an
 unique network event in the period of study.
 
@@ -347,10 +350,9 @@ indegree node perceive the event. In this situation, it is possible to affirm
 that this vertex is not the cause of the event, since not all clients detected
 it. For the same reason, the cause is not located in posterior nodes
 in the path to server.
-Then, if this set size is bigger than one, these end-users must share
-a network equipment, which is the cause, that doesn't respond to traceroute
-pings, and is located before the first hop. As an example,
-this equipment can be a fiber node.
+Then, if this set's size is bigger than one, these end-users must share
+a network equipment, which is the cause, that is located before the first hop.
+As an example, this equipment can be a fiber node.
 
 However, if all clients of the zero indegree vertex detect the event, then
 there are three options:
@@ -373,8 +375,8 @@ event, then they must share at least one equipment. The
 ones that are not common can be discarded from the possible cause list, since
 there are end-users that don't belong to them and still perceive the event.
 
-Also it is possible to note that a failure in the directed link from a router
-A to B is identified as a fault in A.
+Additionally, it is possible to note that a failure in the directed link from a
+router A to B is identified as a fault in A.
 
 Figure~\ref{fig:network_events_locations_examples} presents several topologies
 and different network events. The gray vertices indicate a network event
@@ -435,13 +437,13 @@ Now, suppose paths that doesn't start in zero indegree vertices.
 After the previous analysis,
 if all clients of the first hop user-group detect the event, then this
 path was already treated. Otherwise, the end-users that detected the event
-share an equipment before the first hop,
-that doesn't answer to traceroute pings, and is the cause.
+share an equipment before the first hop that is the cause.
 
 The hypothesis that a change point detection algorithm setup is able to
 identify all, or none, end-users affected by an event, is too strict.
-As an example, considering two clients, one closer to the server than the
-other, if a failure in a router impacts the \gls*{rtt} of both users, probably,
+As an example, consider two clients, one closer to the server than the
+other.
+If a failure in a router impacts the \gls*{rtt} of both users, probably,
 the closest client's \gls*{rtt} will suffer a bigger relative variation than the
 other's \gls*{rtt}\@.
 Therefore, instead of checking if all users perceive the event,
@@ -469,7 +471,7 @@ union of these results should be the final outcome.
 
 From this procedure, it is possible to formulate a
 problem to define the minimum number of end-users to be monitored, and their
-placement to localize events with the minimum number of feasible locations.
+placement, to localize events with the minimum number of feasible locations.
 
 \section{Change Point Detection Issues}
 
@@ -565,8 +567,8 @@ Six specialists with experience in network measurements and statistical
 modeling, but without background in change point detection, classified 71 time
 series.
 To analyze the agreement between different users classifications,
-for each time series, was applied the Events Times Correlation
-procedure~\ref{sec:events_times_correlation}. Therefore, it was
+for each time series, was applied the Time Correlation
+procedure~\ref{sec:time_correlation}. Therefore, it was
 considered that each specialist voted to a set of change points positions.
 The time tolerance was set to 7 hours, which means at most 14 consecutive
 points.

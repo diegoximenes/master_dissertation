@@ -23,7 +23,7 @@
 \contentsline {section}{\numberline {4.1}Measurement Process}{18}{section.4.1}
 \contentsline {section}{\numberline {4.2}Pipeline}{19}{section.4.2}
 \contentsline {section}{\numberline {4.3}Spatial Correlation}{20}{section.4.3}
-\contentsline {section}{\numberline {4.4}Events Times Correlation}{22}{section.4.4}
+\contentsline {section}{\numberline {4.4}Time Correlation}{22}{section.4.4}
 \contentsline {section}{\numberline {4.5}Spatial-Time Correlation}{24}{section.4.5}
 \contentsline {section}{\numberline {4.6}Change Point Detection Issues}{27}{section.4.6}
 \contentsline {section}{\numberline {4.7}Differences to Previous Systems}{32}{section.4.7}
