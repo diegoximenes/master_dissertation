@@ -6,8 +6,7 @@ methodology, this dissertation proposes a data analytics framework to
 detect and localize network events.
 For such purpose, the mechanism tracks
 statistical changes in the end-to-end \gls*{qos} time series from different clients,
-and correlates those patterns with traceroutes.
-Besides, the proposed mechanism was compared with previous systems.
+and correlates these patterns with traceroutes.
 Finally, it were presented several outcomes when the procedure was applied to
 real data.
 
@@ -18,24 +17,24 @@ However, due to the lack of an events dataset, important
 questions persist unanswered.
 For instance, a quantitative accuracy study
 would allow to check which types of events can't be handled by the
-proposed procedure.
+proposed mechanism.
 A dataset would also allow to better understand the events
 patterns, how they impact the \gls*{qos} metrics, and fine tune the system.
 
 The use of end-to-end measurements has the advantage of dealing with
 metrics that are directly related with the service perceived by the customers.
 As an example, this feature can be used to rank simultaneous failure events
-according with their impact to the customers.
+according with their impact to the end-users.
 Nonetheless, would be interesting to study the impact of introducing
 internal network information to the framework.
 
 Besides the data availability, the current measurement process imposed
-several restrictions to this project.
+several restrictions to this work.
 In order to better explore the proposed solution,
 a further continuation of this project
 would require a stronger partnership with the \gls*{isp},
 and also flexibility to adapt the measurement software.
-However, this work can be used as a first guide to TGR's and \gls*{isp}'s engineers.
+However, this dissertation can be used as a first guide to TGR's and \gls*{isp}'s engineers.
 
 \section{Future Work}
 
@@ -49,17 +48,16 @@ were unable to be tackled by this project.
 \item
 The used \gls*{qos} metrics are affected by equipments in the path from the server to
 the end-user, and also by devices in the reverse direction.
-However, only the paths from end-users to servers are available.
-Hence, a complete
-localization analysis requires traceroutes from servers to end-users.
+However, only the paths information from end-users to servers are available.
+Hence, the traceroutes from servers to end-users should also be collected.
 Besides, instead of only considering the round trip loss information,
 the one way loss fraction from both directions can be tracked.
 Further, the maximum achievable one way throughput measurement can be
-implemented using \gls*{udp} instead of TCP, which eliminates the interference of
+implemented using \gls*{udp} instead of \gls*{tcp}, which eliminates the interference of
 performance degradation in the reverse path.
 
 \item
-If available, the HFC physical topology between the home router and the
+The \gls*{hfc} plant between the home router and the
 first hop of the traceroute can be incorporated to the analysis.
 Also, beyond only using end-to-end \gls*{qos} metrics,
 the proposed mechanism can be extended
@@ -67,30 +65,30 @@ to use internal network devices information, such as signal-to-noise ratio.
 
 \item
 A network failure events dataset can be built with \gls*{isp}'s auxiliary data.
-As an example, customers complaints gathered from call centers can be used to,
-during a specific time period, infer clients affected by a QoE deterioration,
-which can then be translated to true network failure events.
+As an example, customers' complaints gathered from call centers can be used to,
+during a specific time period, infer clients affected by a \gls*{qoe} deterioration,
+which can then be translated to true network failures.
 Additionally, it is possible to use records from current failure detection
 methods deployed by the \gls*{isp}, such as manual inspection, or through equipments
 that are able to self report specific faults.
 However, through preliminary talks with \gls*{isp}'s engineers,
 both databases are noisy, and mining useful information
 from them can be a challenging task.
-For instance, some devices flaws are manually
-detected and corrected, but those informations aren't stored.
+For instance, there are cases in which devices flaws are manually
+detected and corrected, but those information aren't stored.
 Also, during the dataset construction, the inferred events times can be
 considerably different from their true occurrence time.
 As stated in Chapter~\ref{chap:methodology}, a dataset could open new
 supervised learning possibilities to the change point detection problem, such
 as hyperparameter optimization and model selection.
 Besides, since the tier-2 \gls*{isp} is not a project partner, this kind of data from
-it's infrastuture may not be available.
+it's infrastructure may not be available.
 
 \item
 Once a network events dataset is constructed, the correlation between
 change points of different \gls*{qos} metrics can reveal useful information
 about the network behavior. This analysis was not done since the algorithms'
-hyperparameters couldn't be optimized, hence, those comparisons could reach
+hyperparameters couldn't be optimized, hence, these comparisons could reach
 wrong conclusions.
 
 \item
@@ -110,14 +108,14 @@ enhance the events localization precision.
 \item
 Once the system is deployed, the algorithms and parameters can be selected
 through a reinforcement learning approach. If network operators
-feedback the outcomes correctness, the system can adaptively optimize the used
+feedback the outcomes' correctness, the system can adaptively optimize the used
 strategies.
 
 \item
 Considering a real time processing environment, in order to decrease the
 event detection delay, the system can adaptively control the measurement
 frequency.
-Increase the amount of data related to potentially problematic regions
+Increase the amount of data related to potentially problematic regions,
 can improve the system's output confidence in a short time period.
 Also, it is possible to reduce the measurement frequency in well behaved
 localities, which can lower the traffic overhead generated by measurements, and
@@ -127,9 +125,9 @@ increase the data analytics computational performance.
 Instead of centrally process the time series,
 it is possible to instrument the home
 gateways to detect changes in an online fashion. Then, as with \gls*{cem}, the home
-routers could push this information to a central database for futher analysis.
+routers could push this information to a central database for further analysis.
 
 \item
-Extend the mechanism to other types of network infrastructures.
+Extend the mechanism to deal with other types of network infrastructures.
 
 \end{itemize}

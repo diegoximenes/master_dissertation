@@ -28,7 +28,7 @@ The final \gls*{rtt} is the average of the individual packets' \gls*{rtt}s.
 The data here presented considers a train of 100 \gls*{udp} packets of 32 bytes,
 separated by 1 millisecond.
 Maximum achievable upstream throughput is measured by overflowing the upload
-links with parallel TCP data transfers from the home router to the server.
+links with parallel \gls*{tcp} data transfers from the home router to the server.
 Traceroutes from the end-users to the respective servers are collected with
 the same frequency.
 The ping packets used in this process is also used to infer \gls*{rtt} per hop.
@@ -316,7 +316,7 @@ are caused in the path from the end-user to the server or vice versa.
 Therefore, correlate those metrics with the available traceroutes can lead to
 erroneous or inconclusive outcomes. Also, the maximum achievable upstream
 throughput can be affected by a service degradation on the path from the server
-to the end-user, since losses of TCP's ACKs can influence the measurement
+to the end-user, since losses of \gls*{tcp}'s ACKs can influence the measurement
 performance.
 Hence, this work restricts to report possible events locations considering that
 they are caused by equipments in the path from the end-user to the server.
