@@ -95,13 +95,13 @@ The blue vertex indicates the correlation between these results.
 
 It was visually verified that the same change point pattern of
 Figure~\ref{fig:zero_indegree_correlation_client} is present in all clients
-that belong to the subtree rooted in the Tier-2 vertex.
+that belong to the subtree rooted in the tier-2 vertex.
 Therefore, the system incorrectly did not detect the event in one of the D
 user-group clients.
 However, since several other G children detected the
 event, the system's output was not compromised by this error.
 Through the correlation of the zero indegree analysis,
-the only match between the problem locations was the Tier-2 group.
+the only match between the problem locations was the tier-2 group.
 
 Figure~\ref{fig:zero_indegreee_without_correlation} presents an example of a
 network event that was only identified in one zero indegree user-group.
@@ -133,7 +133,7 @@ the three previous cases. The system didn't detect inconclusive events.
 \multirow{3}{*}{Metric}                & \multicolumn{6}{c|}{Events}                                                                                                                                                                                                                \\ \cline{2-7}
                                        & \multicolumn{2}{c|}{Before first hop} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Only one zero \\ indegree user-group\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Multiple one degree\\ user-groups\end{tabular}} \\ \cline{2-7}
                                        & Improvement         & Failure         & Improvement                                       & Failure                                       & Improvement                                      & Failure                                     \\ \hline
-RTT                                    & 688                 & 685             & 789                                               & 809                                           & 43                                               & 38                                          \\ \hline
+\gls*{rtt}                                    & 688                 & 685             & 789                                               & 809                                           & 43                                               & 38                                          \\ \hline
 Round trip loss fraction               & 167                 & 144             & 141                                               & 116                                           & 2                                                & 2                                           \\ \hline
 Maximum achievable upstream throughput & 395                 & 358             & 331                                               & 280                                           & 4                                                & 3                                           \\ \hline
 \end{tabular}
@@ -194,14 +194,14 @@ zero indegree vertex.
 \label{fig:untraceable_location}
 \end{figure}%
 
-It is possible to note that both RTT time series changed their pattern
+It is possible to note that both \gls*{rtt} time series changed their pattern
 nearly at the same time, however, one case is characterized by an improvement,
 while the other as a failure.
 The traffic between these customers and the server
-doesn't go to through the Tier-2 \gls*{isp}, therefore, according with the
+doesn't go to through the tier-2 \gls*{isp}, therefore, according with the
 suppositions, these patterns indicate simultaneous events that occurred at
 different equipments before the first hop.
-Nonetheless, the system detected the same RTT modifications, at the end of
+Nonetheless, the system detected the same \gls*{rtt} modifications, at the end of
 06/01/16, in several other clients.
 Comparing these customers, it was verified that many of them don't share
 several attributes.
@@ -215,21 +215,21 @@ As with local events, this work doesn't have access to this kind of
 information, however, it is intriguing the fact that some of the clients
 detected a failure while others perceived an improvement.
 It was manually identified 3 of such cases,
-and the RTT was the only impacted metric.
-A significant number of RTT events were possibly wrongly classified due to this
+and the \gls*{rtt} was the only impacted metric.
+A significant number of \gls*{rtt} events were possibly wrongly classified due to this
 type of event.
 
-In general, the RTT per hop, obtained through the traceroute measurements,
-can be fairly different from the analyzed RTT measures.
+In general, the \gls*{rtt} per hop, obtained through the traceroute measurements,
+can be fairly different from the analyzed \gls*{rtt} measures.
 First, their methodologies are remarkably distinct.
-Second, the RTT associated with hop $i$ can be
-constantly and considerably bigger then the RTT related to a hop $j$,
+Second, the \gls*{rtt} associated with hop $i$ can be
+constantly and considerably bigger then the \gls*{rtt} related to a hop $j$,
 where $j > i$.
 This can be explained by the fact that some routers prioritizes
 forwarding instead of answering ping packets.
 Therefore, the analysis of this data was not included in the framework.
 For instance, Figure~\ref{fig:rtt_per_hop_client_1}
-presents the RTT per hop, disregarding the server hop, of the client of
+presents the \gls*{rtt} per hop, disregarding the server hop, of the client of
 Figure~\ref{fig:untraceable_location_client_1}.
 
 \begin{figure}[H]
@@ -291,9 +291,9 @@ of Figure~\ref{fig:untraceable_location_client_2}.
 \label{fig:rtt_per_hop_client_2}
 \end{figure}%
 
-In this case, it can be noticed that the RTT is bigger in the beginning of the
+In this case, it can be noticed that the \gls*{rtt} is bigger in the beginning of the
 first hop time series.
-This same pattern was detected in the RTT between the client and the server.
+This same pattern was detected in the \gls*{rtt} between the client and the server.
 
 \section{Final Remarks}
 
