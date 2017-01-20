@@ -5,7 +5,7 @@ This chapter briefly describes three projects
 (Argus~\cite{argus_end_to_end_service_anomaly_detection_and_localization_from_an_isps_point_of_view},
 NetNorad~\cite{netnorad}
 and CEM~\cite{crowdsourcing_service_level_network_event_monitoring})
-that use end-to-end QoS to localize faults in computer networks.
+that use end-to-end \gls*{qos} to localize faults in computer networks.
 
 \section{Argus}
 
@@ -14,7 +14,7 @@ is presented Argus, a system to
 detect and localize problems in \gls*{isp}'s networks. To achieve this goal, Argus uses
 network global information, and also passively collected data from the \gls*{isp}'s
 viewpoint to infer
-end-to-end QoS, such as traffic to/from end-users to estimate achievable
+end-to-end \gls*{qos}, such as traffic to/from end-users to estimate achievable
 download
 speed~\cite{speed_testing_without_speed_tests_estimating_achievable_download_speed_from_passive_measurements}.
 
@@ -149,7 +149,7 @@ thresholds, one for trigger and another for clear an alarm.
 
 Considering the three tags, if a high loss is detected in a cluster,
 then the fault is probably located at the cluster's data center.
-Also, if all clusters in a data center identify a QoS degradation,
+Also, if all clusters in a data center identify a \gls*{qos} degradation,
 then the fault is likely to be placed a layer above the clusters.
 Although these simple inferences can reduce the set of possible fault locations,
 they are unable to exactly isolate them.

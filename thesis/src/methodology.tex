@@ -2,13 +2,13 @@
 \label{chap:methodology}
 
 This chapter describes the proposed data analytics workflow.
-Besides, the QoS data gathering procedures are briefly presented,
+Besides, the \gls*{qos} data gathering procedures are briefly presented,
 and the proposed system is compared with previous projects.
 
 \section{Measurement Process}
 
 The time series used in this work represent network end-to-end measures of a
-cable-television infrastructure, which runs DOCSIS with asymmetric download and
+cable-television infrastructure, which runs \gls*{docsis} with asymmetric download and
 upload bandwidths. A home router connected to a cable modem communicates
 with a server strategically located by the \gls*{isp}.
 Each server is responsible for measurements of several end-users.
@@ -16,7 +16,7 @@ Measurements are triggered in
 each home router every half hour and, by the end of every day,
 the results are transferred to a database.
 The software responsible for these procedures was
-developed by TGR (a startup at UFRJ),
+developed by TGR (a startup at \gls*{ufrj}),
 and is spread over approximately four thousand customers of a major Brazilian
 Tier-3 \gls*{isp}.
 
@@ -166,7 +166,7 @@ Additionally, since the implemented traceroute also uses the same ports over
 time, and considering that different measurements types use distinct ports,
 the
 path followed by traceroute packets can be different from the path followed by
-the QoS measurements packets. Then, in this scenario, even with static paths in
+the \gls*{qos} measurements packets. Then, in this scenario, even with static paths in
 the Tier-2 \gls*{isp} network, the correlation between traceroutes
 results with end-to-end metrics can reach wrong conclusions.
 
@@ -506,7 +506,7 @@ as the change points, without even analyzing the time series. However, in the
 application domain of the present work, this approach would be impractical.
 First, this would need the expertise of how the configurations of network
 topology, routers congestion, physical equipment problems, among other features,
-affect the different end-to-end QoS metrics.
+affect the different end-to-end \gls*{qos} metrics.
 Second, this kind of information is absent in the dataset, and would be too
 complex to collect it.
 

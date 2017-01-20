@@ -25,14 +25,14 @@
 \contentsline {figure}{\numberline {4.8}{\ignorespaces Classifications disagreements.\relax }}{31}{figure.caption.21}
 \contentsline {figure}{\numberline {4.9}{\ignorespaces Different classification pattern in the same time series.\relax }}{32}{figure.caption.22}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Before first hop.\relax }}{35}{figure.caption.23}
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Correlation of problem locations detected by analysis that started in zero indegree vertices.\relax }}{35}{figure.caption.24}
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Network event in only one zero indegree user-group.\relax }}{36}{figure.caption.25}
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Time correlation unmatch.\relax }}{37}{figure.caption.27}
-\contentsline {figure}{\numberline {5.5}{\ignorespaces Untraceable location.\relax }}{37}{figure.caption.28}
-\contentsline {figure}{\numberline {5.6}{\ignorespaces RTT per hop of client of Figure~\ref {fig:untraceable_location_client_1}.\relax }}{39}{figure.caption.29}
-\contentsline {figure}{\numberline {5.7}{\ignorespaces RTT per hop of client of Figure~\ref {fig:untraceable_location_client_2}.\relax }}{40}{figure.caption.30}
-\contentsline {figure}{\numberline {5.8}{\ignorespaces Possible contract bandwidth change.\relax }}{41}{figure.caption.31}
-\contentsline {figure}{\numberline {5.9}{\ignorespaces Clients sparsity.\relax }}{41}{figure.caption.32}
-\contentsline {figure}{\numberline {5.10}{\ignorespaces Number of clients per zero indegree user-group histogram.\relax }}{42}{figure.caption.33}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Before first hop.\relax }}{34}{figure.caption.23}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Correlation of problem locations detected by analysis that started in zero indegree vertices.\relax }}{34}{figure.caption.24}
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Network event in only one zero indegree user-group.\relax }}{35}{figure.caption.25}
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Time correlation unmatch.\relax }}{36}{figure.caption.27}
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Untraceable location.\relax }}{36}{figure.caption.28}
+\contentsline {figure}{\numberline {5.6}{\ignorespaces RTT per hop of client of Figure~\ref {fig:untraceable_location_client_1}.\relax }}{38}{figure.caption.29}
+\contentsline {figure}{\numberline {5.7}{\ignorespaces RTT per hop of client of Figure~\ref {fig:untraceable_location_client_2}.\relax }}{39}{figure.caption.30}
+\contentsline {figure}{\numberline {5.8}{\ignorespaces Possible contract bandwidth change.\relax }}{40}{figure.caption.31}
+\contentsline {figure}{\numberline {5.9}{\ignorespaces Clients sparsity.\relax }}{40}{figure.caption.32}
+\contentsline {figure}{\numberline {5.10}{\ignorespaces Number of clients per zero indegree user-group histogram.\relax }}{41}{figure.caption.33}
 \addvspace {10\p@ }

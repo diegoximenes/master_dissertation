@@ -5,14 +5,14 @@ Considering the specific \gls*{isp}'s topology, and the current end-to-end measu
 methodology, this dissertation proposes a data analytics framework to
 detect and localize network events.
 For such purpose, the mechanism tracks
-statistical changes in the end-to-end QoS time series from different clients,
+statistical changes in the end-to-end \gls*{qos} time series from different clients,
 and correlates those patterns with traceroutes.
 Besides, the proposed mechanism was compared with previous systems.
 Finally, it were presented several outcomes when the procedure was applied to
 real data.
 
 The results show that, considering the exposed restrictions,
-it is possible to only use end-to-end QoS metrics, and traceroutes, from
+it is possible to only use end-to-end \gls*{qos} metrics, and traceroutes, from
 different clients, to identify and localize network events.
 However, due to the lack of an events dataset, important
 questions persist unanswered.
@@ -20,7 +20,7 @@ For instance, a quantitative accuracy study
 would allow to check which types of events can't be handled by the
 proposed procedure.
 A dataset would also allow to better understand the events
-patterns, how they impact the QoS metrics, and fine tune the system.
+patterns, how they impact the \gls*{qos} metrics, and fine tune the system.
 
 The use of end-to-end measurements has the advantage of dealing with
 metrics that are directly related with the service perceived by the customers.
@@ -47,7 +47,7 @@ were unable to be tackled by this project.
 
 \begin{itemize}
 \item
-The used QoS metrics are affected by equipments in the path from the server to
+The used \gls*{qos} metrics are affected by equipments in the path from the server to
 the end-user, and also by devices in the reverse direction.
 However, only the paths from end-users to servers are available.
 Hence, a complete
@@ -61,7 +61,7 @@ performance degradation in the reverse path.
 \item
 If available, the HFC physical topology between the home router and the
 first hop of the traceroute can be incorporated to the analysis.
-Also, beyond only using end-to-end QoS metrics,
+Also, beyond only using end-to-end \gls*{qos} metrics,
 the proposed mechanism can be extended
 to use internal network devices information, such as signal-to-noise ratio.
 
@@ -88,7 +88,7 @@ it's infrastuture may not be available.
 
 \item
 Once a network events dataset is constructed, the correlation between
-change points of different QoS metrics can reveal useful information
+change points of different \gls*{qos} metrics can reveal useful information
 about the network behavior. This analysis was not done since the algorithms'
 hyperparameters couldn't be optimized, hence, those comparisons could reach
 wrong conclusions.

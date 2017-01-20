@@ -18,7 +18,7 @@ In general, one client measured against a single server through the batch.
 For all cases, the time series were preprocessed with a median filter.
 The change points were detected through the optimization model described in
 Chapter~\ref{chap:change_point_detection}.
-For each QoS metric, the algorithms' hyperparameters were manually selected.
+For each \gls*{qos} metric, the algorithms' hyperparameters were manually selected.
 It was opted by conservative values, in order to avoid change points that,
 through a visual inspection, may be arguably not related to a network event.
 These algorithms choices were guided by two facts.
@@ -210,7 +210,7 @@ upstream traffic went to completely different IP layer equipments, and they
 were located at different Brazilian UFs.
 This can indicate a single global network event, that simultaneously affected
 different network regions. As an example, the event could be a centralized
-change of DOCSIS' parameters, that is concurrently propagated to all customers.
+change of \gls*{docsis}' parameters, that is concurrently propagated to all customers.
 As with local events, this work doesn't have access to this kind of
 information, however, it is intriguing the fact that some of the clients
 detected a failure while others perceived an improvement.
