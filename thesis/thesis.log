@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.7.24)  20 JAN 2017 01:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.7.24)  20 JAN 2017 02:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -605,23 +605,23 @@ Writing index of abbreviations file thesis.abx
 (./thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             https://www.ctan.org/pkg/pageslts
-(lastpage)             ! on input line 30.
+(lastpage)             ! on input line 32.
  (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count160
@@ -686,7 +686,7 @@ e
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box38
-Package hyperref Info: Link coloring OFF on input line 30.
+Package hyperref Info: Link coloring OFF on input line 32.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -695,9 +695,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count166
 )
-LaTeX Info: Redefining \ref on input line 30.
-LaTeX Info: Redefining \pageref on input line 30.
-LaTeX Info: Redefining \nameref on input line 30.
+LaTeX Info: Redefining \ref on input line 32.
+LaTeX Info: Redefining \pageref on input line 32.
+LaTeX Info: Redefining \nameref on input line 32.
 
 (./thesis.out) (./thesis.out)
 \@outlinefile=\write5
@@ -711,30 +711,30 @@ Package: ltcaption 2013/06/09 v1.4-94 longtable captions (AR)
 )
 Package caption Info: supertabular package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Option `breaklinks' set `true' on input line 53.
-Package hyperref Info: Option `raiselinks' set `true' on input line 53.
-Package hyperref Info: Option `pageanchor' set `true' on input line 53.
+Package hyperref Info: Option `breaklinks' set `true' on input line 55.
+Package hyperref Info: Option `raiselinks' set `true' on input line 55.
+Package hyperref Info: Option `pageanchor' set `true' on input line 55.
 
 <coppe-logo.pdf, id=136, 177.463pt x 76.285pt>
 File: coppe-logo.pdf Graphic file (type pdf)
  <use coppe-logo.pdf>
-Package pdftex.def Info: coppe-logo.pdf used on input line 53.
+Package pdftex.def Info: coppe-logo.pdf used on input line 55.
 (pdftex.def)             Requested size: 177.46255pt x 76.2848pt.
 
-Underfull \hbox (badness 7740) in paragraph at lines 53--53
+Underfull \hbox (badness 7740) in paragraph at lines 55--55
 []\OT1/cmr/m/n/12 Disserta^^Xc~ao de Mestrado apresentada ao
  []
 
 
-Underfull \hbox (badness 3668) in paragraph at lines 53--53
+Underfull \hbox (badness 3668) in paragraph at lines 55--55
 \OT1/cmr/m/n/12 de Sistemas e Computa^^Xc~ao, COPPE, da
  []
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 53.
+LaTeX Font Info:    Try loading font information for U+msa on input line 55.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 53.
+LaTeX Font Info:    Try loading font information for U+msb on input line 55.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -742,29 +742,29 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./coppe-logo.pdf>]
-Underfull \hbox (badness 3884) in paragraph at lines 54--54
+Underfull \hbox (badness 3884) in paragraph at lines 56--56
 \OT1/cmr/m/n/12 DISSERTA[][]AO SUB-METIDA []AO CORPO DOCENTE DO INSTITUTO
  []
 
 
-Underfull \hbox (badness 3884) in paragraph at lines 54--54
+Underfull \hbox (badness 3884) in paragraph at lines 56--56
 \OT1/cmr/m/n/12 ALBERTO LUIZ COIMBRA DE P[]OS-GRADUA[][]AO E PESQUISA DE
  []
 
 
-Underfull \hbox (badness 2884) in paragraph at lines 54--54
+Underfull \hbox (badness 2884) in paragraph at lines 56--56
 \OT1/cmr/m/n/12 ENGENHARIA (COPPE) DA UNIVERSIDADE FEDERAL DO RIO DE
  []
 
 
-Underfull \hbox (badness 3386) in paragraph at lines 54--54
+Underfull \hbox (badness 3386) in paragraph at lines 56--56
 \OT1/cmr/m/n/12 JANEIRO COMO PARTE DOS REQUISITOS NECESS[]ARIOS PARA A
  []
 
 [2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 54--54
+Underfull \hbox (badness 10000) in paragraph at lines 56--56
 \OT1/cmr/m/n/12 Networks Using End-to-End Measurements/Diego
  []
 
@@ -906,7 +906,7 @@ erAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png> <./fi
 gures/change_point_detection/preprocessing/median_filter_latency/serverAMRDTCPE
 V01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png>]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 164.
+put line 165.
  [11 <./figures/change_point_detection/preprocessing/median_filter_loss/serverA
 MRDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png> <./figur
 es/change_point_detection/preprocessing/median_filter_loss/serverAMRDTCPEV01_ma
@@ -922,7 +922,7 @@ CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png Graphic file
 SRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/sliding_windows_onlin
 e/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-1
-1.png used on input line 198.
+1.png used on input line 199.
 (pdftex.def)             Requested size: 298.75264pt x 224.06116pt.
 
 <./figures/change_point_detection/sliding_windows_offline/id100_serverNHODTCSRV
@@ -936,7 +936,7 @@ TCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png Graphic file
 CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/sliding_windows_offli
 ne/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-
-11.png used on input line 214.
+11.png used on input line 215.
 (pdftex.def)             Requested size: 298.75264pt x 224.06116pt.
  [12 <./figures/change_point_detection/sliding_windows_online/id100_serverNHODT
 CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png> <./figures/c
@@ -951,7 +951,7 @@ File: ./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66
 B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/seg_neigh/id7_serverR
 IBDTCSRV03_mac64:66:B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png used on i
-nput line 299.
+nput line 300.
 (pdftex.def)             Requested size: 213.39568pt x 200.04987pt.
 
 <./figures/change_point_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:66:B3
@@ -963,7 +963,7 @@ File: ./figures/change_point_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:
 6:B3:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/seg_neigh/id158_serve
 rSOCDTCPEV01_mac64:66:B3:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png used on
- input line 299.
+ input line 300.
 (pdftex.def)             Requested size: 213.39568pt x 200.04987pt.
  [14 <./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66
 :B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png> <./figures/change_point_det
@@ -980,7 +980,7 @@ c64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png Graphic file (type png
 64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/gaussian_hmm/id115_se
 rverRJODTCLDM031_mac64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png use
-d on input line 355.
+d on input line 357.
 (pdftex.def)             Requested size: 341.43437pt x 256.07178pt.
  [15 <./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_ma
 c64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png>]
@@ -995,7 +995,7 @@ File: ./figures/change_point_detection/bayesian_offline/id305_serverSNEDTCPROB0
 _mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/bayesian_offline/id30
 5_serverSNEDTCPROB01_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png
- used on input line 404.
+ used on input line 405.
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 
 <./figures/change_point_detection/bayesian_online/id305_serverSNEDTCPROB01_mac6
@@ -1009,16 +1009,13 @@ png)
 mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/bayesian_online/id305
 _serverSNEDTCPROB01_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png 
-used on input line 404.
+used on input line 405.
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
- [16 <./figures/change_point_detection/bayesian_offline/id305_serverSNEDTCPROB0
-1_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png> <./figures/change
-_point_detection/bayesian_online/id305_serverSNEDTCPROB01_mac64:66:B3:A6:BB:80_
-dtstart2016-07-01_dtend2016-07-11.png>]
-
-LaTeX Warning: Reference `' on page 17 undefined on input line 419.
-
-) (./src/methodology.tex [17]
+)
+(./src/methodology.tex [16 <./figures/change_point_detection/bayesian_offline/i
+d305_serverSNEDTCPROB01_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.
+png> <./figures/change_point_detection/bayesian_online/id305_serverSNEDTCPROB01
+_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png>] [17]
 Chapter 4.
 [18
 
@@ -1713,24 +1710,20 @@ Missing character: There is no “ in font cmr12!
 
 AED: lastpage setting LastPage
 [48]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 87.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 87.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 89.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 89.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 87.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 87.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 89.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 89.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: AD66BDED01064794657587CC5E4B257B;1977.
-
-
-LaTeX Warning: There were undefined references.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 87.
+(rerunfilecheck)             Checksum: E7A55DA8C97DD5E54F977DA64D8473BE;1953.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 89.
  ) 
 Here is how much of TeX's memory you used:
- 14689 strings out of 494888
- 257207 string characters out of 6179127
- 389415 words of memory out of 5000000
- 17430 multiletter control sequences out of 15000+600000
+ 14748 strings out of 494888
+ 258061 string characters out of 6179127
+ 390044 words of memory out of 5000000
+ 17489 multiletter control sequences out of 15000+600000
  13082 words of font info for 48 fonts, out of 8000000 for 9000
  38 hyphenation exceptions out of 8191
  46i,14n,82p,1915b,542s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1749,7 +1742,7 @@ amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on thesis.pdf (58 pages, 5382866 bytes).
+Output written on thesis.pdf (58 pages, 5324169 bytes).
 PDF statistics:
  876 PDF objects out of 1000 (max. 8388607)
  672 compressed objects within 7 object streams
