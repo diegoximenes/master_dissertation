@@ -49,6 +49,14 @@ measurement software are presented during the text, as they are needed.
 This section describes, in a high level abstraction, the proposed workflow
 used to detect network events and localize their cause. When necessary, some
 steps are better explored in further sections.
+
+The mechanism was motivated by an empirical visual investigation of the
+\gls*{qos} time series.
+Besides the statistical changes that persist for long time periods,
+it was identified that clients with the same
+change point pattern, including the occurrence time,
+usually share physical network equipments.
+
 The analysis seeks for events during a specific time period, in a single
 measurement server, and considers a
 particular metric (round trip loss fraction, \gls*{rtt}, or maximum achievable
