@@ -1,0 +1,10 @@
+digraph {
+    rankdir=BT
+    "A" -> "B"
+    "B" -> "C"
+    "C" -> "D"
+    "E" -> "F"
+    "F" -> "C"
+    "G" -> "H"
+    "H" -> "D"
+}
