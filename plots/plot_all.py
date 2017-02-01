@@ -23,7 +23,7 @@ def plot(dt_start, dt_end, metric):
         # comparison between not filtered and filtered
         ts = TimeSeries(in_path, metric, dt_start, dt_end)
         ts_filter = TimeSeries(in_path, metric, dt_start, dt_end)
-        ts_filter.percentile_filter(win_len=12, p=0.5)
+        ts_filter.percentile_filter(win_len=5, p=0.5)
 
         # if len(ts_filter.y) > 100:
         #     plot_procedures.plot_stl_decomposition(ts_filter,
@@ -37,17 +37,23 @@ def plot(dt_start, dt_end, metric):
         #                        cross_traffic_thresh=0)
         # ts_filter.percentile_filter(win_len=13, p=0.5)
 
-        plot_procedures.plot_ts_share_x(ts, ts_filter, out_path,
-                                        compress=True,
-                                        plot_type2="scatter",
-                                        title1="raw",
-                                        title2="median filtered",
-                                        default_ylabel=True,
-                                        xlabel="$i$")
+        # plot_procedures.plot_ts_share_x(ts, ts_filter, out_path,
+        #                                 compress=True,
+        #                                 plot_type2="scatter",
+        #                                 title1="raw",
+        #                                 title2="median filtered",
+        #                                 default_ylabel=True,
+        #                                 xlabel="$i$")
+
+        ylabel = plot_procedures.get_default_ylabel(ts)
+        plot_procedures.plot_ts(ts_filter, out_path,
+                                ylabel=ylabel,
+                                compress=False,
+                                title="median filtered")
 
 
 if __name__ == "__main__":
-    metric = "throughput_up"
-    dt_start = datetime.datetime(2016, 7, 1)
-    dt_end = datetime.datetime(2016, 7, 11)
+    metric = "loss"
+    dt_start = datetime.datetime(2016, 6, 21)
+    dt_end = datetime.datetime(2016, 7, 1)
     plot(dt_start, dt_end, metric)
