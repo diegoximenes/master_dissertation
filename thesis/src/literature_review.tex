@@ -5,7 +5,20 @@ This chapter briefly describes three projects,
 Argus~\cite{argus_end_to_end_service_anomaly_detection_and_localization_from_an_isps_point_of_view},
 NetNorad~\cite{netnorad},
 and \gls*{cem}~\cite{crowdsourcing_service_level_network_event_monitoring},
-that use end-to-end \gls*{qos} to localize faults in computer networks.
+that use end-to-end \gls*{qos} to identify and localize events, or in some cases
+only faults, in computer networks.
+
+These previous works share common approaches.
+For instance, Argus and
+NetNorad track the end-to-end \gls*{qos} evolution over time of different
+end-hosts,
+and the anomalies identified in these time series are interpreted as events.
+Anomalies are defined as the time points when the data stream deviates from it's
+standard.
+Besides this similarity, considering that these projects where designed to be
+deployed in different network architectures, they differ in several aspects,
+such as in the \gls*{qos} data collection, anomaly detection, and event
+localization procedures.
 
 \section{Argus}
 
@@ -49,8 +62,8 @@ Figure~\ref{fig:argus_spatial_aggregation}.
 The Temporal Aggregation phase determines how data
 from different clients of an end-group are combined.
 For each user-group, the
-measurements of all end-users are grouped in time-bins, and for each
-time-bin, a summary statistic, such as median or mean, is selected.
+measurements samples of all end-users are grouped in time-bins, and for each
+time-bin, a statistic, such as median or mean, is selected.
 Each type of fault can be better tracked by a specific statistic.
 As an example, the
 minimum of the \glspl*{rtt} can capture the physical propagation delay,
@@ -60,7 +73,9 @@ effective transformation to track network flaws, and also robust to individual
 end-users variability caused by their local infrastructure.
 
 The Event Detection procedure identifies anomalies in the
-summary time series. Argus uses a Holt-Winters variation,  which consists of
+time series obtained in the Temporal Aggregation mechanism.
+Argus uses a Holt-Winters~\cite{holt-winters_forecasting_some_practical_issues}
+variation, which consists of
 an online method with low time and memory complexities.
 
 Using spatial and events' times correlations, the Event Localization step
@@ -177,7 +192,7 @@ a specific service, such as a \gls*{vod} application.
 To increase the system's scalability,
 each end-host identifies local problems by their own,
 and pushes these information to a distributed storage to further analysis.
-The framework doesn't specifies how events should be detected,
+The framework doesn't specify how events should be detected,
 however, they must be associated with service level problems.
 
 To spatially isolate network flaws, locally detected events, and spatial

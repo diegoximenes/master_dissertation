@@ -17,17 +17,18 @@
 \BOOKMARK [1][-]{section.3.7}{Bayesian Inference}{chapter.3}% 17
 \BOOKMARK [1][-]{section.3.8}{Final Remarks}{chapter.3}% 18
 \BOOKMARK [0][-]{chapter.4}{Methodology}{}% 19
-\BOOKMARK [1][-]{section.4.1}{Measurement Process}{chapter.4}% 20
-\BOOKMARK [1][-]{section.4.2}{Pipeline}{chapter.4}% 21
+\BOOKMARK [1][-]{section.4.1}{Measurement Environment}{chapter.4}% 20
+\BOOKMARK [1][-]{section.4.2}{Proposed Workflow}{chapter.4}% 21
 \BOOKMARK [1][-]{section.4.3}{Spatial Correlation}{chapter.4}% 22
 \BOOKMARK [1][-]{section.4.4}{Time Correlation}{chapter.4}% 23
 \BOOKMARK [1][-]{section.4.5}{Spatial-Time Correlation}{chapter.4}% 24
 \BOOKMARK [1][-]{section.4.6}{Change Point Detection Issues}{chapter.4}% 25
-\BOOKMARK [1][-]{section.4.7}{Differences to Previous Systems}{chapter.4}% 26
+\BOOKMARK [1][-]{section.4.7}{Differences from Previous Work}{chapter.4}% 26
 \BOOKMARK [0][-]{chapter.5}{Results}{}% 27
 \BOOKMARK [1][-]{section.5.1}{Possible Correct Outcomes}{chapter.5}% 28
 \BOOKMARK [1][-]{section.5.2}{Possible Incorrect Outcomes}{chapter.5}% 29
 \BOOKMARK [1][-]{section.5.3}{Final Remarks}{chapter.5}% 30
 \BOOKMARK [0][-]{chapter.6}{Conclusions}{}% 31
-\BOOKMARK [1][-]{section.6.1}{Future Work}{chapter.6}% 32
-\BOOKMARK [0][-]{chapter*.33}{Bibliography}{}% 33
+\BOOKMARK [1][-]{section.6.1}{Contributions}{chapter.6}% 32
+\BOOKMARK [1][-]{section.6.2}{Future Work}{chapter.6}% 33
+\BOOKMARK [0][-]{chapter*.33}{Bibliography}{}% 34

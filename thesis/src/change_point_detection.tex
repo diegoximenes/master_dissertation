@@ -31,7 +31,7 @@ due to a variety of reasons, such as being too specific to the application
 area, or because the mechanisms were only analyzed through theoretical
 aspects. Therefore, it were selected a set of techniques with a good level
 of theoretical formalism, and flexibility to adapt, in order to handle
-specifities of the problem domain. Furthermore, this chapter exposes several
+specificities of the problem domain. Furthermore, this chapter exposes several
 challenges when dealing with real network measurements data,
 and some adopted solutions which are not described in the literature.
 
@@ -42,7 +42,7 @@ specific point at time $t$ is a change point, the solver has available the
 whole time series, including past and future information w.r.t. $t$. On the
 other hand, in the online version, the information is available up to time $t$.
 The choice between these options is defined by the application domain. In some
-cases data are processed in real time, and change points should be detected as
+cases data is processed in real time, and change points should be detected as
 soon as possible. But in other applications changes are identified by historical
 purposes, and offline algorithms can be used.
 
@@ -52,23 +52,41 @@ a decision, the online definition is relaxed, and to decide if a point
 is a change point, it is possible to use data up to a small window in the future,
 which in real time processing means that the application should wait until
 additional data is available. Hence, there is a trade-off between minimizing
-the time to detect a change, and correctly classify a point. Therefore, in some
-cases, the online version can be transformed in offline by minor modifications.
+the time to detect a change and maximize the correct classification of a point.
+Therefore, in some cases, the online version can be transformed in offline
+by minor modifications.
 
 In this work it is considered the following input and change points attributes,
 which were defined considering the final application scenario:
 \begin{itemize}
 \item Univariate time series. However, it is possible to extend several
-    methods presented here to deal with multivariate data.
-\item Unevenly spaced time series, that is, data is not regularly sampled in
-    time.
-\item Time series with different lengths.
-\item Unknown number of change points.
-\item Different number of points between change points.
+methods presented here to deal with multivariate data. This is an important
+feature since, as is going to be presented in
+Chapter~\ref{chap:methodology}, the measurement software is able to
+simultaneously collect more than one \gls*{qos} metric.
+\item Unevenly spaced time series. As is going to be explained in
+Chapter~\ref{chap:methodology}, the \gls*{qos} data is not regularly sampled
+in time. However, in general, two consecutive points are approximately
+30 minutes apart.
+\item Unknown number of change points, since an arbitrary number of events can
+occur in a specific time period.
+\item Different number of points between change points, since events can persist
+for an arbitrary period of time.
 \item Focus on changes in the underlying mean and distribution, disregarding
-    other kinds of changes, such as in periodicity.
-\item Outliers are not considered statistical changes.
+other kinds of changes, such as in seasonality.
+As stated in~\cite{a_survey_of_methods_for_time_series_change_point_detection},
+an ongoing challenge for the change point detection problem is to handle
+time series with non-stationary segments.
+However, as it will be visually noticed through this chapter, and as it was
+presented
+in~\cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil},
+even without change points, the time series used in this work
+are non-stationary.
 \item There is no latent information of the time series.
+Also, there isn't a change points' ground truth.
+Therefore, it is only possible to use unsupervised change point detection
+methods.
+\item Outliers are not considered statistical changes.
 \item It is considered the online and offline options.
 \end{itemize}
 
@@ -80,8 +98,9 @@ The value $y_{i}$ indicates the $i$-th sampled value, and $x_{i}$ indicates the
 associated sample time. It is assumed that the points are sorted by time, that
 is, $x_{i - 1} < x_{i}$ for $i = 2, \ldots, n$. Since unevenly spaced time
 series is considered, $x_{i} - x_{i - 1}$ can be distinct for different $i$
-values. For $s \le t$ the following notation is adopted:
-$\mathbf{y}_{s:t} = (y_{s}, \ldots, y_{t})$.
+values.
+The following notation is also adopted:
+$\mathbf{y}_{s:t} = (y_{s}, \ldots, y_{t})$ for $s \le t$.
 
 The presence of $k$ change points implies that data is split into $k+1$
 segments, also called windows. Let $\tau_{i}$ indicates the $i$-th change point
@@ -102,17 +121,20 @@ percentiles, z-score,
 wavelet thresholding~\cite{an_introduction_to_wavelets}, optimal 1D
 clustering~\cite{ckmeans_1d_dp_optimal_k_means_clustering_in_one_dimension_by_dynamic_programming},
 and Savitzky-Golay filter~\cite{savgol}.
-
-Since several time series are
-periodic, it was also considered the possibility of only using the
+Also, since several time series exhibit a seasonal pattern,
+it was also considered the possibility of only using the
 trend, or the trend + residual transformation,
 resulted from the STL
 decomposition~\cite{stl_a_seasonal_trend_decomposition_procedure_based_on_loess}.
 
-Due to it's simplicity,
-this chapter uses time series only filtered by a centered median
+This chapter uses time series only filtered by a centered median
 sliding windows, in which given a parameter $w$, $y_{i}$ is set to be
 the median of the raw samples with indexes in $[i-w, i+w]$.
+The choice of this method among the others was guided by two reasons.
+First, it was empirically verified it's effectiveness in removing outliers.
+Second, it's simplicity allows to easily interpret the impact of it's parameter,
+which is an important feature to manually fine tune the procedure for the
+different \gls*{qos} metrics.
 Figures~\ref{fig:median_filter_rtt} and~\ref{fig:median_filter_loss} show
 some examples of this preprocessing.
 
@@ -128,7 +150,7 @@ some examples of this preprocessing.
             \caption{}
         \end{subfigure}%
     }
-    \caption{Median filter RTT. $w=6$.}
+    \caption{Median filter RTT. $w=6$. Plots with different scales.}
 \label{fig:median_filter_rtt}
 \end{figure}%
 
@@ -157,9 +179,9 @@ is to consider a distance metric between two empirical distributions as the base
 to infer the change points. Letting $d(\mathbf{a}, \mathbf{b})$ to be the
 distance
 between two empirical distributions defined by the windows $\mathbf{a}$ and
-$\mathbf{b}$, and considering windows of length $m$, the
+$\mathbf{b}$, and considering windows of length $m$,
 Algorithm~\ref{alg:sliding_windows} presents a simple online sliding windows
-method.
+method~\cite{detecting_change_in_data_streams}.
 
 \begin{algorithm}[H]
 \caption{Online Sliding Windows}
@@ -244,7 +266,7 @@ case~\cite{on_optimal_multiple_changepoint_algorithms_for_large_data}:
 \end{equation}
 
 This problem can be solved using dynamic programming with $O(k n^2 f(n))$ time
-complexity, where $f(n)$ is related with the cost function evaluation. Several
+complexity, where $f(n)$ is a function of the cost to evaluate $C$. Several
 segment cost functions can be evaluated in $O(1)$ after a $O(n)$ preprocessing
 phase, implying in an overall $O(k n^2)$ complexity. It is possible to prove
 that \gls*{mse}, negative maximum log-likelihood functions of normal, exponential,
@@ -281,7 +303,7 @@ optimality.
 
 When a negative maximum log-likelihood is
 used, the cost of a segment with an outlier can be orders of magnitude greater
-than the cost of a window without anomalies. Therefore,
+than the cost of a window without outliers. Therefore,
 in this case, the method is sensible to outliers.
 
 Figure~\ref{fig:seg_neigh} presents two output examples.
@@ -311,17 +333,17 @@ In this context, each window is related to a hidden state of a \gls*{hmm}, and t
 observation distribution of this state represents the distribution of that
 segment. Therefore, the mechanism models the time series using a \gls*{hmm}, and
 through the hidden state path, assesses the times when a transition between
-different hidden states occur.
+different hidden states occurs.
 
 There are several approaches in the detection and training phases. For example,
 given a trained \gls*{hmm}, the most likely hidden state path can be checked
 through
 the Viterbi algorithm. Also, it is possible to evaluate the probability of a
 transition between different hidden states at time $t$, and then apply a
-threshold and peak detection methods, as well as in sliding windows techniques.
+threshold and peak detection methods, such as those in sliding windows techniques.
 For the training step, it is possible to use several time series to train a
 single \gls*{hmm}, and then use this model to detect change points in all time series.
-Another way is to, for each data stream, train a single model using only the
+Another way is to train for each data stream a single model using only the
 target time series.
 
 It is important to note that the structure of the hidden state graph has a large
@@ -332,7 +354,7 @@ segments.
 
 In~\cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series}
 is stated that when using a fully connected structure, the time interval that a
-time series stays in the same hidden state is low, which can not reflect real
+time series stays in the same hidden state is low, which may not reflect real
 data. To overcome this problem,
 \cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series}
 suggests to increase the time that a time series stands in the same hidden
@@ -350,7 +372,8 @@ with observations following a Normal distribution.
 The top plot is the median filtered time series.
 The middle plot is the best hidden state path, in which the vertical axis
 indicates the distribution of each hidden state.
-The bottom plot is the sliding windows distance.
+The bottom plot is the discrete Hellinger distance of consecutive segments
+resulted from applying the sliding windows method to the best hidden state path.
 
 \begin{figure}[H]
     \centering
@@ -411,7 +434,17 @@ algorithms executions.
 
 Despite not being explicitly approached, it is possible to observe
 through this chapter
-that network measurements data has different patterns. Therefore,
-the choice of the most appropriate set of algorithms and hyperparameters
-is one of the main difficulties of this project.
-In Chapter~\ref{chap:methodology} this issue is discussed with more details.
+that network measurements data has different patterns.
+In addition, the absence of a change points dataset ground truth, turn the
+selection of the most appropriate set of algorithms and hyperparameters
+a manual procedure.
+
+In this context, the \gls*{hmm} and bayesian inference methods face a major
+disadvantage, since it was empirically verified that is a challenging task to
+proper choose their hyperparameters.
+The optimization model was the easier to manually fine tune,
+in order to establish a single set of hyperparameters that could
+generalize to different time series characteristics.
+
+In Chapter~\ref{chap:methodology} is discussed the issue relative to how to
+construct an events dataset.

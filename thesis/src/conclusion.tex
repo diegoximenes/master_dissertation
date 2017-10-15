@@ -7,18 +7,18 @@ detect and localize network events.
 For such purpose, the mechanism tracks
 statistical changes in the end-to-end \gls*{qos} time series from different clients,
 and correlates these patterns with traceroutes.
-Finally, it were presented several outcomes when the procedure was applied to
+Finally, several outcomes were presented when the procedure was applied to
 real data.
 
 The results show that, considering the exposed restrictions,
-it is possible to only use end-to-end \gls*{qos} metrics, and traceroutes, from
+it is possible to use only end-to-end \gls*{qos} metrics, and traceroutes, from
 different clients, to identify and localize network events.
-However, due to the lack of an events dataset, important
+However, due to the lack of an events dataset ground truth, important
 questions persist unanswered.
 For instance, a quantitative accuracy study
 would allow to check which types of events can't be handled by the
 proposed mechanism.
-A dataset would also allow to better understand the events
+A dataset would also allow a precise analysis of the events
 patterns, how they impact the \gls*{qos} metrics, and fine tune the system.
 
 The use of end-to-end measurements has the advantage of dealing with
@@ -32,26 +32,41 @@ Besides the data availability, the current measurement process imposed
 several restrictions to this work.
 In order to better explore the proposed solution,
 a further continuation of this project
-would require a stronger partnership with the \gls*{isp},
-and also flexibility to adapt the measurement software.
-However, this dissertation can be used as a first guide to TGR's and \gls*{isp}'s engineers.
+would require a stronger partnership with the \gls*{isp}.
+In addition, in order to improve the proposed framework's performance,
+it would be desirable to adapt the measurement software.
+However, this dissertation can be used as a first guide to the \gls*{isp}'s engineers.
+
+\section{Contributions}
+Next is summarized this dissertation contributions.
+
+\begin{itemize}
+\item
+An automatic procedure, that only uses the available end-to-end \gls*{qos}
+measurements, and traceroutes, to detect and localize network events in the
+specific tier-3 ISP's infrastructure.
+
+\item
+A list of possible improvements in the measurement methodology currently
+employed by the startup, in order to enhance the proposed system's performance. This
+list is presented in the next Section~\ref{sec:future_work}.
+\end{itemize}
 
 \section{Future Work}
+\label{sec:future_work}
 
 Next is presented a list of future development directions of this work.
 Considering the detection and localization of events, several adaptations to
 the current measurement methodology are suggested.
-Also, it is indicated deployment approaches which
-were unable to be tackled by this project.
 
 \begin{itemize}
 \item
 The used \gls*{qos} metrics are affected by equipments in the path from the server to
-the end-user, and also by devices in the reverse direction.
-However, only the paths information from end-users to servers are available.
+the end-user, as well as those in the reverse direction.
+However, only the path information from end-users to servers are available.
 Hence, the traceroutes from servers to end-users should also be collected.
 Besides, instead of only considering the round trip loss information,
-the one way loss fraction from both directions can be tracked.
+the one way loss fraction in both directions can be tracked.
 Further, the maximum achievable one way throughput measurement can be
 implemented using \gls*{udp} instead of \gls*{tcp}, which eliminates the interference of
 performance degradation in the reverse path.
@@ -59,30 +74,30 @@ performance degradation in the reverse path.
 \item
 The \gls*{hfc} plant between the home router and the
 first hop of the traceroute can be incorporated to the analysis.
-Also, beyond only using end-to-end \gls*{qos} metrics,
+Also, in addition to only using end-to-end \gls*{qos} metrics,
 the proposed mechanism can be extended
 to use internal network devices information, such as signal-to-noise ratio.
 
 \item
-A network failure events dataset can be built with \gls*{isp}'s auxiliary data.
+A network failure events dataset can be built with \gls*{isp}'s data.
 As an example, customers' complaints gathered from call centers can be used to,
 during a specific time period, infer clients affected by a \gls*{qoe} deterioration,
 which can then be translated to true network failures.
 Additionally, it is possible to use records from current failure detection
 methods deployed by the \gls*{isp}, such as manual inspection, or through equipments
-that are able to self report specific faults.
+that are able to report specific faults.
 However, through preliminary talks with \gls*{isp}'s engineers,
 both databases are noisy, and mining useful information
 from them can be a challenging task.
 For instance, there are cases in which devices flaws are manually
-detected and corrected, but those information aren't stored.
+detected and corrected, but those information is not stored.
 Also, during the dataset construction, the inferred events times can be
 considerably different from their true occurrence time.
 As stated in Chapter~\ref{chap:methodology}, a dataset could open new
 supervised learning possibilities to the change point detection problem, such
 as hyperparameter optimization and model selection.
-Besides, since the tier-2 \gls*{isp} is not a project partner, this kind of data from
-it's infrastructure may not be available.
+Besides, since the tier-2 \gls*{isp} is not a project partner, this
+complete data of the network infrastructure may not be available.
 
 \item
 Once a network events dataset is constructed, the correlation between
@@ -115,7 +130,7 @@ strategies.
 Considering a real time processing environment, in order to decrease the
 event detection delay, the system can adaptively control the measurement
 frequency.
-Increase the amount of data related to potentially problematic regions,
+Increasing the amount of data related to potentially problematic regions,
 can improve the system's output confidence in a short time period.
 Also, it is possible to reduce the measurement frequency in well behaved
 localities, which can lower the traffic overhead generated by measurements, and

@@ -2,24 +2,28 @@
 \label{chap:results}
 
 As stated in Chapter~\ref{chap:methodology}, due to the absence of an events
-dataset, it is not possible to extensively study the system's accuracy.
-However, this chapter presents illustrative examples when the proposed pipeline
+dataset, it is not possible to extensively study the accuracy of the proposed
+procedure.
+However, this chapter presents illustrative examples when the proposed workflow
 was applied to real data.
 
 It was considered 7 months of measurements, from May to November 2016.
 This data was then split in batches of 10 days, and for each batch,
 a complete offline analysis was executed.
-Considering the 35 servers, the mean number of client-server
-pairs, in which occurred at least one measurement between them during a batch,
+During this time period the measurement software was deployed in 35 servers,
+and the mean number of client-server
+pairs, such that at least one measurement between them occurred during a batch,
 was 2246.
-After the End-Users Filtering step, this average reduced to 741.
+After the End-Users Filtering step~\ref{sec:pipeline},
+this average reduced to 741.
 In general, one client measured against a single server through the batch.
 
 For all cases, the time series were preprocessed with a median filter.
 The change points were detected through the optimization model described in
 Chapter~\ref{chap:change_point_detection}.
-For each \gls*{qos} metric, the algorithms' hyperparameters were manually selected.
-It was opted by conservative values, in order to avoid change points that,
+For each \gls*{qos} metric, the algorithms' hyperparameters were manually
+selected.
+It was opted to use conservative values, in order to avoid change points that,
 through a visual inspection, may be arguably not related to a network event.
 These algorithms choices were guided by two facts.
 First, through an empirical visual analysis,
@@ -30,7 +34,7 @@ an important feature for manual tuning.
 The fraction of clients threshold, used to check if an event can be
 located in a vertex, was set to 0.75. The $\delta$ parameter, used to verify if
 two change points are close, was set to 4 hours.
-It was disconsidered the presence of co-ocurrent events of the same type in the
+It was disconsidered the presence of co-occurrent events of the same type in the
 same network region.
 
 Section~\ref{sec:possible_correct_outcomes} presents examples with potential
@@ -70,7 +74,7 @@ Figure~\ref{fig:zero_indegree_correlation_client} shows a client with a
 specific network event, and
 Figure~\ref{fig:zero_indegree_correlation_user_groups_structure} presents the
 user-group structure in which this customer belong.
-The vertices are defined by a tuple, in which the first field is a
+The vertices are defined by a tuple, in which the first entry is a
 label to the user-group, and the second specifies the fraction of clients
 that detected the considered event.
 The gray vertices represent
@@ -124,22 +128,21 @@ network event that was only identified in one zero indegree user-group.
 \label{fig:zero_indegreee_without_correlation}
 \end{figure}%
 
-Table~\ref{table:number_of_events} summarizes the number of events considering
-the three previous cases. The system didn't detect inconclusive events.
+Table~\ref{table:number_of_events} summarizes the number of events,
+discriminating per metric and type (``Improvement'' or ``Failure'').
+The system didn't detect inconclusive events.
 
 \begin{table}[H]
 \centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|l|l|c|l|l|}
 \hline
-\multirow{3}{*}{Metric}                & \multicolumn{6}{c|}{Events}                                                                                                                                                                                                                \\ \cline{2-7}
-                                       & \multicolumn{2}{c|}{Before first hop} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Only one zero \\ indegree user-group\end{tabular}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Multiple one degree\\ user-groups\end{tabular}} \\ \cline{2-7}
-                                       & Improvement         & Failure         & Improvement                                       & Failure                                       & Improvement                                      & Failure                                     \\ \hline
-\gls*{rtt}                                    & 688                 & 685             & 789                                               & 809                                           & 43                                               & 38                                          \\ \hline
-Round trip loss fraction               & 167                 & 144             & 141                                               & 116                                           & 2                                                & 2                                           \\ \hline
-Maximum achievable upstream throughput & 395                 & 358             & 331                                               & 280                                           & 4                                                & 3                                           \\ \hline
+\multirow{3}{*}{Metric}                & \multicolumn{6}{c|}{Events}                                                                       \\ \cline{2-7}
+                                       & \multicolumn{3}{c|}{\multirow{2}{*}{Improvement}} & \multicolumn{3}{c|}{\multirow{2}{*}{Failure}} \\
+                                       & \multicolumn{3}{c|}{}                             & \multicolumn{3}{c|}{}                         \\ \hline
+RTT                                    & \multicolumn{3}{c|}{1520}                         & \multicolumn{3}{c|}{1532}                     \\ \hline
+Round trip loss fraction               & \multicolumn{3}{c|}{310}                          & \multicolumn{3}{c|}{262}                      \\ \hline
+Maximum achievable upstream throughput & \multicolumn{3}{c|}{730}                          & \multicolumn{3}{c|}{641}                      \\ \hline
 \end{tabular}
-}
 \caption{Number of events.}
 \label{table:number_of_events}
 \end{table}
@@ -175,7 +178,7 @@ Considering the used $\delta$ value, the system recognized two different
 events, nonetheless, these changes are possibly related to a single event.
 This exemplifies the problem difficulty when there isn't a ground truth,
 and also the importance of the algorithms and their hyperparameters selection.
-Such kind of subjectivity is usual in the current dataset.
+Such kind of subjectivity is common in the current dataset.
 
 Figure~\ref{fig:untraceable_location} shows two clients that belong to the same
 zero indegree vertex.
@@ -192,7 +195,7 @@ zero indegree vertex.
             \caption{Client 2.}\label{fig:untraceable_location_client_2}
         \end{subfigure}%
     }
-    \caption{Untraceable location.}
+    \caption{Untraceable location. Plots with different scales.}
 \label{fig:untraceable_location}
 \end{figure}%
 
@@ -200,14 +203,15 @@ It is possible to note that both \gls*{rtt} time series changed their pattern
 nearly at the same time, however, one case is characterized by an improvement,
 while the other as a failure.
 The traffic between these customers and the server
-doesn't go to through the tier-2 \gls*{isp}, therefore, according with the
-suppositions, these patterns indicate simultaneous events that occurred at
+doesn't go to through the tier-2 \gls*{isp}, therefore, according to the
+assumptions, these patterns indicate simultaneous events that occurred at
 different equipments before the first hop.
 Nonetheless, the system detected the same \gls*{rtt} modifications, at the end of
 06/02/16, in several other clients.
 Comparing these customers, it was verified that many of them don't share
 several attributes.
-For instance, they executed measurements against different servers, their
+For instance, they executed measurements against different servers, including
+both ON-NET and OFF-NET cases, their
 upstream traffic went to completely different \gls*{ip} layer equipments, and they
 were located at different Brazilian states.
 This can indicate a single global network event, that simultaneously affected
@@ -218,11 +222,14 @@ information, however, it is intriguing the fact that some of the clients
 detected a failure while others perceived an improvement.
 It was manually identified 3 of such cases,
 and the \gls*{rtt} was the only impacted metric.
-A significant number of \gls*{rtt} events were possibly wrongly classified due to this
-type of event.
+These cases possibly explain why \gls*{rtt} events are considerably more
+frequent than events of other metrics (see Table~\ref{table:number_of_events}),
+since several identified events would be related to a single real event.
 
-In general, the \gls*{rtt} per hop obtained through the traceroute measurements,
-can be fairly different from the analyzed \gls*{rtt} measures.
+Motivated by the previous example, next is presented an analysis of the
+\gls*{rtt} per hop, which is obtained through the traceroute measurements.
+However, this investigation can be fairly different from the analysis of the
+end-to-end \gls*{rtt} measures.
 First, their methodologies are remarkably distinct.
 Second, the \gls*{rtt} associated with hop $i$ can be
 constantly and considerably bigger then the \gls*{rtt} related to a hop $j$,
@@ -257,7 +264,8 @@ Figure~\ref{fig:untraceable_location_client_1}.
         \end{subfigure}
     }
     \caption{RTT per hop of client of
-    Figure~\ref{fig:untraceable_location_client_1}.}
+    Figure~\ref{fig:untraceable_location_client_1}. Plots with different
+    scales.}
 \label{fig:rtt_per_hop_client_1}
 \end{figure}%
 
@@ -289,7 +297,8 @@ of Figure~\ref{fig:untraceable_location_client_2}.
         \end{subfigure}
     }
     \caption{RTT per hop of client of
-    Figure~\ref{fig:untraceable_location_client_2}.}
+    Figure~\ref{fig:untraceable_location_client_2}. Plots with different
+    scales.}
 \label{fig:rtt_per_hop_client_2}
 \end{figure}%
 

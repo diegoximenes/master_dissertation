@@ -1,4 +1,4 @@
-\begin{thebibliography}{28}
+\begin{thebibliography}{30}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -11,8 +11,8 @@
   Yates]{argus_end_to_end_service_anomaly_detection_and_localization_from_an_isps_point_of_view}
 \MakeUppercase{Yan, H., Flavel, A., Ge, Z., \MakeLowercase{et~al.}}
 \newblock \enquote{Argus: End-to-end service anomaly detection and localization
-  from an ISP's point of view}. In: \emph{2012 Proceedings IEEE INFOCOM}, pp.
-  2756--2760, March 2012.
+  from an \gls*{isp}'s point of view}. In: \emph{2012 Proceedings IEEE
+  INFOCOM}, pp. 2756--2760, March 2012.
 \newblock \doi{10.1109/INFCOM.2012.6195694}.
 
 \bibitem[\MakeUppercase{Adams}\emph{ et~al.}(2016)Adams, Lapukhov, e
@@ -46,6 +46,12 @@
 \newblock Dispon{\' i}vel em:
   \textless\url{http://doi.acm.org/10.1145/1879141.1879196}\textgreater .
 
+\bibitem[\MakeUppercase{Chatfield} e \MakeUppercase{Yar}(1988)Chatfield e
+  Yar]{holt-winters_forecasting_some_practical_issues}
+\MakeUppercase{Chatfield, C., Yar, M.}
+\newblock \enquote{Holt-Winters forecasting: some practical issues}, \emph{The
+  Statistician}, pp. 129--140, 1988.
+
 \bibitem[\MakeUppercase{Graps}(1995)Graps]{an_introduction_to_wavelets}
 \MakeUppercase{Graps, A.}
 \newblock \enquote{An introduction to wavelets}, \emph{IEEE computational
@@ -72,6 +78,17 @@
   loess}, \emph{Journal of Official Statistics}, v.~6, n.~1, \penalty0
   pp.~3--73, 1990.
 
+\bibitem[\MakeUppercase{Kifer}\emph{ et~al.}(2004)Kifer, Ben-David, e
+  Gehrke]{detecting_change_in_data_streams}
+\MakeUppercase{Kifer, D., Ben-David, S., Gehrke, J.}
+\newblock \enquote{Detecting Change in Data Streams}. In: \emph{Proceedings of
+  the Thirtieth International Conference on Very Large Data Bases - Volume 30},
+  VLDB '04, pp. 180--191. VLDB Endowment, 2004.
+\newblock ISBN: 0-12-088469-0.
+\newblock Dispon{\' i}vel em:
+  \textless\url{http://dl.acm.org/citation.cfm?id=1316689.1316707}\textgreater
+  .
+
 \bibitem[\MakeUppercase{Wikipedia}(2016{\natexlab{b}})Wikipedia]{hellinger_distance}
 \MakeUppercase{Wikipedia}.
 \newblock \enquote{{Hellinger distance}}. 2016{\natexlab{b}}.
@@ -83,17 +100,6 @@
 \newblock \enquote{The earth mover's distance as a metric for image retrieval},
   \emph{International journal of computer vision}, v.~40, n.~2, \penalty0
   pp.~99--121, 2000.
-
-\bibitem[\MakeUppercase{Kifer}\emph{ et~al.}(2004)Kifer, Ben-David, e
-  Gehrke]{detecting_change_in_data_streams}
-\MakeUppercase{Kifer, D., Ben-David, S., Gehrke, J.}
-\newblock \enquote{Detecting Change in Data Streams}. In: \emph{Proceedings of
-  the Thirtieth International Conference on Very Large Data Bases - Volume 30},
-  VLDB '04, pp. 180--191. VLDB Endowment, 2004.
-\newblock ISBN: 0-12-088469-0.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dl.acm.org/citation.cfm?id=1316689.1316707}\textgreater
-  .
 
 \bibitem[\MakeUppercase{Maidstone}\emph{ et~al.}(2016)Maidstone, Hocking,
   Rigaill, e
@@ -235,6 +241,13 @@
 \MakeUppercase{James, N.~A., Kejariwal, A., Matteson, D.~S.}
 \newblock \enquote{Leveraging Cloud Data to Mitigate User Experience from"
   Breaking Bad"}, \emph{arXiv preprint arXiv:1411.7955}, 2014.
+
+\bibitem[\MakeUppercase{Aminikhanghahi} e
+  \MakeUppercase{Cook}(2016)Aminikhanghahi e
+  Cook]{a_survey_of_methods_for_time_series_change_point_detection}
+\MakeUppercase{Aminikhanghahi, S., Cook, D.~J.}
+\newblock \enquote{A survey of methods for time series change point detection},
+  \emph{Knowledge and Information Systems}, pp. 1--29, 2016.
 
 \bibitem[\MakeUppercase{Mahimkar}\emph{ et~al.}(2008)Mahimkar, Yates, Zhang,
   Shaikh, Wang, Ge, e

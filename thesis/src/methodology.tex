@@ -2,53 +2,55 @@
 \label{chap:methodology}
 
 This chapter describes the proposed data analytics workflow.
-Besides, the \gls*{qos} data gathering procedures are briefly presented,
-and the proposed system is compared with previous projects.
+The \gls*{qos} data gathering procedures are briefly presented,
+and the proposed methodology is compared against those used in
+previous projects.
 
-\section{Measurement Process}
+\section{Measurement Environment}
 
-The time series used in this work represent network end-to-end measures of a
+The time series used in this work result from end-to-end measures of a
 cable-television infrastructure, which runs \gls*{docsis} with asymmetric download and
 upload bandwidths. A home gateway, connected to a cable modem, communicates
 with a server strategically located by the \gls*{isp}.
 Each server is responsible for measurements of several end-users.
-Measurements are triggered in
-each home router every half hour, and, by the end of every day,
+Measurements are triggered from
+each home router every half hour and, by the end of every day,
 the results are transferred to a database.
-The software responsible for these procedures was
-developed by TGR (a startup at \gls*{ufrj}),
-and is spread over approximately four thousand customers of a major Brazilian
+The measurement software was
+developed by the startup,
+and is spread over approximately two thousand customers of a major Brazilian
 tier-3 \gls*{isp}.
 
 To measure the round
 trip packet loss fraction, and the \gls*{rtt}, between the end-user and the associated
 server, the home router sends a train of short \gls*{udp} packets, and the server
-bounces back them.
+bounces them back.
 The final \gls*{rtt} is the average of the individual packets' \gls*{rtt}s.
 The data here presented considers a train of 100 \gls*{udp} packets of 32 bytes,
 separated by 1 millisecond.
 Maximum achievable upstream throughput is measured by overflowing the upload
 links with parallel \gls*{tcp} data transfers from the home router to the server.
-Traceroutes from the end-users to the respective servers are collected with
-the same frequency.
+Traceroutes from the end-users to the respective servers are collected
+at 30 minutes intervals.
 The ping packets used in this process is also used to infer \gls*{rtt} per hop.
 Traceroutes from servers to end-users are not gathered.
 In~\cite{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil}
 is presented a preliminary descriptive investigation of these metrics.
 
-The resulted time series are unevenly spaced due to a range of reasons. First,
+The resulting time series are unevenly spaced due to several reasons. First,
 measurements are initiated only if the residential link is not under use by the
 customer. Also, the client may have no Internet connection to start a
-measurement, or even be without electrical energy.
+measurement, or the home gateway may be turned off.
 
 Other details about the
-measurement software are presented during the text, as they are needed.
+measurement software are presented during the text, as needed.
 
-\section{Pipeline}
+\section{Proposed Workflow}
+\label{sec:pipeline}
 
 This section describes, in a high level abstraction, the proposed workflow
 used to detect network events and localize their cause. When necessary, some
-steps are better explored in further sections.
+steps are better explored in later sections.
 
 The mechanism was motivated by an empirical visual investigation of the
 \gls*{qos} time series.
@@ -57,7 +59,7 @@ it was identified that clients with the same
 change point pattern, including the occurrence time,
 usually share physical network equipments.
 
-The analysis seeks for events during a specific time period, in a single
+The analysis seeks for events during a specific time interval, in a single
 measurement server, and considers a
 particular metric (round trip loss fraction, \gls*{rtt}, or maximum achievable
 upstream throughput),
@@ -74,19 +76,20 @@ Figure~\ref{fig:pipeline} illustrates the process.
 \end{figure}%
 
 The workflow starts with the End-Users Filtering step,
-which aims to remove clients that can negatively affect the analysis.
+which aims at removing clients that can negatively affect the analysis.
 As an example, this work eliminates clients
 with a small number of measurement samples.
 
 The Change Point Detection phase preprocess the end-users' time series and
-identify change points.
+identify change points for each time series.
 Also, the change points are classified in three types of events: failure,
 improvement, or inconclusive. For the \gls*{rtt} and round trip loss fraction,
 a change point defines a
 failure event if the average of the window after this point is greater than the
-average of the window before. The improvement event is analogous, however is
-characterized by a mean decrease.
-The inconclusive event means that the segments averages are too close.
+average of the preceding window. The improvement event is analogous, however it
+is characterized by a mean decrease.
+The inconclusive event means that the segments averages are within a given
+tolerance.
 The same reasoning is applied to maximum
 achievable upstream throughput, however, a decrease means a failure, and a
 increase is related to an improvement.
@@ -97,8 +100,8 @@ in further steps to isolate possible events locations.
 This stage must produce a specific grouping structure, which is detailed in
 Section~\ref{sec:spatial_correlation}.
 
-The Time Correlation step aims to combine similar events of different
-end-users. For example, if three clients detect a failure at
+The Time Correlation step aims at combining similar events of different
+end-users. For example, if three clients detect a failure at approximately
 the same time, then this information is identified at this step.
 The grouped end-users events of an user-group are named as network events.
 The details of this method are enlightened in
@@ -111,13 +114,13 @@ This is better explained in Section~\ref{sec:spatial_time_correlation}.
 \section{Spatial Correlation}
 \label{sec:spatial_correlation}
 
-This method provides the necessary information to check which network
+This method provides the necessary information to determine which network
 equipments
 are shared by end-users that perceive the same network event.
 The developed strategies were guided by the specific \gls*{isp}'s topology.
 
 The server position relative to the client
-can be categorized in two contexts.
+can be distinguished in two scenarios.
 In the OFF-NET case, the traffic between them
 goes through a tier-2 \gls*{isp}\@.
 In the ON-NET case, the traffic
@@ -129,7 +132,7 @@ doesn't applies load balancing nor \gls*{mpls}, techniques that are usual in the
 
 Then, considering measurements against a single server and the ON-NET
 case, paths from end-users to the server form a hierarchically
-structured topology, which is a required design to be consumed by the
+structured topology, which is a required design for the
 Spatial-Time Correlation procedure~\ref{sec:spatial_time_correlation}.
 This work doesn't have access to the \gls*{isp}'s routing tables,
 therefore, this structure is reconstructed through traceroutes.
@@ -172,20 +175,20 @@ Hence, if routers only apply per flow load balancing,
 and considering a time period without routing tables updates, and
 depending of which \gls*{ip} header's fields are used to define a flow, it is possible
 that all packets generated by a specific measurement type traverse the same
-path. However, these are strong and unlikely suppositions.
+path. However, these are strong and unlikely assumptions.
 Additionally, since the implemented traceroute also uses the same ports over
 time, and considering that different measurements types use distinct ports,
 the
 path followed by traceroute packets can be different from the path followed by
 the \gls*{qos} measurements packets. Then, in this scenario, even with static paths in
 the tier-2 \gls*{isp}'s network, the correlation between traceroutes
-results with end-to-end metrics can reach wrong conclusions.
+results with end-to-end metrics can lead to wrong conclusions.
 
-Therefore, this work supposes that the tier-2 \gls*{isp} only applies per packet load
+Therefore, this work assumes that the tier-2 \gls*{isp} only applies per packet load
 balancing, which is modeled here as a random strategy. With this hypothesis,
 if two end-users are geographically near, then it is likely that their packets
 traverse in the same set of routers in the tier-2 network. This implies that if
-an event occur in a tier-2 router, it is not possible that only one of these
+an event occurs in a tier-2 router, it is not possible that only one of these
 clients perceives the event. This is an important consequence explored in
 Section~\ref{sec:spatial_time_correlation}.
 
@@ -228,7 +231,7 @@ scenarios in which the traceroute doesn't reach the server are discarded.
 Since routing tables can be updated, after the tier-2 vertices compression,
 it is only considered clients with static traceroutes
 during the specified time period.
-Situations characterized by tier-2 routers that doesn't appear as consecutive
+Situations characterized by tier-2 routers that not appear as consecutive
 elements in the traceroute are also deleted.
 
 \section{Time Correlation}
@@ -237,10 +240,11 @@ elements in the traceroute are also deleted.
 The motivation of this mechanism is to infer network events that can explain
 end-users events of an user-group.
 
-There are two main reasons to detect the same network event, such as an
-equipment failure, at distinct times in different clients. The first one is
+There are two main reasons to erroneous detect the same network event,
+such as an
+equipment failure, at distinct times in different clients. The first is
 related to the fact that the time series are not regularly sampled. The second
-one is due to the change point detection algorithm behavior.
+is due to the change point detection algorithm behavior.
 Therefore, a procedure to group end-users events based on their type and time,
 should be flexible enough to take into consideration time delay effects. Also,
 it must be robust to deal with multiple change points per time series.
@@ -248,14 +252,15 @@ it must be robust to deal with multiple change points per time series.
 In order to relax a change location, a detected change point is
 transformed into an interval according to a time tolerance.
 Hence, given a parameter $\delta$, a change point identified at
-time $t$ implies in the existence of a change point within
+time $t$ implies that there is a change point in the interval
 $[t - \delta, t + \delta]$. To be consistent,
-change point algorithms must report locations separated by more than
+change point algorithms must report points in time separated by more than
 $2 \delta$ time units. In general, the algorithms presented in
 Chapter~\ref{chap:change_point_detection}
 can be adapted to respect this restriction. However, this can also be
-achieved by the following post processing step:
-sweeping time from left to right, if two
+achieved by the following post processing step: considering that the points are
+sorted by time, and
+sweeping points from left to right, if two
 points are at most $2 \delta$ time units apart, then the right one is removed.
 
 Consequently, the problem can be defined as selecting a set of network events,
@@ -264,9 +269,7 @@ defined only by their time and type.
 A client event is explained by a network event if they have the same type,
 and the end-user event time is inside the network event time interval.
 This problem has several possible solutions, and the comparison between
-them is subjective. As an example, not
-necessarily selecting the minimum number of network events that cover all
-customers events is the most appropriate answer.
+them is subjective.
 
 To this goal, it was developed a heuristic inspired in the Inexact Voting in
 Totally
@@ -283,17 +286,14 @@ Algorithm~\ref{alg:multiple_inexact_voting_totally_ordered_space}
 \caption{Multiple Inexact Voting in Totally Ordered Space}
 \label{alg:multiple_inexact_voting_totally_ordered_space}
     \begin{algorithmic}[1]
-        \State{Let $l$ be the end-users events of a specific type sorted by
-        time}
+        \State{Let $l$ be the end-users events of a specific type.}
         \While{$l$ is not empty}
-            \State{Considering only the events in $l$,
-            select the interval $d$ with the greatest number of
-            end-users events,
-            in which all these events are at most $2 \delta$ apart.
-            In case of ties, select the left most one}
-            \State{Report the mean time of
-            the $d$ extremes as the network event time}
-            \State{Remove all end-users events from $l$ that are in $d$}
+            \State{Select the interval $d$ with the greatest number of end-users
+            events that belong to $l$, and that all these events are at most
+            $2 \delta$ apart. In case of ties, choose the left most one.}
+            \State{Report the average time of
+            the $d$ extremes as the network event time.}
+            \State{Remove all end-users events from $l$ that are in $d$.}
         \EndWhile{}
     \end{algorithmic}
 \end{algorithm}
@@ -308,84 +308,53 @@ regular time-bins, and interpret all end-users events that occur in the same
 bin as a common network event.
 However, this strategy can introduce
 discontinuities. If a network event occurs in the end/beginning of a time-bin,
-then it is likely to different clients events, associated with this
-network event, be located in different bins.
+then it is likely that different clients events, associated with this
+network event, are going to be located in different bins.
 
-If co-occurrent events with the same type affect the same end-users set,
+If co-occurrent events of the same type affect the same end-users set,
 it is not possible to distinguish them. Nonetheless, the chances of
-detecting different events at the same time can reduce with the increase
-of the time series sampling frequency.
+detecting different events at the same time can be reduced by increasing
+the time series sampling frequency.
 
 \section{Spatial-Time Correlation}
 \label{sec:spatial_time_correlation}
 
-This step matches network events from different user-groups to define
+This section describes the steps that leads to matching
+network events from different user-groups in order to define
 a set of feasible events locations.
 
-It is not possible to check if changes in round trip metrics, such as \gls*{rtt},
-are caused in the path from the end-user to the server or vice versa.
+It is not possible to determine if changes in round trip metrics, such as
+\gls*{rtt},
+are caused in the path from the end-user to the server or in the reverse path.
 Therefore, correlate these metrics with the available traceroutes can lead to
-erroneous or inconclusive outcomes. Also, the maximum achievable upstream
+erroneous or inconclusive conclusions. Also, the maximum achievable upstream
 throughput can be affected by a service degradation on the path from the server
 to the end-user, since losses of \gls*{tcp} ACKs can influence the measurement
 performance.
 Hence, this work restricts to report possible events locations considering that
 they are caused by equipments in the path from the end-user to the server.
 
-With exception of the tier-2 user-group, the mechanism supposes that
-if an event occur in an user-group,
-all traffic that goes through this cluster is affected by the event. Since
+With exception of the tier-2 user-group, the proposed mechanism assumes that
+if an event occurs in an user-group,
+all traffic that goes through the corresponding cluster is affected by the
+event. Since
 there is a direct connection between an user-group and an unique network
-equipment, this is a reasonable hypothesis.
-It is also presumed a hierarchical user-groups structure, and that there is at most
+equipment, this is a reasonable assumption.
+It is also assumed a hierarchical user-groups structure, and that there is at most
 one link between two network equipments.
 
-In the first reasoning part, it will be processed cases without the
-presence of the tier-2 user-group.
-Also, it will be removed
-traceroutes paths that doesn't start in a zero indegree vertex.
-Additionally, it will be disregarded co-occurrent events with the same type.
-Moreover, it will be considered that
-a change point detection algorithm setup is able to detect all end-users
+In the first reasoning part, cases with no tier-2 user-groups will be processed.
+Also,
+traceroutes paths that does not start in a zero indegree vertex will be removed.
+Additionally, co-occurrent events with the same type will be disregarded.
+Moreover, it is assumed that the
+change point detection algorithm setup is able to detect all end-users
 affected by a network event, or no end-user is identified.
 Later, the mechanism will be expanded, and these restrictions will be removed.
-Unless stated differently, in the rest of this section is considered an
-unique network event in the period of study.
+Unless stated otherwise, in the rest of this section an
+unique network event during the period of study is considered.
 
-The procedure starts analyzing zero indegree vertices.
-Suppose that only a proper subset of the clients that belong to a zero
-indegree node perceive the event. In this situation, it is possible to affirm
-that this vertex is not the cause of the event, since not all clients detected
-it. For the same reason, the cause is not located in posterior nodes
-in the path to server.
-Then, if this set's size is bigger than one, these end-users must share
-a network equipment, which is the cause, that is located before the first hop.
-As an example, this equipment can be a fiber node.
-
-However, if all clients of the zero indegree vertex detect the event, then
-there are three options:
-this vertex can be the cause, or these end-users can share an equipment before
-the first hop that explains the event,
-or the cause is located after the first hop. Due to the
-lack of information about the topology below the \gls*{ip} layer, the first two cases
-can't be
-distinguished. Nonetheless, to check the latter scenario, the same type of
-analysis is applied to the next vertex in the path to the server. If not all
-clients of the second hop detected this event, then it is surely located
-in the first hop or before. Otherwise, the procedure continues to the next hop.
-
-When applied to different zero indegree vertices,
-this method results in possible events locations that are prefixes of
-the paths to the server.
-Also, these prefixes can be correlated.
-If different paths detect the same network
-event, then they must share at least one equipment. The
-ones that are not common can be discarded from the possible cause list, since
-there are end-users that don't belong to them and still perceive the event.
-
-Additionally, it is possible to note that a failure in the directed link from a
-router A to B is identified as a fault in A.
-
+In order to better explain the proposed procedure,
 Figure~\ref{fig:network_events_locations_examples} presents several topologies
 and different network events. The gray vertices indicate a network event
 that occurred in this location.
@@ -414,15 +383,49 @@ that occurred in this location.
 \label{fig:network_events_locations_examples}
 \end{figure}%
 
+The procedure starts analyzing zero indegree vertices.
+Suppose that only a proper subset of the clients that belong to a zero
+indegree node perceive the event. In this situation, it is possible to affirm
+that this vertex is not the cause of the event, since not all clients detected
+it. For the same reason, the cause is not located in posterior nodes
+in the path to server.
+Then, if this set's size is bigger than one, these end-users must share
+a network equipment, which is the cause, that is located before the first hop.
+As an example, this equipment can be a fiber node.
+
+However, if all clients of the zero indegree vertex detect the event, then
+there are three options:
+this vertex can be the cause, or these end-users share an equipment before
+the first hop that explains the event,
+or the cause is located after the first hop. Due to the
+lack of information about the topology below the \gls*{ip} layer, the first two cases
+can't be
+distinguished. Nonetheless, to check the latter scenario, the same type of
+analysis is applied to the next vertex in the path to the server. If not all
+clients of the second hop detected this event, then it is surely located
+in the first hop or before. Otherwise, the procedure continues to the next hop.
+
+When applied to different zero indegree vertices,
+this method results in possible events locations that are prefixes of
+the paths to the server.
+Also, these prefixes can be correlated.
+If different paths detect the same network
+event, then they must share at least one equipment. The
+ones that are not common can be discarded from the possible cause list, since
+there are end-users that don't belong to them and still perceive the event.
+
+Additionally, it is possible to note that a failure in the directed link from a
+router A to a router B is identified as a fault in A.
+
 In Figure~\ref{fig:network_events_locations_examples_1}, the analysis
 starting at vertex A results in the following feasible event locations,
-\{A, B, C, D\}. The reasoning through node E leads to
+\{A, B, C, D\}. The same reasoning using node E leads to
 \{E, F, C, D\}. Correlating both results, the possible locations are \{C, D\}.
 Figure~\ref{fig:network_events_locations_examples_2} presents a scenario with
 the same conclusion.
 
 In Figure~\ref{fig:network_events_locations_examples_3}, the analysis made
-through the zero indegree vertices result in the paths from them to the server.
+using the zero indegree vertices results in the paths from them to the server.
 Matching the outcomes, the D vertex is the only possible event location.
 
 In Figure~\ref{fig:network_events_locations_examples_4}, the reasoning through
@@ -435,13 +438,13 @@ user-group.
 As an example, suppose two geographically distant end-users in an OFF-NET case.
 The packets from these two users can go through completely different routers in
 the tier-2 \gls*{isp}. Then, it is possible that an event in the tier-2 \gls*{isp} only
-affects one of the users, which contradicts one of the established suppositions.
+affects one of the users, which contradicts one of the assumptions.
 To overcome this issue, when analyzing a path, if an event can be located in the
 previous hop of the tier-2 user-group, then the event can also be located at
 the tier-2 vertex, even considering that not all end-users of this user-group
 perceive the event.
 
-Now, suppose paths that doesn't start in zero indegree vertices.
+Now, consider paths that does not start in zero indegree vertices.
 After the previous analysis,
 if all clients of the first hop user-group detect the event, then this
 path was already treated. Otherwise, the end-users that detected the event
@@ -452,20 +455,21 @@ identify all, or none, end-users affected by an event, is too strict.
 As an example, consider two clients, one closer to the server than the
 other.
 If a failure in a router impacts the \gls*{rtt} of both users, probably,
-the closest client's \gls*{rtt} will suffer a bigger relative variation than the
+the \gls*{rtt} of the client that is closest to this router
+will suffer a bigger relative variation than the
 other's \gls*{rtt}\@.
 Therefore, instead of checking if all users perceive the event,
 it is defined a threshold, and is verified if the fraction of clients
-that detect the event is bigger than this value.
+that detect the event is greater than this value.
 
 If there are co-occurrent events with the same type, the complete procedure can
-result in a wrong outcome. Figure~\ref{fig:network_events_locations_examples_5}
+result in a wrong conclusion. Figure~\ref{fig:network_events_locations_examples_5}
 illustrates this case.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.35\linewidth]{./figures/methodology/spatial_time_correlation/event_tree_graph_5.png}
-    \caption{Co-occurent events.}
+    \caption{Co-occurrent events.}
 \label{fig:network_events_locations_examples_5}
 \end{figure}%
 
@@ -475,18 +479,15 @@ In vertex G, the outcome is \{G, H, D\}.
 The paths results correlation leads to the location D, which is a mistake.
 Therefore, when considering co-occurrent events with the same type, the step of
 matching the conclusions of different paths must not be applied, and the
-union of these results should be the final outcome.
-
-From this procedure, it is possible to formulate a
-problem to define the minimum number of end-users to be monitored, and their
-placement, to localize events with the minimum number of feasible locations.
+union of these results should be the final answer.
 
 \section{Change Point Detection Issues}
 
 As stated in Chapter~\ref{chap:change_point_detection}, one of the main issues
-of this work is the algorithms and parameters selection.
-In general, this process requires a dataset to enable the evaluation of an
-algorithm setup.
+to be dealt with in
+this work is to select the proper algorithms and parameters.
+In general, this process requires a dataset to allow evaluation of the
+algorithm chosen and it's related parameters.
 
 There are several approaches to construct a
 change points dataset in the literature.
@@ -499,7 +500,7 @@ building process. Also, real data can have complex characteristics that are
 difficult to be reproduced by generative models. Another strategy is to join
 segments from different real time series with different
 characteristics~\cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series}.
-However, this can introduce unreal change points scenarios. Since one of
+However, this can introduce unrealistic change points scenarios. Since one of
 the goals of this work is to deal directly with real data,
 this approach was discarded.
 
@@ -507,45 +508,45 @@ When the latent information of the time series are available, and if there is a
 complete knowledge of what configurations changes in the latent state impact
 data, it is possible to check the change points only analyzing this underlying
 information. As an example, consider a time series that represents the cardiac
-frequency of a soccer player during a match. Also, consider that in this
+frequency of a soccer player during a match. Also, consider that, in this
 controlled environment, the only causes of changes in the cardiac frequency are
 the variations of physical activities, such as starting or stopping to run.
 Therefore,
 it is possible to use the times in which a player changed his movement behavior
 as the change points, without even analyzing the time series. However, in the
-application domain of the present work, this approach would be impractical.
-First, this would need the expertise of how the configurations of network
+application domain of the present work, this approach is impractical.
+First, it would be necessary to know the network
 topology, routers congestion, physical equipment problems, among other features,
-affect the different end-to-end \gls*{qos} metrics.
+and how they affect the different end-to-end \gls*{qos} metrics.
 Second, this kind of information is absent in the dataset, and would be too
 complex to collect it.
 
 Another way is to use visual annotations,
 as it was done
 in~\cite{learning_sparse_penalties_for_change_point_detection_using_max_margin_interval_regression}.
-Also, manual labeling is usual for anomaly identification in Internet traffic
+Manual labeling has been used for anomaly identification in Internet traffic
 traces~\cite{webclass_adding_rigor_to_manual_labeling_of_traffic_anomalies}.
 In this strategy, an application domain expert is exposed to a time series,
 and visually indicates his opinion about the change points locations.
 
 It is known that visual inspection methods can bring erroneous
 conclusions~\cite{leveraging_cloud_data_to_mitigate_user_experience_from_breaking_bad},
-and also amplify subjectivity, however, to better understand the problem, this
+and also amplify subjectivity. However, to better understand the problem, this
 approach was experimented in this work.
 
 Through a web system a user freely marked the change points with a mouse.
 The fact that data is not regularly sampled in time could bring an unwanted
 visual change perception. Therefore, the X axis of the displayed time series
 represented only the temporal order of the measures.
-It was only presented raw
+The user had visual access to the
 loss fraction time series with 10 days of data.
-Also, it was selected the ones that have at
+Also, the selected series had at
 least 85\% of the maximum possible number of points during the specified period,
-considering that data is sampled at most two times in a hour. Change points can
+considering that data is sampled at most twice per hour. Change points can
 be interpreted as rare events in this dataset, and several data streams have
 almost
 all measures with zero losses. Therefore, to increase the entropy,
-it was selected time series that have at least one window of length 48 with
+it was selected time series that had at least one window of length 48 with
 more than 5 measures with loss fraction larger than 0.01.
 
 Additionally, it was provided a set of tips to the specialist:
@@ -578,8 +579,8 @@ To analyze the agreement between different users classifications,
 for each time series, was applied the Time Correlation
 procedure~\ref{sec:time_correlation}. Therefore, it was
 considered that each specialist voted to a set of change points positions.
-The time tolerance was set to 7 hours, which means at most 14 consecutive
-points.
+The $\delta$ parameter described in Section~\ref{sec:time_correlation} was
+set to 7.
 
 Then, for each change point voted at least once, it was counted the number of
 specialists that voted in that location.
@@ -596,8 +597,9 @@ It is possible to note that, 44\% of the change points were only voted by
 a single user, and only 23\% were voted by the majority (more than 3 votes).
 Therefore, in general, the consensus of change point locations is low.
 
-In Figure~\ref{fig:classification_match} is presented the specialists
-classifications in a time series with a high level of agreement on the change
+Figure~\ref{fig:classification_match} shows the
+classifications obtained from this experiment
+in one of the time series that had a high level of agreement on the change
 points locations.
 
 \begin{figure}[H]
@@ -710,7 +712,7 @@ Once a change point dataset is constructed, it is possible to apply supervised
 learning procedures, which are not much explored in the change
 point detection literature.
 
-\section{Differences to Previous Systems}
+\section{Differences from Previous Work}
 
 The proposed data analytics architecture has several similarities with the
 projects described in Chapter~\ref{chap:literature_review}.
@@ -718,9 +720,10 @@ projects described in Chapter~\ref{chap:literature_review}.
 As with Argus and NetNorad, this work clusters end-users in user-groups, however
 with finer topology granularity. Also, to increase the system's scalability,
 NetNorad and Argus use this grouping to reduce the number of tracked time
-series. This strategy was not applied in this project,
+series. This strategy was not applied in this work,
 since the finer granularity requires more time series to be spread in different
-network locations, and the current dataset has a low number of end-users.
+network locations, and the number of tracked end-users tracked by the
+measurement software is low.
 
 Additionally, beyond the network edge point of view, Argus and NetNorad
 uses some internal network information, which is absent in the present work.
