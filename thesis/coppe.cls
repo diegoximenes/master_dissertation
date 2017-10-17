@@ -5,31 +5,31 @@
 %% The original source files were:
 %%
 %% coppe.dtx  (with options: `class')
-%% 
+%%
 %% This is the `coppe' document class used for composition of LaTeX
 %% monographs (master and PhD thesis, and PhD qualifying exams)
 %% satisfying the requirements of the Coordination of Research and
 %% Graduate Courses in Engineering at the Federal University of
 %% Rio de Janeiro.
-%% 
+%%
 %% Copyright (C) 2008 Vicente Helano and George Ainsworth Jr.
-%% 
+%%
 %% This program is free software; you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License version 3 as
 %% published by the Free Software Foundation.
-%% 
+%%
 %% This program is distributed in the hope that it will be useful,
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of
 %% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 %% GNU General Public License version 3 for more details.
-%% 
+%%
 %% You should have received a copy of the GNU General Public License
 %% version 3 along with this package (see COPYING file).
 %% If not, see <http://www.gnu.org/licenses/>.
-%% 
+%%
 %% Author(s): Vicente Helano,
 %%            George Ainsworth
-%% 
+%%
 %% \CheckSum{1416}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -392,7 +392,7 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
   \abstract@toptext\par
   \vspace*{8.6mm}
   \begin{center}
-    \sloppy\nohyphens{\MakeUppercase\local@title}\par
+    \sloppy\nohyphens{\MakeUppercase\foreign@title}\par
     \vspace*{13.2mm}
     \@authname\ \@authsurn \par
     \vspace*{7mm}
@@ -430,7 +430,7 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
   \foreignabstract@toptext\par
   \vspace*{8.6mm}
   \begin{center}
-    \sloppy\nohyphens{\MakeUppercase\foreign@title}\par
+    \sloppy\nohyphens{\MakeUppercase\local@title}\par
     \vspace*{13.2mm}
     \@authname\ \@authsurn \par
     \vspace*{7mm}
@@ -691,6 +691,6 @@ T\kern-.1667em\lower.5ex\hbox{E}\kern-.125emX\spacefactor1000}
   COPPE/UFRJ as a partial fulfillment of the requirements for the
   degree of \foreign@degname\ of Science (\@degree)}
 }
-%% 
+%%
 %%
 %% End of file `coppe.cls'.
