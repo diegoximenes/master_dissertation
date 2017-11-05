@@ -20,16 +20,16 @@ these two problems is subtle, and can be fuzzy in the literature. The
 anomaly detection assumes that a standard pattern is already known or
 is identified by the procedure, then, the goal is to find when the data
 stream
-deviates from it's standard. The change point detection only seeks for
+deviates from its standard. The change point detection only seeks for
 points where the statistical properties change, and doesn't take into
 consideration a standard time series behavior.
 
 In this context, this chapter studies the problem and briefly discusses
 several change point detection algorithms. The literature of this area is
-extensive, and it is common to find methods that presents a poor performance
+extensive, and it is common to find methods that present a poor performance
 due to a variety of reasons, such as being too specific to the application
 area, or because the mechanisms were only analyzed through theoretical
-aspects. Therefore, it were selected a set of techniques with a good level
+aspects. Therefore, it was selected a set of techniques with a good level
 of theoretical formalism, and flexibility to adapt, in order to handle
 specificities of the problem domain. Furthermore, this chapter exposes several
 challenges when dealing with real network measurements data,
@@ -37,7 +37,8 @@ and some adopted solutions which are not described in the literature.
 
 \section{Problem Definition}
 
-The problem can be offline or online. In the offline version, to decide if a
+The problem can be treated in an offline or online fashion.
+In the offline version, to decide if a
 specific point at time $t$ is a change point, the solver has available the
 whole time series, including past and future information w.r.t. $t$. On the
 other hand, in the online version, the information is available up to time $t$.
@@ -131,8 +132,8 @@ This chapter uses time series only filtered by a centered median
 sliding windows, in which given a parameter $w$, $y_{i}$ is set to be
 the median of the raw samples with indexes in $[i-w, i+w]$.
 The choice of this method among the others was guided by two reasons.
-First, it was empirically verified it's effectiveness in removing outliers.
-Second, it's simplicity allows to easily interpret the impact of it's parameter,
+First, it was empirically verified its effectiveness in removing outliers.
+Second, its simplicity allows to easily interpret the impact of its parameter,
 which is an important feature to manually fine tune the procedure for the
 different \gls*{qos} metrics.
 Figures~\ref{fig:median_filter_rtt} and~\ref{fig:median_filter_loss} show
@@ -246,7 +247,8 @@ segments with distinct number of points.
 
 \section{Optimization Model}
 
-Given a fixed value of $k$, one approach is to define a cost function that
+Given a fixed number of windows (segments), $k$, one approach is to define a
+cost function that
 measures the homogeneity of a window, and therefore, choose the change points
 that globally optimize this homogeneity. Let the cost of the $i$-th segment be
 defined as $C(\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}})$, then the cost of a
@@ -268,9 +270,9 @@ case~\cite{on_optimal_multiple_changepoint_algorithms_for_large_data}:
 This problem can be solved using dynamic programming with $O(k n^2 f(n))$ time
 complexity, where $f(n)$ is a function of the cost to evaluate $C$. Several
 segment cost functions can be evaluated in $O(1)$ after a $O(n)$ preprocessing
-phase, implying in an overall $O(k n^2)$ complexity. It is possible to prove
+phase, implying an overall $O(k n^2)$ complexity. It is possible to prove
 that \gls*{mse}, negative maximum log-likelihood functions of normal, exponential,
-poisson and binomial distributions have this characteristic. Also, the
+Poisson and binomial distributions have this characteristic. Also, the
 formulation can consider a minimum value of a window length.
 
 Modeling segments with distributions can lead to practical difficulties. One of
@@ -292,7 +294,7 @@ is:
     \min_{k, \boldsymbol \tau_{1 : k}} \sum \limits_{i = 1}^{k + 1} C(\mathbf{y}_{\tau_{i - 1} + 1 : \tau_{i}}) + g(k)
 \end{equation}
 
-This problem can be solved in $O(K n^{2} f(n))$. However, if the penalty
+This problem can be solved in $O(k n^{2} f(n))$. However, if the penalty
 function is linear in $k$, the problem can be formulated more efficiently and
 solved in $O(n^{2} f(n))$.
 
@@ -358,10 +360,10 @@ time series stays in the same hidden state is low, which may not reflect real
 data. To overcome this problem,
 \cite{inertial_hidden_markov_models_modeling_change_in_multivariate_time_series}
 suggests to increase the time that a time series stands in the same hidden
-state using a dirichlet prior regularization. However, it was empirically
+state using a Dirichlet prior regularization. However, it was empirically
 verified that it is difficult to choose good hyperparameters for this strategy.
 Instead, to surpass this issue,
-when using the best hidden state path, this dissertation used a \gls*{hmm} only as a
+when using the best hidden state path, this dissertation used a \gls*{hmm} as a
 filter, which acts as a dimensional reduction that takes into consideration
 temporal
 patterns. In this scenario, the best hidden state sequence is the input to
@@ -369,9 +371,10 @@ a sliding windows method with a discrete Hellinger distance.
 
 Figure~\ref{fig:hmm_filter} presents an execution using a fully connected \gls*{hmm}
 with observations following a Normal distribution.
-The top plot is the median filtered time series.
-The middle plot is the best hidden state path, in which the vertical axis
-indicates the distribution of each hidden state.
+The top plot is the median filtered time series, which was used to train the
+HMM.
+The middle plot is the best hidden state path of the previous time series,
+in which the vertical axis indicates the distribution of each hidden state.
 The bottom plot is the discrete Hellinger distance of consecutive segments
 resulted from applying the sliding windows method to the best hidden state path.
 
@@ -384,7 +387,7 @@ resulted from applying the sliding windows method to the best hidden state path.
 
 \section{Bayesian Inference}
 
-There are several Bayesian methods which aims to assess the probability that a
+There are several Bayesian methods which aim to assess the probability that a
 point is a change point. Following an offline fashion, the work
 of~\cite{exact_and_efficient_bayesian_inference_for_multiple_changepoint_problems}
 recursively calculates, for each $i$, the probability of $\mathbf{y}_{i : n}$
@@ -440,7 +443,7 @@ selection of the most appropriate set of algorithms and hyperparameters
 a manual procedure.
 
 In this context, the \gls*{hmm} and bayesian inference methods face a major
-disadvantage, since it was empirically verified that is a challenging task to
+disadvantage, since it was empirically verified that it is a challenging task to
 proper choose their hyperparameters.
 The optimization model was the easier to manually fine tune,
 in order to establish a single set of hyperparameters that could

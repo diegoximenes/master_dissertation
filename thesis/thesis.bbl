@@ -31,8 +31,6 @@
   ago. 2010.
 \newblock ISSN: 0146-4833.
 \newblock \doi{10.1145/1851275.1851228}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://doi.acm.org/10.1145/1851275.1851228}\textgreater .
 
 \bibitem[\MakeUppercase{Gerber}\emph{ et~al.}(2010)Gerber, Pang, Spatscheck, e
   Venkataraman]{speed_testing_without_speed_tests_estimating_achievable_download_speed_from_passive_measurements}
@@ -43,14 +41,31 @@
   York, NY, USA, 2010. ACM.
 \newblock ISBN: 978-1-4503-0483-2.
 \newblock \doi{10.1145/1879141.1879196}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://doi.acm.org/10.1145/1879141.1879196}\textgreater .
 
 \bibitem[\MakeUppercase{Chatfield} e \MakeUppercase{Yar}(1988)Chatfield e
   Yar]{holt-winters_forecasting_some_practical_issues}
 \MakeUppercase{Chatfield, C., Yar, M.}
 \newblock \enquote{Holt-Winters forecasting: some practical issues}, \emph{The
   Statistician}, pp. 129--140, 1988.
+
+\bibitem[\MakeUppercase{Aminikhanghahi} e
+  \MakeUppercase{Cook}(2016)Aminikhanghahi e
+  Cook]{a_survey_of_methods_for_time_series_change_point_detection}
+\MakeUppercase{Aminikhanghahi, S., Cook, D.~J.}
+\newblock \enquote{A survey of methods for time series change point detection},
+  \emph{Knowledge and Information Systems}, pp. 1--29, 2016.
+
+\bibitem[\MakeUppercase{Mendes}\emph{ et~al.}(2016)Mendes, Senges, Santos,
+  Mendon\c{c}a, Le\~{a}o, e
+  Silva]{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil}
+\MakeUppercase{Mendes, D.~X., Senges, G. d.~S., Santos, G. H. A.~d.,
+  \MakeLowercase{et~al.}}
+\newblock \enquote{A Preliminary Performance Measurement Study of Residential
+  Broadband Services in Brazil}. In: \emph{Proceedings of the 2016 Workshop on
+  Fostering Latin-American Research in Data Communication Networks}, LANCOMM
+  '16, pp. 16--18, New York, NY, USA, 2016. ACM.
+\newblock ISBN: 978-1-4503-4426-5.
+\newblock \doi{2940116.2940135}.
 
 \bibitem[\MakeUppercase{Graps}(1995)Graps]{an_introduction_to_wavelets}
 \MakeUppercase{Graps, A.}
@@ -85,9 +100,6 @@
   the Thirtieth International Conference on Very Large Data Bases - Volume 30},
   VLDB '04, pp. 180--191. VLDB Endowment, 2004.
 \newblock ISBN: 0-12-088469-0.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dl.acm.org/citation.cfm?id=1316689.1316707}\textgreater
-  .
 
 \bibitem[\MakeUppercase{Wikipedia}(2016{\natexlab{b}})Wikipedia]{hellinger_distance}
 \MakeUppercase{Wikipedia}.
@@ -122,8 +134,6 @@
   of Penalties}, \emph{Journal of Computational and Graphical Statistics},
   v.~0, n.~ja, \penalty0 pp.~1--28, 0.
 \newblock \doi{10.1080/10618600.2015.1116445}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dx.doi.org/10.1080/10618600.2015.1116445}\textgreater .
 
 \bibitem[\MakeUppercase{Kehagias}(2004)Kehagias]{a_hidden_markov_model_segmentation_procedure_for_hydrological_and_environmental_time_series}
 \MakeUppercase{Kehagias, A.}
@@ -132,8 +142,6 @@
   Research and Risk Assessment}, v.~18, n.~2, \penalty0 pp.~117--130, 2004.
 \newblock ISSN: 1436-3259.
 \newblock \doi{10.1007/s00477-003-0145-5}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dx.doi.org/10.1007/s00477-003-0145-5}\textgreater .
 
 \bibitem[\MakeUppercase{Luong}\emph{ et~al.}(2013)Luong, Rozenholc, e
   Nuel]{fast_estimation_of_posterior_probabilities_in_change-point_analysis_through_a_constrained_hidden_markov_model}
@@ -143,9 +151,6 @@
   Statistics and Data Analysis}, v.~68, \penalty0 pp.~129 -- 140, 2013.
 \newblock ISSN: 0167-9473.
 \newblock \doi{http://dx.doi.org/10.1016/j.csda.2013.06.020}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://www.sciencedirect.com/science/article/pii/S0167947313002326}\textgreater
-  .
 
 \bibitem[\MakeUppercase{Monta\~{n}ez}\emph{ et~al.}(2015)Monta\~{n}ez,
   Amizadeh, e
@@ -156,9 +161,6 @@
   Conference on Artificial Intelligence}, AAAI'15, pp. 1819--1825. AAAI Press,
   2015.
 \newblock ISBN: 0-262-51129-0.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dl.acm.org/citation.cfm?id=2886521.2886573}\textgreater
-  .
 
 \bibitem[\MakeUppercase{Fearnhead}(2006)Fearnhead]{exact_and_efficient_bayesian_inference_for_multiple_changepoint_problems}
 \MakeUppercase{Fearnhead, P.}
@@ -166,28 +168,12 @@
   changepoint problems}, \emph{Statistics and Computing}, v.~16, n.~2,
   \penalty0 pp.~203--213, 2006.
 \newblock \doi{10.1007/s11222-006-8450-8}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dx.doi.org/10.1007/s11222-006-8450-8}\textgreater .
 
 \bibitem[\MakeUppercase{Adams} e \MakeUppercase{MacKay}(2007)Adams e
   MacKay]{bayesian_online_changepoint_detection}
 \MakeUppercase{Adams, R.~P., MacKay, D.~J.}
 \newblock \enquote{Bayesian online changepoint detection}, \emph{arXiv preprint
   arXiv:0710.3742}, 2007.
-
-\bibitem[\MakeUppercase{Mendes}\emph{ et~al.}(2016)Mendes, Senges, Santos,
-  Mendon\c{c}a, Le\~{a}o, e
-  Silva]{a_preliminary_performance_measurement_study_of_residential_broadband_services_in_brazil}
-\MakeUppercase{Mendes, D.~X., Senges, G. d.~S., Santos, G. H. A.~d.,
-  \MakeLowercase{et~al.}}
-\newblock \enquote{A Preliminary Performance Measurement Study of Residential
-  Broadband Services in Brazil}. In: \emph{Proceedings of the 2016 Workshop on
-  Fostering Latin-American Research in Data Communication Networks}, LANCOMM
-  '16, pp. 16--18, New York, NY, USA, 2016. ACM.
-\newblock ISBN: 978-1-4503-4426-5.
-\newblock \doi{2940116.2940135}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://doi.acm.org/2940116.2940135}\textgreater .
 
 \bibitem[\MakeUppercase{Augustin}\emph{ et~al.}(2006)Augustin, Cuvellier,
   Orgogozo, Viger, Friedman, Latapy, Magnien, e
@@ -211,9 +197,6 @@
   83, 2013.
 \newblock ISSN: 0893-6080.
 \newblock \doi{http://dx.doi.org/10.1016/j.neunet.2013.01.012}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://www.sciencedirect.com/science/article/pii/S0893608013000270}\textgreater
-  .
 
 \bibitem[\MakeUppercase{Hocking}\emph{ et~al.}(2013)Hocking, Rigaill, philippe
   Vert, e
@@ -225,9 +208,6 @@
   \emph{Proceedings of the 30th International Conference on Machine Learning
   (ICML-13)}, v.~28, pp. 172--180. JMLR Workshop and Conference Proceedings,
   maio 2013.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://jmlr.org/proceedings/papers/v28/hocking13.pdf}\textgreater
-  .
 
 \bibitem[\MakeUppercase{Ringberg}\emph{ et~al.}(2008)Ringberg, Soule, e
   Rexford]{webclass_adding_rigor_to_manual_labeling_of_traffic_anomalies}
@@ -242,13 +222,6 @@
 \newblock \enquote{Leveraging Cloud Data to Mitigate User Experience from"
   Breaking Bad"}, \emph{arXiv preprint arXiv:1411.7955}, 2014.
 
-\bibitem[\MakeUppercase{Aminikhanghahi} e
-  \MakeUppercase{Cook}(2016)Aminikhanghahi e
-  Cook]{a_survey_of_methods_for_time_series_change_point_detection}
-\MakeUppercase{Aminikhanghahi, S., Cook, D.~J.}
-\newblock \enquote{A survey of methods for time series change point detection},
-  \emph{Knowledge and Information Systems}, pp. 1--29, 2016.
-
 \bibitem[\MakeUppercase{Mahimkar}\emph{ et~al.}(2008)Mahimkar, Yates, Zhang,
   Shaikh, Wang, Ge, e
   Ee]{troubleshooting_chronic_conditions_in_large_ip_networks}
@@ -258,8 +231,6 @@
   2:1--2:12, New York, NY, USA, 2008. ACM.
 \newblock ISBN: 978-1-60558-210-8.
 \newblock \doi{10.1145/1544012.1544014}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://doi.acm.org/10.1145/1544012.1544014}\textgreater .
 
 \bibitem[\MakeUppercase{Auger} e \MakeUppercase{Lawrence}(1989)Auger e
   Lawrence]{algorithms_for_the_optimal_identification_of_segment_neighborhoods}
@@ -269,7 +240,5 @@
   \penalty0 pp.~39--54, 1989.
 \newblock ISSN: 1522-9602.
 \newblock \doi{10.1007/BF02458835}.
-\newblock Dispon{\' i}vel em:
-  \textless\url{http://dx.doi.org/10.1007/BF02458835}\textgreater .
 
 \end{thebibliography}

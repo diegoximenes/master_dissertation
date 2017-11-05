@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.9.23)  16 OCT 2017 22:06
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.11.4)  5 NOV 2017 02:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -844,7 +844,7 @@ e (type jpg)
 
 <use ./figures/literature_review/netnorad_network_architecture.jpg>
 Package pdftex.def Info: ./figures/literature_review/netnorad_network_architect
-ure.jpg used on input line 129.
+ure.jpg used on input line 128.
 (pdftex.def)             Requested size: 298.75264pt x 232.18358pt.
  [5]
 [6 <./figures/literature_review/netnorad_network_architecture.jpg>])
@@ -864,7 +864,7 @@ c file (type png)
 rAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/preprocessing/median_
 filter_latency/serverAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend20
-16-07-11.png used on input line 152.
+16-07-11.png used on input line 153.
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 
 <./figures/change_point_detection/preprocessing/median_filter_latency/serverAMR
@@ -878,7 +878,7 @@ c file (type png)
 rAMRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/preprocessing/median_
 filter_latency/serverAMRDTCPEV01_mac64:66:B3:4F:FD:B6_dtstart2016-07-01_dtend20
-16-07-11.png used on input line 152.
+16-07-11.png used on input line 153.
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 
 [10]
@@ -893,7 +893,7 @@ ile (type png)
 RDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/preprocessing/median_
 filter_loss/serverAMRDTCPEV01_mac64:66:B3:4F:EB:D6_dtstart2016-07-01_dtend2016-
-07-11.png used on input line 168.
+07-11.png used on input line 169.
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 
 <./figures/change_point_detection/preprocessing/median_filter_loss/serverAMRDTC
@@ -907,10 +907,10 @@ ile (type png)
 RDTCPEV01_mac64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/preprocessing/median_
 filter_loss/serverAMRDTCPEV01_mac64:66:B3:4F:FE:D4_dtstart2016-07-01_dtend2016-
-07-11.png used on input line 168.
+07-11.png used on input line 169.
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 187.
+put line 188.
  [11 <./figures/change_point_detection/preprocessing/median_filter_latency/serv
 erAMRDTCPEV01_mac64:66:B3:4F:EC:6C_dtstart2016-07-01_dtend2016-07-11.png> <./fi
 gures/change_point_detection/preprocessing/median_filter_latency/serverAMRDTCPE
@@ -930,7 +930,7 @@ CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png Graphic file
 SRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/sliding_windows_onlin
 e/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-1
-1.png used on input line 221.
+1.png used on input line 222.
 (pdftex.def)             Requested size: 298.75264pt x 224.06116pt.
 
 <./figures/change_point_detection/sliding_windows_offline/id100_serverNHODTCSRV
@@ -944,7 +944,7 @@ TCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png Graphic file
 CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/sliding_windows_offli
 ne/id100_serverNHODTCSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-
-11.png used on input line 237.
+11.png used on input line 238.
 (pdftex.def)             Requested size: 298.75264pt x 224.06116pt.
  [12 <./figures/change_point_detection/sliding_windows_online/id100_serverNHODT
 CSRV04_mac64:66:B3:A6:B3:22_dtstart2016-07-01_dtend2016-07-11.png>] [13 <./figu
@@ -959,7 +959,7 @@ File: ./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66
 B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/seg_neigh/id7_serverR
 IBDTCSRV03_mac64:66:B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png used on i
-nput line 322.
+nput line 324.
 (pdftex.def)             Requested size: 213.39568pt x 200.04987pt.
 
 <./figures/change_point_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:66:B3
@@ -971,14 +971,14 @@ File: ./figures/change_point_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:
 6:B3:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/seg_neigh/id158_serve
 rSOCDTCPEV01_mac64:66:B3:A6:B9:D2_dtstart2016-07-01_dtend2016-07-11.png used on
- input line 322.
+ input line 324.
 (pdftex.def)             Requested size: 213.39568pt x 200.04987pt.
- [14 <./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac64:66
-:B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png> <./figures/change_point_det
-ection/seg_neigh/id158_serverSOCDTCPEV01_mac64:66:B3:A6:B9:D2_dtstart2016-07-01
-_dtend2016-07-11.png>]
+ [14] [15 <./figures/change_point_detection/seg_neigh/id7_serverRIBDTCSRV03_mac
+64:66:B3:A6:BB:10_dtstart2016-07-01_dtend2016-07-11.png> <./figures/change_poin
+t_detection/seg_neigh/id158_serverSOCDTCPEV01_mac64:66:B3:A6:B9:D2_dtstart2016-
+07-01_dtend2016-07-11.png>]
 <./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_mac64:6
-6:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png, id=452, 1156.32pt x 867.24
+6:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png, id=458, 1156.32pt x 867.24
 pt>
 File: ./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_ma
 c64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png Graphic file (type png
@@ -988,12 +988,12 @@ c64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png Graphic file (type png
 64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/gaussian_hmm/id115_se
 rverRJODTCLDM031_mac64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png use
-d on input line 380.
+d on input line 383.
 (pdftex.def)             Requested size: 341.43437pt x 256.07178pt.
- [15] [16 <./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM0
-31_mac64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png>]
+ [16 <./figures/change_point_detection/gaussian_hmm/id115_serverRJODTCLDM031_ma
+c64:66:B3:7B:A1:B8_dtstart2016-05-01_dtend2016-05-11.png>]
 <./figures/change_point_detection/bayesian_offline/id305_serverSNEDTCPROB01_mac
-64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png, id=471, 1156.32pt x 86
+64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png, id=470, 1156.32pt x 86
 7.24pt>
 File: ./figures/change_point_detection/bayesian_offline/id305_serverSNEDTCPROB0
 1_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type
@@ -1003,11 +1003,11 @@ File: ./figures/change_point_detection/bayesian_offline/id305_serverSNEDTCPROB0
 _mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/bayesian_offline/id30
 5_serverSNEDTCPROB01_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png
- used on input line 428.
+ used on input line 431.
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
 
 <./figures/change_point_detection/bayesian_online/id305_serverSNEDTCPROB01_mac6
-4:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png, id=472, 1156.32pt x 867
+4:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png, id=471, 1156.32pt x 867
 .24pt>
 File: ./figures/change_point_detection/bayesian_online/id305_serverSNEDTCPROB01
 _mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png Graphic file (type 
@@ -1017,26 +1017,25 @@ png)
 mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png>
 Package pdftex.def Info: ./figures/change_point_detection/bayesian_online/id305
 _serverSNEDTCPROB01_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png 
-used on input line 428.
+used on input line 431.
 (pdftex.def)             Requested size: 256.07741pt x 192.05052pt.
-)
-(./src/methodology.tex [17 <./figures/change_point_detection/bayesian_offline/i
-d305_serverSNEDTCPROB01_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.
-png> <./figures/change_point_detection/bayesian_online/id305_serverSNEDTCPROB01
-_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png>]
+ [17 <./figures/change_point_detection/bayesian_offline/id305_serverSNEDTCPROB0
+1_mac64:66:B3:A6:BB:80_dtstart2016-07-01_dtend2016-07-11.png> <./figures/change
+_point_detection/bayesian_online/id305_serverSNEDTCPROB01_mac64:66:B3:A6:BB:80_
+dtstart2016-07-01_dtend2016-07-11.png>]) (./src/methodology.tex [18]
 Chapter 4.
-[18
+[19
 
 ]
-<./figures/methodology/pipeline/pipeline.png, id=486, 785.93625pt x 178.6675pt>
+<./figures/methodology/pipeline/pipeline.png, id=490, 785.93625pt x 178.6675pt>
 File: ./figures/methodology/pipeline/pipeline.png Graphic file (type png)
 <use ./figures/methodology/pipeline/pipeline.png>
 Package pdftex.def Info: ./figures/methodology/pipeline/pipeline.png used on in
 put line 73.
 (pdftex.def)             Requested size: 384.1096pt x 87.32155pt.
- [19 <./figures/methodology/pipeline/pipeline.png>] [20]
+ [20 <./figures/methodology/pipeline/pipeline.png>] [21]
 <./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend2016-05-11_NR
-IDTCLDM031_graph_anonymized.png, id=503, 326.21875pt x 348.30125pt>
+IDTCLDM031_graph_anonymized.png, id=507, 326.21875pt x 348.30125pt>
 File: ./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend2016-05-
 11_NRIDTCLDM031_graph_anonymized.png Graphic file (type png)
 
@@ -1046,9 +1045,9 @@ Package pdftex.def Info: ./figures/methodology/spatial_correlation/dtstart2016-
 05-01_dtend2016-05-11_NRIDTCLDM031_graph_anonymized.png used on input line 214.
 
 (pdftex.def)             Requested size: 149.37958pt x 159.49773pt.
- [21] [22 <./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend201
-6-05-11_NRIDTCLDM031_graph_anonymized.png>] [23]
-<./figures/methodology/spatial_time_correlation/event_tree_graph_1.png, id=526,
+ [22] [23 <./figures/methodology/spatial_correlation/dtstart2016-05-01_dtend201
+6-05-11_NRIDTCLDM031_graph_anonymized.png>] [24]
+<./figures/methodology/spatial_time_correlation/event_tree_graph_1.png, id=530,
  179.67125pt x 348.30125pt>
 File: ./figures/methodology/spatial_time_correlation/event_tree_graph_1.png Gra
 phic file (type png)
@@ -1058,7 +1057,7 @@ Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
 ree_graph_1.png used on input line 381.
 (pdftex.def)             Requested size: 85.35696pt x 165.47137pt.
 
-<./figures/methodology/spatial_time_correlation/event_tree_graph_2.png, id=527,
+<./figures/methodology/spatial_time_correlation/event_tree_graph_2.png, id=531,
  179.67125pt x 348.30125pt>
 File: ./figures/methodology/spatial_time_correlation/event_tree_graph_2.png Gra
 phic file (type png)
@@ -1068,7 +1067,7 @@ Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
 ree_graph_2.png used on input line 381.
 (pdftex.def)             Requested size: 85.35696pt x 165.47137pt.
 
-<./figures/methodology/spatial_time_correlation/event_tree_graph_3.png, id=528,
+<./figures/methodology/spatial_time_correlation/event_tree_graph_3.png, id=532,
  276.03125pt x 348.30125pt>
 File: ./figures/methodology/spatial_time_correlation/event_tree_graph_3.png Gra
 phic file (type png)
@@ -1078,7 +1077,7 @@ Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
 ree_graph_3.png used on input line 381.
 (pdftex.def)             Requested size: 128.0387pt x 161.56512pt.
 
-<./figures/methodology/spatial_time_correlation/event_tree_graph_4.png, id=529,
+<./figures/methodology/spatial_time_correlation/event_tree_graph_4.png, id=533,
  276.03125pt x 348.30125pt>
 File: ./figures/methodology/spatial_time_correlation/event_tree_graph_4.png Gra
 phic file (type png)
@@ -1088,11 +1087,11 @@ Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
 ree_graph_4.png used on input line 381.
 (pdftex.def)             Requested size: 128.0387pt x 161.56512pt.
 
-[24] [25 <./figures/methodology/spatial_time_correlation/event_tree_graph_1.png
+[25] [26 <./figures/methodology/spatial_time_correlation/event_tree_graph_1.png
 > <./figures/methodology/spatial_time_correlation/event_tree_graph_2.png> <./fi
 gures/methodology/spatial_time_correlation/event_tree_graph_3.png> <./figures/m
 ethodology/spatial_time_correlation/event_tree_graph_4.png>]
-<./figures/methodology/spatial_time_correlation/event_tree_graph_5.png, id=547,
+<./figures/methodology/spatial_time_correlation/event_tree_graph_5.png, id=551,
  276.03125pt x 348.30125pt>
 File: ./figures/methodology/spatial_time_correlation/event_tree_graph_5.png Gra
 phic file (type png)
@@ -1102,9 +1101,9 @@ Package pdftex.def Info: ./figures/methodology/spatial_time_correlation/event_t
 ree_graph_5.png used on input line 471.
 (pdftex.def)             Requested size: 149.37958pt x 188.49973pt.
 
-[26] [27 <./figures/methodology/spatial_time_correlation/event_tree_graph_5.png
+[27] [28 <./figures/methodology/spatial_time_correlation/event_tree_graph_5.png
 >]
-<./figures/methodology/supervised_learning_try/survey_system.png, id=565, 1396.
+<./figures/methodology/supervised_learning_try/survey_system.png, id=570, 1396.
 21625pt x 804.00375pt>
 File: ./figures/methodology/supervised_learning_try/survey_system.png Graphic f
 ile (type png)
@@ -1113,9 +1112,9 @@ ile (type png)
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/survey_s
 ystem.png used on input line 570.
 (pdftex.def)             Requested size: 384.1096pt x 221.18146pt.
- [28]
+ [29]
 <./figures/methodology/supervised_learning_try/cnt_classifications_per_vote.png
-, id=577, 1156.32pt x 794.97pt>
+, id=581, 1156.32pt x 794.97pt>
 File: ./figures/methodology/supervised_learning_try/cnt_classifications_per_vot
 e.png Graphic file (type png)
 
@@ -1124,10 +1123,10 @@ e.png Graphic file (type png)
 Package pdftex.def Info: ./figures/methodology/supervised_learning_try/cnt_clas
 sifications_per_vote.png used on input line 591.
 (pdftex.def)             Requested size: 298.75264pt x 205.38939pt.
- [29 <./figures/methodology/supervised_learning_try/survey_system.png> <./figur
+ [30 <./figures/methodology/supervised_learning_try/survey_system.png> <./figur
 es/methodology/supervised_learning_try/cnt_classifications_per_vote.png>]
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=585, 1
+B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=589, 1
 228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png Graph
@@ -1142,7 +1141,7 @@ d.ufrj.br.png used on input line 616.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
 B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br.png, id
-=586, 1228.59pt x 867.24pt>
+=590, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br.pn
 g Graphic file (type png)
@@ -1156,8 +1155,8 @@ antos@tgr.net.br.png used on input line 616.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png, id=58
-7, 1228.59pt x 867.24pt>
+B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png, id=59
+1, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png G
 raphic file (type png)
@@ -1171,7 +1170,7 @@ verNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/guisenges
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
 B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gabriel.mendonca@tgr.net.br.png, 
-id=588, 1228.59pt x 867.24pt>
+id=592, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/gabriel.mendonca@tgr.net.br.
 png Graphic file (type png)
@@ -1185,8 +1184,8 @@ endonca@tgr.net.br.png used on input line 626.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png, id=58
-9, 1228.59pt x 867.24pt>
+B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png, id=59
+3, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png G
 raphic file (type png)
@@ -1199,7 +1198,7 @@ lva@gmail.com.png used on input line 636.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=590,
+B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=594,
  1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png Gra
@@ -1212,7 +1211,7 @@ verNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/edmundo@l
 and.ufrj.br.png used on input line 636.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
-[30 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64
+[31 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64
 :66:B3:A6:BC:B8_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png> <./fi
 gures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6
 :BC:B8_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br.png> <./figu
@@ -1225,7 +1224,7 @@ dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png> <./figures/method
 ology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6:BC:B8_dtsta
 rt2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png>]
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
-B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=602, 1
+B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=606, 1
 228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png Graph
@@ -1240,7 +1239,7 @@ d.ufrj.br.png used on input line 657.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
 B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br.png, id
-=603, 1228.59pt x 867.24pt>
+=607, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br.pn
 g Graphic file (type png)
@@ -1255,7 +1254,7 @@ antos@tgr.net.br.png used on input line 657.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
 B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png, id=60
-4, 1228.59pt x 867.24pt>
+8, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/guisenges@land.ufrj.br.png G
 raphic file (type png)
@@ -1269,7 +1268,7 @@ verCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/guisenges
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
 B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gabriel.mendonca@tgr.net.br.png, 
-id=605, 1228.59pt x 867.24pt>
+id=609, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/gabriel.mendonca@tgr.net.br.
 png Graphic file (type png)
@@ -1283,8 +1282,8 @@ endonca@tgr.net.br.png used on input line 667.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
-B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png, id=60
-6, 1228.59pt x 867.24pt>
+B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png, id=61
+0, 1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png G
 raphic file (type png)
@@ -1297,7 +1296,7 @@ lva@gmail.com.png used on input line 677.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:
-B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=607,
+B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=611,
  1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac6
 4:66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png Gra
@@ -1311,7 +1310,7 @@ and.ufrj.br.png used on input line 677.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=609, 1
+B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png, id=613, 1
 228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png Graph
@@ -1325,7 +1324,7 @@ d.ufrj.br.png used on input line 699.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:
-B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=610,
+B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png, id=614,
  1228.59pt x 867.24pt>
 File: ./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac6
 4:66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png Gra
@@ -1338,7 +1337,7 @@ verNHODTCSRV04_mac64:66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@l
 and.ufrj.br.png used on input line 699.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
-[31 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64
+[32 <./figures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64
 :66:B3:A6:B7:BC_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png> <./fi
 gures/methodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:B3:A6
 :B7:BC_dtstart2016-05-01_dtend2016-05-11/gustavo.santos@tgr.net.br.png> <./figu
@@ -1350,14 +1349,14 @@ ethodology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:B3:A6:B7:BC_
 dtstart2016-05-01_dtend2016-05-11/edmundosilva@gmail.com.png> <./figures/method
 ology/supervised_learning_try/cnt6_serverCTBDTCLDM91_mac64:66:B3:A6:B7:BC_dtsta
 rt2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png>]) (./src/results.tex
-[32 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64
+[33 <./figures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64
 :66:B3:A6:B6:36_dtstart2016-05-01_dtend2016-05-11/rosam@land.ufrj.br.png> <./fi
 gures/methodology/supervised_learning_try/cnt6_serverNHODTCSRV04_mac64:66:B3:A6
 :B6:36_dtstart2016-05-01_dtend2016-05-11/edmundo@land.ufrj.br.png>]
 Chapter 5.
 
 <./figures/results/correct_examples/before_first_hop/serverSDRDTCLDM012_mac64:6
-6:B3:50:06:D4_dtstart2016-05-01_dtend2016-05-11.png, id=636, 1228.59pt x 867.24
+6:B3:50:06:D4_dtstart2016-05-01_dtend2016-05-11.png, id=640, 1228.59pt x 867.24
 pt>
 File: ./figures/results/correct_examples/before_first_hop/serverSDRDTCLDM012_ma
 c64:66:B3:50:06:D4_dtstart2016-05-01_dtend2016-05-11.png Graphic file (type png
@@ -1371,7 +1370,7 @@ d on input line 62.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/correct_examples/before_first_hop/serverSDRDTCLDM012_mac64:6
-6:B3:A6:A9:70_dtstart2016-05-01_dtend2016-05-11.png, id=637, 1228.59pt x 867.24
+6:B3:A6:A9:70_dtstart2016-05-01_dtend2016-05-11.png, id=641, 1228.59pt x 867.24
 pt>
 File: ./figures/results/correct_examples/before_first_hop/serverSDRDTCLDM012_ma
 c64:66:B3:A6:A9:70_dtstart2016-05-01_dtend2016-05-11.png Graphic file (type png
@@ -1383,11 +1382,11 @@ Package pdftex.def Info: ./figures/results/correct_examples/before_first_hop/se
 rverSDRDTCLDM012_mac64:66:B3:A6:A9:70_dtstart2016-05-01_dtend2016-05-11.png use
 d on input line 62.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
- [33
+ [34
 
 ]
 <./figures/results/correct_examples/zero_indegree_correlation/serverSOCDTCPEV01
-_mac64:66:B3:4F:EA:E2_dtstart2016-06-01_dtend2016-06-11.png, id=644, 1228.59pt 
+_mac64:66:B3:4F:EA:E2_dtstart2016-06-01_dtend2016-06-11.png, id=649, 1228.59pt 
 x 867.24pt>
 File: ./figures/results/correct_examples/zero_indegree_correlation/serverSOCDTC
 PEV01_mac64:66:B3:4F:EA:E2_dtstart2016-06-01_dtend2016-06-11.png Graphic file (
@@ -1402,7 +1401,7 @@ lation/serverSOCDTCPEV01_mac64:66:B3:4F:EA:E2_dtstart2016-06-01_dtend2016-06-11
 
 <./figures/results/correct_examples/zero_indegree_correlation/dtstart2016-06-01
 _dtend2016-06-11_SOCDTCPEV01_traceroute_compress_embratel_graph_anonymized.png,
- id=645, 1128.215pt x 444.66125pt>
+ id=650, 1128.215pt x 444.66125pt>
 File: ./figures/results/correct_examples/zero_indegree_correlation/dtstart2016-
 06-01_dtend2016-06-11_SOCDTCPEV01_traceroute_compress_embratel_graph_anonymized
 .png Graphic file (type png)
@@ -1414,7 +1413,7 @@ Package pdftex.def Info: ./figures/results/correct_examples/zero_indegree_corre
 lation/dtstart2016-06-01_dtend2016-06-11_SOCDTCPEV01_traceroute_compress_embrat
 el_graph_anonymized.png used on input line 96.
 (pdftex.def)             Requested size: 298.75264pt x 117.74646pt.
- [34 <./figures/results/correct_examples/before_first_hop/serverSDRDTCLDM012_ma
+ [35 <./figures/results/correct_examples/before_first_hop/serverSDRDTCLDM012_ma
 c64:66:B3:50:06:D4_dtstart2016-05-01_dtend2016-05-11.png> <./figures/results/co
 rrect_examples/before_first_hop/serverSDRDTCLDM012_mac64:66:B3:A6:A9:70_dtstart
 2016-05-01_dtend2016-05-11.png> <./figures/results/correct_examples/zero_indegr
@@ -1423,7 +1422,7 @@ ee_correlation/serverSOCDTCPEV01_mac64:66:B3:4F:EA:E2_dtstart2016-06-01_dtend20
 tart2016-06-01_dtend2016-06-11_SOCDTCPEV01_traceroute_compress_embratel_graph_a
 nonymized.png>]
 <./figures/results/correct_examples/zero_indegree_single/serverGRSCBCSRV01_mac6
-4:66:B3:50:05:56_dtstart2016-06-21_dtend2016-07-01.png, id=657, 1228.59pt x 867
+4:66:B3:50:05:56_dtstart2016-06-21_dtend2016-07-01.png, id=661, 1228.59pt x 867
 .24pt>
 File: ./figures/results/correct_examples/zero_indegree_single/serverGRSCBCSRV01
 _mac64:66:B3:50:05:56_dtstart2016-06-21_dtend2016-07-01.png Graphic file (type 
@@ -1438,7 +1437,7 @@ used on input line 126.
 
 <./figures/results/correct_examples/zero_indegree_single/dtstart2016-06-21_dten
 d2016-07-01_GRSCBCSRV01_traceroute_compress_embratel_filter_graph_anonymized.pn
-g, id=658, 1171.37625pt x 251.94125pt>
+g, id=662, 1171.37625pt x 251.94125pt>
 File: ./figures/results/correct_examples/zero_indegree_single/dtstart2016-06-21
 _dtend2016-07-01_GRSCBCSRV01_traceroute_compress_embratel_filter_graph_anonymiz
 ed.png Graphic file (type png)
@@ -1452,7 +1451,7 @@ lter_graph_anonymized.png used on input line 126.
 (pdftex.def)             Requested size: 298.75264pt x 64.25761pt.
 
 <./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV16_ma
-c64:66:B3:A6:AB:80_dtstart2016-05-01_dtend2016-05-11.png, id=661, 1228.59pt x 8
+c64:66:B3:A6:AB:80_dtstart2016-05-01_dtend2016-05-11.png, id=665, 1228.59pt x 8
 67.24pt>
 File: ./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV
 16_mac64:66:B3:A6:AB:80_dtstart2016-05-01_dtend2016-05-11.png Graphic file (typ
@@ -1466,7 +1465,7 @@ g used on input line 167.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV16_ma
-c64:66:B3:A6:AC:40_dtstart2016-05-01_dtend2016-05-11.png, id=662, 1228.59pt x 8
+c64:66:B3:A6:AC:40_dtstart2016-05-01_dtend2016-05-11.png, id=666, 1228.59pt x 8
 67.24pt>
 File: ./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV
 16_mac64:66:B3:A6:AC:40_dtstart2016-05-01_dtend2016-05-11.png Graphic file (typ
@@ -1478,12 +1477,12 @@ Package pdftex.def Info: ./figures/results/wrong_examples/time_correlation_exam
 ple/serverSPOTVTSRV16_mac64:66:B3:A6:AC:40_dtstart2016-05-01_dtend2016-05-11.pn
 g used on input line 167.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
- [35 <./figures/results/correct_examples/zero_indegree_single/serverGRSCBCSRV01
+ [36 <./figures/results/correct_examples/zero_indegree_single/serverGRSCBCSRV01
 _mac64:66:B3:50:05:56_dtstart2016-06-21_dtend2016-07-01.png> <./figures/results
 /correct_examples/zero_indegree_single/dtstart2016-06-21_dtend2016-07-01_GRSCBC
 SRV01_traceroute_compress_embratel_filter_graph_anonymized.png>]
 <./figures/results/wrong_examples/untraceable_example/serverBHZDTCLDM062_mac64:
-66:B3:50:00:68_dtstart2016-06-01_dtend2016-06-11.png, id=670, 1228.59pt x 867.2
+66:B3:50:00:68_dtstart2016-06-01_dtend2016-06-11.png, id=674, 1228.59pt x 867.2
 4pt>
 File: ./figures/results/wrong_examples/untraceable_example/serverBHZDTCLDM062_m
 ac64:66:B3:50:00:68_dtstart2016-06-01_dtend2016-06-11.png Graphic file (type pn
@@ -1497,7 +1496,7 @@ ed on input line 197.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/serverBHZDTCLDM062_mac64:
-66:B3:50:00:B6_dtstart2016-06-01_dtend2016-06-11.png, id=671, 1228.59pt x 867.2
+66:B3:50:00:B6_dtstart2016-06-01_dtend2016-06-11.png, id=675, 1228.59pt x 867.2
 4pt>
 File: ./figures/results/wrong_examples/untraceable_example/serverBHZDTCLDM062_m
 ac64:66:B3:50:00:B6_dtstart2016-06-01_dtend2016-06-11.png Graphic file (type pn
@@ -1509,7 +1508,7 @@ Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/s
 erverBHZDTCLDM062_mac64:66:B3:50:00:B6_dtstart2016-06-01_dtend2016-06-11.png us
 ed on input line 197.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
- [36 <./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV
+ [37 <./figures/results/wrong_examples/time_correlation_example/serverSPOTVTSRV
 16_mac64:66:B3:A6:AB:80_dtstart2016-05-01_dtend2016-05-11.png> <./figures/resul
 ts/wrong_examples/time_correlation_example/serverSPOTVTSRV16_mac64:66:B3:A6:AC:
 40_dtstart2016-05-01_dtend2016-05-11.png> <./figures/results/wrong_examples/unt
@@ -1517,7 +1516,7 @@ raceable_example/serverBHZDTCLDM062_mac64:66:B3:50:00:68_dtstart2016-06-01_dten
 d2016-06-11.png> <./figures/results/wrong_examples/untraceable_example/serverBH
 ZDTCLDM062_mac64:66:B3:50:00:B6_dtstart2016-06-01_dtend2016-06-11.png>]
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
-0:68/hop00_b3ea1801.virtua.com.br.png, id=683, 1228.59pt x 867.24pt>
+0:68/hop00_b3ea1801.virtua.com.br.png, id=687, 1228.59pt x 867.24pt>
 File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:68/hop00_b3ea1801.virtua.com.br.png Graphic file (type png)
 
@@ -1529,7 +1528,7 @@ e 255.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
-0:68/hop01_b3ea0001.virtua.com.br.png, id=684, 1228.59pt x 867.24pt>
+0:68/hop01_b3ea0001.virtua.com.br.png, id=688, 1228.59pt x 867.24pt>
 File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:68/hop01_b3ea0001.virtua.com.br.png Graphic file (type png)
 
@@ -1541,7 +1540,7 @@ e 255.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
-0:68/hop02_c911a615.virtua.com.br.png, id=685, 1228.59pt x 867.24pt>
+0:68/hop02_c911a615.virtua.com.br.png, id=689, 1228.59pt x 867.24pt>
 File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:68/hop02_c911a615.virtua.com.br.png Graphic file (type png)
 
@@ -1553,7 +1552,7 @@ e 265.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
-0:68/hop03_c91180fe.virtua.com.br.png, id=686, 1228.59pt x 867.24pt>
+0:68/hop03_c91180fe.virtua.com.br.png, id=690, 1228.59pt x 867.24pt>
 File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:68/hop03_c91180fe.virtua.com.br.png Graphic file (type png)
 
@@ -1563,9 +1562,9 @@ Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/r
 tt_per_hop/64:66:B3:50:00:68/hop03_c91180fe.virtua.com.br.png used on input lin
 e 265.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
- [37]
+ [38]
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
-0:B6/hop00_b3ea1801.virtua.com.br.png, id=696, 1228.59pt x 867.24pt>
+0:B6/hop00_b3ea1801.virtua.com.br.png, id=700, 1228.59pt x 867.24pt>
 File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:B6/hop00_b3ea1801.virtua.com.br.png Graphic file (type png)
 
@@ -1577,7 +1576,7 @@ e 288.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
-0:B6/hop01_b3ea0001.virtua.com.br.png, id=697, 1228.59pt x 867.24pt>
+0:B6/hop01_b3ea0001.virtua.com.br.png, id=701, 1228.59pt x 867.24pt>
 File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:B6/hop01_b3ea0001.virtua.com.br.png Graphic file (type png)
 
@@ -1589,7 +1588,7 @@ e 288.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
-0:B6/hop02_c911a615.virtua.com.br.png, id=698, 1228.59pt x 867.24pt>
+0:B6/hop02_c911a615.virtua.com.br.png, id=702, 1228.59pt x 867.24pt>
 File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:B6/hop02_c911a615.virtua.com.br.png Graphic file (type png)
 
@@ -1601,7 +1600,7 @@ e 298.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
 
 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:50:0
-0:B6/hop03_c91180fe.virtua.com.br.png, id=699, 1228.59pt x 867.24pt>
+0:B6/hop03_c91180fe.virtua.com.br.png, id=703, 1228.59pt x 867.24pt>
 File: ./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:B6/hop03_c91180fe.virtua.com.br.png Graphic file (type png)
 
@@ -1611,7 +1610,7 @@ Package pdftex.def Info: ./figures/results/wrong_examples/untraceable_example/r
 tt_per_hop/64:66:B3:50:00:B6/hop03_c91180fe.virtua.com.br.png used on input lin
 e 298.
 (pdftex.def)             Requested size: 234.73654pt x 165.69038pt.
- [38 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
+ [39 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:68/hop00_b3ea1801.virtua.com.br.png> <./figures/results/wrong_examples/u
 ntraceable_example/rtt_per_hop/64:66:B3:50:00:68/hop01_b3ea0001.virtua.com.br.p
 ng> <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:
@@ -1619,7 +1618,7 @@ ng> <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:
 traceable_example/rtt_per_hop/64:66:B3:50:00:68/hop03_c91180fe.virtua.com.br.pn
 g>]
 <./figures/results/final_remarks/change_contracted_bandwidth/serverGOIDTCSRV07_
-macF8:1A:67:2E:E4:9A_dtstart2016-07-01_dtend2016-07-11.png, id=711, 1228.59pt x
+macF8:1A:67:2E:E4:9A_dtstart2016-07-01_dtend2016-07-11.png, id=715, 1228.59pt x
  867.24pt>
 File: ./figures/results/final_remarks/change_contracted_bandwidth/serverGOIDTCS
 RV07_macF8:1A:67:2E:E4:9A_dtstart2016-07-01_dtend2016-07-11.png Graphic file (t
@@ -1631,7 +1630,7 @@ Package pdftex.def Info: ./figures/results/final_remarks/change_contracted_band
 width/serverGOIDTCSRV07_macF8:1A:67:2E:E4:9A_dtstart2016-07-01_dtend2016-07-11.
 png used on input line 319.
 (pdftex.def)             Requested size: 298.75264pt x 210.88109pt.
- [39 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
+ [40 <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3
 :50:00:B6/hop00_b3ea1801.virtua.com.br.png> <./figures/results/wrong_examples/u
 ntraceable_example/rtt_per_hop/64:66:B3:50:00:B6/hop01_b3ea0001.virtua.com.br.p
 ng> <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:
@@ -1639,7 +1638,7 @@ ng> <./figures/results/wrong_examples/untraceable_example/rtt_per_hop/64:66:B3:
 traceable_example/rtt_per_hop/64:66:B3:50:00:B6/hop03_c91180fe.virtua.com.br.pn
 g>]
 <./figures/results/final_remarks/client_sparsity/serverRJODTCLDM031_mac64:66:B3
-:4F:E9:24_dtstart2016-08-01_dtend2016-08-11.png, id=721, 1228.59pt x 867.24pt>
+:4F:E9:24_dtstart2016-08-01_dtend2016-08-11.png, id=726, 1228.59pt x 867.24pt>
 File: ./figures/results/final_remarks/client_sparsity/serverRJODTCLDM031_mac64:
 66:B3:4F:E9:24_dtstart2016-08-01_dtend2016-08-11.png Graphic file (type png)
 
@@ -1652,7 +1651,7 @@ RJODTCLDM031_mac64:66:B3:4F:E9:24_dtstart2016-08-01_dtend2016-08-11.png used on
 
 <./figures/results/final_remarks/client_sparsity/dtstart2016-08-01_dtend2016-08
 -11_RJODTCLDM031_traceroute_compress_embratel_filter_subgraph_anonymized.png, i
-d=722, 991.705pt x 348.30125pt>
+d=727, 991.705pt x 348.30125pt>
 File: ./figures/results/final_remarks/client_sparsity/dtstart2016-08-01_dtend20
 16-08-11_RJODTCLDM031_traceroute_compress_embratel_filter_subgraph_anonymized.p
 ng Graphic file (type png)
@@ -1664,16 +1663,16 @@ Package pdftex.def Info: ./figures/results/final_remarks/client_sparsity/dtstar
 t2016-08-01_dtend2016-08-11_RJODTCLDM031_traceroute_compress_embratel_filter_su
 bgraph_anonymized.png used on input line 339.
 (pdftex.def)             Requested size: 298.75264pt x 104.92697pt.
-) (./src/conclusion.tex [40 <./figures/results/final_remarks/change_contracted_
+) (./src/conclusion.tex [41 <./figures/results/final_remarks/change_contracted_
 bandwidth/serverGOIDTCSRV07_macF8:1A:67:2E:E4:9A_dtstart2016-07-01_dtend2016-07
 -11.png> <./figures/results/final_remarks/client_sparsity/serverRJODTCLDM031_ma
 c64:66:B3:4F:E9:24_dtstart2016-08-01_dtend2016-08-11.png> <./figures/results/fi
 nal_remarks/client_sparsity/dtstart2016-08-01_dtend2016-08-11_RJODTCLDM031_trac
 eroute_compress_embratel_filter_subgraph_anonymized.png>]
 Chapter 6.
-[41
+[42
 
-] [42]) [43] (./thesis.bbl
+] [43]) [44] (./thesis.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 20--25
 []\OT1/cmr/m/n/12 ADAMS, A., LA-PUKHOV, P., ZENG, J. H.  ``Net-NO-RAD:
  []
@@ -1689,22 +1688,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 20--25
 5 /
  []
 
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 35.
-(/usr/share/texlive/texmf-dist/tex/latex/base/omlcmr.fd
-File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 35.
+[45
+
+
+]
 Missing character: There is no â in font cmr12!
 Missing character: There is no € in font cmr12!
 Missing character: There is no “ in font cmr12!
- [44
-
-
-] [45] [46])
-
+ [46] [47]) 
 AED: lastpage setting LastPage
-[47]
+[48]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 96.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 96.
  (./thesis.aux)
@@ -1715,13 +1708,13 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 96.
  ) 
 Here is how much of TeX's memory you used:
- 14970 strings out of 493029
- 261286 string characters out of 6136234
- 397131 words of memory out of 5000000
- 17947 multiletter control sequences out of 15000+600000
+ 14954 strings out of 493029
+ 261004 string characters out of 6136234
+ 397132 words of memory out of 5000000
+ 17933 multiletter control sequences out of 15000+600000
  13082 words of font info for 48 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 46i,11n,82p,1915b,635s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 46i,11n,82p,1915b,639s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texl
@@ -1737,10 +1730,10 @@ amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on thesis.pdf (56 pages, 5409665 bytes).
+Output written on thesis.pdf (57 pages, 5436116 bytes).
 PDF statistics:
- 882 PDF objects out of 1000 (max. 8388607)
- 682 compressed objects within 7 object streams
- 155 named destinations out of 1000 (max. 500000)
+ 864 PDF objects out of 1000 (max. 8388607)
+ 663 compressed objects within 7 object streams
+ 156 named destinations out of 1000 (max. 500000)
  568 words of extra memory for PDF output out of 10000 (max. 10000000)
 

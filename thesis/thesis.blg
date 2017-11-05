@@ -5,16 +5,16 @@ The style file: coppe-unsrt.bst
 Database file #1: ./src/bibliography.bib
 You've used 30 entries,
             2630 wiz_defined-function locations,
-            771 strings with 12261 characters,
-and the built_in function-call counts, 14426 in all, are:
-= -- 1315
+            758 strings with 11650 characters,
+and the built_in function-call counts, 14244 in all, are:
+= -- 1276
 > -- 548
 < -- 35
 + -- 240
 - -- 179
-* -- 1324
-:= -- 2088
-add.period$ -- 134
+* -- 1298
+:= -- 2049
+add.period$ -- 121
 call.type$ -- 30
 change.case$ -- 30
 chr.to.int$ -- 29
@@ -22,13 +22,13 @@ cite$ -- 30
 duplicate$ -- 826
 empty$ -- 1385
 format.name$ -- 219
-if$ -- 3153
+if$ -- 3114
 int.to.chr$ -- 2
 int.to.str$ -- 31
 missing$ -- 27
-newline$ -- 166
+newline$ -- 153
 num.names$ -- 92
-pop$ -- 246
+pop$ -- 259
 preamble$ -- 1
 purify$ -- 30
 quote$ -- 0
@@ -43,4 +43,4 @@ type$ -- 210
 warning$ -- 0
 while$ -- 117
 width$ -- 0
-write$ -- 450
+write$ -- 424

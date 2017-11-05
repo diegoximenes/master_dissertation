@@ -19,19 +19,19 @@
 \contentsline {section}{\numberline {3.6}HMM}{15}{section.3.6}
 \contentsline {section}{\numberline {3.7}Bayesian Inference}{16}{section.3.7}
 \contentsline {section}{\numberline {3.8}Final Remarks}{17}{section.3.8}
-\contentsline {chapter}{\numberline {4}Methodology}{18}{chapter.4}
-\contentsline {section}{\numberline {4.1}Measurement Environment}{18}{section.4.1}
-\contentsline {section}{\numberline {4.2}Proposed Workflow}{19}{section.4.2}
-\contentsline {section}{\numberline {4.3}Spatial Correlation}{20}{section.4.3}
-\contentsline {section}{\numberline {4.4}Time Correlation}{22}{section.4.4}
-\contentsline {section}{\numberline {4.5}Spatial-Time Correlation}{24}{section.4.5}
-\contentsline {section}{\numberline {4.6}Change Point Detection Issues}{27}{section.4.6}
-\contentsline {section}{\numberline {4.7}Differences from Previous Work}{32}{section.4.7}
-\contentsline {chapter}{\numberline {5}Results}{33}{chapter.5}
-\contentsline {section}{\numberline {5.1}Possible Correct Outcomes}{34}{section.5.1}
-\contentsline {section}{\numberline {5.2}Possible Incorrect Outcomes}{35}{section.5.2}
-\contentsline {section}{\numberline {5.3}Final Remarks}{39}{section.5.3}
-\contentsline {chapter}{\numberline {6}Conclusions}{41}{chapter.6}
-\contentsline {section}{\numberline {6.1}Contributions}{41}{section.6.1}
-\contentsline {section}{\numberline {6.2}Future Work}{42}{section.6.2}
-\contentsline {chapter}{Bibliography}{44}{chapter*.33}
+\contentsline {chapter}{\numberline {4}Methodology}{19}{chapter.4}
+\contentsline {section}{\numberline {4.1}Measurement Environment}{19}{section.4.1}
+\contentsline {section}{\numberline {4.2}Proposed Workflow}{20}{section.4.2}
+\contentsline {section}{\numberline {4.3}Spatial Correlation}{21}{section.4.3}
+\contentsline {section}{\numberline {4.4}Time Correlation}{23}{section.4.4}
+\contentsline {section}{\numberline {4.5}Spatial-Time Correlation}{25}{section.4.5}
+\contentsline {section}{\numberline {4.6}Change Point Detection Issues}{28}{section.4.6}
+\contentsline {section}{\numberline {4.7}Differences from Previous Work}{33}{section.4.7}
+\contentsline {chapter}{\numberline {5}Results}{34}{chapter.5}
+\contentsline {section}{\numberline {5.1}Possible Correct Outcomes}{35}{section.5.1}
+\contentsline {section}{\numberline {5.2}Possible Incorrect Outcomes}{36}{section.5.2}
+\contentsline {section}{\numberline {5.3}Final Remarks}{40}{section.5.3}
+\contentsline {chapter}{\numberline {6}Conclusions}{42}{chapter.6}
+\contentsline {section}{\numberline {6.1}Contributions}{42}{section.6.1}
+\contentsline {section}{\numberline {6.2}Future Work}{43}{section.6.2}
+\contentsline {chapter}{Bibliography}{45}{chapter*.33}

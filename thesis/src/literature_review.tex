@@ -13,7 +13,7 @@ For instance, Argus and
 NetNorad track the end-to-end \gls*{qos} evolution over time of different
 end-hosts,
 and the anomalies identified in these time series are interpreted as events.
-Anomalies are defined as the time points when the data stream deviates from it's
+Anomalies are defined as the time points when the data stream deviates from its
 standard.
 Besides this similarity, considering that these projects where designed to be
 deployed in different network architectures, they differ in several aspects,
@@ -75,8 +75,7 @@ end-users variability caused by their local infrastructure.
 The Event Detection procedure identifies anomalies in the
 time series obtained in the Temporal Aggregation mechanism.
 Argus uses a Holt-Winters~\cite{holt-winters_forecasting_some_practical_issues}
-variation, which consists of
-an online method with low time and memory complexities.
+variation.
 
 Using spatial and events' times correlations, the Event Localization step
 infer fault locations.
@@ -107,13 +106,13 @@ not studied.
 \section{NetNorad}
 
 NetNorad~\cite{netnorad} consists of a Facebook's internal project to
-automate it's network's faults analysis.
+automate its network's faults analysis.
 Previous deployed techniques by Facebook exhibit several
 disadvantages, for instance,
 human-driven investigation may take hours. Also, cases known as gray failures,
 can't be detected only collecting devices information through \gls*{snmp},
 or command line interface.
-For example, some equipments can't report it's own malfunctioning, or
+For example, some equipments can't report its own malfunctioning, or
 some problems can be related with the global network structure.
 
 Facebook's network is structured hierarchically. At the
@@ -151,7 +150,7 @@ data center but within the same region;
 ``Global'' if the target cluster is outside the pinger's
 region.
 
-With the tagging process, each cluster have three time series reflecting
+With the tagging process, each cluster has three time series reflecting
 different spatial viewpoints.
 To mitigate problems, these data streams are tracked through
 distinct percentiles over 10 minutes intervals.

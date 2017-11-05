@@ -187,7 +187,7 @@ results with end-to-end metrics can lead to wrong conclusions.
 Therefore, this work assumes that the tier-2 \gls*{isp} only applies per packet load
 balancing, which is modeled here as a random strategy. With this hypothesis,
 if two end-users are geographically near, then it is likely that their packets
-traverse in the same set of routers in the tier-2 network. This implies that if
+traverse the same set of routers in the tier-2 network. This implies that if
 an event occurs in a tier-2 router, it is not possible that only one of these
 clients perceives the event. This is an important consequence explored in
 Section~\ref{sec:spatial_time_correlation}.
@@ -345,7 +345,7 @@ one link between two network equipments.
 
 In the first reasoning part, cases with no tier-2 user-groups will be processed.
 Also,
-traceroutes paths that does not start in a zero indegree vertex will be removed.
+traceroutes paths that do not start in a zero indegree vertex will be removed.
 Additionally, co-occurrent events with the same type will be disregarded.
 Moreover, it is assumed that the
 change point detection algorithm setup is able to detect all end-users
@@ -389,7 +389,7 @@ indegree node perceive the event. In this situation, it is possible to affirm
 that this vertex is not the cause of the event, since not all clients detected
 it. For the same reason, the cause is not located in posterior nodes
 in the path to server.
-Then, if this set's size is bigger than one, these end-users must share
+Then, if this set's size is larger than one, these end-users must share
 a network equipment, which is the cause, that is located before the first hop.
 As an example, this equipment can be a fiber node.
 
@@ -456,7 +456,7 @@ As an example, consider two clients, one closer to the server than the
 other.
 If a failure in a router impacts the \gls*{rtt} of both users, probably,
 the \gls*{rtt} of the client that is closest to this router
-will suffer a bigger relative variation than the
+will suffer a larger relative variation than the
 other's \gls*{rtt}\@.
 Therefore, instead of checking if all users perceive the event,
 it is defined a threshold, and is verified if the fraction of clients
@@ -487,7 +487,7 @@ As stated in Chapter~\ref{chap:change_point_detection}, one of the main issues
 to be dealt with in
 this work is to select the proper algorithms and parameters.
 In general, this process requires a dataset to allow evaluation of the
-algorithm chosen and it's related parameters.
+algorithm chosen and its related parameters.
 
 There are several approaches to construct a
 change points dataset in the literature.
